@@ -26,6 +26,17 @@ class JudgeAgent:
         for field_name, value in prediction.items():
             if value is None:
                 issues.append(JudgeIssue(field=field_name, message="Predicted field is null"))
+                continue
+
+            if isinstance(value, (int, float)) and value < 0:
+                issues.append(JudgeIssue(field=field_name, message="Predicted numeric value is negative", severity="error"))
+                continue
+
+            if isinstance(value, str):
+                normalized_source = source_text.lower()
+                normalized_value = value.strip().lower()
+                if normalized_value and normalized_value not in normalized_source:
+                    issues.append(JudgeIssue(field=field_name, message="Predicted value is not grounded in the source text"))
 
         score = max(0.0, 1.0 - (len(issues) * 0.1))
         return JudgeResult(
