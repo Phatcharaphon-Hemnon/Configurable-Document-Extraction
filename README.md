@@ -69,8 +69,10 @@ pip install -r requirements.txt
 Start the app:
 
 ```bash
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
+
+If you prefer the `uvicorn` command directly, make sure your virtual environment is active and dependencies are installed in that environment first.
 
 Open:
 
