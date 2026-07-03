@@ -21,6 +21,15 @@ class Settings:
         self.few_shot_examples_per_doc_type = int(os.getenv("FEW_SHOT_EXAMPLES_PER_DOC_TYPE", "5"))
         self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "gemini-2.0-flash")
         self.gemini_api_key = os.getenv("GEMINI_API_KEY", os.getenv("API_KEY", "test-api-key"))
+        self.recommended_extraction_model_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "gemini-3.1-pro-preview")
+        self.recommended_extraction_model_display_name = os.getenv(
+            "RECOMMENDED_EXTRACTION_MODEL_DISPLAY_NAME",
+            "Gemini 3.1 Pro Preview",
+        )
+        self.recommended_extraction_model_reason = os.getenv(
+            "RECOMMENDED_EXTRACTION_MODEL_REASON",
+            "Best quality choice from the available model list for mixed document extraction, validation-heavy batches, and judge review.",
+        )
 
     @property
     def supported_doc_type_list(self) -> list[str]:

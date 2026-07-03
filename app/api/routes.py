@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from app.core.config import get_settings
 from app.schemas.documents import BatchCreateResponse, BatchStatusResponse, EvaluateRequest, EvaluateResponse, ExtractionResult
@@ -16,6 +16,33 @@ def home() -> dict[str, object]:
         "status": "ok",
         "frontend_origins": settings.frontend_origin_list,
         "supported_doc_types": settings.supported_doc_type_list,
+        "recommended_extraction_model": {
+            "name": settings.recommended_extraction_model_name,
+            "display_name": settings.recommended_extraction_model_display_name,
+            "reason": settings.recommended_extraction_model_reason,
+        },
+        "demo_criteria": [
+            {
+                "id": "mixed-batch",
+                "title": "Upload mixed batch of 3 doc types",
+                "expected": "One invoice, one PO, and one delivery note should be classified separately.",
+            },
+            {
+                "id": "router-extraction",
+                "title": "Show router classification + per-type extraction",
+                "expected": "Each file should display its routed doc type, extracted fields, and confidence values.",
+            },
+            {
+                "id": "bad-doc",
+                "title": "Trigger intentional bad doc",
+                "expected": "A malformed invoice should raise validation issues and judge warnings.",
+            },
+            {
+                "id": "eval-dashboard",
+                "title": "Show eval dashboard with F1 metrics",
+                "expected": "Precision, recall, and F1 should be computed for the demo batch.",
+            },
+        ],
         "endpoints": ["/extract", "/templates", "/extract/batch", "/jobs/{job_id}", "/evaluate"],
     }
 
@@ -26,11 +53,17 @@ def health() -> dict[str, str]:
 
 
 @router.post("/extract", response_model=ExtractionResult)
-async def extract_document(file: UploadFile = File(...)) -> ExtractionResult:
+async def extract_document(file: UploadFile = File(...), ocr_text: str | None = Form(None)) -> ExtractionResult:
     contents = await file.read()
     text = contents.decode("utf-8", errors="ignore")
     try:
-        return service.extract(filename=file.filename or "uploaded-document", content_type=file.content_type, text=text)
+        return service.extract(
+            filename=file.filename or "uploaded-document",
+            content_type=file.content_type,
+            text=text,
+            raw_content=contents,
+            ocr_text=ocr_text,
+        )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
