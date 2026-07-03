@@ -385,6 +385,63 @@ pre {
   gap: 18px;
 }
 
+/* ── Minimal / landing.ai-like ── */
+/* Keep layout visible; only reduce text blocks. */
+.shell {
+  padding: 28px 16px 48px;
+}
+
+.hero,
+.criteria-grid,
+.evaluation-row,
+.metric-grid,
+.issue-summary,
+.status-grid,
+.routing-note,
+.score-pill {
+  display: none;
+}
+
+.content-grid {
+  grid-template-columns: 1fr !important;
+}
+
+.results-grid {
+  grid-template-columns: 1fr !important;
+  margin-top: 0;
+  gap: 14px;
+}
+
+.result-card {
+  padding: 16px !important;
+}
+
+.result-card-head {
+  margin-bottom: 8px;
+}
+
+.extraction-data {
+  margin-top: 0 !important;
+  padding: 14px !important;
+}
+
+.extraction-data h3 {
+  display: none;
+}
+
+.data-output {
+  margin: 0;
+  padding: 12px;
+  font-size: 0.82rem;
+}
+
+.copy-btn {
+  width: auto;
+  align-self: flex-start;
+  padding: 9px 12px;
+  border-radius: 12px;
+}
+
 .result-card {
   padding: 22px;
 }
