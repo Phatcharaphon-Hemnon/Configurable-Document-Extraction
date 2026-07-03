@@ -25,28 +25,6 @@ flowchart LR
 - Gemini LLM Judge
 - `.env`-driven configuration
 
-## Recommended Model
-
-- Best extraction choice from the provided model list: `Gemini 3.1 Pro Preview`
-- Fallback choice if you want a more stable non-preview option: `Gemini 2.5 Pro`
-- The app now surfaces this recommendation in the API root and in the frontend demo header
-
-## Demo Criteria
-
-The frontend demo now covers these acceptance criteria:
-
-1. Mixed batch upload of 3 document types
-2. Router classification plus per-type extraction output
-3. Intentional bad document that triggers validation and judge flags
-4. Evaluation dashboard with precision, recall, and F1 metrics
-
-## Image Upload Support
-
-- The upload flow now accepts image files such as `.png`, `.jpg`, `.jpeg`, `.webp`, `.gif`, `.bmp`, `.tif`, and `.tiff`
-- The frontend runs OCR on image files before upload and sends the recognized text to the backend
-- The backend still keeps a Gemini OCR fallback for image uploads if client-side OCR is unavailable
-- A valid `GEMINI_API_KEY` improves the fallback path, but the browser OCR path works without it
-
 ## Project Layout
 
 - `app/main.py` FastAPI entry point
