@@ -106,15 +106,10 @@ pip install -r requirements.txt
 Start the app:
 
 ```bash
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
-Start the frontend from the `frontend/` folder:
 
-```bash
-npm install
-npm run dev
-```
 
 Open:
 
