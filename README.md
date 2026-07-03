@@ -1,6 +1,6 @@
 # Configurable Document Extraction
 
-FastAPI backend plus a separate React frontend for AI-assisted document extraction with a Router Agent, three specialist extractors, a Validator Agent, and an LLM Judge.
+FastAPI backend plus a separate React frontend for AI-assisted document extraction with a Router Agent, three specialist extractors, a Validator Agent, and a Gemini-powered LLM Judge.
 
 ## Architecture
 
@@ -22,7 +22,7 @@ flowchart LR
 - RAG-ready knowledge base layout
 - Multi-agent orchestration layer
 - Pydantic schemas
-- LLM Judge stub
+- Gemini LLM Judge
 - `.env`-driven configuration
 
 ## Project Layout
@@ -57,6 +57,7 @@ Important variables:
 - `KNOWLEDGE_BASE_PATH`
 - `FEW_SHOT_EXAMPLES_PER_DOC_TYPE`
 - `JUDGE_MODEL_NAME`
+- `GEMINI_API_KEY`
 - `FRONTEND_ORIGINS`
 
 Frontend environment:
@@ -70,7 +71,7 @@ Frontend environment:
 - `GET /templates` list supported document types and schemas
 - `POST /extract/batch` create async batch job
 - `GET /jobs/{id}` check batch status and results
-- `POST /evaluate` evaluate prediction against ground truth
+- `POST /evaluate` evaluate prediction against ground truth using the configured judge model
 
 ## Run
 

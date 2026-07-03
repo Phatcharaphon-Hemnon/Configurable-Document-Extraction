@@ -19,8 +19,8 @@ class Settings:
         self.supported_doc_types = os.getenv("SUPPORTED_DOC_TYPES", "invoice,po,delivery_note")
         self.knowledge_base_path = os.getenv("KNOWLEDGE_BASE_PATH", "app/data/knowledge_base")
         self.few_shot_examples_per_doc_type = int(os.getenv("FEW_SHOT_EXAMPLES_PER_DOC_TYPE", "5"))
-        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "gpt-4.1-mini")
-        self.api_key = os.getenv("API_KEY", "test-api-key")
+        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "gemini-2.0-flash")
+        self.gemini_api_key = os.getenv("GEMINI_API_KEY", os.getenv("API_KEY", "test-api-key"))
 
     @property
     def supported_doc_type_list(self) -> list[str]:
