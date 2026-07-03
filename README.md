@@ -1,6 +1,6 @@
 # Configurable Document Extraction
 
-FastAPI scaffold for AI-assisted document extraction with a Router Agent, three specialist extractors, a Validator Agent, and an LLM Judge.
+FastAPI backend plus a separate React frontend for AI-assisted document extraction with a Router Agent, three specialist extractors, a Validator Agent, and a Gemini-powered LLM Judge.
 
 ## Architecture
 
@@ -17,22 +17,30 @@ flowchart LR
 
 ## Tech Stack
 
-- FastAPI
+- React frontend
+- FastAPI backend
 - RAG-ready knowledge base layout
 - Multi-agent orchestration layer
 - Pydantic schemas
-- LLM Judge stub
+- Gemini LLM Judge
 - `.env`-driven configuration
 
 ## Project Layout
 
 - `app/main.py` FastAPI entry point
-- `app/core/config.py` environment settings
-- `app/api/routes.py` API endpoints and landing page
+- `app/core/config.py` backend environment settings
+- `app/api/routes.py` API endpoints
 - `app/agents/` router, extractors, validator, judge
 - `app/services/` orchestration, jobs, knowledge base
 - `app/schemas/` Pydantic models
 - `app/data/knowledge_base/` sample KB structure
+- `frontend/` React UI that calls the backend API
+
+## Data Layer
+
+- No persistent database is configured yet.
+- Batch jobs currently use the in-memory job store in `app/services/job_store.py`.
+- The knowledge base is file-backed under `app/data/knowledge_base/`.
 
 ## Environment
 
@@ -49,6 +57,13 @@ Important variables:
 - `KNOWLEDGE_BASE_PATH`
 - `FEW_SHOT_EXAMPLES_PER_DOC_TYPE`
 - `JUDGE_MODEL_NAME`
+- `GEMINI_API_KEY`
+- `FRONTEND_ORIGINS`
+
+Frontend environment:
+
+- copy `frontend/.env.example` to `frontend/.env`
+- set `VITE_API_BASE_URL` to your FastAPI backend URL
 
 ## API Contract
 
@@ -56,7 +71,7 @@ Important variables:
 - `GET /templates` list supported document types and schemas
 - `POST /extract/batch` create async batch job
 - `GET /jobs/{id}` check batch status and results
-- `POST /evaluate` evaluate prediction against ground truth
+- `POST /evaluate` evaluate prediction against ground truth using the configured judge model
 
 ## Run
 
@@ -72,9 +87,10 @@ Start the app:
 python -m uvicorn app.main:app --reload
 ```
 
-If you prefer the `uvicorn` command directly, make sure your virtual environment is active and dependencies are installed in that environment first.
+
 
 Open:
 
-- Home page: `http://127.0.0.1:8000/`
+- Frontend: `http://127.0.0.1:5173/`
+- Backend API root: `http://127.0.0.1:8000/`
 - API docs: `http://127.0.0.1:8000/docs`

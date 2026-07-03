@@ -79,6 +79,7 @@ class ExtractionResult(BaseModel):
     request: FileUploadMeta
     doc_type: DocumentType
     language: DocumentLanguage
+    routing_reason: str | None = None
     extracted_fields: dict[str, ExtractionField]
     validation: ValidationResult
     judge: JudgeResult | None = None
@@ -104,5 +105,8 @@ class EvaluateRequest(BaseModel):
 
 class EvaluateResponse(BaseModel):
     score: float
+    precision: float
+    recall: float
+    f1: float
     summary: str
     mismatches: list[dict[str, Any]] = Field(default_factory=list)
