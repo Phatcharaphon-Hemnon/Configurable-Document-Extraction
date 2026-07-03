@@ -13,6 +13,7 @@ class Settings:
         self.app_host = os.getenv("APP_HOST", "0.0.0.0")
         self.app_port = int(os.getenv("APP_PORT", "8000"))
         self.app_debug = os.getenv("APP_DEBUG", "true").lower() == "true"
+        self.frontend_origins = os.getenv("FRONTEND_ORIGINS", "http://localhost:5173")
         self.max_upload_mb = int(os.getenv("MAX_UPLOAD_MB", "10"))
         self.supported_languages = os.getenv("SUPPORTED_LANGUAGES", "en,th")
         self.supported_doc_types = os.getenv("SUPPORTED_DOC_TYPES", "invoice,po,delivery_note")
@@ -28,6 +29,10 @@ class Settings:
     @property
     def supported_language_list(self) -> list[str]:
         return [item.strip() for item in self.supported_languages.split(",") if item.strip()]
+
+    @property
+    def frontend_origin_list(self) -> list[str]:
+        return [item.strip() for item in self.frontend_origins.split(",") if item.strip()]
 
     @property
     def knowledge_base_directory(self) -> Path:
