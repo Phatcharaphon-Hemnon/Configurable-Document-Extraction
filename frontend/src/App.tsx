@@ -138,14 +138,31 @@ function App() {
             <section key={r.fileName} className="panel" style={{ padding: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
                 <div style={{ fontWeight: 700 }}>{r.fileName}</div>
-                <button
-                  className="copy-btn"
-                  style={{ width: 'auto' }}
-                  type="button"
-                  onClick={() => navigator.clipboard.writeText(JSON.stringify(r.dataOnly, null, 2))}
-                >
-                  Copy
-                </button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    className="copy-btn"
+                    style={{ width: 'auto' }}
+                    type="button"
+                    onClick={() => navigator.clipboard.writeText(JSON.stringify(r.dataOnly, null, 2))}
+                  >
+                    Copy
+                  </button>
+                  <button
+                    className="save-btn"
+                    type="button"
+                    onClick={() => {
+                      const blob = new Blob([JSON.stringify(r.dataOnly, null, 2)], { type: 'application/json' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `${r.fileName.replace(/\.[^/.]+$/, '')}.json`;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    }}
+                  >
+                    Save JSON
+                  </button>
+                </div>
               </div>
               <pre style={{ margin: '10px 0 0', padding: 12, background: 'rgba(0,0,0,0.3)', borderRadius: 12, border: '1px solid rgba(148,163,184,0.1)', overflowX: 'auto', fontSize: 12, color: '#ecf4ff' }}>
                 {JSON.stringify(r.dataOnly, null, 2)}

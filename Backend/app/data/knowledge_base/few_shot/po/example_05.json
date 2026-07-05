@@ -1,0 +1,11 @@
+{
+  "description": "Simple purchase order with minimal fields",
+  "input_text": "Purchase Order\nPO No: PO-MIN-001\nDate: 2024-06-01\nSupplier: Quick Supply Co.\nTotal: PHP 15,000.00",
+  "output": {
+    "po_number": "PO-MIN-001",
+    "order_date": "2024-06-01",
+    "supplier_name": "Quick Supply Co.",
+    "total_amount": 15000.00,
+    "currency": "PHP"
+  }
+}

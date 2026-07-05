@@ -75,22 +75,59 @@ Frontend environment:
 
 ## Run
 
-Install dependencies:
+Minimum requirements:
 
-```bash
-pip install -r requirements.txt
-```
+- Python 3.10+ and pip
+- Node.js 16+ (for the frontend) and npm/yarn/pnpm
 
-Start the app:
+1) Backend (FastAPI)
 
-```bash
-python -m uvicorn app.main:app --reload
-```
+- Copy environment example: `cp .env.example .env` and edit values as needed (notably `GEMINI_API_KEY` and `FRONTEND_ORIGINS`).
+- Create and activate a virtualenv (recommended):
 
+	```bash
+	python -m venv .venv
+	source .venv/bin/activate
+	```
 
+- Install Python dependencies:
 
-Open:
+	```bash
+	pip install -r requirements.txt
+	```
 
-- Frontend: `http://127.0.0.1:5173/`
+- Run the backend:
+
+	```bash
+	python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+	```
+
+2) Frontend (React / Vite)
+
+- Change to the frontend folder and copy the env example:
+
+	```bash
+	cd frontend
+	cp .env.example .env
+	```
+
+- Install JS deps and start the dev server:
+
+	```bash
+	npm install
+	npm run dev
+	```
+
+3) Open in your browser
+
+- Frontend UI (Vite dev server): `http://127.0.0.1:5173/`
 - Backend API root: `http://127.0.0.1:8000/`
-- API docs: `http://127.0.0.1:8000/docs`
+- Swagger docs: `http://127.0.0.1:8000/docs`
+
+4) Quick troubleshooting
+
+- If you see errors about missing API keys, set `GEMINI_API_KEY` (or other provider keys) in `.env` or set to an empty string for local testing.
+- Check backend logs in the terminal where `uvicorn` runs for tracebacks.
+- If frontend cannot reach the backend, ensure `VITE_API_BASE_URL` in `frontend/.env` points to `http://127.0.0.1:8000` and `FRONTEND_ORIGINS` in the backend `.env` allows the origin.
+
+If you want, I can also add example `.env` values and an npm script to run both frontend and backend concurrently.
