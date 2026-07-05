@@ -1,0 +1,21 @@
+{
+  "doc_type": "invoice",
+  "description": "Billing statement / tax invoice / account statement",
+  "fields": [
+    {"name": "invoice_number",   "type": "string",  "required": true,  "validation_rule": "Non-empty alphanumeric identifier"},
+    {"name": "statement_number", "type": "string",  "required": false, "validation_rule": "Non-empty alphanumeric identifier"},
+    {"name": "customer_id",      "type": "string",  "required": false, "validation_rule": "Non-empty alphanumeric identifier"},
+    {"name": "bill_to_name",     "type": "string",  "required": true,  "validation_rule": "Non-empty string"},
+    {"name": "bill_to_address",  "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "vendor_name",      "type": "string",  "required": true,  "validation_rule": "Non-empty string"},
+    {"name": "vendor_address",   "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "vendor_phone",     "type": "string",  "required": false, "validation_rule": "Valid phone number"},
+    {"name": "vendor_email",     "type": "string",  "required": false, "validation_rule": "Valid email address"},
+    {"name": "statement_date",   "type": "date",    "required": true,  "validation_rule": "Date in any recognisable format"},
+    {"name": "payment_due_date", "type": "date",    "required": false, "validation_rule": "Date in any recognisable format"},
+    {"name": "balance_due",      "type": "number",  "required": true,  "validation_rule": "Positive numeric value"},
+    {"name": "current_balance",  "type": "number",  "required": false, "validation_rule": "Numeric value"},
+    {"name": "currency",         "type": "string",  "required": true,  "validation_rule": "ISO 4217 code or symbol (PHP, USD, THB, EUR …)"},
+    {"name": "line_items",       "type": "array",   "required": false, "validation_rule": "Array of objects with date, type, description, payment, amount, balance"}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "doc_type": "po",
+  "description": "Purchase order",
+  "fields": [
+    {"name": "po_number",       "type": "string",  "required": true,  "validation_rule": "Non-empty alphanumeric identifier"},
+    {"name": "order_date",      "type": "date",    "required": true,  "validation_rule": "Date in any recognisable format"},
+    {"name": "supplier_name",   "type": "string",  "required": true,  "validation_rule": "Non-empty string"},
+    {"name": "supplier_address","type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "buyer_name",      "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "buyer_address",   "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "delivery_date",   "type": "date",    "required": false, "validation_rule": "Date in any recognisable format"},
+    {"name": "total_amount",    "type": "number",  "required": true,  "validation_rule": "Positive numeric value"},
+    {"name": "currency",        "type": "string",  "required": true,  "validation_rule": "ISO 4217 code or symbol"},
+    {"name": "payment_terms",   "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "line_items",      "type": "array",   "required": false, "validation_rule": "Array of objects with description, quantity, unit_price, total"},
+    {"name": "notes",           "type": "string",  "required": false, "validation_rule": "Non-empty string"}
+  ]
+}

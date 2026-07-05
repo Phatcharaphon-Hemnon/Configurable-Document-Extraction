@@ -1,0 +1,22 @@
+{
+  "description": "Purchase order with notes and USD currency",
+  "input_text": "PURCHASE ORDER\nPO No: PO-US-0012\nDate: March 5, 2024\nVendor: Global Parts Inc.\n500 Industrial Blvd, Los Angeles, CA 90001\nShip To: Pacific Manufacturing\n1200 Harbor Way, Long Beach, CA 90802\nRequired Delivery: March 20, 2024\nPayment Terms: Net 45\nPart No  Description         Qty   Unit Price  Amount\nGP-001   Steel Bolts M8x20   500   0.45        225.00\nGP-002   Hex Nuts M8         500   0.20        100.00\nGP-003   Washers M8          1000  0.10        100.00\nTotal: USD 425.00\nNotes: Please include packing slip with each shipment.",
+  "output": {
+    "po_number": "PO-US-0012",
+    "order_date": "March 5, 2024",
+    "supplier_name": "Global Parts Inc.",
+    "supplier_address": "500 Industrial Blvd, Los Angeles, CA 90001",
+    "buyer_name": "Pacific Manufacturing",
+    "buyer_address": "1200 Harbor Way, Long Beach, CA 90802",
+    "delivery_date": "March 20, 2024",
+    "total_amount": 425.00,
+    "currency": "USD",
+    "payment_terms": "Net 45",
+    "notes": "Please include packing slip with each shipment.",
+    "line_items": [
+      {"description": "Steel Bolts M8x20", "quantity": 500, "unit_price": 0.45, "total": 225.00},
+      {"description": "Hex Nuts M8", "quantity": 500, "unit_price": 0.20, "total": 100.00},
+      {"description": "Washers M8", "quantity": 1000, "unit_price": 0.10, "total": 100.00}
+    ]
+  }
+}
