@@ -1,0 +1,16 @@
+{
+  "doc_type": "delivery_note",
+  "description": "Delivery note / delivery order / packing list",
+  "fields": [
+    {"name": "delivery_note_number", "type": "string",  "required": true,  "validation_rule": "Non-empty alphanumeric identifier"},
+    {"name": "delivery_date",        "type": "date",    "required": true,  "validation_rule": "Date in any recognisable format"},
+    {"name": "delivered_by",         "type": "string",  "required": true,  "validation_rule": "Non-empty string"},
+    {"name": "recipient_name",       "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "recipient_address",    "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "sender_name",          "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "sender_address",       "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "items",                "type": "array",   "required": false, "validation_rule": "Array of objects with description and quantity"},
+    {"name": "total_weight",         "type": "string",  "required": false, "validation_rule": "Non-empty string"},
+    {"name": "notes",                "type": "string",  "required": false, "validation_rule": "Non-empty string"}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "description": "Simple tax invoice USD",
+  "input_text": "ACME Corp\nTax Invoice\nInvoice No: INV-2024-0042\nDate: 2024-03-15\nBill To:\nGlobal Traders Ltd\n100 Commerce Street, Bangkok 10110\nDescription: Consulting Services Q1 2024\nAmount: USD 8,500.00\nTax (7%): USD 595.00\nTotal Due: USD 9,095.00\nPayment Due: 2024-04-15\nBank: Bangkok Bank, Account 123-4-56789-0",
+  "output": {
+    "invoice_number": "INV-2024-0042",
+    "bill_to_name": "Global Traders Ltd",
+    "bill_to_address": "100 Commerce Street, Bangkok 10110",
+    "vendor_name": "ACME Corp",
+    "statement_date": "2024-03-15",
+    "payment_due_date": "2024-04-15",
+    "balance_due": 9095.00,
+    "currency": "USD",
+    "line_items": [
+      {"description": "Consulting Services Q1 2024", "amount": 8500.00},
+      {"description": "Tax (7%)", "amount": 595.00}
+    ]
+  }
+}

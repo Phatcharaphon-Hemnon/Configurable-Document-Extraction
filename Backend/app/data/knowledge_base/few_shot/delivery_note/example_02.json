@@ -1,0 +1,18 @@
+{
+  "description": "Delivery order with signature fields",
+  "input_text": "DELIVERY ORDER\nDO Number: DO-PH-2024-0015\nDate of Delivery: April 5, 2024\nCourier: LBC Express\nDeliver To:\nMr. Juan dela Cruz\n123 Rizal Street, Makati City, Metro Manila\nSent By:\nOnline Shop PH\nUnit 5, E-Commerce Hub, Pasig City\nPackages:\n- 1x Laptop bag (brown)\n- 2x USB-C cables\n- 1x Wireless mouse\nReceived By: _______________  Date: _______________",
+  "output": {
+    "delivery_note_number": "DO-PH-2024-0015",
+    "delivery_date": "April 5, 2024",
+    "delivered_by": "LBC Express",
+    "recipient_name": "Mr. Juan dela Cruz",
+    "recipient_address": "123 Rizal Street, Makati City, Metro Manila",
+    "sender_name": "Online Shop PH",
+    "sender_address": "Unit 5, E-Commerce Hub, Pasig City",
+    "items": [
+      {"description": "Laptop bag (brown)", "quantity": "1"},
+      {"description": "USB-C cables", "quantity": "2"},
+      {"description": "Wireless mouse", "quantity": "1"}
+    ]
+  }
+}

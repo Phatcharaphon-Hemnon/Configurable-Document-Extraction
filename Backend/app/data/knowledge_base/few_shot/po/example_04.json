@@ -1,0 +1,21 @@
+{
+  "description": "IT equipment purchase order",
+  "input_text": "PURCHASE ORDER\nPO Number: PO-IT-2024-007\nIssue Date: 2024-01-22\nSupplier: TechZone Distribution\n77 Lat Phrao Road, Bangkok 10230\nBuyer: Sunrise Hospital\n1 Hospital Road, Nonthaburi 11000\nExpected Delivery: 2024-02-05\nItem  Description                  Qty  Unit Price (THB)  Total (THB)\n1     Laptop Dell Latitude 5540     5    35,000.00         175,000.00\n2     Monitor 24\" Full HD           5    8,500.00          42,500.00\n3     Wireless Keyboard+Mouse       5    1,200.00          6,000.00\nTotal Amount: THB 223,500.00\nPayment Terms: 50% deposit, 50% on delivery",
+  "output": {
+    "po_number": "PO-IT-2024-007",
+    "order_date": "2024-01-22",
+    "supplier_name": "TechZone Distribution",
+    "supplier_address": "77 Lat Phrao Road, Bangkok 10230",
+    "buyer_name": "Sunrise Hospital",
+    "buyer_address": "1 Hospital Road, Nonthaburi 11000",
+    "delivery_date": "2024-02-05",
+    "total_amount": 223500.00,
+    "currency": "THB",
+    "payment_terms": "50% deposit, 50% on delivery",
+    "line_items": [
+      {"description": "Laptop Dell Latitude 5540", "quantity": 5, "unit_price": 35000.00, "total": 175000.00},
+      {"description": "Monitor 24\" Full HD", "quantity": 5, "unit_price": 8500.00, "total": 42500.00},
+      {"description": "Wireless Keyboard+Mouse", "quantity": 5, "unit_price": 1200.00, "total": 6000.00}
+    ]
+  }
+}

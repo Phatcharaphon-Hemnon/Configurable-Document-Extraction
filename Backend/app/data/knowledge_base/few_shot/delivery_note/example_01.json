@@ -1,0 +1,20 @@
+{
+  "description": "Standard delivery note with item list",
+  "input_text": "DELIVERY NOTE\nDN No: DN-2024-0088\nDelivery Date: 2024-03-18\nDelivered By: SpeedEx Courier\nRecipient: ABC Manufacturing Co.\n10 Factory Road, Samut Prakan 10280\nSender: Raw Materials Ltd.\n55 Warehouse District, Chonburi 20000\nItems Delivered:\n1. Steel Rods 10mm x 6m  - 100 pcs\n2. Steel Plates 5mm       - 50 sheets\n3. Welding Wire 1.2mm     - 20 rolls\nTotal Weight: 2,500 kg\nNotes: Handle with care. Fragile items in box 3.",
+  "output": {
+    "delivery_note_number": "DN-2024-0088",
+    "delivery_date": "2024-03-18",
+    "delivered_by": "SpeedEx Courier",
+    "recipient_name": "ABC Manufacturing Co.",
+    "recipient_address": "10 Factory Road, Samut Prakan 10280",
+    "sender_name": "Raw Materials Ltd.",
+    "sender_address": "55 Warehouse District, Chonburi 20000",
+    "items": [
+      {"description": "Steel Rods 10mm x 6m", "quantity": "100 pcs"},
+      {"description": "Steel Plates 5mm", "quantity": "50 sheets"},
+      {"description": "Welding Wire 1.2mm", "quantity": "20 rolls"}
+    ],
+    "total_weight": "2,500 kg",
+    "notes": "Handle with care. Fragile items in box 3."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "Minimal receipt / invoice with few fields",
+  "input_text": "ANNEX \"3\"\nLF-2-08\nCharot Express\nBilling Statement\nBill To: Chuva Chemex Logistic Services\nStatement Date: 5/28/2018\nStatement #: 1234\nCustomer ID: CCL1354\nBalance Due: PHP 250,000\nPayment Due Date: 5/4/18\nCurrent Balance: Php 150,000",
+  "output": {
+    "invoice_number": "1234",
+    "statement_number": "1234",
+    "customer_id": "CCL1354",
+    "bill_to_name": "Chuva Chemex Logistic Services",
+    "vendor_name": "Charot Express",
+    "statement_date": "5/28/2018",
+    "payment_due_date": "5/4/18",
+    "balance_due": 250000,
+    "current_balance": 150000,
+    "currency": "PHP"
+  }
+}

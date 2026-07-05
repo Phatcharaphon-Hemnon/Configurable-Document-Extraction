@@ -1,0 +1,19 @@
+{
+  "description": "Packing list / consignment note",
+  "input_text": "PACKING LIST\nConsignment No: CN-2024-0201\nShipment Date: 2024-05-12\nCarrier: DHL Express\nShipper: Export Goods Co., Ltd.\n1 Export Zone, Laem Chabang, Chonburi 20230\nConsignee: Import Partners GmbH\nHamburger Str. 100, 20095 Hamburg, Germany\nContents:\nBox 1: Electronic components (PCBs) - 50 units - 5 kg\nBox 2: Cables and connectors - 200 units - 3 kg\nBox 3: Instruction manuals - 50 sets - 2 kg\nGross Weight: 10 kg\nDimensions: 60x40x30 cm",
+  "output": {
+    "delivery_note_number": "CN-2024-0201",
+    "delivery_date": "2024-05-12",
+    "delivered_by": "DHL Express",
+    "sender_name": "Export Goods Co., Ltd.",
+    "sender_address": "1 Export Zone, Laem Chabang, Chonburi 20230",
+    "recipient_name": "Import Partners GmbH",
+    "recipient_address": "Hamburger Str. 100, 20095 Hamburg, Germany",
+    "items": [
+      {"description": "Electronic components (PCBs)", "quantity": "50 units", "weight": "5 kg"},
+      {"description": "Cables and connectors", "quantity": "200 units", "weight": "3 kg"},
+      {"description": "Instruction manuals", "quantity": "50 sets", "weight": "2 kg"}
+    ],
+    "total_weight": "10 kg"
+  }
+}

@@ -1,13 +1,38 @@
-.env
+# ==========================================
+# Python / Backend Avoidances
+# ==========================================
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python caching
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 .pytest_cache/
-.venv/
-venv/
-.idea/
-.vscode/
-app/__pycache__/
+.mypy_cache/
 
-# Frontend
+# Local configuration & secrets
+.env
+.env.local
+
+# ==========================================
+# React Frontend Avoidances
+# ==========================================
+# Dependencies (Vercel will install this on its own)
 frontend/node_modules/
+
+# Production build artifacts
 frontend/dist/
+frontend/build/
+
+# TypeScript build caches
+frontend/*.tsbuildinfo
+
+# Local dev/system files
+frontend/.apps/
+.DS_Store
+Thumbs.db
