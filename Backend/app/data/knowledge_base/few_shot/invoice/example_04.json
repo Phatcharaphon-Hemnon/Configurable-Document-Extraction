@@ -1,0 +1,23 @@
+{
+  "description": "Multi-line account statement with multiple transactions",
+  "input_text": "FastShip Logistics\nAccount Statement\nStatement Date: 01/10/2023\nStatement No: ST-20231001\nCustomer ID: FS-8821\nBill To: Metro Supplies Inc.\n55 Industrial Ave, Quezon City, Philippines\nAccount Activity:\nDate       Type  Invoice   Description          Payment    Amount     Balance\n09/01/23   Inv   INV-001   Freight charges      -          12,000.00  12,000.00\n09/15/23   Pay   -         Payment received     12,000.00  -          0.00\n09/20/23   Inv   INV-002   Storage fees         -          3,500.00   3,500.00\n10/01/23   Inv   INV-003   Handling charges     -          1,800.00   5,300.00\nBalance Due: PHP 5,300.00\nPayment Due Date: 10/31/2023\nContact: billing@fastship.ph | +63 2 8888 9999",
+  "output": {
+    "statement_number": "ST-20231001",
+    "customer_id": "FS-8821",
+    "bill_to_name": "Metro Supplies Inc.",
+    "bill_to_address": "55 Industrial Ave, Quezon City, Philippines",
+    "vendor_name": "FastShip Logistics",
+    "vendor_email": "billing@fastship.ph",
+    "vendor_phone": "+63 2 8888 9999",
+    "statement_date": "01/10/2023",
+    "payment_due_date": "10/31/2023",
+    "balance_due": 5300.00,
+    "currency": "PHP",
+    "line_items": [
+      {"date": "09/01/23", "type": "Inv", "description": "Freight charges", "amount": 12000.00, "balance": 12000.00},
+      {"date": "09/15/23", "type": "Pay", "description": "Payment received", "payment": 12000.00, "balance": 0.00},
+      {"date": "09/20/23", "type": "Inv", "description": "Storage fees", "amount": 3500.00, "balance": 3500.00},
+      {"date": "10/01/23", "type": "Inv", "description": "Handling charges", "amount": 1800.00, "balance": 5300.00}
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Simple goods received note",
+  "input_text": "Goods Received Note\nGRN No: GRN-2024-0033\nDate Received: 2024-06-20\nReceived From: Supplier XYZ\nReceived By: Warehouse Team\nItems: Office chairs x 10, Desks x 5\nNotes: All items in good condition.",
+  "output": {
+    "delivery_note_number": "GRN-2024-0033",
+    "delivery_date": "2024-06-20",
+    "delivered_by": "Supplier XYZ",
+    "recipient_name": "Warehouse Team",
+    "items": [
+      {"description": "Office chairs", "quantity": "10"},
+      {"description": "Desks", "quantity": "5"}
+    ],
+    "notes": "All items in good condition."
+  }
+}

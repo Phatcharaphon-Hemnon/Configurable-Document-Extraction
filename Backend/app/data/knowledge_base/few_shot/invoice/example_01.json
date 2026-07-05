@@ -1,0 +1,30 @@
+{
+  "description": "Standard billing statement with account activity table",
+  "input_text": "Charot Express\nBilling Statement\nBill To: Chuva Chemex Logistic Services\nRoom 1234, Madrigal Building, Escota Street\nBinondo, Manila City, Philippines\n428-765\nStatement Date: 5/28/2018\nStatement #: 1234\nCustomer ID: CCL1354\nMake all checks payable to:\nCharot Express\n1234 Dixi Street, Barangay Chamus, Subic Zambales, Philippines\nPhone 0916-567-8891\nAccount Summary\nBalance Due: PHP 250,000\nPayment Due Date: 5/4/18\nAccount Activity\nDATE  TYPE  INVOICE  DESCRIPTION  PAYMENT  AMOUNT  BALANCE\n1/28-18  Inv  Php 100,000  Php 100,000  Initial Deposit  Php 100,000  Php 150,000\nCurrent Balance: Php 150,000\nIf you have any questions about this invoice, please contact:\nCharot Express, 1234 Dixi Street, Barangay Chamus, Subic Zambales, Philippines\nPhone 0916-567-8891, Email: charotexpress.shipping@yahoo.com\nThank You For Your Business!",
+  "output": {
+    "invoice_number": "1234",
+    "statement_number": "1234",
+    "customer_id": "CCL1354",
+    "bill_to_name": "Chuva Chemex Logistic Services",
+    "bill_to_address": "Room 1234, Madrigal Building, Escota Street, Binondo, Manila City, Philippines",
+    "vendor_name": "Charot Express",
+    "vendor_address": "1234 Dixi Street, Barangay Chamus, Subic Zambales, Philippines",
+    "vendor_phone": "0916-567-8891",
+    "vendor_email": "charotexpress.shipping@yahoo.com",
+    "statement_date": "5/28/2018",
+    "payment_due_date": "5/4/18",
+    "balance_due": 250000,
+    "current_balance": 150000,
+    "currency": "PHP",
+    "line_items": [
+      {
+        "date": "1/28-18",
+        "type": "Inv",
+        "description": "Initial Deposit",
+        "payment": 100000,
+        "amount": 100000,
+        "balance": 150000
+      }
+    ]
+  }
+}

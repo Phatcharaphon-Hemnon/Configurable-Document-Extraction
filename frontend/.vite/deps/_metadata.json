@@ -1,0 +1,40 @@
+{
+  "hash": "7bf11f47",
+  "configHash": "6675ae7c",
+  "lockfileHash": "81009f9a",
+  "browserHash": "d86633e8",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "e4b0844f",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "00dc31b6",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "2cbe3890",
+      "needsInterop": true
+    },
+    "tesseract.js": {
+      "src": "../../node_modules/tesseract.js/src/index.js",
+      "file": "tesseract__js.js",
+      "fileHash": "17c3459f",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-I7YLUTJE": {
+      "file": "chunk-I7YLUTJE.js"
+    },
+    "chunk-E4AONNX5": {
+      "file": "chunk-E4AONNX5.js"
+    }
+  }
+}
