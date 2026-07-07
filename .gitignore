@@ -36,3 +36,4 @@ frontend/*.tsbuildinfo
 frontend/.apps/
 .DS_Store
 Thumbs.db
+*.png
