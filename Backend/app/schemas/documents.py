@@ -77,13 +77,15 @@ class JudgeResult(BaseModel):
 class ExtractionResult(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     request: FileUploadMeta
-    doc_type: DocumentType
-    language: DocumentLanguage
+    doc_type: DocumentType | None = None
+    language: DocumentLanguage | None = None
     routing_reason: str | None = None
-    extracted_fields: dict[str, ExtractionField]
+    extracted_fields: dict[str, ExtractionField] = Field(default_factory=dict)
     full_text: str | None = None
-    validation: ValidationResult
+    validation: ValidationResult | None = None
     judge: JudgeResult | None = None
+    needs_review: bool = False
+    error: str | None = None
 
 
 class BatchCreateResponse(BaseModel):
