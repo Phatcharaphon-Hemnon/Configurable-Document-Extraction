@@ -16,6 +16,13 @@ async def lifespan(app: FastAPI):
 settings = get_settings()
 app = FastAPI(title=settings.app_name, version="0.1.0", lifespan=lifespan)
 
+
+@app.get("/")
+def root_health_check() -> dict[str, str]:
+    """Root-level health check for deployment platforms like Render."""
+    return {"status": "ok", "service": "Configurable Document Extraction API"}
+
+
 # Build a robust origins list combining config variables and hardcoded fallbacks
 origins = [
     "http://localhost:5173",
