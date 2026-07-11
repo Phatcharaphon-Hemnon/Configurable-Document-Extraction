@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 from pathlib import Path
 from typing import Any
 
@@ -17,11 +16,9 @@ from Backend.app.schemas.documents import (
     FileUploadMeta,
     ValidationResult,
 )
-from Backend.app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
+from Backend.app.services.gemini_client import GeminiCallError, GeminiClient
 from Backend.app.services.job_store import InMemoryJobStore
 from Backend.app.services.knowledge_base import KnowledgeBaseRepository
-
-logger = logging.getLogger(__name__)
 
 
 class DocumentExtractionService:
@@ -139,7 +136,6 @@ class DocumentExtractionService:
                 needs_review=not validation.is_valid or (judge_result.score < 0.7),
             )
         except GeminiCallError as exc:
-            logger.exception("GeminiCallError during extraction")
             return ExtractionResult(
                 request=request_meta,
                 needs_review=True,
@@ -147,7 +143,6 @@ class DocumentExtractionService:
                 validation=ValidationResult(is_valid=False, issues=[]),
             )
         except Exception as exc:
-            logger.exception("Unexpected error during extraction")
             return ExtractionResult(
                 request=request_meta,
                 needs_review=True,
