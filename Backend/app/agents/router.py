@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from Backend.app.core.config import Settings
 from Backend.app.schemas.documents import DocumentLanguage, DocumentType
 from Backend.app.schemas.gemini_schemas import RoutingResponseSchema
-from Backend.app.services.gemini_client import GeminiCallError, GeminiClient
+from Backend.app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
 
 @dataclass(slots=True)
