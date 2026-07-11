@@ -19,13 +19,14 @@ class Settings:
         self.supported_doc_types = os.getenv("SUPPORTED_DOC_TYPES", "invoice,po,delivery_note")
         self.knowledge_base_path = os.getenv("KNOWLEDGE_BASE_PATH", "app/data/knowledge_base")
         self.few_shot_examples_per_doc_type = int(os.getenv("FEW_SHOT_EXAMPLES_PER_DOC_TYPE", "5"))
-        self.gemini_api_key = os.getenv("GEMINI_API_KEY", os.getenv("API_KEY", ""))
-        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "gemini-2.0-flash")
-        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "gemini-2.0-flash")
+        # SUT GenAI gateway key (primary provider).
+        self.sut_genai_api_key = os.getenv("SUT_GENAI_API_KEY", "")
+        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "google/gemini-3-flash-preview")
+        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "google/gemini-3-flash-preview")
         # Recommended model used for extraction
-        self.recommended_extraction_model_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "gemini-2.0-flash")
+        self.recommended_extraction_model_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "google/gemini-3-flash-preview")
         # NOTE: display name must match the actual model name above — update both together
-        self.recommended_extraction_model_display_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_DISPLAY_NAME", "Gemini 2.0 Flash")
+        self.recommended_extraction_model_display_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_DISPLAY_NAME", "Gemini 3 Flash (SUT GenAI)")
         self.recommended_extraction_model_reason = os.getenv(
             "RECOMMENDED_EXTRACTION_MODEL_REASON",
             "Best available model for complex document extraction and reasoning.",

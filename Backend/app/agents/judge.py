@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
+
 from Backend.app.core.config import Settings
 from Backend.app.schemas.documents import JudgeIssue, JudgeResult
 from Backend.app.schemas.gemini_schemas import JudgeResponseSchema
-from Backend.app.services.gemini_client import GeminiCallError, GeminiClient
+from Backend.app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
 
 class JudgeAgent:

@@ -8,7 +8,7 @@ from typing import Any
 from Backend.app.core.config import Settings
 from Backend.app.schemas.documents import DocumentType, ExtractionField
 from Backend.app.schemas.gemini_schemas import ExtractionResponseSchema
-from Backend.app.services.gemini_client import GeminiCallError, GeminiClient
+from Backend.app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
 _KB_ROOT = Path(__file__).resolve().parents[1] / "data" / "knowledge_base" / "few_shot"
 
