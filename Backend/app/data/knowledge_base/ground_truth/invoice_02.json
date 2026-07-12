@@ -1,0 +1,26 @@
+{
+  "invoice_number": "INV-2023-1002",
+  "statement_number": "1002",
+  "customer_id": "CUST2002",
+  "bill_to_name": "TechStart Co., Ltd.",
+  "bill_to_address": "88 Silom Road, Bangkok 10500",
+  "vendor_name": "Raw Materials Ltd.",
+  "vendor_address": "55 Warehouse District, Chonburi 20000",
+  "vendor_phone": "038-455-901",
+  "vendor_email": "warehouse@rawmaterials.co.th",
+  "statement_date": "1/31/2023",
+  "payment_due_date": "2/15/2023",
+  "balance_due": 24650.0,
+  "current_balance": 0.0,
+  "currency": "THB",
+  "line_items": [
+    {
+      "date": "1/31/2023",
+      "type": "Pmt",
+      "description": "Printer Toner Cartridge",
+      "payment": 24650.0,
+      "amount": 24650.0,
+      "balance": 0.0
+    }
+  ]
+}

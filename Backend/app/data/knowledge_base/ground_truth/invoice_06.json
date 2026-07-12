@@ -1,0 +1,34 @@
+{
+  "invoice_number": "INV-2024-1006",
+  "statement_number": "1006",
+  "customer_id": "CUST2006",
+  "bill_to_name": "SpeedEx Logistics Co., Ltd.",
+  "bill_to_address": "77 Sukhumvit Rd, Bangkok 10110",
+  "vendor_name": "Northern Produce Trading",
+  "vendor_address": "45 Chang Klan Rd, Chiang Mai 50100",
+  "vendor_phone": "053-818-224",
+  "vendor_email": "info@northernproduce.com",
+  "statement_date": "1/25/2024",
+  "payment_due_date": "2/24/2024",
+  "balance_due": 525.0,
+  "current_balance": 120.0,
+  "currency": "THB",
+  "line_items": [
+    {
+      "date": "1/20/2024",
+      "type": "Inv",
+      "description": "Sticky Notes (pack)",
+      "payment": 120.0,
+      "amount": 240.0,
+      "balance": 120.0
+    },
+    {
+      "date": "1/15/2024",
+      "type": "Inv",
+      "description": "Whiteboard Markers (set of 4)",
+      "payment": 285.0,
+      "amount": 285.0,
+      "balance": 120.0
+    }
+  ]
+}

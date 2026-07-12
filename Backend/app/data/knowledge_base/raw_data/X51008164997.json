@@ -1,0 +1,32 @@
+{
+    "company_name": "ONE ONE THREE SEAFOOD RESTAURANT SDN BHD",
+    "company_registration_number": "1120908-M",
+    "gst_id": "000670224384",
+    "company_address": "NO.1, TAMAN SRI DENGKIL, JALAN AIR HITAM 43800 DENGKIL, SELANGOR.",
+    "date": "15-06-2018",
+    "time": "11:35:35",
+    "invoice_number": "V001-540417",
+    "items": [
+        {
+            "description": "Cat Fish Item",
+            "quantity": 1,
+            "amount": 120.0
+        },
+        {
+            "description": "Vege item",
+            "quantity": 1,
+            "amount": 18.0
+        },
+        {
+            "description": "White Rice",
+            "quantity": 1,
+            "amount": 5.5
+        },
+        {
+            "description": "Beverage",
+            "quantity": 1,
+            "amount": 5.0
+        }
+    ],
+    "total": 148.5
+}

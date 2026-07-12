@@ -1,0 +1,42 @@
+{
+  "invoice_number": "INV-2023-1005",
+  "statement_number": "1005",
+  "customer_id": "CUST2005",
+  "bill_to_name": "TechStart Co., Ltd.",
+  "bill_to_address": "88 Silom Road, Bangkok 10500",
+  "vendor_name": "Golden Rice Mill Ltd.",
+  "vendor_address": "150 Moo 3, Korat Rd, Nakhon Ratchasima 30000",
+  "vendor_phone": "044-255-678",
+  "vendor_email": "sales@goldenricemill.co.th",
+  "statement_date": "9/28/2023",
+  "payment_due_date": "10/13/2023",
+  "balance_due": 6030.0,
+  "current_balance": 4910.0,
+  "currency": "PHP",
+  "line_items": [
+    {
+      "date": "9/22/2023",
+      "type": "Inv",
+      "description": "USB Flash Drive 32GB",
+      "payment": 0.0,
+      "amount": 3960.0,
+      "balance": 3960.0
+    },
+    {
+      "date": "9/19/2023",
+      "type": "Inv",
+      "description": "Whiteboard Markers (set of 4)",
+      "payment": 950.0,
+      "amount": 1900.0,
+      "balance": 4910.0
+    },
+    {
+      "date": "9/25/2023",
+      "type": "Adj",
+      "description": "Ballpoint Pens (box of 12)",
+      "payment": 170.0,
+      "amount": 170.0,
+      "balance": 4910.0
+    }
+  ]
+}

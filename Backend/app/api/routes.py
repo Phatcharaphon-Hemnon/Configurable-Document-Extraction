@@ -1,8 +1,14 @@
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, HTTPException, UploadFile
 
-from Backend.app.core.config import get_settings
-from Backend.app.schemas.documents import BatchCreateResponse, BatchStatusResponse, EvaluateRequest, EvaluateResponse, ExtractionResult
-from Backend.app.services.extraction_service import DocumentExtractionService
+from app.core.config import get_settings
+from app.schemas.documents import (
+    BatchCreateResponse,
+    BatchStatusResponse,
+    EvaluateRequest,
+    EvaluateResponse,
+    FileExtractionResponse,
+)
+from app.services.extraction_service import DocumentExtractionService, UploadedFilePart
 
 router = APIRouter()
 settings = get_settings()
@@ -15,34 +21,12 @@ def home() -> dict[str, object]:
         "name": settings.app_name,
         "status": "ok",
         "frontend_origins": settings.frontend_origin_list,
-        "supported_doc_types": settings.supported_doc_type_list,
+        "schema_mode": "open",  # doc types and fields are no longer a fixed catalog
         "recommended_extraction_model": {
             "name": settings.recommended_extraction_model_name,
             "display_name": settings.recommended_extraction_model_display_name,
             "reason": settings.recommended_extraction_model_reason,
         },
-        "demo_criteria": [
-            {
-                "id": "mixed-batch",
-                "title": "Upload mixed batch of 3 doc types",
-                "expected": "One invoice, one PO, and one delivery note should be classified separately.",
-            },
-            {
-                "id": "router-extraction",
-                "title": "Show router classification + per-type extraction",
-                "expected": "Each file should display its routed doc type, extracted fields, and confidence values.",
-            },
-            {
-                "id": "bad-doc",
-                "title": "Trigger intentional bad doc",
-                "expected": "A malformed invoice should raise validation issues and judge warnings.",
-            },
-            {
-                "id": "eval-dashboard",
-                "title": "Show eval dashboard with F1 metrics",
-                "expected": "Precision, recall, and F1 should be computed for the demo batch.",
-            },
-        ],
         "endpoints": ["/extract", "/templates", "/extract/batch", "/jobs/{job_id}", "/evaluate"],
     }
 
@@ -52,26 +36,43 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@router.post("/extract", response_model=ExtractionResult)
-async def extract_document(file: UploadFile = File(...), ocr_text: str | None = Form(None)) -> ExtractionResult:
-    contents = await file.read()
-    text = contents.decode("utf-8", errors="ignore")
-    try:
-        return service.extract(
-            filename=file.filename or "uploaded-document",
-            content_type=file.content_type,
-            text=text,
-            raw_content=contents,
-            ocr_text=ocr_text,
+@router.post("/extract", response_model=FileExtractionResponse)
+async def extract_document(files: list[UploadFile] = File(...)) -> FileExtractionResponse:
+    """Accepts one or more files selected together in a single upload action.
+
+    - Multiple files here are treated as PAGES of ONE logical document
+      (e.g. page1.jpg + page2.jpg of the same invoice).
+    - A single PDF file is automatically split into one page per PDF page.
+    - The response contains one ExtractionResult per detected page.
+    """
+    if not files:
+        raise HTTPException(status_code=400, detail="No files uploaded")
+
+    parts: list[UploadedFilePart] = []
+    for f in files:
+        contents = await f.read()
+        parts.append(
+            UploadedFilePart(
+                filename=f.filename or "uploaded-document",
+                content_type=f.content_type,
+                raw_content=contents,
+            )
         )
+
+    try:
+        return service.extract_group(parts)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @router.get("/templates")
 def list_templates() -> dict[str, object]:
+    # NOTE: with the open-schema change, there is no fixed catalog of
+    # supported document types anymore — this now returns whatever the
+    # knowledge base repository has on file (e.g. few-shot examples), if
+    # anything. Kept for backward compatibility with the API contract.
     return {
-        "supported_doc_types": settings.supported_doc_type_list,
+        "schema_mode": "open",
         "templates": service.list_templates(),
     }
 

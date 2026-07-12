@@ -1,0 +1,26 @@
+{
+  "invoice_number": "INV-2024-1003",
+  "statement_number": "1003",
+  "customer_id": "CUST2003",
+  "bill_to_name": "Isaan Farm Equipment Co.",
+  "bill_to_address": "9 Mittraphap Rd, Khon Kaen 40000",
+  "vendor_name": "Office Depot Thailand",
+  "vendor_address": "200 Rama IV Road, Bangkok 10120",
+  "vendor_phone": "02-635-9900",
+  "vendor_email": "orders@officedepot.co.th",
+  "statement_date": "7/12/2024",
+  "payment_due_date": "8/11/2024",
+  "balance_due": 4180.0,
+  "current_balance": 2090.0,
+  "currency": "PHP",
+  "line_items": [
+    {
+      "date": "7/12/2024",
+      "type": "Inv",
+      "description": "USB Flash Drive 32GB",
+      "payment": 2090.0,
+      "amount": 4180.0,
+      "balance": 2090.0
+    }
+  ]
+}

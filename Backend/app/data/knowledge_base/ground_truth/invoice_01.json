@@ -1,0 +1,26 @@
+{
+  "invoice_number": "INV-2023-1001",
+  "statement_number": "1001",
+  "customer_id": "CUST2001",
+  "bill_to_name": "Northern Produce Trading",
+  "bill_to_address": "45 Chang Klan Rd, Chiang Mai 50100",
+  "vendor_name": "Bangkok Print & Packaging",
+  "vendor_address": "22 Ratchada Rd, Bangkok 10400",
+  "vendor_phone": "02-693-2211",
+  "vendor_email": "billing@bkkprint.co.th",
+  "statement_date": "10/9/2023",
+  "payment_due_date": "10/24/2023",
+  "balance_due": 1000.0,
+  "current_balance": 0.0,
+  "currency": "THB",
+  "line_items": [
+    {
+      "date": "10/1/2023",
+      "type": "Inv",
+      "description": "Stapler Heavy Duty",
+      "payment": 1000.0,
+      "amount": 1000.0,
+      "balance": 0.0
+    }
+  ]
+}
