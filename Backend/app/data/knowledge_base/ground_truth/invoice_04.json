@@ -1,0 +1,26 @@
+{
+  "invoice_number": "INV-2023-1004",
+  "statement_number": "1004",
+  "customer_id": "CUST2004",
+  "bill_to_name": "TechStart Co., Ltd.",
+  "bill_to_address": "88 Silom Road, Bangkok 10500",
+  "vendor_name": "Isaan Farm Equipment Co.",
+  "vendor_address": "9 Mittraphap Rd, Khon Kaen 40000",
+  "vendor_phone": "043-221-887",
+  "vendor_email": "sales@isaanfarmequip.com",
+  "statement_date": "10/12/2023",
+  "payment_due_date": "10/27/2023",
+  "balance_due": 160.0,
+  "current_balance": 160.0,
+  "currency": "USD",
+  "line_items": [
+    {
+      "date": "10/6/2023",
+      "type": "Inv",
+      "description": "Sticky Notes (pack)",
+      "payment": 0.0,
+      "amount": 160.0,
+      "balance": 160.0
+    }
+  ]
+}

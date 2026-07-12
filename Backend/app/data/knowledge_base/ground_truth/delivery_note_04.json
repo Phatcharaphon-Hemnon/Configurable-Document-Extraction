@@ -1,0 +1,25 @@
+{
+  "delivery_note_number": "DN-2024-0104",
+  "delivery_date": "2024-11-05",
+  "delivered_by": "Nim Express",
+  "recipient_name": "Chaiyaphum Agro Supplies",
+  "recipient_address": "12 Municipality Rd, Chaiyaphum 36000",
+  "sender_name": "Northern Produce Trading",
+  "sender_address": "45 Chang Klan Rd, Chiang Mai 50100",
+  "items": [
+    {
+      "description": "Seed Corn Hybrid 20kg",
+      "quantity": "124 bags"
+    },
+    {
+      "description": "Jasmine Rice 25kg bag",
+      "quantity": "177 bags"
+    },
+    {
+      "description": "Jasmine Rice 25kg bag",
+      "quantity": "20 bags"
+    }
+  ],
+  "total_weight": "3,498 kg",
+  "notes": "Signature required upon delivery."
+}

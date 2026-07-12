@@ -1,0 +1,21 @@
+{
+  "delivery_note_number": "DN-2024-0101",
+  "delivery_date": "2024-04-07",
+  "delivered_by": "SpeedEx Courier",
+  "recipient_name": "Raw Materials Ltd.",
+  "recipient_address": "55 Warehouse District, Chonburi 20000",
+  "sender_name": "BlueSky Manufacturing",
+  "sender_address": "300 Industrial Estate, Rayong 21000",
+  "items": [
+    {
+      "description": "Steel Rods 10mm x 6m",
+      "quantity": "91 pcs"
+    },
+    {
+      "description": "Steel Rods 10mm x 6m",
+      "quantity": "155 pcs"
+    }
+  ],
+  "total_weight": "4,737 kg",
+  "notes": "Deliver to loading dock B."
+}

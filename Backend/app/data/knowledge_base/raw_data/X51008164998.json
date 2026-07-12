@@ -1,0 +1,27 @@
+{
+    "company_name": "ONE ONE THREE SEAFOOD RESTAURANT SDN BHD",
+    "company_registration_number": "1120908-M",
+    "gst_id": "000670224384",
+    "company_address": "NO.1, TAMAN SRI DENGKIL, JALAN AIR HITAM 43800 DENGKIL, SELANGOR.",
+    "date": "20-06-2018",
+    "time": "21:36:11",
+    "invoice_number": "V001-540835",
+    "items": [
+        {
+            "description": "Fish Item",
+            "quantity": 1,
+            "amount": 30.0
+        },
+        {
+            "description": "Beverage",
+            "quantity": 1,
+            "amount": 5.0
+        },
+        {
+            "description": "Noodle Item Single",
+            "quantity": 1,
+            "amount": 3.0
+        }
+    ],
+    "total": 38.0
+}

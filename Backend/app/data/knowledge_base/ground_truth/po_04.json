@@ -1,0 +1,26 @@
+{
+  "po_number": "PO-2024-0104",
+  "order_date": "2024-07-03",
+  "supplier_name": "Bangkok Print & Packaging",
+  "supplier_address": "22 Ratchada Rd, Bangkok 10400",
+  "buyer_name": "Northern Produce Trading",
+  "buyer_address": "45 Chang Klan Rd, Chiang Mai 50100",
+  "delivery_date": "2024-07-16",
+  "total_amount": 73466.2,
+  "currency": "PHP",
+  "payment_terms": "Net 30",
+  "line_items": [
+    {
+      "description": "Irrigation Hose 50m",
+      "quantity": 32,
+      "unit_price": 1200.0,
+      "total": 38400.0
+    },
+    {
+      "description": "Fertilizer NPK 15-15-15 50kg",
+      "quantity": 34,
+      "unit_price": 890.0,
+      "total": 30260.0
+    }
+  ]
+}

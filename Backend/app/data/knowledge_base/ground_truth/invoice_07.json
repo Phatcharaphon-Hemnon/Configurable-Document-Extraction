@@ -1,0 +1,34 @@
+{
+  "invoice_number": "INV-2024-1007",
+  "statement_number": "1007",
+  "customer_id": "CUST2007",
+  "bill_to_name": "Office Depot Thailand",
+  "bill_to_address": "200 Rama IV Road, Bangkok 10120",
+  "vendor_name": "ABC Manufacturing Co.",
+  "vendor_address": "10 Factory Road, Samut Prakan 10280",
+  "vendor_phone": "02-701-5566",
+  "vendor_email": "ap@abcmfg.co.th",
+  "statement_date": "4/18/2024",
+  "payment_due_date": "5/18/2024",
+  "balance_due": 16470.0,
+  "current_balance": 16210.0,
+  "currency": "THB",
+  "line_items": [
+    {
+      "date": "4/15/2024",
+      "type": "Inv",
+      "description": "Printer Toner Cartridge",
+      "payment": 0.0,
+      "amount": 15950.0,
+      "balance": 15950.0
+    },
+    {
+      "date": "4/17/2024",
+      "type": "Inv",
+      "description": "Sticky Notes (pack)",
+      "payment": 260.0,
+      "amount": 520.0,
+      "balance": 16210.0
+    }
+  ]
+}

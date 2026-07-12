@@ -1,0 +1,21 @@
+{
+  "delivery_note_number": "DN-2023-0102",
+  "delivery_date": "2023-01-08",
+  "delivered_by": "SpeedEx Courier",
+  "recipient_name": "Office Depot Thailand",
+  "recipient_address": "200 Rama IV Road, Bangkok 10120",
+  "sender_name": "Raw Materials Ltd.",
+  "sender_address": "55 Warehouse District, Chonburi 20000",
+  "items": [
+    {
+      "description": "Steel Rods 10mm x 6m",
+      "quantity": "13 pcs"
+    },
+    {
+      "description": "Industrial Bearings 6205",
+      "quantity": "89 pcs"
+    }
+  ],
+  "total_weight": "780 kg",
+  "notes": ""
+}

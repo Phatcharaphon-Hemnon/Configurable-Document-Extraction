@@ -37,7 +37,7 @@ from typing import Any, TypeVar
 from openai import OpenAI
 from pydantic import BaseModel
 
-from Backend.app.core.config import Settings
+from app.core.config import Settings
 
 logger = logging.getLogger(__name__)
 
