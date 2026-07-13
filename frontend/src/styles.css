@@ -315,6 +315,34 @@ body {
 }
 
 /* ------------------------------------------------------------------ */
+/* Info box (calmer variant of warning-box for passing judge reviews) */
+/* ------------------------------------------------------------------ */
+
+.info-box {
+  display: flex;
+  gap: var(--spacing-sm);
+  border: 1px solid #1E3A5F;
+  background: linear-gradient(180deg, #101A24, #0D151C);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-status-agent);
+}
+
+.info-box svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-box h3, .info-box p, .info-box li {
+  color: #A5D6FF;
+}
+
+.info-box strong {
+  color: var(--color-status-agent);
+}
+
+/* ------------------------------------------------------------------ */
 /* Extracted fields table                                              */
 /* ------------------------------------------------------------------ */
 

@@ -469,6 +469,70 @@ function App() {
                       </div>
                     </div>
                   )}
+                  {!selectedDoc?.error && selectedDoc?.judge && (
+                    <div
+                      className={selectedDoc.judge.score < 0.7 ? 'warning-box' : 'info-box'}
+                      style={{ marginTop: 'var(--spacing-md)' }}
+                    >
+                      {selectedDoc.judge.score < 0.7 ? <AlertTriangleIcon /> : null}
+                      <div>
+                        <h3 style={{ margin: '0 0 var(--spacing-xs) 0', fontSize: 'var(--font-size-lg)' }}>
+                          Judge Review — {Math.round(selectedDoc.judge.score * 100)}% confidence
+                        </h3>
+                        {selectedDoc.judge.notes && (
+                          <p style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: 'var(--font-size-sm)' }}>
+                            {selectedDoc.judge.notes}
+                          </p>
+                        )}
+                        {selectedDoc.judge.issues.length > 0 && (
+                          <>
+                            <p style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: 'var(--font-size-sm)' }}>
+                              Flagged fields:
+                            </p>
+                            <ul style={{ listStyleType: 'disc', marginLeft: 'var(--spacing-md)' }}>
+                              {selectedDoc.judge.issues.map((issue, index) => (
+                                <li key={index}>
+                                  <strong>{issue.field}</strong> [{issue.severity}]: {issue.message}
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {!selectedDoc?.error && selectedDoc?.judge && (
+                    <div
+                      className={selectedDoc.judge.score < 0.7 ? 'warning-box' : 'info-box'}
+                      style={{ marginTop: 'var(--spacing-md)' }}
+                    >
+                      {selectedDoc.judge.score < 0.7 ? <AlertTriangleIcon /> : null}
+                      <div>
+                        <h3 style={{ margin: '0 0 var(--spacing-xs) 0', fontSize: 'var(--font-size-lg)' }}>
+                          Judge Review — {Math.round(selectedDoc.judge.score * 100)}% confidence
+                        </h3>
+                        {selectedDoc.judge.notes && (
+                          <p style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: 'var(--font-size-sm)' }}>
+                            {selectedDoc.judge.notes}
+                          </p>
+                        )}
+                        {selectedDoc.judge.issues.length > 0 && (
+                          <>
+                            <p style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: 'var(--font-size-sm)' }}>
+                              Flagged fields:
+                            </p>
+                            <ul style={{ listStyleType: 'disc', marginLeft: 'var(--spacing-md)' }}>
+                              {selectedDoc.judge.issues.map((issue, index) => (
+                                <li key={index}>
+                                  <strong>{issue.field}</strong> [{issue.severity}]: {issue.message}
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
                   {!selectedDoc?.error && (
                     <>
