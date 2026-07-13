@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+import json
+
 from app.agents.extractors import ExtractionContext, OpenSchemaExtractor
 from app.agents.judge import JudgeAgent
 from app.agents.router import RouterAgent
@@ -52,6 +54,135 @@ class DocumentExtractionService:
     def list_templates(self) -> list[Any]:
         return self.knowledge_base.list_templates()
 
+    def _values_match(self, predicted: Any, expected: Any) -> bool:
+        """Compare prediction vs ground-truth values with normalization.
+
+        This affects only the *match decision* (precision/recall/F1 and
+        mismatch classification), not the raw values shown in mismatches.
+        """
+
+        # a) Exact-match fast path
+        try:
+            if predicted == expected:
+                return True
+        except Exception:
+            # e.g., uncomparable types; fall through to normalization
+            pass
+
+        # b) None/missing handling
+        if predicted is None or expected is None:
+            return predicted is None and expected is None
+
+        # Helper: normalize numeric-like strings
+        def _try_parse_number(v: Any) -> float | None:
+            if v is None:
+                return None
+
+            if isinstance(v, (int, float)):
+                return float(v)
+
+            if isinstance(v, str):
+                s = v.strip()
+                # strip common currency symbols and separators
+                for sym in ("$", "€", "฿"):
+                    s = s.replace(sym, "")
+                s = s.replace(",", "")
+                # allow things like "(1,234.56)" to mean negative
+                if s.startswith("(") and s.endswith(")"):
+                    s = "-" + s[1:-1]
+                try:
+                    return float(s)
+                except ValueError:
+                    return None
+            return None
+
+        # c) Numeric-like comparison (with epsilon)
+        pn = _try_parse_number(predicted)
+        en = _try_parse_number(expected)
+        if pn is not None and en is not None:
+            return abs(pn - en) <= 1e-6
+
+        # e) Date-like comparison
+        from datetime import datetime
+        import re
+
+        def _try_parse_date(v: Any) -> datetime | None:
+            if not isinstance(v, str):
+                return None
+            s = v.strip()
+            if not s:
+                return None
+
+            # If it's a plain number string, don't treat as date
+            if re.fullmatch(r"\d+", s):
+                return None
+
+            formats = [
+                "%d/%m/%y",
+                "%d/%m/%Y",
+                "%Y-%m-%d",
+                "%m/%d/%Y",
+                "%B %d, %Y",
+            ]
+            for fmt in formats:
+                try:
+                    return datetime.strptime(s, fmt)
+                except ValueError:
+                    continue
+            return None
+
+        pd = _try_parse_date(predicted)
+        ed = _try_parse_date(expected)
+        if pd is not None and ed is not None:
+            return pd == ed
+
+        # f) List/array comparison (JSON-encoded strings)
+        def _try_parse_json_container(v: Any) -> Any | None:
+            if isinstance(v, (list, dict)):
+                return v
+            if isinstance(v, str):
+                s = v.strip()
+                if not s:
+                    return None
+                # only attempt json parsing if it looks like a container
+                if not (s.startswith("[") or s.startswith("{")):
+                    return None
+                try:
+                    return json.loads(s)
+                except Exception:
+                    return None
+            return None
+
+        p_container = _try_parse_json_container(predicted)
+        e_container = _try_parse_json_container(expected)
+        if p_container is not None and e_container is not None:
+            # Both containers recognized: compare recursively
+            if isinstance(p_container, list) and isinstance(e_container, list):
+                if len(p_container) != len(e_container):
+                    return False
+                return all(self._values_match(p_item, e_item) for p_item, e_item in zip(p_container, e_container))
+            if isinstance(p_container, dict) and isinstance(e_container, dict):
+                if p_container.keys() != e_container.keys():
+                    return False
+                return all(self._values_match(p_container[k], e_container[k]) for k in e_container.keys())
+            # One list and one dict (or container types mismatch)
+            return False
+
+        # d) String comparison
+        if isinstance(predicted, str) and isinstance(expected, str):
+            def _normalize_ws(s: str) -> str:
+                s = s.strip()
+                s = re.sub(r"\s+", " ", s)
+                return s
+
+            return _normalize_ws(predicted).lower() == _normalize_ws(expected).lower()
+
+        # g) Fallback
+        try:
+            return predicted == expected
+        except Exception:
+            return False
+
     def evaluate(self, prediction: dict[str, Any], ground_truth: dict[str, Any], source_text: str | None = None) -> EvaluateResponse:
         matched_fields = 0
         false_positives = 0
@@ -59,17 +190,17 @@ class DocumentExtractionService:
         mismatches = [
             {"field": field_name, "predicted": prediction.get(field_name), "expected": expected_value}
             for field_name, expected_value in ground_truth.items()
-            if prediction.get(field_name) != expected_value
+            if not self._values_match(prediction.get(field_name), expected_value)
         ]
 
         for field_name, expected_value in ground_truth.items():
-            if prediction.get(field_name) == expected_value:
+            if self._values_match(prediction.get(field_name), expected_value):
                 matched_fields += 1
             else:
                 false_negatives += 1
 
         for field_name, predicted_value in prediction.items():
-            if ground_truth.get(field_name) != predicted_value:
+            if not self._values_match(predicted_value, ground_truth.get(field_name)):
                 false_positives += 1
 
         precision = matched_fields / (matched_fields + false_positives) if (matched_fields + false_positives) else 1.0
