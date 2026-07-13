@@ -1,0 +1,24 @@
+{
+    "company_name": "PASAR RAYA MEGA MAJU (SEMENYIH) SDN BHD",
+    "company_registration_number": "767840-W",
+    "gst_id": "000746659840",
+    "company_address": "NO 24, 25 & 26, JALAN PUSAT PERNIAGAAN BUNGA RAYA 4, PUSAT PERNIAGAAN BUNGA RAYA,",
+    "date": "03/07/2018",
+    "time": "5:22:43 PM",
+    "invoice_number": "01-283886",
+    "items": [
+        {
+            "description": "PRO BALANCE 400GM - BEFF",
+            "quantity": 4,
+            "unit_price": 4.35,
+            "amount": 17.4
+        },
+        {
+            "description": "PRO BALANCE LAMB 400GM",
+            "quantity": 3,
+            "unit_price": 4.35,
+            "amount": 13.05
+        }
+    ],
+    "total": 30.45
+}

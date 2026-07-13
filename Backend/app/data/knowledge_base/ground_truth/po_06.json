@@ -1,0 +1,32 @@
+{
+  "po_number": "PO-2023-0106",
+  "order_date": "2023-01-20",
+  "supplier_name": "Raw Materials Ltd.",
+  "supplier_address": "55 Warehouse District, Chonburi 20000",
+  "buyer_name": "Golden Rice Mill Ltd.",
+  "buyer_address": "150 Moo 3, Korat Rd, Nakhon Ratchasima 30000",
+  "delivery_date": "2023-01-28",
+  "total_amount": 53617.7,
+  "currency": "USD",
+  "payment_terms": "Net 45",
+  "line_items": [
+    {
+      "description": "Fertilizer NPK 15-15-15 50kg",
+      "quantity": 8,
+      "unit_price": 890.0,
+      "total": 7120.0
+    },
+    {
+      "description": "Fertilizer NPK 15-15-15 50kg",
+      "quantity": 41,
+      "unit_price": 890.0,
+      "total": 36490.0
+    },
+    {
+      "description": "Jasmine Rice 25kg bag",
+      "quantity": 10,
+      "unit_price": 650.0,
+      "total": 6500.0
+    }
+  ]
+}

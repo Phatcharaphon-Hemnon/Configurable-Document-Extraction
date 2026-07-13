@@ -1,0 +1,26 @@
+{
+  "po_number": "PO-2024-0102",
+  "order_date": "2024-08-20",
+  "supplier_name": "Isaan Farm Equipment Co.",
+  "supplier_address": "9 Mittraphap Rd, Khon Kaen 40000",
+  "buyer_name": "Raw Materials Ltd.",
+  "buyer_address": "55 Warehouse District, Chonburi 20000",
+  "delivery_date": "2024-09-06",
+  "total_amount": 71615.1,
+  "currency": "USD",
+  "payment_terms": "Net 30",
+  "line_items": [
+    {
+      "description": "Fertilizer NPK 15-15-15 50kg",
+      "quantity": 37,
+      "unit_price": 890.0,
+      "total": 32930.0
+    },
+    {
+      "description": "Seed Corn Hybrid 20kg",
+      "quantity": 10,
+      "unit_price": 3400.0,
+      "total": 34000.0
+    }
+  ]
+}

@@ -1,52 +1,109 @@
-from Backend.app.schemas.documents import DocumentType, ExtractionField, ValidationIssue, ValidationResult
+from __future__ import annotations
+
 from datetime import datetime
+
+from app.schemas.documents import ExtractionField, FieldDefinition, ValidationIssue, ValidationResult
+
+_AMOUNT_HINTS = ("amount", "total", "balance", "price", "sum", "due")
+_DATE_HINTS = ("date",)
 
 
 class ValidatorAgent:
-    def validate(self, doc_type: DocumentType, fields: dict[str, ExtractionField]) -> ValidationResult:
-        issues: list[ValidationIssue] = []
+    """Open-schema, non-blocking validator.
 
-        if doc_type == DocumentType.INVOICE:
-            required = ["invoice_number", "balance_due", "currency"]
-            self._validate_required(fields, required, issues)
-            self._validate_positive_amount(fields, issues)
-            self._validate_date_like(fields, ["statement_date", "payment_due_date"], issues)
-        elif doc_type == DocumentType.PURCHASE_ORDER:
-            required = ["po_number", "supplier_name", "order_date"]
-            self._validate_required(fields, required, issues)
-            self._validate_date_like(fields, ["order_date", "delivery_date"], issues)
-            self._validate_positive_amount(fields, issues)
-        elif doc_type == DocumentType.DELIVERY_NOTE:
-            required = ["delivery_note_number", "delivered_by", "delivery_date"]
-            self._validate_required(fields, required, issues)
-            self._validate_date_like(fields, ["delivery_date"], issues)
+    There is no hardcoded required-field list per document type anymore.
+    Instead:
+      - A field is only treated as "required" for THIS document if the
+        Router marked it likely_required=true when proposing suggested_fields.
+      - Missing a likely_required field, or a document with literally zero
+        extracted fields, is the only thing that can make needs_review=true.
+      - Missing any other (non-required) suggested field is informational
+        only — it lowers completeness_score but is never an "error".
+      - Generic pattern checks (based on field NAME, not a fixed catalog)
+        still run: fields whose name suggests a date are checked for a
+        parseable format; fields whose name suggests a monetary amount are
+        checked for being a positive number when present.
+    """
 
-        return ValidationResult(is_valid=not issues, issues=issues)
-
-    def _validate_required(
+    def validate(
         self,
-        fields: dict[str, ExtractionField],
-        required_fields: list[str],
-        issues: list[ValidationIssue],
-    ) -> None:
-        for field_name in required_fields:
-            if field_name not in fields:
-                issues.append(ValidationIssue(field=field_name, message="Missing required field"))
+        suggested_fields: list[FieldDefinition],
+        extracted_fields: dict[str, ExtractionField],
+        additional_fields: dict[str, ExtractionField] | None = None,
+    ) -> ValidationResult:
+        issues: list[ValidationIssue] = []
+        additional_fields = additional_fields or {}
+        all_fields: dict[str, ExtractionField] = {**extracted_fields, **additional_fields}
 
-    def _validate_positive_amount(self, fields: dict[str, ExtractionField], issues: list[ValidationIssue]) -> None:
-        amount = fields.get("balance_due") or fields.get("total_amount")
-        if amount is None:
-            return
-        if isinstance(amount.value, (int, float)) and amount.value <= 0:
-            issues.append(ValidationIssue(field="total_amount", message="Total amount must be positive"))
+        # --- Hard-ish check: nothing extracted at all ---
+        if not all_fields:
+            issues.append(
+                ValidationIssue(
+                    field="*",
+                    message="No fields could be extracted from this document at all",
+                    severity="error",
+                )
+            )
 
-    def _validate_date_like(self, fields: dict[str, ExtractionField], field_names: list[str], issues: list[ValidationIssue]) -> None:
-        for field_name in field_names:
-            field = fields.get(field_name)
-            if field is None or field.value is None:
+        # --- Missing likely_required fields (per-document, not per hardcoded type) ---
+        required_names = [f.name for f in suggested_fields if f.likely_required]
+        for name in required_names:
+            if name not in extracted_fields:
+                issues.append(
+                    ValidationIssue(
+                        field=name,
+                        message="Missing field the router flagged as required for this document",
+                        severity="error",
+                    )
+                )
+
+        # --- Generic pattern checks (name-based, not tied to a fixed schema) ---
+        for name, item in all_fields.items():
+            lower = name.lower()
+            if item.value is None:
                 continue
-            if isinstance(field.value, str) and self._parse_date(field.value) is None:
-                issues.append(ValidationIssue(field=field_name, message="Date does not match a supported format"))
+            if any(hint in lower for hint in _DATE_HINTS):
+                if isinstance(item.value, str) and self._parse_date(item.value) is None:
+                    issues.append(
+                        ValidationIssue(
+                            field=name,
+                            message="Date does not match a supported format",
+                            severity="warning",
+                        )
+                    )
+            if any(hint in lower for hint in _AMOUNT_HINTS):
+                if isinstance(item.value, (int, float)) and item.value < 0:
+                    issues.append(
+                        ValidationIssue(
+                            field=name,
+                            message="Amount should not be negative",
+                            severity="warning",
+                        )
+                    )
+
+        completeness_score = self._completeness_score(suggested_fields, extracted_fields)
+
+        # Only "error" severity issues make the document invalid; "warning"
+        # severity is informational and does not block anything.
+        has_hard_error = any(i.severity == "error" for i in issues)
+
+        return ValidationResult(
+            is_valid=not has_hard_error,
+            completeness_score=completeness_score,
+            issues=issues,
+        )
+
+    def _completeness_score(
+        self,
+        suggested_fields: list[FieldDefinition],
+        extracted_fields: dict[str, ExtractionField],
+    ) -> float:
+        if not suggested_fields:
+            # No fields were suggested at all — completeness is measured by
+            # whether we found anything, capped at 1.0 either way.
+            return 1.0 if extracted_fields else 0.0
+        found = sum(1 for f in suggested_fields if f.name in extracted_fields)
+        return round(found / len(suggested_fields), 4)
 
     def _parse_date(self, value: str):
         value = value.strip()

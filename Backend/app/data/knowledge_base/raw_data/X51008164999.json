@@ -1,0 +1,47 @@
+{
+    "company_name": "ONE ONE THREE SEAFOOD RESTAURANT SDN BHD",
+    "company_registration_number": "1120908-M",
+    "gst_id": "000670224384",
+    "company_address": "NO.1, TAMAN SRI DENGKIL, JALAN AIR HITAM 43800 DENGKIL, SELANGOR.",
+    "date": "23-06-2018",
+    "time": "20:52:16",
+    "invoice_number": "V001-541021",
+    "items": [
+        {
+            "description": "Yam Item",
+            "quantity": 1,
+            "amount": 30.0
+        },
+        {
+            "description": "S.Soup Lala Item (XL)",
+            "quantity": 1,
+            "amount": 30.0
+        },
+        {
+            "description": "Fish Item",
+            "quantity": 1,
+            "amount": 77.0
+        },
+        {
+            "description": "Omellete Item",
+            "quantity": 1,
+            "amount": 15.0
+        },
+        {
+            "description": "White Rice",
+            "quantity": 1,
+            "amount": 7.5
+        },
+        {
+            "description": "Vege Item (M)",
+            "quantity": 1,
+            "amount": 15.0
+        },
+        {
+            "description": "Beverage",
+            "quantity": 1,
+            "amount": 5.0
+        }
+    ],
+    "total": 179.5
+}

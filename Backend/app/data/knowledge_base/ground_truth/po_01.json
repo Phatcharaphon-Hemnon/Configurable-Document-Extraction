@@ -1,0 +1,38 @@
+{
+  "po_number": "PO-2024-0101",
+  "order_date": "2024-11-02",
+  "supplier_name": "Raw Materials Ltd.",
+  "supplier_address": "55 Warehouse District, Chonburi 20000",
+  "buyer_name": "Golden Rice Mill Ltd.",
+  "buyer_address": "150 Moo 3, Korat Rd, Nakhon Ratchasima 30000",
+  "delivery_date": "2024-11-22",
+  "total_amount": 137174.0,
+  "currency": "THB",
+  "payment_terms": "Due on Receipt",
+  "line_items": [
+    {
+      "description": "Seed Corn Hybrid 20kg",
+      "quantity": 14,
+      "unit_price": 3400.0,
+      "total": 47600.0
+    },
+    {
+      "description": "Irrigation Hose 50m",
+      "quantity": 13,
+      "unit_price": 1200.0,
+      "total": 15600.0
+    },
+    {
+      "description": "Fertilizer NPK 15-15-15 50kg",
+      "quantity": 52,
+      "unit_price": 890.0,
+      "total": 46280.0
+    },
+    {
+      "description": "Hand Sprayer 16L",
+      "quantity": 39,
+      "unit_price": 480.0,
+      "total": 18720.0
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "po_number": "PO-2023-0107",
+  "order_date": "2023-05-12",
+  "supplier_name": "Northern Produce Trading",
+  "supplier_address": "45 Chang Klan Rd, Chiang Mai 50100",
+  "buyer_name": "Raw Materials Ltd.",
+  "buyer_address": "55 Warehouse District, Chonburi 20000",
+  "delivery_date": "2023-06-01",
+  "total_amount": 81876.4,
+  "currency": "THB",
+  "payment_terms": "Due on Receipt",
+  "line_items": [
+    {
+      "description": "Ring Binder A4",
+      "quantity": 18,
+      "unit_price": 65.0,
+      "total": 1170.0
+    },
+    {
+      "description": "Printer Toner Cartridge",
+      "quantity": 50,
+      "unit_price": 1450.0,
+      "total": 72500.0
+    },
+    {
+      "description": "Whiteboard Markers (set of 4)",
+      "quantity": 30,
+      "unit_price": 95.0,
+      "total": 2850.0
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import argparse
 import json
 import mimetypes
 import sys
+import dataclasses
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -17,7 +18,7 @@ from Backend.app.agents.judge import JudgeAgent  # noqa: E402
 from Backend.app.agents.router import RouterAgent  # noqa: E402
 from Backend.app.core.config import get_settings  # noqa: E402
 from Backend.app.schemas.documents import DocumentType  # noqa: E402
-from Backend.app.services.gemini_client import GeminiCallError, GeminiClient  # noqa: E402
+from Backend.app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient  # noqa: E402
 
 
 def _load_image(path: Path) -> tuple[bytes, str]:
@@ -61,7 +62,7 @@ def run_router(image_path: Path, settings) -> None:
         image_bytes=image_bytes,
         image_mime_type=mime_type,
     )
-    _print_section("ROUTER — parsed RoutingDecision", decision.__dict__)
+    _print_section("ROUTER — parsed RoutingDecision", dataclasses.asdict(decision))
 
 
 def run_extractor(image_path: Path, doc_type: DocumentType, settings) -> None:
@@ -109,8 +110,8 @@ def main() -> int:
         return 1
 
     settings = get_settings()
-    if not settings.gemini_api_key.strip():
-        print("Error: GEMINI_API_KEY environment variable is not set.", file=sys.stderr)
+    if not settings.sut_genai_api_key.strip():
+        print("Error: SUT_GENAI_API_KEY environment variable is not set.", file=sys.stderr)
         return 1
 
     doc_type = DocumentType(args.doc_type)

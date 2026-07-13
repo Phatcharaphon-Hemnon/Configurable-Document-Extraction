@@ -1,0 +1,37 @@
+{
+    "company_name": "ONE ONE THREE SEAFOOD RESTAURANT SDN BHD",
+    "company_registration_number": "1120908-M",
+    "gst_id": "000670224384",
+    "company_address": "NO.1, TAMAN SRI DENGKIL, JALAN AIR HITAM 43800 DENGKIL, SELANGOR.",
+    "date": "14-06-2018",
+    "time": "20:41:44",
+    "invoice_number": "V001-540401",
+    "items": [
+        {
+            "description": "Tilapia",
+            "quantity": 1,
+            "amount": 28.0
+        },
+        {
+            "description": "Vege item",
+            "quantity": 1,
+            "amount": 16.0
+        },
+        {
+            "description": "White Rice",
+            "quantity": 1,
+            "amount": 7.0
+        },
+        {
+            "description": "Beverage",
+            "quantity": 1,
+            "amount": 5.0
+        },
+        {
+            "description": "Herbal Tea Item",
+            "quantity": 1,
+            "amount": 3.0
+        }
+    ],
+    "total": 59.0
+}

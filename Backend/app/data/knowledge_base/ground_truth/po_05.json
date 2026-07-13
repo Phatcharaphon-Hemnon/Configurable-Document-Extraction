@@ -1,0 +1,38 @@
+{
+  "po_number": "PO-2023-0105",
+  "order_date": "2023-07-02",
+  "supplier_name": "Isaan Farm Equipment Co.",
+  "supplier_address": "9 Mittraphap Rd, Khon Kaen 40000",
+  "buyer_name": "SpeedEx Logistics Co., Ltd.",
+  "buyer_address": "77 Sukhumvit Rd, Bangkok 10110",
+  "delivery_date": "2023-07-10",
+  "total_amount": 140608.7,
+  "currency": "PHP",
+  "payment_terms": "Net 30",
+  "line_items": [
+    {
+      "description": "Hand Sprayer 16L",
+      "quantity": 43,
+      "unit_price": 480.0,
+      "total": 20640.0
+    },
+    {
+      "description": "Fertilizer NPK 15-15-15 50kg",
+      "quantity": 14,
+      "unit_price": 890.0,
+      "total": 12460.0
+    },
+    {
+      "description": "Irrigation Hose 50m",
+      "quantity": 53,
+      "unit_price": 1200.0,
+      "total": 63600.0
+    },
+    {
+      "description": "Fertilizer NPK 15-15-15 50kg",
+      "quantity": 39,
+      "unit_price": 890.0,
+      "total": 34710.0
+    }
+  ]
+}
