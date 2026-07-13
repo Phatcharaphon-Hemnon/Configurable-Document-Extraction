@@ -1,0 +1,21 @@
+{
+  "delivery_note_number": "DN-2023-0105",
+  "delivery_date": "2023-07-16",
+  "delivered_by": "Kerry Express Freight",
+  "recipient_name": "SpeedEx Logistics Co., Ltd.",
+  "recipient_address": "77 Sukhumvit Rd, Bangkok 10110",
+  "sender_name": "Northern Produce Trading",
+  "sender_address": "45 Chang Klan Rd, Chiang Mai 50100",
+  "items": [
+    {
+      "description": "Seed Corn Hybrid 20kg",
+      "quantity": "51 bags"
+    },
+    {
+      "description": "Irrigation Hose 50m",
+      "quantity": "123 rolls"
+    }
+  ],
+  "total_weight": "2,246 kg",
+  "notes": "Handle with care. Fragile items included."
+}

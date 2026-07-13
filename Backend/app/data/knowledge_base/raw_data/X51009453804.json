@@ -1,0 +1,17 @@
+{
+    "company_name": "LIAN HING STATIONERY SDN BHD",
+    "company_registration_number": "162761-M",
+    "gst_id": "002139201536",
+    "company_address": "NO.32 & 33, JALAN SR 1/9, SEKSYEN 9, TAMAN SERDANG RAYA, 43300 SERI KEMBANGAN, SELANGOR DARUL EHSAN",
+    "date": "27/03/2018",
+    "invoice_number": "CS-20243",
+    "items": [
+        {
+            "description": "F/Castell 187057-75 Tack-It 75g- White (new)",
+            "quantity": 2,
+            "unit_price": 5.66,
+            "amount": 12.0
+        }
+    ],
+    "total": 12.0
+}

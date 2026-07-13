@@ -1,0 +1,29 @@
+{
+  "delivery_note_number": "DN-2024-0103",
+  "delivery_date": "2024-11-16",
+  "delivered_by": "Nim Express",
+  "recipient_name": "Golden Rice Mill Ltd.",
+  "recipient_address": "150 Moo 3, Korat Rd, Nakhon Ratchasima 30000",
+  "sender_name": "Office Depot Thailand",
+  "sender_address": "200 Rama IV Road, Bangkok 10120",
+  "items": [
+    {
+      "description": "Steel Plates 5mm",
+      "quantity": "190 sheets"
+    },
+    {
+      "description": "Hex Bolts M12",
+      "quantity": "152 boxes"
+    },
+    {
+      "description": "Galvanized Pipe 2 inch",
+      "quantity": "67 pcs"
+    },
+    {
+      "description": "Industrial Bearings 6205",
+      "quantity": "126 pcs"
+    }
+  ],
+  "total_weight": "3,534 kg",
+  "notes": "Deliver to loading dock B."
+}

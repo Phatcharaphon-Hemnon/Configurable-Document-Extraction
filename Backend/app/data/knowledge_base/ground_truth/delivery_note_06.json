@@ -1,0 +1,21 @@
+{
+  "delivery_note_number": "DN-2023-0106",
+  "delivery_date": "2023-04-11",
+  "delivered_by": "SpeedEx Courier",
+  "recipient_name": "Raw Materials Ltd.",
+  "recipient_address": "55 Warehouse District, Chonburi 20000",
+  "sender_name": "BlueSky Manufacturing",
+  "sender_address": "300 Industrial Estate, Rayong 21000",
+  "items": [
+    {
+      "description": "Industrial Bearings 6205",
+      "quantity": "65 pcs"
+    },
+    {
+      "description": "Steel Plates 5mm",
+      "quantity": "109 sheets"
+    }
+  ],
+  "total_weight": "4,178 kg",
+  "notes": "Keep dry, do not stack more than 3 high."
+}
