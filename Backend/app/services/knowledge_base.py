@@ -87,6 +87,40 @@ class KnowledgeBaseRepository:
         ]
 
     # ------------------------------------------------------------------
+    # Catalog field lookup
+    # ------------------------------------------------------------------
+
+    def get_catalog_fields(self, doc_type: str) -> list[FieldDefinition]:
+        """Return the list of :class:`FieldDefinition` objects for *doc_type*
+        from the on-disk field catalog, or ``[]`` if no matching catalog file
+        exists.
+
+        Matching is case-insensitive against the ``doc_type`` value stored in
+        each catalog file (or derived from its filename).  Never raises.
+        """
+        base = self.base_path / "field_catalog"
+        if not base.exists():
+            return []
+
+        target = doc_type.lower().strip()
+        for path in sorted(base.glob("*.json")):
+            payload = self._load(path)
+            if not payload:
+                continue
+            # Derive the doc_type the same way _parse_template does
+            file_doc_type = str(
+                payload.get("doc_type") or path.stem.replace("_fields", "")
+            ).strip().lower()
+            if file_doc_type != target:
+                continue
+            # Re-use _parse_template to get a fully-parsed TemplateSchema
+            template = self._parse_template(path, payload)
+            if template is not None:
+                return list(template.fields)
+
+        return []
+
+    # ------------------------------------------------------------------
     # Few-shot examples
     # ------------------------------------------------------------------
 

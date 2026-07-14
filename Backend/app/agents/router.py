@@ -1,11 +1,44 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from app.core.config import Settings
 from app.schemas.documents import DocumentLanguage, FieldDefinition
 from app.schemas.gemini_schemas import RoutingResponseSchema
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
+
+if TYPE_CHECKING:
+    from app.services.knowledge_base import KnowledgeBaseRepository
+
+
+def _normalize_name(name: str) -> str:
+    """Normalize a field name for catalog-matching purposes.
+
+    Rules (order matters):
+    1. Strip leading/trailing whitespace.
+    2. Lowercase.
+    3. Replace any run of whitespace or hyphens with a single underscore.
+    4. Collapse multiple consecutive underscores to one.
+
+    This intentionally does NOT perform synonym mapping — "Merchant Name"
+    and "vendor_name" will NOT match.  Only case/spacing differences are
+    bridged.
+
+    Examples::
+
+        >>> _normalize_name("Total Amount")
+        'total_amount'
+        >>> _normalize_name("  Invoice-Number  ")
+        'invoice_number'
+        >>> _normalize_name("total_amount")
+        'total_amount'
+    """
+    s = name.strip().lower()
+    s = re.sub(r"[\s\-]+", "_", s)
+    s = re.sub(r"_+", "_", s)
+    return s
 
 
 @dataclass(slots=True)
@@ -24,9 +57,81 @@ class RouterAgent:
     the Extractor and Validator then use instead of a hardcoded catalog.
     """
 
-    def __init__(self, settings: Settings) -> None:
+    def __init__(
+        self,
+        settings: Settings,
+        knowledge_base: "KnowledgeBaseRepository | None" = None,
+    ) -> None:
         self.settings = settings
         self._client = GeminiClient(settings)
+        self._knowledge_base = knowledge_base
+
+    @staticmethod
+    def _reconcile_with_catalog(
+        ai_fields: list[FieldDefinition],
+        catalog_fields: list[FieldDefinition],
+    ) -> list[FieldDefinition]:
+        """Merge AI-proposed fields with the on-disk field catalog.
+
+        Algorithm
+        ---------
+        a. Build a ``{normalized_name: FieldDefinition}`` lookup from
+           *catalog_fields* using :func:`_normalize_name`.
+        b. For each field in *ai_fields*: if its normalized name matches a
+           catalog entry, replace **only** ``name`` and ``likely_required``
+           with the catalog's canonical values — the AI's ``description`` is
+           kept because it is often more specific/contextual.  Track which
+           catalog names were matched.
+        c. Append any catalog field that was NOT matched by an AI-proposed
+           field, using the catalog's ``name``, ``required`` as
+           ``likely_required``, and ``validation_rule`` (if present) as the
+           ``description`` — so the Extractor still looks for it even if the
+           Router's own guess missed it.
+        d. AI-proposed fields that don't match any catalog entry are left
+           as-is (open-schema behaviour — novel fields are preserved).
+        e. The input lists are never mutated.
+        """
+        # Build normalized lookup from catalog
+        catalog_lookup: dict[str, FieldDefinition] = {
+            _normalize_name(cf.name): cf for cf in catalog_fields
+        }
+
+        reconciled: list[FieldDefinition] = []
+        matched_catalog_names: set[str] = set()
+
+        for ai_field in ai_fields:
+            norm = _normalize_name(ai_field.name)
+            if norm in catalog_lookup:
+                catalog_entry = catalog_lookup[norm]
+                matched_catalog_names.add(norm)
+                # Override name + likely_required from catalog; keep AI description
+                reconciled.append(
+                    FieldDefinition(
+                        name=catalog_entry.name,
+                        description=ai_field.description,
+                        likely_required=catalog_entry.likely_required,
+                        type=ai_field.type,
+                        validation_rule=ai_field.validation_rule,
+                    )
+                )
+            else:
+                # No catalog match — keep the AI field unchanged (open-schema)
+                reconciled.append(ai_field.model_copy())
+
+        # Append catalog fields the AI never proposed
+        for norm_key, catalog_entry in catalog_lookup.items():
+            if norm_key not in matched_catalog_names:
+                reconciled.append(
+                    FieldDefinition(
+                        name=catalog_entry.name,
+                        description=catalog_entry.validation_rule,
+                        likely_required=catalog_entry.likely_required,
+                        type=catalog_entry.type,
+                        validation_rule=catalog_entry.validation_rule,
+                    )
+                )
+
+        return reconciled
 
     def classify(
         self,
@@ -87,6 +192,15 @@ class RouterAgent:
             )
             for f in parsed.suggested_fields
         ]
+
+        # Reconcile with the on-disk field catalog when a knowledge base is
+        # available.  For doc types with no matching catalog file this is a
+        # no-op (get_catalog_fields returns []), preserving open-schema
+        # behaviour for novel document types.
+        if self._knowledge_base is not None:
+            catalog_fields = self._knowledge_base.get_catalog_fields(parsed.doc_type)
+            if catalog_fields:
+                suggested = self._reconcile_with_catalog(suggested, catalog_fields)
 
         return RoutingDecision(
             doc_type=parsed.doc_type,
