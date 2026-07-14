@@ -34,12 +34,12 @@ if isinstance(settings.frontend_origin_list, list):
     origins.extend(settings.frontend_origin_list)
 elif isinstance(settings.frontend_origin_list, str):
     # Fallback if your config parses a comma-separated string
-    origins.extend([o.strip() for f in settings.frontend_origin_list.split(",")])
+    origins.extend([o.strip() for o in settings.frontend_origin_list.split(",")])
 
 # ⚠️ MANUALLY ADD YOUR EXACT VERCEL PRODUCTION DOMAINS BELOW ⚠️
 # Replace these strings with your active .vercel.app domain
 origins.extend([
-    "https://configurable-document-extraction.vercel.app", 
+    "https://configurable-document-extraction.vercel.app",
     "https://configurable-document-extraction-git-makefrontend-peter-o-manufactor.vercel.app"
 ])
 
@@ -48,7 +48,11 @@ origins = list(dict.fromkeys(origins))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Uses the comprehensive verified list
+    allow_origins=origins,  # Exact-match list (production + configured origins)
+    # Also allow any Vercel preview deployment for this project, since Vercel
+    # generates a new unique hash-based URL (e.g. ...-ltjrc0rwh-...) on every
+    # push. Without this, CORS breaks on every single preview deploy.
+    allow_origin_regex=r"https://configurable-document-extraction.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
