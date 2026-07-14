@@ -44,12 +44,12 @@ class UploadedFilePart:
 class DocumentExtractionService:
     def __init__(self, settings: Settings, job_store: InMemoryJobStore | None = None) -> None:
         self.settings = settings
-        self.router = RouterAgent(settings)
+        self.knowledge_base = KnowledgeBaseRepository(Path(settings.knowledge_base_path))
+        self.router = RouterAgent(settings, knowledge_base=self.knowledge_base)
         self.extractor = OpenSchemaExtractor(settings)
         self.validator = ValidatorAgent()
         self.judge = JudgeAgent(settings)
         self.job_store = job_store or InMemoryJobStore()
-        self.knowledge_base = KnowledgeBaseRepository(Path(settings.knowledge_base_path))
 
     def list_templates(self) -> list[Any]:
         return self.knowledge_base.list_templates()
