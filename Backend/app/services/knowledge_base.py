@@ -120,6 +120,28 @@ class KnowledgeBaseRepository:
 
         return []
 
+    def list_catalog_doc_types(self) -> list[str]:
+        """Return the list of doc_type values from all field catalog JSON files.
+
+        Derives doc_type the same way :meth:`_parse_template` does: prefers an
+        explicit ``doc_type`` key in the JSON, otherwise strips ``_fields``
+        from the filename stem.
+        """
+        base = self.base_path / "field_catalog"
+        if not base.is_dir():
+            return []
+        doc_types: list[str] = []
+        for path in sorted(base.glob("*.json")):
+            payload = self._load(path)
+            if not payload:
+                continue
+            doc_type = str(
+                payload.get("doc_type") or path.stem.replace("_fields", "")
+            ).strip()
+            if doc_type:
+                doc_types.append(doc_type)
+        return doc_types
+
     # ------------------------------------------------------------------
     # Few-shot examples
     # ------------------------------------------------------------------

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from app.core.config import Settings
 from app.schemas.documents import DocumentLanguage, FieldDefinition
-from app.schemas.gemini_schemas import RoutingResponseSchema
+from app.schemas.llm_schemas import RoutingResponseSchema
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
 if TYPE_CHECKING:
@@ -48,23 +48,59 @@ class RoutingDecision:
     reason: str
     confidence: float = 1.0
     suggested_fields: list[FieldDefinition] = field(default_factory=list)
+    out_of_catalog: bool = False
+
+
+# Alias mapping for strict mode: common LLM-returned doc_type variants that
+# should map to a catalog doc_type.  Keys are lowercase.
+_STRICT_ALIASES: dict[str, str] = {
+    "purchase_order": "po",
+    "purchase order": "po",
+    "p.o.": "po",
+    "invoices": "invoice",
+    "delivery note": "delivery_note",
+    "dn": "delivery_note",
+}
 
 
 class RouterAgent:
-    """Open-schema router. Does NOT restrict documents to a fixed type list —
-    it proposes whatever document type it recognizes and, per document, a
-    list of fields it expects to find (with a likely_required flag), which
-    the Extractor and Validator then use instead of a hardcoded catalog.
+    """Document-classification router.
+
+    Supports two modes controlled by ``schema_mode``:
+
+    * **open** (default) — proposes whatever document type it recognizes and a
+      list of fields per document, with no restriction on doc_type values.
+    * **strict** — constrains doc_type to only the types found in the
+      knowledge-base field catalog (e.g. invoice, po, delivery_note).  If the
+      model returns an out-of-catalog type, an alias lookup is attempted before
+      falling back to ``out_of_catalog=True``.
     """
 
     def __init__(
         self,
         settings: Settings,
         knowledge_base: "KnowledgeBaseRepository | None" = None,
+        schema_mode: str = "open",
     ) -> None:
         self.settings = settings
+        self.schema_mode = schema_mode
         self._client = GeminiClient(settings)
         self._knowledge_base = knowledge_base
+
+        # Derive allowed doc types from catalog when in strict mode.
+        self._allowed_doc_types: list[str] = []
+        if self.schema_mode == "strict":
+            if self._knowledge_base is None:
+                raise ValueError(
+                    "SCHEMA_MODE=strict requires a knowledge base with a "
+                    "field_catalog directory"
+                )
+            self._allowed_doc_types = self._knowledge_base.list_catalog_doc_types()
+            if not self._allowed_doc_types:
+                raise ValueError(
+                    "SCHEMA_MODE=strict requires at least one field catalog "
+                    "JSON file in the knowledge base field_catalog directory"
+                )
 
     @staticmethod
     def _reconcile_with_catalog(
@@ -133,14 +169,7 @@ class RouterAgent:
 
         return reconciled
 
-    def classify(
-        self,
-        filename: str,
-        content_type: str | None = None,
-        text_hint: str | None = None,
-        image_bytes: bytes | None = None,
-        image_mime_type: str | None = None,
-    ) -> RoutingDecision:
+    def _build_open_prompt(self, filename: str, text_hint: str | None) -> str:
         prompt_parts = [
             "You are a document classification router with an OPEN, unrestricted schema.",
             "Look at this document and identify what TYPE of document it is, in your own words "
@@ -158,23 +187,56 @@ class RouterAgent:
         ]
         if text_hint and text_hint.strip():
             prompt_parts.append(f"Document text hint:\n{text_hint.strip()}")
+        return "\n\n".join(prompt_parts)
 
-        if image_bytes is not None:
-            prompt_parts.append("Analyze the attached document image to determine its type, language, and fields.")
-        elif not (text_hint and text_hint.strip()):
+    def _build_strict_prompt(self, filename: str, text_hint: str | None) -> str:
+        allowed_str = ", ".join(self._allowed_doc_types)
+        prompt_parts = [
+            "You are a document classification router.",
+            f"Look at this document and classify it as exactly one of: {allowed_str}.",
+            "Also detect the primary language: en (English), th (Thai), or other.",
+            "Propose a list of fields you would expect to find on a document of this type, based "
+            "on what you can actually see. For each suggested field, give a short name, a brief "
+            "description, and mark likely_required=true only if the document would be essentially "
+            "useless/unidentifiable without that field (e.g. an invoice number, a total amount). "
+            "Most fields should be likely_required=false.",
+            "IMPORTANT — Field naming convention: When you see a value on the document that "
+            "is a more specific variant of a common concept, use the short generic field name "
+            "and put the specific nuance in the description. For example:\n"
+            '  - "Grand Total (incl. GST)" on the document → name: "total_amount", '
+            'description: "Grand total including GST"\n'
+            '  - "Ship-to Address" on the document → name: "delivery_address", '
+            'description: "Shipping destination address"\n'
+            "Do NOT invent qualified names like \"total_amount_incl_gst\" or "
+            "\"ship_to_address\" — keep names generic so they match the field catalog.",
+            "Base your decision on the actual document content — not the filename.",
+            "Return your confidence (0.0–1.0) reflecting how certain you are.",
+            f"Filename (metadata only, do not rely on it): {filename}",
+        ]
+        if text_hint and text_hint.strip():
+            prompt_parts.append(f"Document text hint:\n{text_hint.strip()}")
+        return "\n\n".join(prompt_parts)
+
+    async def classify(
+        self,
+        filename: str,
+        text_hint: str | None = None,
+    ) -> RoutingDecision:
+        if not (text_hint and text_hint.strip()):
             raise GeminiCallError(
-                "Router requires either document text or an image to classify the document"
+                "Router requires document text to classify the document"
             )
 
-        prompt = "\n\n".join(prompt_parts)
+        if self.schema_mode == "strict":
+            prompt = self._build_strict_prompt(filename, text_hint)
+        else:
+            prompt = self._build_open_prompt(filename, text_hint)
 
         try:
-            result = self._client.generate_structured(
+            result = await self._client.generate_structured(
                 model=self.settings.router_model_name,
                 prompt=prompt,
                 response_schema=RoutingResponseSchema,
-                image_bytes=image_bytes,
-                image_mime_type=image_mime_type or content_type,
             )
         except GeminiCallError:
             raise
@@ -183,6 +245,24 @@ class RouterAgent:
 
         parsed = result.parsed
         assert isinstance(parsed, RoutingResponseSchema)
+
+        doc_type = parsed.doc_type
+        out_of_catalog = False
+
+        if self.schema_mode == "strict":
+            norm_dt = doc_type.strip().lower()
+            allowed_normalized = {dt.strip().lower(): dt for dt in self._allowed_doc_types}
+            
+            if norm_dt in allowed_normalized:
+                doc_type = allowed_normalized[norm_dt]
+            elif norm_dt in _STRICT_ALIASES:
+                alias = _STRICT_ALIASES[norm_dt]
+                if alias in allowed_normalized:
+                    doc_type = allowed_normalized[alias]
+                else:
+                    out_of_catalog = True
+            else:
+                out_of_catalog = True
 
         suggested = [
             FieldDefinition(
@@ -198,14 +278,15 @@ class RouterAgent:
         # no-op (get_catalog_fields returns []), preserving open-schema
         # behaviour for novel document types.
         if self._knowledge_base is not None:
-            catalog_fields = self._knowledge_base.get_catalog_fields(parsed.doc_type)
+            catalog_fields = self._knowledge_base.get_catalog_fields(doc_type)
             if catalog_fields:
                 suggested = self._reconcile_with_catalog(suggested, catalog_fields)
 
         return RoutingDecision(
-            doc_type=parsed.doc_type,
+            doc_type=doc_type,
             language=parsed.language,
             reason=parsed.reason,
             confidence=parsed.confidence,
             suggested_fields=suggested,
+            out_of_catalog=out_of_catalog,
         )
