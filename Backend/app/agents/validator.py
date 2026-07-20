@@ -30,6 +30,8 @@ class ValidatorAgent:
         suggested_fields: list[FieldDefinition],
         extracted_fields: dict[str, ExtractionField],
         additional_fields: dict[str, ExtractionField] | None = None,
+        schema_mode: str = "open",
+        catalog_fields: list[FieldDefinition] | None = None,
     ) -> ValidationResult:
         issues: list[ValidationIssue] = []
         additional_fields = additional_fields or {}
@@ -45,19 +47,32 @@ class ValidatorAgent:
                 )
             )
 
-        # --- Missing likely_required fields (per-document, not per hardcoded type) ---
-        required_names = [f.name for f in suggested_fields if f.likely_required]
+        # --- Missing required fields ---
+        if schema_mode == "strict":
+            if catalog_fields is not None:
+                required_names = [f.name for f in catalog_fields if f.likely_required]
+            else:
+                required_names = [f.name for f in suggested_fields if f.likely_required]
+        else:
+            required_names = [f.name for f in suggested_fields if f.likely_required]
+
         for name in required_names:
             if name not in extracted_fields:
+                msg = (
+                    f"Missing required field '{name}' from catalog"
+                    if schema_mode == "strict"
+                    else "Missing field the router flagged as required for this document"
+                )
                 issues.append(
                     ValidationIssue(
                         field=name,
-                        message="Missing field the router flagged as required for this document",
+                        message=msg,
                         severity="error",
                     )
                 )
 
-        # --- Generic pattern checks (name-based, not tied to a fixed schema) ---
+        # --- Generic pattern checks ---
+        severity_format = "error" if schema_mode == "strict" else "warning"
         for name, item in all_fields.items():
             lower = name.lower()
             if item.value is None:
@@ -68,7 +83,7 @@ class ValidatorAgent:
                         ValidationIssue(
                             field=name,
                             message="Date does not match a supported format",
-                            severity="warning",
+                            severity=severity_format,
                         )
                     )
             if any(hint in lower for hint in _AMOUNT_HINTS):
@@ -77,7 +92,7 @@ class ValidatorAgent:
                         ValidationIssue(
                             field=name,
                             message="Amount should not be negative",
-                            severity="warning",
+                            severity=severity_format,
                         )
                     )
 

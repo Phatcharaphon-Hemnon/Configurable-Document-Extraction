@@ -4,7 +4,7 @@ import json
 
 from app.core.config import Settings
 from app.schemas.documents import JudgeIssue, JudgeResult
-from app.schemas.gemini_schemas import JudgeResponseSchema
+from app.schemas.llm_schemas import JudgeResponseSchema
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
 
@@ -13,15 +13,13 @@ class JudgeAgent:
         self.settings = settings
         self._client = GeminiClient(settings)
 
-    def evaluate(
+    async def evaluate(
         self,
         prediction: dict[str, object],
         source_text: str | None = None,
-        image_bytes: bytes | None = None,
-        image_mime_type: str | None = None,
     ) -> JudgeResult:
-        if not source_text and image_bytes is None:
-            raise GeminiCallError("Judge requires source text and/or the original document image")
+        if not source_text or not source_text.strip():
+            raise GeminiCallError("Judge requires source text")
 
         prompt_parts = [
             "You are a strict document-extraction judge.",
@@ -29,23 +27,15 @@ class JudgeAgent:
             "Penalize hallucinated, unsupported, or incorrect values.",
             "Flag fields whose values cannot be verified in the source document.",
             f"Predicted fields: {json.dumps(prediction, ensure_ascii=False, indent=2)}",
+            f"Source text:\n{source_text.strip()}",
         ]
-        if source_text and source_text.strip():
-            prompt_parts.append(f"Source text (OCR/Hint):\n{source_text.strip()}")
-        if image_bytes is not None:
-            prompt_parts.append(
-                "The original document image is attached. Cross-check every predicted field against what is visible. "
-                "The image is the ground truth."
-            )
 
         prompt = "\n\n".join(prompt_parts)
 
-        result = self._client.generate_structured(
+        result = await self._client.generate_structured(
             model=self.settings.judge_model_name,
             prompt=prompt,
             response_schema=JudgeResponseSchema,
-            image_bytes=image_bytes,
-            image_mime_type=image_mime_type,
         )
 
         parsed = result.parsed
