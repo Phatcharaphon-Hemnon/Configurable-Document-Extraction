@@ -1,0 +1,1 @@
+ทำระบบEvaluate โดยการลบ Evaluaation Tab เเละให้เวลารันเสร็จ เเสดง Evaluate Score ออกมา ใช้วิธี RAG triad of metric โดยดึงมาจาก /Ground_truth เพื่อ เปรียบเทียบ โดยใช้ชื่อไฟล์เหมือนกัน เเละ check Trigger intentional bad doc → validation + judge flags เเละให้Fixed เเค่ document type เเละ ให้ใช้open schema เวลา extractor 
