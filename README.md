@@ -46,12 +46,18 @@ flowchart LR
 
 Copy `.env.example` to `.env` if you want to change defaults.
 
+### Schema Mode Selection
+The system supports two runtime modes controlled by the `SCHEMA_MODE` environment variable:
+- `"strict"` (default): Restores the original 3-document-type specification (invoice, purchase_order, delivery_note) with strict validation. If a required catalog field is missing or format checks (dates, amounts) fail, validation fails (`is_valid = False`, `severity = "error"`) and flags the document for review.
+- `"open"`: Retains the open-schema architecture where `doc_type` is free-form and validation is soft/informational (warnings only, does not block the document).
+
 Important variables:
 
 - `APP_NAME`
 - `APP_ENV`
 - `APP_HOST`
 - `APP_PORT`
+- `SCHEMA_MODE` (values: `"strict"` or `"open"`, default: `"strict"`)
 - `SUPPORTED_DOC_TYPES`
 - `SUPPORTED_LANGUAGES`
 - `KNOWLEDGE_BASE_PATH`

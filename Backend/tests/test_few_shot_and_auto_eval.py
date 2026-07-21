@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, AsyncMock, patch
 
 import pytest
 
@@ -183,7 +183,8 @@ def _make_extraction_result(extracted: dict, additional: dict | None = None) -> 
 class TestAutoEvaluation:
     """Tests for the auto-evaluation wiring in _extract_one_page."""
 
-    def test_auto_evaluation_is_none_when_no_ground_truth(self, tmp_path: Path) -> None:
+    @pytest.mark.anyio
+    async def test_auto_evaluation_is_none_when_no_ground_truth(self, tmp_path: Path) -> None:
         """When no ground-truth file matches the uploaded filename, auto_evaluation is None."""
         service = _make_service(tmp_path)
 
@@ -201,21 +202,20 @@ class TestAutoEvaluation:
         judge_result = JudgeResult(score=0.9, issues=[], notes="ok")
 
         with (
-            patch.object(service, "_extract_text_from_image", return_value="some text"),
-            patch.object(service.router, "classify", return_value=routing),
-            patch.object(service.extractor, "extract", return_value=(extracted_fields, additional_fields)),
+            patch.object(service.router, "classify", new_callable=AsyncMock, return_value=routing),
+            patch.object(service.extractor, "extract", new_callable=AsyncMock, return_value=(extracted_fields, additional_fields)),
             patch.object(service.validator, "validate", return_value=validation),
-            patch.object(service.judge, "evaluate", return_value=judge_result),
+            patch.object(service.judge, "evaluate", new_callable=AsyncMock, return_value=judge_result),
         ):
-            result = service._extract_one_page(
+            result = await service._extract_one_page(
                 filename="no_match_document.pdf",
-                image_bytes=b"fake",
-                image_mime_type="image/png",
+                page_text="some text",
             )
 
         assert result.auto_evaluation is None
 
-    def test_auto_evaluation_populated_when_ground_truth_matches(self, tmp_path: Path) -> None:
+    @pytest.mark.anyio
+    async def test_auto_evaluation_populated_when_ground_truth_matches(self, tmp_path: Path) -> None:
         """When a ground-truth file matches the filename stem, auto_evaluation is set."""
         # Write a ground-truth file that will match "invoice_01.pdf"
         gt = {
@@ -245,16 +245,14 @@ class TestAutoEvaluation:
         judge_result = JudgeResult(score=0.95, issues=[], notes="ok")
 
         with (
-            patch.object(service, "_extract_text_from_image", return_value="some text"),
-            patch.object(service.router, "classify", return_value=routing),
-            patch.object(service.extractor, "extract", return_value=(extracted_fields, additional_fields)),
+            patch.object(service.router, "classify", new_callable=AsyncMock, return_value=routing),
+            patch.object(service.extractor, "extract", new_callable=AsyncMock, return_value=(extracted_fields, additional_fields)),
             patch.object(service.validator, "validate", return_value=validation),
-            patch.object(service.judge, "evaluate", return_value=judge_result),
+            patch.object(service.judge, "evaluate", new_callable=AsyncMock, return_value=judge_result),
         ):
-            result = service._extract_one_page(
+            result = await service._extract_one_page(
                 filename="invoice_01.pdf",
-                image_bytes=b"fake",
-                image_mime_type="image/png",
+                page_text="some text",
             )
 
         assert result.auto_evaluation is not None
@@ -263,7 +261,8 @@ class TestAutoEvaluation:
         assert result.auto_evaluation.recall == pytest.approx(1.0)
         assert result.auto_evaluation.mismatches == []
 
-    def test_auto_evaluation_partial_match(self, tmp_path: Path) -> None:
+    @pytest.mark.anyio
+    async def test_auto_evaluation_partial_match(self, tmp_path: Path) -> None:
         """Partial prediction match produces correct F1 < 1.0."""
         gt = {
             "invoice_number": "INV-001",
@@ -291,16 +290,14 @@ class TestAutoEvaluation:
         judge_result = JudgeResult(score=0.6, issues=[], notes="partial")
 
         with (
-            patch.object(service, "_extract_text_from_image", return_value="text"),
-            patch.object(service.router, "classify", return_value=routing),
-            patch.object(service.extractor, "extract", return_value=(extracted_fields, additional_fields)),
+            patch.object(service.router, "classify", new_callable=AsyncMock, return_value=routing),
+            patch.object(service.extractor, "extract", new_callable=AsyncMock, return_value=(extracted_fields, additional_fields)),
             patch.object(service.validator, "validate", return_value=validation),
-            patch.object(service.judge, "evaluate", return_value=judge_result),
+            patch.object(service.judge, "evaluate", new_callable=AsyncMock, return_value=judge_result),
         ):
-            result = service._extract_one_page(
+            result = await service._extract_one_page(
                 filename="invoice_02.pdf",
-                image_bytes=b"fake",
-                image_mime_type="image/png",
+                page_text="text",
             )
 
         assert result.auto_evaluation is not None
@@ -309,7 +306,8 @@ class TestAutoEvaluation:
         # "vendor_name" is wrong → mismatch
         assert len(result.auto_evaluation.mismatches) >= 1
 
-    def test_auto_evaluation_uses_evaluate_method_not_judge(self, tmp_path: Path) -> None:
+    @pytest.mark.anyio
+    async def test_auto_evaluation_uses_evaluate_method_not_judge(self, tmp_path: Path) -> None:
         """Auto-evaluation must call self.evaluate(), NOT self.judge.evaluate()."""
         gt = {"invoice_number": "INV-001"}
         _write_json(tmp_path / "ground_truth" / "invoice_03.json", gt)
@@ -329,17 +327,15 @@ class TestAutoEvaluation:
         judge_result = JudgeResult(score=0.9, issues=[], notes="ok")
 
         with (
-            patch.object(service, "_extract_text_from_image", return_value="text"),
-            patch.object(service.router, "classify", return_value=routing),
-            patch.object(service.extractor, "extract", return_value=(extracted_fields, additional_fields)),
+            patch.object(service.router, "classify", new_callable=AsyncMock, return_value=routing),
+            patch.object(service.extractor, "extract", new_callable=AsyncMock, return_value=(extracted_fields, additional_fields)),
             patch.object(service.validator, "validate", return_value=validation),
-            patch.object(service.judge, "evaluate", return_value=judge_result) as mock_judge_eval,
+            patch.object(service.judge, "evaluate", new_callable=AsyncMock, return_value=judge_result) as mock_judge_eval,
             patch.object(service, "evaluate", wraps=service.evaluate) as mock_local_eval,
         ):
-            result = service._extract_one_page(
+            result = await service._extract_one_page(
                 filename="invoice_03.pdf",
-                image_bytes=b"fake",
-                image_mime_type="image/png",
+                page_text="text",
             )
 
         # Local evaluate() was called once for auto-evaluation
