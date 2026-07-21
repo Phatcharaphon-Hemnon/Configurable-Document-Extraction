@@ -6,7 +6,7 @@ from typing import Any
 
 from app.core.config import Settings
 from app.schemas.documents import ExtractionField, FieldDefinition
-from app.schemas.gemini_schemas import ExtractionResponseSchema
+from app.schemas.llm_schemas import ExtractionResponseSchema
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
 
@@ -16,8 +16,6 @@ class ExtractionContext:
     doc_type: str
     suggested_fields: list[FieldDefinition] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
-    image_bytes: bytes | None = None
-    image_mime_type: str | None = None
     few_shot_examples: list[dict] | None = None
 
 
@@ -56,12 +54,11 @@ class OpenSchemaExtractor:
         self.settings = settings
         self._client = GeminiClient(settings)
 
-    def extract(self, context: ExtractionContext) -> tuple[dict[str, ExtractionField], dict[str, ExtractionField]]:
-        has_image = context.image_bytes is not None and context.image_mime_type is not None
+    async def extract(self, context: ExtractionContext) -> tuple[dict[str, ExtractionField], dict[str, ExtractionField]]:
         has_text = bool(context.text.strip())
 
-        if not has_image and not has_text:
-            raise GeminiCallError("Extractor requires either document text or an image")
+        if not has_text:
+            raise GeminiCallError("Extractor requires document text")
 
         suggested_names = {f.name for f in context.suggested_fields}
         fields_desc = {
@@ -92,44 +89,48 @@ class OpenSchemaExtractor:
             "too as an extra entry — do not discard information just because it wasn't suggested.\n"
             "- For numeric amounts, return the number without currency symbols.\n"
             "- For dates, preserve the original format shown in the document.\n"
-            "- For itemized lists (line items, products, etc.), return an array of objects as the value.\n"
+            "- For itemized lists (line items, products, etc.), return an array of objects — "
+            "one object per row — even if there is only a single row. Include whatever of "
+            "description/quantity/unit_price/amount is present in that row.\n"
             "- Omit a suggested field entirely if it is truly not present — do NOT invent or "
             "hallucinate a value to fill it in.\n"
+            "\n"
+            "Extraction procedure:\n"
+            "1. Go through the suggested field list ONE BY ONE and actively check the document "
+            "for each — do not stop after finding the obvious ones (name, date, total). Read "
+            "the WHOLE document, including footers, small-print tables, and summary boxes, "
+            "before deciding a field is absent.\n"
+            "2. Pay special attention to these commonly-missed field types:\n"
+            "   - Tax/VAT/GST breakdown tables (e.g. 'GST Summary', 'Tax Summary'): these "
+            "usually contain the subtotal (amount before tax) and the tax amount separately "
+            "from the grand total. Extract both, even if the grand total is already captured "
+            "elsewhere.\n"
+            "   - Currency: infer from explicit symbols/codes (RM, MYR, $, USD, ฿, THB, €, "
+            "EUR, etc.) or from strong contextual clues (e.g. a Malaysian company registration "
+            "number or 'GST ID' implies MYR). If there is genuinely no clue, omit the field "
+            "rather than guessing.\n"
+            "   - Tax ID / GST ID / VAT number: often printed near the seller's name or "
+            "address, sometimes labeled separately from the company registration number.\n"
+            "   - Payment mechanics: amount paid/tendered and change given, if shown.\n"
+            "3. Before finalizing your answer, re-check the document once more against the "
+            "suggested field list: for every suggested field you have NOT extracted, confirm it "
+            "is truly absent rather than just easy to miss.\n"
         )
 
-        if has_image:
-            prompt = (
-                "You are a document data extraction expert operating with an OPEN schema — "
-                "this document type may not match any fixed catalog.\n\n"
-                f"Document type (as classified by the router): {context.doc_type}\n\n"
-                f"Suggested fields to look for:\n{fields_json}\n\n"
-                f"{few_shot_block}"
-                f"{base_rules}"
-                "- The image is the ground truth; use any provided text only as a hint.\n"
-            )
-            if has_text:
-                prompt += f"\nDocument text (OCR/Hint):\n{context.text}\n"
-            image_bytes = context.image_bytes
-            image_mime_type = context.image_mime_type
-        else:
-            prompt = (
-                "You are a document data extraction expert operating with an OPEN schema — "
-                "this document type may not match any fixed catalog.\n\n"
-                f"Document type (as classified by the router): {context.doc_type}\n\n"
-                f"Suggested fields to look for:\n{fields_json}\n\n"
-                f"{few_shot_block}"
-                f"{base_rules}"
-                f"\nDocument text:\n{context.text}\n"
-            )
-            image_bytes = None
-            image_mime_type = None
+        prompt = (
+            "You are a document data extraction expert operating with an OPEN schema — "
+            "this document type may not match any fixed catalog.\n\n"
+            f"Document type (as classified by the router): {context.doc_type}\n\n"
+            f"Suggested fields to look for:\n{fields_json}\n\n"
+            f"{few_shot_block}"
+            f"{base_rules}"
+            f"\nDocument text:\n{context.text}\n"
+        )
 
-        result = self._client.generate_structured(
+        result = await self._client.generate_structured(
             model=self.settings.recommended_extraction_model_name,
             prompt=prompt,
             response_schema=ExtractionResponseSchema,
-            image_bytes=image_bytes,
-            image_mime_type=image_mime_type,
         )
 
         parsed = result.parsed

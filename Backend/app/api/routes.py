@@ -21,7 +21,7 @@ def home() -> dict[str, object]:
         "name": settings.app_name,
         "status": "ok",
         "frontend_origins": settings.frontend_origin_list,
-        "schema_mode": "open",  # doc types and fields are no longer a fixed catalog
+        "schema_mode": settings.schema_mode,  # reflect the active mode
         "recommended_extraction_model": {
             "name": settings.recommended_extraction_model_name,
             "display_name": settings.recommended_extraction_model_display_name,
@@ -60,20 +60,21 @@ async def extract_document(files: list[UploadFile] = File(...)) -> FileExtractio
         )
 
     try:
-        return service.extract_group(parts)
+        return await service.extract_group(parts)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @router.get("/templates")
 def list_templates() -> dict[str, object]:
-    # NOTE: with the open-schema change, there is no fixed catalog of
-    # supported document types anymore — this now returns whatever the
-    # knowledge base repository has on file (e.g. few-shot examples), if
-    # anything. Kept for backward compatibility with the API contract.
+    templates = service.list_templates()
+    if settings.schema_mode == "strict":
+        base = service.knowledge_base.base_path / "field_catalog"
+        if not base.exists() or not list(base.glob("*.json")):
+            templates = []
     return {
-        "schema_mode": "open",
-        "templates": service.list_templates(),
+        "schema_mode": settings.schema_mode,
+        "templates": templates,
     }
 
 

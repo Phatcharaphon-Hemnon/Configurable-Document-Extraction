@@ -4,6 +4,9 @@ from pathlib import Path
 from typing import Any
 
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 from app.agents.extractors import ExtractionContext, OpenSchemaExtractor
 from app.agents.judge import JudgeAgent
@@ -25,11 +28,7 @@ from app.schemas.documents import (
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 from app.services.job_store import InMemoryJobStore
 from app.services.knowledge_base import KnowledgeBaseRepository
-
-try:
-    import fitz  # PyMuPDF
-except ImportError:  # pragma: no cover - surfaced clearly at call time instead
-    fitz = None
+from app.services.llamaparse_client import LlamaParseClient
 
 
 class UploadedFilePart:
@@ -45,7 +44,12 @@ class DocumentExtractionService:
     def __init__(self, settings: Settings, job_store: InMemoryJobStore | None = None) -> None:
         self.settings = settings
         self.knowledge_base = KnowledgeBaseRepository(Path(settings.knowledge_base_path))
-        self.router = RouterAgent(settings, knowledge_base=self.knowledge_base)
+        self.llamaparse = LlamaParseClient(settings.llama_cloud_api_key)
+        self.router = RouterAgent(
+            settings,
+            knowledge_base=self.knowledge_base,
+            schema_mode=settings.schema_mode,
+        )
         self.extractor = OpenSchemaExtractor(settings)
         self.validator = ValidatorAgent()
         self.judge = JudgeAgent(settings)
@@ -220,18 +224,14 @@ class DocumentExtractionService:
     # Multi-file / multi-page extraction
     # ------------------------------------------------------------------
 
-    def extract_group(self, parts: list[UploadedFilePart]) -> FileExtractionResponse:
+    async def extract_group(self, parts: list[UploadedFilePart]) -> FileExtractionResponse:
         """Process a GROUP of uploaded files as pages of ONE logical upload.
 
-        - If a part is a PDF, it is split into one page-image per PDF page.
-        - If a part is a plain image, it is treated as a single page.
+        Every incoming file must go through LlamaParse first.
+        - If a part is a multi-page document, LlamaParse returns one text/markdown page per page.
         - All pages from all parts in the group are flattened, in order, and
           each page runs independently through Router -> Extractor ->
           Validator -> Judge, producing one ExtractionResult per page.
-
-        This covers both requested cases: a single multi-page PDF, and the
-        user selecting multiple image files together in one upload action
-        (e.g. page1.jpg + page2.jpg of the same document).
         """
         total_size = sum(len(p.raw_content) for p in parts)
         combined_name = parts[0].filename if len(parts) == 1 else f"{len(parts)} files ({parts[0].filename}, ...)"
@@ -241,77 +241,36 @@ class DocumentExtractionService:
             size_bytes=total_size,
         )
 
+        pages_text: list[str] = []
         try:
-            page_images = self._collect_page_images(parts)
+            for part in parts:
+                parsed_pages = await self.llamaparse.aparse_file(part.raw_content, part.filename)
+                pages_text.extend(parsed_pages)
         except Exception as exc:
-            return FileExtractionResponse(request=request_meta, error=f"Failed to read uploaded file(s): {exc}")
+            return FileExtractionResponse(request=request_meta, error=f"Failed to parse uploaded file(s): {exc}")
 
-        if not page_images:
+        if not pages_text:
             return FileExtractionResponse(
                 request=request_meta,
-                error="No readable pages/images found in the uploaded file(s).",
+                error="No readable pages/text found in the uploaded file(s).",
             )
 
         documents: list[ExtractionResult] = []
-        for image_bytes, image_mime_type in page_images:
+        for page_text in pages_text:
             documents.append(
-                self._extract_one_page(
+                await self._extract_one_page(
                     filename=combined_name,
-                    image_bytes=image_bytes,
-                    image_mime_type=image_mime_type,
+                    page_text=page_text,
                 )
             )
 
         return FileExtractionResponse(request=request_meta, documents=documents)
 
-    def _collect_page_images(self, parts: list[UploadedFilePart]) -> list[tuple[bytes, str]]:
-        pages: list[tuple[bytes, str]] = []
-        for part in parts:
-            if self._is_pdf(part.filename, part.content_type):
-                pages.extend(self._pdf_to_page_images(part.raw_content))
-            elif self._is_image_upload(part.filename, part.content_type):
-                pages.append((part.raw_content, part.content_type or "image/png"))
-            else:
-                raise GeminiCallError(
-                    f"Unsupported file type for '{part.filename}' — only PDF and common image "
-                    "formats (png/jpg/webp/etc.) are supported."
-                )
-        return pages
-
-    def _pdf_to_page_images(self, pdf_bytes: bytes, dpi: int = 200) -> list[tuple[bytes, str]]:
-        if fitz is None:
-            raise GeminiCallError(
-                "PDF support requires the 'pymupdf' package, which is not installed. "
-                "Add pymupdf to requirements.txt and reinstall dependencies."
-            )
-        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    async def _extract_one_page(self, filename: str, page_text: str) -> ExtractionResult:
         try:
-            zoom = dpi / 72
-            matrix = fitz.Matrix(zoom, zoom)
-            pages: list[tuple[bytes, str]] = []
-            for page in doc:
-                pixmap = page.get_pixmap(matrix=matrix)
-                pages.append((pixmap.tobytes("png"), "image/png"))
-            return pages
-        finally:
-            doc.close()
-
-    def _extract_one_page(self, filename: str, image_bytes: bytes, image_mime_type: str) -> ExtractionResult:
-        final_text = ""
-        try:
-            final_text = self._extract_text_from_image(image_bytes=image_bytes, mime_type=image_mime_type) or ""
-        except GeminiCallError as exc:
-            # TEMP DEBUG — remove after bug is found
-            print(f"[TEMP DEBUG] _extract_text_from_image GeminiCallError: {exc}")
-            final_text = ""
-
-        try:
-            routing = self.router.classify(
+            routing = await self.router.classify(
                 filename=filename,
-                content_type=image_mime_type,
-                text_hint=final_text or None,
-                image_bytes=image_bytes,
-                image_mime_type=image_mime_type,
+                text_hint=page_text or None,
             )
 
             # --- Few-shot injection (opt-out via FEW_SHOT_EXAMPLES_PER_DOC_TYPE=0) ---
@@ -323,29 +282,28 @@ class DocumentExtractionService:
                 ) or None  # normalise [] → None so the extractor skips the block
 
             context = ExtractionContext(
-                text=final_text,
+                text=page_text,
                 doc_type=routing.doc_type,
                 suggested_fields=routing.suggested_fields,
-                metadata={"filename": filename, "content_type": image_mime_type},
-                image_bytes=image_bytes,
-                image_mime_type=image_mime_type,
+                metadata={"filename": filename},
                 few_shot_examples=few_shot,
             )
-            extracted_fields, additional_fields = self.extractor.extract(context)
+            extracted_fields, additional_fields = await self.extractor.extract(context)
 
+            catalog_fields = self.knowledge_base.get_catalog_fields(routing.doc_type)
             validation = self.validator.validate(
                 suggested_fields=routing.suggested_fields,
                 extracted_fields=extracted_fields,
                 additional_fields=additional_fields,
+                schema_mode=self.settings.schema_mode,
+                catalog_fields=catalog_fields,
             )
-            judge_result = self.judge.evaluate(
+            judge_result = await self.judge.evaluate(
                 prediction={
                     **{name: f.value for name, f in extracted_fields.items()},
                     **{name: f.value for name, f in additional_fields.items()},
                 },
-                source_text=final_text or None,
-                image_bytes=image_bytes,
-                image_mime_type=image_mime_type,
+                source_text=page_text or None,
             )
 
             # --- Auto-evaluation against ground truth (local dict comparison only) ---
@@ -366,10 +324,14 @@ class DocumentExtractionService:
                 suggested_fields=routing.suggested_fields,
                 extracted_fields=extracted_fields,
                 additional_fields=additional_fields,
-                full_text=final_text or None,
+                full_text=page_text or None,
                 validation=validation,
                 judge=judge_result,
-                needs_review=(not validation.is_valid) or (judge_result.score < 0.7),
+                needs_review=(
+                    (not validation.is_valid)
+                    or (judge_result.score < 0.7)
+                    or (self.settings.schema_mode == "strict" and getattr(routing, "out_of_catalog", False))
+                ),
                 auto_evaluation=auto_eval,
             )
         except GeminiCallError as exc:
@@ -384,30 +346,6 @@ class DocumentExtractionService:
                 error=f"Extraction pipeline failed: {exc}",
                 validation=ValidationResult(is_valid=False, completeness_score=0.0, issues=[]),
             )
-
-    def _is_pdf(self, filename: str, content_type: str | None) -> bool:
-        if content_type == "application/pdf":
-            return True
-        return filename.lower().endswith(".pdf")
-
-    def _is_image_upload(self, filename: str, content_type: str | None) -> bool:
-        lower_name = filename.lower()
-        if content_type is not None and content_type.startswith("image/"):
-            return True
-        return lower_name.endswith((".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp", ".tif", ".tiff"))
-
-    def _extract_text_from_image(self, image_bytes: bytes, mime_type: str | None) -> str | None:
-        client = GeminiClient(self.settings)
-        result = client.generate_text(
-            model=self.settings.recommended_extraction_model_name,
-            prompt=(
-                "Extract all readable text from this document image. "
-                "Return only the text content, preserve line breaks, and do not add commentary."
-            ),
-            image_bytes=image_bytes,
-            image_mime_type=mime_type,
-        )
-        return result.raw_text
 
     # ------------------------------------------------------------------
     # Batch jobs (unchanged shape, now returns FileExtractionResponse)

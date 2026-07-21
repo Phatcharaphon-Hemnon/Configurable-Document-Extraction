@@ -17,7 +17,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, AsyncMock, patch
 
 import pytest
 
@@ -280,6 +280,54 @@ class TestReconcileWithCatalog:
         assert result[0].name == "some_field"
         assert result[0].description == "desc"
 
+    # -----------------------------------------------------------------------
+    # 2g. Specific-variant name does NOT match generic catalog name
+    # -----------------------------------------------------------------------
+
+    def test_specific_variant_does_not_match_generic_catalog_name(self) -> None:
+        """AI proposes \"total_amount_incl_gst\"; catalog has \"total_amount\".
+
+        After normalization:
+          - "total_amount_incl_gst" → "total_amount_incl_gst"
+          - "total_amount"          → "total_amount"
+
+        These are different strings, so NO match occurs.  The AI field must
+        be kept as-is and the catalog field must be appended.
+
+        This documents a key limitation: _normalize_name bridges only
+        case/spacing differences, not semantic synonyms or qualified
+        variants.  The prompt guidance in _build_strict_prompt() is the
+        primary defence against this kind of mismatch.
+        """
+        ai_fields = [
+            _fd("total_amount_incl_gst", description="Grand total including GST", likely_required=True),
+            _fd("invoice_number", description="Receipt number", likely_required=True),
+        ]
+        catalog_fields = [
+            _fd("total_amount", description="Positive numeric value", likely_required=True, validation_rule="Positive numeric value"),
+            _fd("invoice_number", description="Non-empty alphanumeric identifier", likely_required=True, validation_rule="Non-empty alphanumeric identifier"),
+        ]
+
+        result = RouterAgent._reconcile_with_catalog(ai_fields, catalog_fields)
+
+        names = [f.name for f in result]
+
+        # invoice_number matched — canonical name and required from catalog, description from AI
+        inv = next(f for f in result if f.name == "invoice_number")
+        assert inv.likely_required is True
+        assert inv.description == "Receipt number"
+
+        # total_amount_incl_gst did NOT match total_amount — kept as-is
+        assert "total_amount_incl_gst" in names
+        variant = next(f for f in result if f.name == "total_amount_incl_gst")
+        assert variant.description == "Grand total including GST"
+
+        # total_amount appended from catalog because it was never matched
+        assert "total_amount" in names
+        catalog_total = next(f for f in result if f.name == "total_amount")
+        assert catalog_total.likely_required is True
+        assert catalog_total.description == "Positive numeric value"
+
 
 # ===========================================================================
 # PART 3 — Open-schema fallback: doc_type with no catalog file
@@ -358,8 +406,8 @@ class TestRouterAgentBackwardCompatibility:
 
     def _make_settings(self) -> Settings:
         settings = MagicMock(spec=Settings)
-        settings.router_model_name = "google/gemini-3-flash-preview"
-        settings.sut_genai_api_key = "test-key"
+        settings.router_model_name = "gpt-4.1"
+        settings.github_models_token = "test-key"
         return settings
 
     def test_init_without_knowledge_base(self) -> None:
@@ -374,10 +422,11 @@ class TestRouterAgentBackwardCompatibility:
         agent = RouterAgent(settings, knowledge_base=None)
         assert agent._knowledge_base is None
 
-    def test_classify_skips_reconciliation_when_no_knowledge_base(self) -> None:
+    @pytest.mark.anyio
+    async def test_classify_skips_reconciliation_when_no_knowledge_base(self) -> None:
         """When _knowledge_base is None, classify() must return the raw AI
         suggested_fields without any catalog reconciliation."""
-        from app.schemas.gemini_schemas import RoutingResponseSchema
+        from app.schemas.llm_schemas import RoutingResponseSchema
 
         settings = self._make_settings()
         agent = RouterAgent(settings)
@@ -398,8 +447,8 @@ class TestRouterAgentBackwardCompatibility:
         fake_result = MagicMock()
         fake_result.parsed = fake_parsed
 
-        with patch.object(agent._client, "generate_structured", return_value=fake_result):
-            decision = agent.classify(filename="test.pdf", text_hint="Invoice #001")
+        with patch.object(agent._client, "generate_structured", new_callable=AsyncMock, return_value=fake_result):
+            decision = await agent.classify(filename="test.pdf", text_hint="Invoice #001")
 
         assert len(decision.suggested_fields) == 1
         assert decision.suggested_fields[0].name == "invoice_number"
