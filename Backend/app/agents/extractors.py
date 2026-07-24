@@ -1,13 +1,19 @@
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import dataclass, field
 from typing import Any
 
+
+from app.agents.router import _normalize_name
 from app.core.config import Settings
 from app.schemas.documents import ExtractionField, FieldDefinition
 from app.schemas.llm_schemas import ExtractionResponseSchema
+from app.services.field_aliases import resolve_field_alias
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -17,15 +23,26 @@ class ExtractionContext:
     suggested_fields: list[FieldDefinition] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
     few_shot_examples: list[dict] | None = None
+    image_bytes: bytes | None = None
+    image_media_type: str | None = None
 
 
 def _parse_extraction_response(
     parsed: ExtractionResponseSchema,
     suggested_names: set[str],
+    doc_type: str = "",
 ) -> tuple[dict[str, ExtractionField], dict[str, ExtractionField]]:
     """Split extracted fields into (matches a suggested field, extra/unlisted field)."""
     extracted: dict[str, ExtractionField] = {}
     additional: dict[str, ExtractionField] = {}
+
+    suggested_lookup: dict[str, str] = {}
+    for name in suggested_names:
+        norm = _normalize_name(name)
+        resolved = resolve_field_alias(doc_type, norm)
+        suggested_lookup[norm] = name
+        suggested_lookup[resolved] = name
+
     for entry in parsed.fields:
         if entry.value is None:
             continue
@@ -38,7 +55,16 @@ def _parse_extraction_response(
         if entry.name in suggested_names:
             extracted[entry.name] = item
         else:
-            additional[entry.name] = item
+            norm_entry = _normalize_name(entry.name)
+            resolved_entry = resolve_field_alias(doc_type, norm_entry)
+            if resolved_entry in suggested_lookup:
+                canonical = suggested_lookup[resolved_entry]
+                extracted[canonical] = item
+            elif norm_entry in suggested_lookup:
+                canonical = suggested_lookup[norm_entry]
+                extracted[canonical] = item
+            else:
+                additional[entry.name] = item
     return extracted, additional
 
 
@@ -56,9 +82,10 @@ class OpenSchemaExtractor:
 
     async def extract(self, context: ExtractionContext) -> tuple[dict[str, ExtractionField], dict[str, ExtractionField]]:
         has_text = bool(context.text.strip())
+        has_image = bool(context.image_bytes)
 
-        if not has_text:
-            raise GeminiCallError("Extractor requires document text")
+        if not has_text and not has_image:
+            raise GeminiCallError("Extractor requires document text or an image")
 
         suggested_names = {f.name for f in context.suggested_fields}
         fields_desc = {
@@ -79,42 +106,27 @@ class OpenSchemaExtractor:
 
         base_rules = (
             "Rules:\n"
-            "- Return a JSON object with a 'fields' array.\n"
-            "- Each array entry must have: name, value, confidence (0.0-1.0), source_span "
-            "(exact text visible/present in the document), and likely_required (true only for "
-            "fields essential to identify/use this document).\n"
-            "- Extract every field in the suggested list that you can actually find.\n"
-            "- If you notice OTHER clearly labeled data on the document that is not in the "
-            "suggested list (e.g. a discount line, a PO reference, payment terms), INCLUDE it "
-            "too as an extra entry — do not discard information just because it wasn't suggested.\n"
-            "- For numeric amounts, return the number without currency symbols.\n"
-            "- For dates, preserve the original format shown in the document.\n"
-            "- For itemized lists (line items, products, etc.), return an array of objects — "
-            "one object per row — even if there is only a single row. Include whatever of "
-            "description/quantity/unit_price/amount is present in that row.\n"
-            "- Omit a suggested field entirely if it is truly not present — do NOT invent or "
-            "hallucinate a value to fill it in.\n"
+            "- Return a JSON object with a 'fields' array. Each entry MUST have: name, value, "
+            "confidence (0.0-1.0), source_span (exact text from the document), likely_required.\n"
+            "- Extract every suggested field you can find. Also include any OTHER clearly labeled "
+            "data not in the list (e.g. discount, PO reference, payment terms) — never discard information.\n"
+            "- Omit a field entirely if truly absent — do NOT hallucinate values.\n"
+            "- Numeric amounts: return numbers without currency symbols.\n"
+            "- Dates: preserve the document's original format.\n"
+            "- Itemized lists (line items, products): return an array of objects (one per row) with "
+            "whatever of description/quantity/unit_price/amount is present, even for a single row.\n"
             "\n"
             "Extraction procedure:\n"
-            "1. Go through the suggested field list ONE BY ONE and actively check the document "
-            "for each — do not stop after finding the obvious ones (name, date, total). Read "
-            "the WHOLE document, including footers, small-print tables, and summary boxes, "
-            "before deciding a field is absent.\n"
-            "2. Pay special attention to these commonly-missed field types:\n"
-            "   - Tax/VAT/GST breakdown tables (e.g. 'GST Summary', 'Tax Summary'): these "
-            "usually contain the subtotal (amount before tax) and the tax amount separately "
-            "from the grand total. Extract both, even if the grand total is already captured "
-            "elsewhere.\n"
-            "   - Currency: infer from explicit symbols/codes (RM, MYR, $, USD, ฿, THB, €, "
-            "EUR, etc.) or from strong contextual clues (e.g. a Malaysian company registration "
-            "number or 'GST ID' implies MYR). If there is genuinely no clue, omit the field "
-            "rather than guessing.\n"
-            "   - Tax ID / GST ID / VAT number: often printed near the seller's name or "
-            "address, sometimes labeled separately from the company registration number.\n"
+            "1. Check EVERY suggested field against the ENTIRE document — including footers, "
+            "small-print tables, and summary boxes — before deciding a field is absent.\n"
+            "2. Pay special attention to commonly missed fields:\n"
+            "   - Tax/VAT/GST breakdown tables: extract subtotal and tax amount separately from "
+            "the grand total.\n"
+            "   - Currency: infer from symbols/codes (RM, MYR, $, USD, ฿, THB, €, EUR) or strong "
+            "context (e.g. Malaysian registration → MYR). Omit if no clue.\n"
+            "   - Tax ID / GST ID / VAT number: often near the seller's name/address.\n"
             "   - Payment mechanics: amount paid/tendered and change given, if shown.\n"
-            "3. Before finalizing your answer, re-check the document once more against the "
-            "suggested field list: for every suggested field you have NOT extracted, confirm it "
-            "is truly absent rather than just easy to miss.\n"
+            "3. Re-check: for every suggested field NOT extracted, confirm it is truly absent.\n"
         )
 
         prompt = (
@@ -127,19 +139,29 @@ class OpenSchemaExtractor:
             f"\nDocument text:\n{context.text}\n"
         )
 
-        result = await self._client.generate_structured(
-            model=self.settings.recommended_extraction_model_name,
-            prompt=prompt,
-            response_schema=ExtractionResponseSchema,
+        if has_image and context.image_bytes and context.image_media_type:
+            result = await self._client.generate_structured_with_image(
+                model=self.settings.recommended_extraction_model_name,
+                prompt=prompt,
+                image_bytes=context.image_bytes,
+                image_media_type=context.image_media_type,
+                response_schema=ExtractionResponseSchema,
+            )
+        else:
+            result = await self._client.generate_structured(
+                model=self.settings.recommended_extraction_model_name,
+                prompt=prompt,
+                response_schema=ExtractionResponseSchema,
+            )
+        logger.info(
+            "Extractor tokens: doc_type=%s prompt=%s completion=%s total=%s",
+            context.doc_type,
+            result.prompt_tokens,
+            result.completion_tokens,
+            result.total_tokens,
         )
 
         parsed = result.parsed
         assert isinstance(parsed, ExtractionResponseSchema)
-        extracted, additional = _parse_extraction_response(parsed, suggested_names)
-        if not extracted and not additional:
-            raise GeminiCallError(
-                "Extractor returned no fields",
-                request_summary=result.request_summary,
-                raw_response=result.raw_response,
-            )
+        extracted, additional = _parse_extraction_response(parsed, suggested_names, doc_type=context.doc_type)
         return extracted, additional

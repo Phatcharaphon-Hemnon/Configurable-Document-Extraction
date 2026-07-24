@@ -67,12 +67,12 @@ class ValidatorAgent:
                     ValidationIssue(
                         field=name,
                         message=msg,
-                        severity="error",
+                        severity="warning",
                     )
                 )
 
         # --- Generic pattern checks ---
-        severity_format = "error" if schema_mode == "strict" else "warning"
+        severity_format = "warning"
         for name, item in all_fields.items():
             lower = name.lower()
             if item.value is None:
