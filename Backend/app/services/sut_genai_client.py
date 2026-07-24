@@ -8,6 +8,7 @@ Model: Locked to gpt-4.1 to avoid premium Copilot request quota.
 
 from __future__ import annotations
 
+import base64
 import json
 import logging
 from dataclasses import dataclass
@@ -56,6 +57,9 @@ class SutGenAICallResult:
     raw_text: str | None
     raw_response: Any
     request_summary: dict[str, Any]
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    total_tokens: int | None = None
 
 
 # Keep old name as alias.
@@ -135,7 +139,7 @@ class SutGenAIClient:
         messages = [{"role": "user", "content": prompt}]
 
         # --- Attempt 1: response_format with json_schema ---
-        raw_text, raw_response = await self._call_with_schema(
+        raw_text, raw_response, attempt1_prompt_tokens, attempt1_comp_tokens, attempt1_tot_tokens = await self._call_with_schema(
             model=model,
             messages=messages,
             response_schema=response_schema,
@@ -143,24 +147,40 @@ class SutGenAIClient:
             request_summary=request_summary,
         )
 
+        prompt_tokens = attempt1_prompt_tokens
+        completion_tokens = attempt1_comp_tokens
+        total_tokens = attempt1_tot_tokens
+
         parsed = self._try_parse(response_schema, raw_text)
 
         if parsed is None:
             # --- Attempt 2: prompt-level JSON fallback ---
-            logger.warning(
-                "GitHub Models: response_format schema enforcement failed or returned "
-                "unparseable JSON for %s — retrying with prompt-level instructions.",
-                response_schema.__name__,
+            fallback_prompt = (
+                "The following response was supposed to be valid JSON matching a "
+                "specific schema, but failed to parse. Return ONLY the corrected, "
+                "valid JSON object — no markdown fences, no commentary.\n\n"
+                f"Schema:\n{json.dumps(response_schema.model_json_schema(), indent=2)}\n\n"
+                f"Response to fix:\n{raw_text}"
             )
-            fallback_prompt = prompt + _build_json_prompt_suffix(response_schema)
             fallback_messages = [{"role": "user", "content": fallback_prompt}]
-            raw_text, raw_response = await self._call_plain(
+            raw_text, raw_response, attempt2_prompt_tokens, attempt2_comp_tokens, attempt2_tot_tokens = await self._call_plain(
                 model=model,
                 messages=fallback_messages,
                 temperature=temperature,
                 request_summary=request_summary,
             )
+            logger.warning(
+                "GitHub Models retry triggered for schema=%s — extra tokens spent: "
+                "attempt1=%s prompt tokens, attempt2=%s prompt tokens",
+                response_schema.__name__,
+                attempt1_prompt_tokens,
+                attempt2_prompt_tokens,
+            )
             parsed = self._try_parse(response_schema, raw_text)
+
+            prompt_tokens = attempt2_prompt_tokens
+            completion_tokens = attempt2_comp_tokens
+            total_tokens = attempt2_tot_tokens
 
         if parsed is None:
             raise SutGenAICallError(
@@ -180,6 +200,114 @@ class SutGenAIClient:
             raw_text=raw_text,
             raw_response=raw_response,
             request_summary=request_summary,
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            total_tokens=total_tokens,
+        )
+
+    # ------------------------------------------------------------------
+    # generate_structured_with_image (vision / multimodal)
+    # ------------------------------------------------------------------
+
+    async def generate_structured_with_image(
+        self,
+        *,
+        model: str,
+        prompt: str,
+        image_bytes: bytes,
+        image_media_type: str,
+        response_schema: type[T],
+        temperature: float = 0.0,
+    ) -> SutGenAICallResult:
+        """Call the model with an image + text prompt and parse the response.
+
+        Uses the OpenAI vision API format: the user message contains a list
+        of content parts — one ``image_url`` (base64 data-URI) and one
+        ``text`` part.
+        """
+        b64 = base64.b64encode(image_bytes).decode("ascii")
+        data_uri = f"data:{image_media_type};base64,{b64}"
+
+        request_summary: dict[str, Any] = {
+            "model": model,
+            "prompt": _truncate(prompt),
+            "response_schema": response_schema.__name__,
+            "temperature": temperature,
+            "has_image": True,
+            "image_size_bytes": len(image_bytes),
+        }
+
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": data_uri, "detail": "high"}},
+                    {"type": "text", "text": prompt},
+                ],
+            }
+        ]
+
+        # --- Attempt 1: response_format with json_schema ---
+        raw_text, raw_response, a1_pt, a1_ct, a1_tt = await self._call_with_schema(
+            model=model,
+            messages=messages,
+            response_schema=response_schema,
+            temperature=temperature,
+            request_summary=request_summary,
+        )
+
+        prompt_tokens = a1_pt
+        completion_tokens = a1_ct
+        total_tokens = a1_tt
+
+        parsed = self._try_parse(response_schema, raw_text)
+
+        if parsed is None:
+            # --- Attempt 2: prompt-level JSON fallback (text-only repair) ---
+            fallback_prompt = (
+                "The following response was supposed to be valid JSON matching a "
+                "specific schema, but failed to parse. Return ONLY the corrected, "
+                "valid JSON object — no markdown fences, no commentary.\n\n"
+                f"Schema:\n{json.dumps(response_schema.model_json_schema(), indent=2)}\n\n"
+                f"Response to fix:\n{raw_text}"
+            )
+            fallback_messages = [{"role": "user", "content": fallback_prompt}]
+            raw_text, raw_response, a2_pt, a2_ct, a2_tt = await self._call_plain(
+                model=model,
+                messages=fallback_messages,
+                temperature=temperature,
+                request_summary=request_summary,
+            )
+            logger.warning(
+                "GitHub Models vision retry triggered for schema=%s — extra tokens spent",
+                response_schema.__name__,
+            )
+            parsed = self._try_parse(response_schema, raw_text)
+            prompt_tokens = a2_pt
+            completion_tokens = a2_ct
+            total_tokens = a2_tt
+
+        if parsed is None:
+            raise SutGenAICallError(
+                f"GitHub Models returned unparseable JSON for schema {response_schema.__name__} (vision)",
+                request_summary=request_summary,
+                raw_response=raw_text,
+            )
+
+        logger.debug(
+            "GitHub Models generate_structured_with_image OK schema=%s model=%s",
+            response_schema.__name__,
+            model,
+        )
+
+        return SutGenAICallResult(
+            parsed=parsed,
+            raw_text=raw_text,
+            raw_response=raw_response,
+            request_summary=request_summary,
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            total_tokens=total_tokens,
         )
 
     # ------------------------------------------------------------------
@@ -201,7 +329,7 @@ class SutGenAIClient:
         }
 
         messages = [{"role": "user", "content": prompt}]
-        raw_text, raw_response = await self._call_plain(
+        raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_plain(
             model=model,
             messages=messages,
             temperature=temperature,
@@ -220,6 +348,9 @@ class SutGenAIClient:
             raw_text=raw_text.strip(),
             raw_response=raw_response,
             request_summary=request_summary,
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            total_tokens=total_tokens,
         )
 
     # ------------------------------------------------------------------
@@ -234,7 +365,7 @@ class SutGenAIClient:
         response_schema: type[BaseModel],
         temperature: float,
         request_summary: dict[str, Any],
-    ) -> tuple[str | None, Any]:
+    ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Try calling with response_format json_schema enforcement."""
         json_schema_dict = _pydantic_to_json_schema(response_schema)
         response_format: dict[str, Any] = {
@@ -260,15 +391,19 @@ class SutGenAIClient:
                 type(exc).__name__,
                 exc,
             )
-            return None, None
+            return None, None, None, None, None
 
         raw_text = resp.choices[0].message.content if resp.choices else None
         raw_response = resp.model_dump() if hasattr(resp, "model_dump") else str(resp)
+        usage = getattr(resp, "usage", None)
+        prompt_tokens = getattr(usage, "prompt_tokens", None) if usage else None
+        completion_tokens = getattr(usage, "completion_tokens", None) if usage else None
+        total_tokens = getattr(usage, "total_tokens", None) if usage else None
         logger.debug(
             "GitHub Models _call_with_schema raw_text preview: %s",
             (raw_text or "")[:300],
         )
-        return raw_text, raw_response
+        return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens
 
     async def _call_plain(
         self,
@@ -277,7 +412,7 @@ class SutGenAIClient:
         messages: list[dict[str, Any]],
         temperature: float,
         request_summary: dict[str, Any],
-    ) -> tuple[str | None, Any]:
+    ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Plain chat completion call (no response_format param)."""
         try:
             resp = await self._client.chat.completions.create(
@@ -293,11 +428,15 @@ class SutGenAIClient:
 
         raw_text = resp.choices[0].message.content if resp.choices else None
         raw_response = resp.model_dump() if hasattr(resp, "model_dump") else str(resp)
+        usage = getattr(resp, "usage", None)
+        prompt_tokens = getattr(usage, "prompt_tokens", None) if usage else None
+        completion_tokens = getattr(usage, "completion_tokens", None) if usage else None
+        total_tokens = getattr(usage, "total_tokens", None) if usage else None
         logger.debug(
             "GitHub Models _call_plain raw_text preview: %s",
             (raw_text or "")[:300],
         )
-        return raw_text, raw_response
+        return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens
 
     @staticmethod
     def _try_parse(schema: type[T], raw_text: str | None) -> T | None:

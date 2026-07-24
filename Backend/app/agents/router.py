@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from app.core.config import Settings
 from app.schemas.documents import DocumentLanguage, FieldDefinition
+from app.services.field_aliases import resolve_field_alias
 from app.schemas.llm_schemas import RoutingResponseSchema
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
 if TYPE_CHECKING:
     from app.services.knowledge_base import KnowledgeBaseRepository
+
+logger = logging.getLogger(__name__)
+
 
 
 def _normalize_name(name: str) -> str:
@@ -106,6 +111,7 @@ class RouterAgent:
     def _reconcile_with_catalog(
         ai_fields: list[FieldDefinition],
         catalog_fields: list[FieldDefinition],
+        doc_type: str = "",
     ) -> list[FieldDefinition]:
         """Merge AI-proposed fields with the on-disk field catalog.
 
@@ -137,6 +143,7 @@ class RouterAgent:
 
         for ai_field in ai_fields:
             norm = _normalize_name(ai_field.name)
+            norm = resolve_field_alias(doc_type, norm)
             if norm in catalog_lookup:
                 catalog_entry = catalog_lookup[norm]
                 matched_catalog_names.add(norm)
@@ -171,60 +178,53 @@ class RouterAgent:
 
     def _build_open_prompt(self, filename: str, text_hint: str | None) -> str:
         prompt_parts = [
-            "You are a document classification router with an OPEN, unrestricted schema.",
-            "Look at this document and identify what TYPE of document it is, in your own words "
-            "(e.g. 'invoice', 'purchase_order', 'delivery_note', 'receipt', 'medical_form', "
-            "'id_card', or any other type you recognize — do not limit yourself to a fixed list).",
-            "Also detect the primary language: en (English), th (Thai), or other.",
-            "Propose a list of fields you would expect to find on a document of this type, based "
-            "on what you can actually see. For each suggested field, give a short name, a brief "
-            "description, and mark likely_required=true only if the document would be essentially "
-            "useless/unidentifiable without that field (e.g. an invoice number, a total amount). "
+            "You are a document classification router (open schema).",
+            "Identify the document TYPE in your own words (e.g. invoice, purchase_order, "
+            "delivery_note, receipt, medical_form, id_card — any type you recognize).",
+            "Detect the primary language: en, th, or other.",
+            "Propose fields visible on this document. For each: short name, brief description, "
+            "likely_required=true only if essential (e.g. invoice number, total). "
             "Most fields should be likely_required=false.",
-            "Base your decision on the actual document content — not the filename.",
-            "Return your confidence (0.0–1.0) reflecting how certain you are.",
-            f"Filename (metadata only, do not rely on it): {filename}",
+            "Base your decision on document content, not the filename. Return confidence (0.0–1.0).",
+            f"Filename (metadata only): {filename}",
         ]
         if text_hint and text_hint.strip():
-            prompt_parts.append(f"Document text hint:\n{text_hint.strip()}")
+            prompt_parts.append(f"Document text:\n{text_hint.strip()}")
         return "\n\n".join(prompt_parts)
 
     def _build_strict_prompt(self, filename: str, text_hint: str | None) -> str:
         allowed_str = ", ".join(self._allowed_doc_types)
         prompt_parts = [
             "You are a document classification router.",
-            f"Look at this document and classify it as exactly one of: {allowed_str}.",
-            "Also detect the primary language: en (English), th (Thai), or other.",
-            "Propose a list of fields you would expect to find on a document of this type, based "
-            "on what you can actually see. For each suggested field, give a short name, a brief "
-            "description, and mark likely_required=true only if the document would be essentially "
-            "useless/unidentifiable without that field (e.g. an invoice number, a total amount). "
+            f"Classify this document as exactly one of: {allowed_str}.",
+            "Detect the primary language: en, th, or other.",
+            "Propose fields visible on this document. For each: short name, brief description, "
+            "likely_required=true only if essential (e.g. invoice number, total). "
             "Most fields should be likely_required=false.",
-            "IMPORTANT — Field naming convention: When you see a value on the document that "
-            "is a more specific variant of a common concept, use the short generic field name "
-            "and put the specific nuance in the description. For example:\n"
-            '  - "Grand Total (incl. GST)" on the document → name: "total_amount", '
-            'description: "Grand total including GST"\n'
-            '  - "Ship-to Address" on the document → name: "delivery_address", '
-            'description: "Shipping destination address"\n'
-            "Do NOT invent qualified names like \"total_amount_incl_gst\" or "
-            "\"ship_to_address\" — keep names generic so they match the field catalog.",
-            "Base your decision on the actual document content — not the filename.",
-            "Return your confidence (0.0–1.0) reflecting how certain you are.",
-            f"Filename (metadata only, do not rely on it): {filename}",
+            "Field naming: use short generic names; put specifics in the description. "
+            'Example: "Grand Total (incl. GST)" → name: "total_amount", '
+            'description: "Grand total including GST". '
+            "Do NOT invent qualified names like \"total_amount_incl_gst\" — keep names "
+            "generic to match the field catalog.",
+            "Base your decision on document content, not the filename. Return confidence (0.0–1.0).",
+            f"Filename (metadata only): {filename}",
         ]
         if text_hint and text_hint.strip():
-            prompt_parts.append(f"Document text hint:\n{text_hint.strip()}")
+            prompt_parts.append(f"Document text:\n{text_hint.strip()}")
         return "\n\n".join(prompt_parts)
 
     async def classify(
         self,
         filename: str,
         text_hint: str | None = None,
+        image_bytes: bytes | None = None,
+        image_media_type: str | None = None,
     ) -> RoutingDecision:
-        if not (text_hint and text_hint.strip()):
+        has_text = bool(text_hint and text_hint.strip())
+        has_image = bool(image_bytes)
+        if not has_text and not has_image:
             raise GeminiCallError(
-                "Router requires document text to classify the document"
+                "Router requires document text or an image to classify the document"
             )
 
         if self.schema_mode == "strict":
@@ -233,11 +233,20 @@ class RouterAgent:
             prompt = self._build_open_prompt(filename, text_hint)
 
         try:
-            result = await self._client.generate_structured(
-                model=self.settings.router_model_name,
-                prompt=prompt,
-                response_schema=RoutingResponseSchema,
-            )
+            if has_image and image_bytes and image_media_type:
+                result = await self._client.generate_structured_with_image(
+                    model=self.settings.router_model_name,
+                    prompt=prompt,
+                    image_bytes=image_bytes,
+                    image_media_type=image_media_type,
+                    response_schema=RoutingResponseSchema,
+                )
+            else:
+                result = await self._client.generate_structured(
+                    model=self.settings.router_model_name,
+                    prompt=prompt,
+                    response_schema=RoutingResponseSchema,
+                )
         except GeminiCallError:
             raise
         except Exception as exc:
@@ -247,6 +256,13 @@ class RouterAgent:
         assert isinstance(parsed, RoutingResponseSchema)
 
         doc_type = parsed.doc_type
+        logger.info(
+            "Router tokens: doc_type=%s prompt=%s completion=%s total=%s",
+            doc_type,
+            result.prompt_tokens,
+            result.completion_tokens,
+            result.total_tokens,
+        )
         out_of_catalog = False
 
         if self.schema_mode == "strict":
@@ -280,7 +296,7 @@ class RouterAgent:
         if self._knowledge_base is not None:
             catalog_fields = self._knowledge_base.get_catalog_fields(doc_type)
             if catalog_fields:
-                suggested = self._reconcile_with_catalog(suggested, catalog_fields)
+                suggested = self._reconcile_with_catalog(suggested, catalog_fields, doc_type=doc_type)
 
         return RoutingDecision(
             doc_type=doc_type,

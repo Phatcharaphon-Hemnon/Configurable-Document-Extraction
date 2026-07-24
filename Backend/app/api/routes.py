@@ -104,4 +104,5 @@ def evaluate(request: EvaluateRequest) -> EvaluateResponse:
         prediction=request.prediction,
         ground_truth=request.ground_truth,
         source_text=request.source_text,
+        doc_type=request.doc_type,
     )

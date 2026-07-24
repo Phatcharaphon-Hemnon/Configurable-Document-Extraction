@@ -106,6 +106,24 @@ const AlertTriangleIcon = () => (
   </svg>
 );
 
+const InfoIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="16" x2="12" y2="12" />
+    <line x1="12" y1="8" x2="12.01" y2="8" />
+  </svg>
+);
+
 /* -------------------------------------------------------------------------- */
 /*                                   App Main                                 */
 /* -------------------------------------------------------------------------- */
@@ -454,11 +472,11 @@ function App() {
                   )}
 
                   {!selectedDoc?.error && validationErrors.length > 0 && (
-                    <div className="warning-box">
-                      <AlertTriangleIcon />
+                    <div className="info-box">
+                      <InfoIcon />
                       <div>
-                        <h3 style={{ margin: '0 0 var(--spacing-xs) 0', fontSize: 'var(--font-size-lg)' }}>Document Flagged for Review</h3>
-                        <p style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: 'var(--font-size-sm)' }}>The following validation errors were found:</p>
+                        <h3 style={{ margin: '0 0 var(--spacing-xs) 0', fontSize: 'var(--font-size-lg)' }}>Extraction Incomplete</h3>
+                        <p style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: 'var(--font-size-sm)' }}>The following issues were noted:</p>
                         <ul style={{ listStyleType: 'disc', marginLeft: 'var(--spacing-md)' }}>
                           {validationErrors.map((error, index) => (
                             <li key={index}>
@@ -501,38 +519,7 @@ function App() {
                       </div>
                     </div>
                   )}
-                  {!selectedDoc?.error && selectedDoc?.judge && (
-                    <div
-                      className={selectedDoc.judge.score < 0.7 ? 'warning-box' : 'info-box'}
-                      style={{ marginTop: 'var(--spacing-md)' }}
-                    >
-                      {selectedDoc.judge.score < 0.7 ? <AlertTriangleIcon /> : null}
-                      <div>
-                        <h3 style={{ margin: '0 0 var(--spacing-xs) 0', fontSize: 'var(--font-size-lg)' }}>
-                          Judge Review — {Math.round(selectedDoc.judge.score * 100)}% confidence
-                        </h3>
-                        {selectedDoc.judge.notes && (
-                          <p style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: 'var(--font-size-sm)' }}>
-                            {selectedDoc.judge.notes}
-                          </p>
-                        )}
-                        {selectedDoc.judge.issues.length > 0 && (
-                          <>
-                            <p style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: 'var(--font-size-sm)' }}>
-                              Flagged fields:
-                            </p>
-                            <ul style={{ listStyleType: 'disc', marginLeft: 'var(--spacing-md)' }}>
-                              {selectedDoc.judge.issues.map((issue, index) => (
-                                <li key={index}>
-                                  <strong>{issue.field}</strong> [{issue.severity}]: {issue.message}
-                                </li>
-                              ))}
-                            </ul>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  )}
+
 
                   {!selectedDoc?.error && (
                     <>

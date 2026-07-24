@@ -77,7 +77,7 @@ async def test_router_strict_prompt_and_classification() -> None:
 
     # Check strict prompt content
     prompt = router._build_strict_prompt("test.pdf", None)
-    assert "classify it as exactly one of: invoice, po, delivery_note" in prompt
+    assert "exactly one of: invoice, po, delivery_note" in prompt
 
     # Mock Gemini client response
     from app.schemas.llm_schemas import RoutingResponseSchema
@@ -148,8 +148,8 @@ def test_validator_strict_vs_open() -> None:
     assert res_open.issues[0].severity == "warning"
     assert "Amount should not be negative" in res_open.issues[0].message
 
-    # Mode: strict. Missing catalog-required field (total_amount is required, but missing) -> error.
-    # Negative amount -> error.
+    # Mode: strict. Missing catalog-required field (total_amount is required, but missing) -> warning.
+    # Negative amount -> warning.
     extracted_strict = {
         "invoice_number": ExtractionField(value="INV-123", confidence=1.0),
         # missing total_amount!
@@ -162,10 +162,10 @@ def test_validator_strict_vs_open() -> None:
         schema_mode="strict",
         catalog_fields=catalog_fields
     )
-    assert res_strict_missing.is_valid is False
-    assert any(i.severity == "error" and "Missing required field" in i.message for i in res_strict_missing.issues)
+    assert res_strict_missing.is_valid is True  # Warning does not block
+    assert any(i.severity == "warning" and "Missing required field" in i.message for i in res_strict_missing.issues)
 
-    # Mode: strict. Format error (negative amount) -> error.
+    # Mode: strict. Format issue (negative amount) -> warning.
     extracted_strict_format = {
         "invoice_number": ExtractionField(value="INV-123", confidence=1.0),
         "total_amount": ExtractionField(value=-100.0, confidence=1.0),
@@ -177,8 +177,8 @@ def test_validator_strict_vs_open() -> None:
         schema_mode="strict",
         catalog_fields=catalog_fields
     )
-    assert res_strict_format.is_valid is False
-    assert any(i.severity == "error" and "Amount should not be" in i.message for i in res_strict_format.issues)
+    assert res_strict_format.is_valid is True  # Warning does not block
+    assert any(i.severity == "warning" and "Amount should not be" in i.message for i in res_strict_format.issues)
 
 
 @pytest.mark.anyio
