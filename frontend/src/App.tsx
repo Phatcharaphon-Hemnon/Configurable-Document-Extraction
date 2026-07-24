@@ -26,6 +26,7 @@ type ExtractionResult = {
   judge: JudgeResult | null;
   needs_review: boolean;
   error?: string | null;
+  failed_stage?: 'router' | 'extractor' | 'validator' | 'judge' | null;
 };
 
 type FileExtractionResponse = {
@@ -65,6 +66,13 @@ type ApiRoot = {
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
 const PIPELINE_STEPS = ['Router', 'Extractor', 'Validator', 'Judge'];
+
+const STAGE_INDEX: Record<string, number> = {
+  router: 0,
+  extractor: 1,
+  validator: 2,
+  judge: 3,
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                  Icons                                     */
@@ -224,8 +232,16 @@ function App() {
 
   const currentPipelineStage = (doc: ExtractionResult | null): number => {
     if (!doc) return 0;
-    if (doc.error) return 2; // stopped at validator stage with an error
-    return 4; // fully processed (router -> extractor -> validator -> judge all ran)
+    if (doc.failed_stage) return STAGE_INDEX[doc.failed_stage] ?? 0;
+    if (doc.doc_type == null) return 0; // stopped at Router
+
+    const hasExtracted = Object.keys(doc.extracted_fields || {}).length > 0;
+    const hasAdditional = Object.keys(doc.additional_fields || {}).length > 0;
+    if (!hasExtracted && !hasAdditional) return 1; // stopped at Extractor
+
+    if (doc.validation == null) return 2; // stopped before Validator
+    if (doc.judge == null) return 3; // stopped before Judge
+    return 4; // fully processed
   };
 
   /* ---- Evaluation tab: compare extracted fields against a ground truth JSON ---- */

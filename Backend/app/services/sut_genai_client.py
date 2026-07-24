@@ -76,11 +76,83 @@ def _truncate(value: str, limit: int = 500) -> str:
     return f"{value[:limit]}… [truncated, {len(value)} chars total]"
 
 
+def _ensure_typed(schema: dict) -> None:
+    """Inject a permissive type into empty schemas (e.g. from Any) for strict mode."""
+    if not isinstance(schema, dict):
+        return
+    if not any(k in schema for k in ("type", "$ref", "anyOf", "oneOf", "allOf")):
+        # Note: "object" is deliberately excluded. Strict mode requires
+        # additionalProperties: false on any type-array branch containing "object",
+        # which a bare type-list cannot express. In this codebase, Any/untyped
+        # fields (like ExtractedFieldEntry.value) only hold scalars or arrays.
+        # We use an explicit anyOf because strict mode requires array types to
+        # define an "items" schema, which cannot be done in a flat type list.
+        # For array items, we use the same permissive scalar subset (no object),
+        # meaning line-item objects will likely be returned as JSON-encoded strings.
+        schema["anyOf"] = [
+            {"type": "string"},
+            {"type": "number"},
+            {"type": "boolean"},
+            {"type": "null"},
+            {
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {"type": "string"},
+                        {"type": "number"},
+                        {"type": "boolean"},
+                        {"type": "null"},
+                    ]
+                }
+            }
+        ]
+
+def _patch_schema_for_strict_mode(schema: dict) -> None:
+    """Recursively set strict mode constraints on all object schemas.
+    
+    1. Sets additionalProperties = False
+    2. Forces all properties into the required array
+    3. Injects types for completely unconstrained (Any) schemas
+    """
+    if not isinstance(schema, dict):
+        return
+
+    _ensure_typed(schema)
+
+    if schema.get("type") == "object":
+        schema["additionalProperties"] = False
+        if "properties" in schema and isinstance(schema["properties"], dict):
+            schema["required"] = list(schema["properties"].keys())
+
+    if "properties" in schema and isinstance(schema["properties"], dict):
+        for prop_schema in schema["properties"].values():
+            _ensure_typed(prop_schema)
+            _patch_schema_for_strict_mode(prop_schema)
+
+    if "$defs" in schema and isinstance(schema["$defs"], dict):
+        for def_schema in schema["$defs"].values():
+            _ensure_typed(def_schema)
+            _patch_schema_for_strict_mode(def_schema)
+
+    if "items" in schema and isinstance(schema["items"], dict):
+        _ensure_typed(schema["items"])
+        _patch_schema_for_strict_mode(schema["items"])
+
+    for key in ["anyOf", "oneOf", "allOf"]:
+        if key in schema and isinstance(schema[key], list):
+            for branch in schema[key]:
+                _ensure_typed(branch)
+                _patch_schema_for_strict_mode(branch)
+
+
 def _pydantic_to_json_schema(model: type[BaseModel]) -> dict[str, Any]:
     """Return a JSON-Schema dict suitable for response_format.json_schema."""
     schema = model.model_json_schema()
     # Remove Pydantic-specific keys that confuse some proxies.
     schema.pop("title", None)
+    
+    _patch_schema_for_strict_mode(schema)
+    
     return schema
 
 
@@ -289,7 +361,7 @@ class SutGenAIClient:
 
         if parsed is None:
             raise SutGenAICallError(
-                f"GitHub Models returned unparseable JSON for schema {response_schema.__name__} (vision)",
+                f"GitHub Models returned unparseable JSON for schema {response_schema.__name__} (vision) [image_size_bytes={len(image_bytes)}, image_media_type={image_media_type}]",
                 request_summary=request_summary,
                 raw_response=raw_text,
             )
@@ -390,6 +462,7 @@ class SutGenAIClient:
                 "GitHub Models: response_format call raised %s: %s — will retry plain.",
                 type(exc).__name__,
                 exc,
+                exc_info=True,
             )
             return None, None, None, None, None
 
