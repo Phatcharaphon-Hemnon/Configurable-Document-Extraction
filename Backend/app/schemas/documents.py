@@ -132,6 +132,10 @@ class ExtractionResult(BaseModel):
     judge: JudgeResult | None = None
     needs_review: bool = False
     error: str | None = None
+    failed_stage: str | None = Field(
+        default=None,
+        description="The pipeline stage (router, extractor, validator, judge) that failed, or None on success."
+    )
     extracted_at: datetime = Field(default_factory=datetime.utcnow)
     auto_evaluation: "EvaluateResponse | None" = Field(
         default=None,

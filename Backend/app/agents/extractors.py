@@ -45,6 +45,7 @@ def _parse_extraction_response(
 
     for entry in parsed.fields:
         if entry.value is None:
+            logger.debug("Extractor dropped field '%s' (null value) for doc_type=%s", entry.name, doc_type)
             continue
         item = ExtractionField(
             value=entry.value,
@@ -162,6 +163,25 @@ class OpenSchemaExtractor:
         )
 
         parsed = result.parsed
+
+        logger.info(
+            "Extractor raw response: doc_type=%s fields_returned=%d raw_text_preview=%s",
+            context.doc_type,
+            len(parsed.fields) if parsed and parsed.fields else 0,
+            (result.raw_text or "")[:300],
+        )
+
+        if not parsed or not parsed.fields:
+            has_image = bool(context.image_bytes)
+            if has_image:
+                logger.warning(
+                    "Extractor got zero fields for %s (doc_type=%s, has_image=%s) — "
+                    "check image quality/orientation or GitHub Models vision response",
+                    context.metadata.get("filename"),
+                    context.doc_type,
+                    has_image,
+                )
+
         assert isinstance(parsed, ExtractionResponseSchema)
         extracted, additional = _parse_extraction_response(parsed, suggested_names, doc_type=context.doc_type)
         return extracted, additional

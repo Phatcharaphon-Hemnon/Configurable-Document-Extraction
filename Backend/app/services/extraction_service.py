@@ -421,6 +421,7 @@ class DocumentExtractionService:
         image_bytes: bytes | None = None,
         image_media_type: str | None = None,
     ) -> ExtractionResult:
+        # --- 1. Router ---
         try:
             routing = await self.router.classify(
                 filename=filename,
@@ -428,27 +429,80 @@ class DocumentExtractionService:
                 image_bytes=image_bytes,
                 image_media_type=image_media_type,
             )
-
-            # --- Few-shot injection (opt-out via FEW_SHOT_EXAMPLES_PER_DOC_TYPE=0) ---
-            few_shot: list[dict] | None = None
-            limit = self.settings.few_shot_examples_per_doc_type
-            if limit > 0:
-                few_shot = self.knowledge_base.get_few_shot_examples(
-                    routing.doc_type, limit=limit
-                ) or None  # normalise [] → None so the extractor skips the block
-
-            context = ExtractionContext(
-                text=page_text,
-                doc_type=routing.doc_type,
-                suggested_fields=routing.suggested_fields,
-                metadata={"filename": filename},
-                few_shot_examples=few_shot,
-                image_bytes=image_bytes,
-                image_media_type=image_media_type,
+        except GeminiCallError as exc:
+            return ExtractionResult(
+                needs_review=True,
+                error=str(exc),
+                failed_stage="router",
             )
-            extracted_fields, additional_fields = await self.extractor.extract(context)
+        except Exception as exc:
+            return ExtractionResult(
+                needs_review=True,
+                error=f"Extraction pipeline failed: {exc}",
+                failed_stage=None,
+            )
 
-            catalog_fields = self.knowledge_base.get_catalog_fields(routing.doc_type)
+        # --- 2. Extractor ---
+        # --- Few-shot injection (opt-out via FEW_SHOT_EXAMPLES_PER_DOC_TYPE=0) ---
+        few_shot: list[dict] | None = None
+        limit = self.settings.few_shot_examples_per_doc_type
+        if limit > 0:
+            few_shot = self.knowledge_base.get_few_shot_examples(
+                routing.doc_type, limit=limit
+            ) or None  # normalise [] → None so the extractor skips the block
+
+        context = ExtractionContext(
+            text=page_text,
+            doc_type=routing.doc_type,
+            suggested_fields=routing.suggested_fields,
+            metadata={"filename": filename},
+            few_shot_examples=few_shot,
+            image_bytes=image_bytes,
+            image_media_type=image_media_type,
+        )
+        
+        try:
+            extracted_fields, additional_fields = await self.extractor.extract(context)
+        except GeminiCallError as exc:
+            return ExtractionResult(
+                doc_type=routing.doc_type,
+                language=routing.language,
+                routing_reason=routing.reason,
+                suggested_fields=routing.suggested_fields,
+                needs_review=True,
+                error=str(exc),
+                failed_stage="extractor",
+            )
+        except Exception as exc:
+            return ExtractionResult(
+                doc_type=routing.doc_type,
+                language=routing.language,
+                routing_reason=routing.reason,
+                suggested_fields=routing.suggested_fields,
+                needs_review=True,
+                error=f"Extraction pipeline failed: {exc}",
+                failed_stage=None,
+            )
+
+        if image_bytes and not extracted_fields and not additional_fields:
+            logger.warning(
+                "Extractor returned zero fields for image %s — failing immediately.",
+                filename,
+            )
+            return ExtractionResult(
+                doc_type=routing.doc_type,
+                language=routing.language,
+                routing_reason=routing.reason,
+                suggested_fields=routing.suggested_fields,
+                needs_review=True,
+                error="No fields could be extracted — the document may be unreadable, blank, or the vision model failed to parse it.",
+                failed_stage="extractor",
+            )
+
+        catalog_fields = self.knowledge_base.get_catalog_fields(routing.doc_type)
+
+        # --- 3. Validator ---
+        try:
             validation = self.validator.validate(
                 suggested_fields=routing.suggested_fields,
                 extracted_fields=extracted_fields,
@@ -456,6 +510,22 @@ class DocumentExtractionService:
                 schema_mode=self.settings.schema_mode,
                 catalog_fields=catalog_fields,
             )
+        except Exception as exc:
+            return ExtractionResult(
+                doc_type=routing.doc_type,
+                language=routing.language,
+                routing_reason=routing.reason,
+                suggested_fields=routing.suggested_fields,
+                extracted_fields=extracted_fields,
+                additional_fields=additional_fields,
+                full_text=page_text or None,
+                needs_review=True,
+                error=f"Validation failed: {exc}",
+                failed_stage="validator",
+            )
+
+        # --- 4. Judge ---
+        try:
             judge_result = await self.judge.evaluate(
                 prediction={
                     **{name: f.value for name, f in extracted_fields.items()},
@@ -465,18 +535,7 @@ class DocumentExtractionService:
                 image_bytes=image_bytes,
                 image_media_type=image_media_type,
             )
-
-            # --- Auto-evaluation against ground truth (local dict comparison only) ---
-            auto_eval = None
-            filename_stem = Path(filename).stem
-            gt = self.knowledge_base.get_ground_truth(filename_stem)
-            if gt is not None:
-                prediction_flat = {
-                    **{name: f.value for name, f in extracted_fields.items()},
-                    **{name: f.value for name, f in additional_fields.items()},
-                }
-                auto_eval = self.evaluate(prediction=prediction_flat, ground_truth=gt, doc_type=routing.doc_type)
-
+        except GeminiCallError as exc:
             return ExtractionResult(
                 doc_type=routing.doc_type,
                 language=routing.language,
@@ -486,26 +545,53 @@ class DocumentExtractionService:
                 additional_fields=additional_fields,
                 full_text=page_text or None,
                 validation=validation,
-                judge=judge_result,
-                needs_review=(
-                    (not validation.is_valid)
-                    or (judge_result.score < 0.7)
-                    or (self.settings.schema_mode == "strict" and getattr(routing, "out_of_catalog", False))
-                ),
-                auto_evaluation=auto_eval,
-            )
-        except GeminiCallError as exc:
-            return ExtractionResult(
                 needs_review=True,
                 error=str(exc),
-                validation=ValidationResult(is_valid=False, completeness_score=0.0, issues=[]),
+                failed_stage="judge",
             )
         except Exception as exc:
             return ExtractionResult(
+                doc_type=routing.doc_type,
+                language=routing.language,
+                routing_reason=routing.reason,
+                suggested_fields=routing.suggested_fields,
+                extracted_fields=extracted_fields,
+                additional_fields=additional_fields,
+                full_text=page_text or None,
+                validation=validation,
                 needs_review=True,
                 error=f"Extraction pipeline failed: {exc}",
-                validation=ValidationResult(is_valid=False, completeness_score=0.0, issues=[]),
+                failed_stage=None,
             )
+
+        # --- Auto-evaluation against ground truth (local dict comparison only) ---
+        auto_eval = None
+        filename_stem = Path(filename).stem
+        gt = self.knowledge_base.get_ground_truth(filename_stem)
+        if gt is not None:
+            prediction_flat = {
+                **{name: f.value for name, f in extracted_fields.items()},
+                **{name: f.value for name, f in additional_fields.items()},
+            }
+            auto_eval = self.evaluate(prediction=prediction_flat, ground_truth=gt, doc_type=routing.doc_type)
+
+        return ExtractionResult(
+            doc_type=routing.doc_type,
+            language=routing.language,
+            routing_reason=routing.reason,
+            suggested_fields=routing.suggested_fields,
+            extracted_fields=extracted_fields,
+            additional_fields=additional_fields,
+            full_text=page_text or None,
+            validation=validation,
+            judge=judge_result,
+            needs_review=(
+                (not validation.is_valid)
+                or (judge_result.score < 0.7)
+                or (self.settings.schema_mode == "strict" and getattr(routing, "out_of_catalog", False))
+            ),
+            auto_evaluation=auto_eval,
+        )
 
     # ------------------------------------------------------------------
     # Batch jobs (unchanged shape, now returns FileExtractionResponse)
