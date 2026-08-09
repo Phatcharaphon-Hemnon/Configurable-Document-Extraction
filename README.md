@@ -1,28 +1,40 @@
 # Configurable Document Extraction
 
-FastAPI backend plus a separate React frontend for AI-assisted document extraction with a Router Agent, three specialist extractors, a Validator Agent, and a Gemini-powered LLM Judge.
+FastAPI backend plus a separate React frontend for AI-assisted document extraction with a Router Agent, a single open-schema extractor, a Validator Agent, and a GitHub Models (GPT-4.1)-powered LLM Judge.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-	A[Router Agent] --> B[Invoice Extractor]
-	A --> C[PO Extractor]
-	A --> D[Delivery Note Extractor]
-	B --> E[Validator Agent]
-	C --> E
-	D --> E
-	E --> F[Judge Agent]
+	A[Router Agent] -->|doc_type + suggested_fields| B[OpenSchemaExtractor]
+	B -->|extracted_fields + additional_fields| C[Validator Agent]
+	C -->|validation result| D[Judge Agent]
+	D -->|score + issues| E[ExtractionResult]
+
+	F[(Field Catalog<br/>strict mode only)] -.reconcile.-> A
+	G[(Few-shot Examples)] -.inject.-> B
+	H[(Ground Truth)] -.auto-eval.-> E
 ```
+
+The Router classifies the document and proposes fields; a single generic
+`OpenSchemaExtractor` extracts whatever fields it can find guided by that
+suggestion list (no more hardcoded per-type extractors). In `SCHEMA_MODE=strict`,
+the Router additionally reconciles its suggestions against the on-disk field
+catalog (invoice / po / delivery_note). The Validator never hard-blocks a
+document on its own — only a completely empty extraction, or missing fields the
+Router flagged `likely_required`, affect `needs_review`. The Judge does a final
+LLM-based sanity check against the source text/image. If a ground-truth file
+matching the uploaded filename exists in the knowledge base, an automatic
+precision/recall/F1 evaluation is attached to the result.
 
 ## Tech Stack
 
 - React frontend
 - FastAPI backend
 - RAG-ready knowledge base layout
-- Multi-agent orchestration layer
+- Multi-agent orchestration layer (Router → Extractor → Validator → Judge)
 - Pydantic schemas
-- Gemini LLM Judge
+- GitHub Models (GPT-4.1) via an OpenAI-compatible client
 - `.env`-driven configuration
 
 ## Project Layout
@@ -30,7 +42,7 @@ flowchart LR
 - `app/main.py` FastAPI entry point
 - `app/core/config.py` backend environment settings
 - `app/api/routes.py` API endpoints
-- `app/agents/` router, extractors, validator, judge
+- `app/agents/` router, extractor, validator, judge
 - `app/services/` orchestration, jobs, knowledge base
 - `app/schemas/` Pydantic models
 - `app/data/knowledge_base/` sample KB structure
@@ -63,7 +75,7 @@ Important variables:
 - `KNOWLEDGE_BASE_PATH`
 - `FEW_SHOT_EXAMPLES_PER_DOC_TYPE`
 - `JUDGE_MODEL_NAME`
-- `GEMINI_API_KEY`
+- `GITHUB_MODELS_TOKEN`
 - `FRONTEND_ORIGINS`
 
 Frontend environment:
@@ -73,11 +85,11 @@ Frontend environment:
 
 ## API Contract
 
-- `POST /extract` upload file and return extraction result
+- `POST /extract` upload file(s) and return extraction result(s)
 - `GET /templates` list supported document types and schemas
 - `POST /extract/batch` create async batch job
 - `GET /jobs/{id}` check batch status and results
-- `POST /evaluate` evaluate prediction against ground truth using the configured judge model
+- `POST /evaluate` evaluate prediction against ground truth
 
 ## Run
 
@@ -88,7 +100,7 @@ Minimum requirements:
 
 1) Backend (FastAPI)
 
-- Copy environment example: `cp .env.example .env` and edit values as needed (notably `GEMINI_API_KEY` and `FRONTEND_ORIGINS`).
+- Copy environment example: `cp .env.example .env` and edit values as needed (notably `GITHUB_MODELS_TOKEN` and `FRONTEND_ORIGINS`).
 - Create and activate a virtualenv (recommended):
 
 	```bash
@@ -132,8 +144,14 @@ Minimum requirements:
 
 4) Quick troubleshooting
 
-- If you see errors about missing API keys, set `GEMINI_API_KEY` (or other provider keys) in `.env` or set to an empty string for local testing.
+- If you see errors about missing API keys, set `GITHUB_MODELS_TOKEN` (or other provider keys) in `.env` or set to an empty string for local testing.
 - Check backend logs in the terminal where `uvicorn` runs for tracebacks.
 - If frontend cannot reach the backend, ensure `VITE_API_BASE_URL` in `frontend/.env` points to `http://127.0.0.1:8000` and `FRONTEND_ORIGINS` in the backend `.env` allows the origin.
 
-If you want, I can also add example `.env` values and an npm script to run both frontend and backend concurrently.
+## CI
+
+`.github/workflows/ci.yml` runs on every push/PR to `main`:
+- **Backend**: Ruff lint + `pytest Backend/tests/`
+- **Frontend**: `npm run build` (type-checks via `tsc -b`, then builds)
+
+`.github/workflows/sonarcloud.yml` runs static code analysis separately.
