@@ -55,6 +55,13 @@ def test_date_like_match() -> None:
     assert _eval(svc, pred, gt).f1 == pytest.approx(1.0)
 
 
+def test_dot_separated_date_matches_slash_separated() -> None:
+    svc = _service()
+    pred = {"invoice_date": "27.03.2018"}
+    gt = {"invoice_date": "27/03/2018"}
+    assert _eval(svc, pred, gt).f1 == pytest.approx(1.0)
+
+
 def test_date_like_falls_back_when_only_one_side_parses() -> None:
     svc = _service()
     pred = {"statement_date": "10/9/2023"}

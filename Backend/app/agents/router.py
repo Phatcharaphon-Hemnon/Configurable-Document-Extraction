@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import logging
-import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from app.core.config import Settings
 from app.schemas.documents import DocumentLanguage, FieldDefinition
-from app.services.field_aliases import resolve_field_alias
+from app.services.field_matching import _normalize_name, build_alternative_name_lookup
 from app.schemas.llm_schemas import RoutingResponseSchema
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
@@ -17,33 +16,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-
-def _normalize_name(name: str) -> str:
-    """Normalize a field name for catalog-matching purposes.
-
-    Rules (order matters):
-    1. Strip leading/trailing whitespace.
-    2. Lowercase.
-    3. Replace any run of whitespace or hyphens with a single underscore.
-    4. Collapse multiple consecutive underscores to one.
-
-    This intentionally does NOT perform synonym mapping — "Merchant Name"
-    and "vendor_name" will NOT match.  Only case/spacing differences are
-    bridged.
-
-    Examples::
-
-        >>> _normalize_name("Total Amount")
-        'total_amount'
-        >>> _normalize_name("  Invoice-Number  ")
-        'invoice_number'
-        >>> _normalize_name("total_amount")
-        'total_amount'
-    """
-    s = name.strip().lower()
-    s = re.sub(r"[\s\-]+", "_", s)
-    s = re.sub(r"_+", "_", s)
-    return s
 
 
 @dataclass(slots=True)
@@ -133,20 +105,22 @@ class RouterAgent:
            as-is (open-schema behaviour — novel fields are preserved).
         e. The input lists are never mutated.
         """
-        # Build normalized lookup from catalog
-        catalog_lookup: dict[str, FieldDefinition] = {
+        # Build lookup keyed by canonical name + all alternative_names
+        catalog_lookup = build_alternative_name_lookup(catalog_fields)
+        # Also track canonical-only keys so we know which catalog fields were matched
+        canonical_keys: dict[str, FieldDefinition] = {
             _normalize_name(cf.name): cf for cf in catalog_fields
         }
 
         reconciled: list[FieldDefinition] = []
-        matched_catalog_names: set[str] = set()
+        matched_canonical: set[str] = set()
 
         for ai_field in ai_fields:
             norm = _normalize_name(ai_field.name)
-            norm = resolve_field_alias(doc_type, norm)
             if norm in catalog_lookup:
                 catalog_entry = catalog_lookup[norm]
-                matched_catalog_names.add(norm)
+                canon = _normalize_name(catalog_entry.name)
+                matched_canonical.add(canon)
                 # Override name + likely_required from catalog; keep AI description
                 reconciled.append(
                     FieldDefinition(
@@ -162,8 +136,8 @@ class RouterAgent:
                 reconciled.append(ai_field.model_copy())
 
         # Append catalog fields the AI never proposed
-        for norm_key, catalog_entry in catalog_lookup.items():
-            if norm_key not in matched_catalog_names:
+        for canon_key, catalog_entry in canonical_keys.items():
+            if canon_key not in matched_canonical:
                 reconciled.append(
                     FieldDefinition(
                         name=catalog_entry.name,

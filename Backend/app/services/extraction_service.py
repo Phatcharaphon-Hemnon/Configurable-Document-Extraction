@@ -11,10 +11,10 @@ logger = logging.getLogger(__name__)
 
 from app.agents.extractors import ExtractionContext, OpenSchemaExtractor
 from app.agents.judge import JudgeAgent
-from app.agents.router import RouterAgent, _normalize_name
+from app.agents.router import RouterAgent
 from app.agents.validator import ValidatorAgent
 from app.core.config import Settings
-from app.services.field_aliases import resolve_field_alias
+from app.services.field_matching import _normalize_name, build_alternative_name_lookup
 from app.schemas.documents import (
     BatchCreateResponse,
     BatchStatusResponse,
@@ -32,7 +32,7 @@ from app.services.job_store import InMemoryJobStore
 from app.services.knowledge_base import KnowledgeBaseRepository
 from app.services.llamaparse_client import LlamaParseClient
 
-# Image file extensions and MIME types that GPT-4.1 can process directly
+# Image file extensions and MIME types that NVIDIA Nemotron can process directly
 # via vision, skipping the LlamaParse OCR step entirely.
 _IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tiff", ".tif"}
 _IMAGE_CONTENT_TYPES = {
@@ -152,14 +152,8 @@ class DocumentExtractionService:
             if re.fullmatch(r"\d+", s):
                 return None
 
-            formats = [
-                "%d/%m/%y",
-                "%d/%m/%Y",
-                "%Y-%m-%d",
-                "%m/%d/%Y",
-                "%B %d, %Y",
-            ]
-            for fmt in formats:
+            from app.services.date_formats import KNOWN_DATE_FORMATS
+            for fmt in KNOWN_DATE_FORMATS:
                 try:
                     return datetime.strptime(s, fmt)
                 except ValueError:
@@ -231,32 +225,38 @@ class DocumentExtractionService:
         """Rename prediction keys to match ground-truth canonical names.
 
         Builds a lookup of ground-truth keys using both
-        :func:`_normalize_name` and :func:`resolve_field_alias` so that
-        semantic synonyms are resolved.  Prediction keys that match a
-        ground-truth key (after normalization + alias resolution) are
-        renamed to the ground-truth-canonical form.  Keys with no match
+        :func:`_normalize_name` and the catalog's ``alternative_names`` so
+        that semantic synonyms are resolved.  Prediction keys that match a
+        ground-truth key (after normalization + alternative-name resolution)
+        are renamed to the ground-truth-canonical form.  Keys with no match
         are left untouched.
 
         The original *prediction* dict is **not** mutated; a new dict is
         returned.
         """
+        # Build alt-name lookup from the catalog for this doc_type
+        catalog_fields = self.knowledge_base.get_catalog_fields(doc_type)
+        alt_lookup = build_alternative_name_lookup(catalog_fields)
+
         # Map normalized+aliased ground-truth key → original GT key
         gt_lookup: dict[str, str] = {}
         for gt_key in ground_truth:
             norm = _normalize_name(gt_key)
-            resolved = resolve_field_alias(doc_type, norm)
-            gt_lookup[resolved] = gt_key
-            # Also store the raw normalized form so an exact normalized
-            # match (before alias) still works.
-            if norm != resolved:
-                gt_lookup[norm] = gt_key
+            gt_lookup[norm] = gt_key
+            # Also resolve via alternative names
+            if norm in alt_lookup:
+                canon = _normalize_name(alt_lookup[norm].name)
+                gt_lookup[canon] = gt_key
 
         reconciled: dict[str, Any] = {}
         for pred_key, pred_value in prediction.items():
             norm = _normalize_name(pred_key)
-            resolved = resolve_field_alias(doc_type, norm)
-            if resolved in gt_lookup:
-                canonical = gt_lookup[resolved]
+            # Try resolving via alternative names
+            resolved_norm = norm
+            if norm in alt_lookup:
+                resolved_norm = _normalize_name(alt_lookup[norm].name)
+            if resolved_norm in gt_lookup:
+                canonical = gt_lookup[resolved_norm]
             elif norm in gt_lookup:
                 canonical = gt_lookup[norm]
             else:
@@ -330,7 +330,7 @@ class DocumentExtractionService:
         """Process a GROUP of uploaded files as pages of ONE logical upload.
 
         Every incoming file must go through LlamaParse first — UNLESS the
-        file is an image.  Image files are sent directly to GPT-4.1 via
+        file is an image.  Image files are sent directly to NVIDIA Nemotron via
         the vision API, skipping LlamaParse entirely for speed & accuracy.
         """
         total_size = sum(len(p.raw_content) for p in parts)

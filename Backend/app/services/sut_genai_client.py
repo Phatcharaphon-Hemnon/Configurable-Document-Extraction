@@ -1,9 +1,9 @@
-"""SUT GenAI gateway client wrapper, now using GitHub Models.
+"""SUT GenAI gateway client wrapper, now using OpenRouter.
 
-Talks to https://models.github.ai/inference which is an OpenAI-compatible endpoint.
+Talks to https://openrouter.ai/api/v1 which is an OpenAI-compatible endpoint.
 
-Auth:  Authorization: Bearer <GITHUB_MODELS_TOKEN>
-Model: Locked to gpt-4.1 to avoid premium Copilot request quota.
+Auth:  Authorization: Bearer <OPENROUTER_API_KEY>
+Model: Locked to nvidia/nemotron-nano-12b-v2-vl:free to avoid premium Copilot request quota.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=BaseModel)
 
-_SUT_BASE_URL = "https://models.github.ai/inference"
+_SUT_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 # ---------------------------------------------------------------------------
@@ -76,48 +76,14 @@ def _truncate(value: str, limit: int = 500) -> str:
     return f"{value[:limit]}… [truncated, {len(value)} chars total]"
 
 
-def _ensure_typed(schema: dict) -> None:
-    """Inject a permissive type into empty schemas (e.g. from Any) for strict mode."""
-    if not isinstance(schema, dict):
-        return
-    if not any(k in schema for k in ("type", "$ref", "anyOf", "oneOf", "allOf")):
-        # Note: "object" is deliberately excluded. Strict mode requires
-        # additionalProperties: false on any type-array branch containing "object",
-        # which a bare type-list cannot express. In this codebase, Any/untyped
-        # fields (like ExtractedFieldEntry.value) only hold scalars or arrays.
-        # We use an explicit anyOf because strict mode requires array types to
-        # define an "items" schema, which cannot be done in a flat type list.
-        # For array items, we use the same permissive scalar subset (no object),
-        # meaning line-item objects will likely be returned as JSON-encoded strings.
-        schema["anyOf"] = [
-            {"type": "string"},
-            {"type": "number"},
-            {"type": "boolean"},
-            {"type": "null"},
-            {
-                "type": "array",
-                "items": {
-                    "anyOf": [
-                        {"type": "string"},
-                        {"type": "number"},
-                        {"type": "boolean"},
-                        {"type": "null"},
-                    ]
-                }
-            }
-        ]
-
 def _patch_schema_for_strict_mode(schema: dict) -> None:
     """Recursively set strict mode constraints on all object schemas.
     
     1. Sets additionalProperties = False
     2. Forces all properties into the required array
-    3. Injects types for completely unconstrained (Any) schemas
     """
     if not isinstance(schema, dict):
         return
-
-    _ensure_typed(schema)
 
     if schema.get("type") == "object":
         schema["additionalProperties"] = False
@@ -126,22 +92,18 @@ def _patch_schema_for_strict_mode(schema: dict) -> None:
 
     if "properties" in schema and isinstance(schema["properties"], dict):
         for prop_schema in schema["properties"].values():
-            _ensure_typed(prop_schema)
             _patch_schema_for_strict_mode(prop_schema)
 
     if "$defs" in schema and isinstance(schema["$defs"], dict):
         for def_schema in schema["$defs"].values():
-            _ensure_typed(def_schema)
             _patch_schema_for_strict_mode(def_schema)
 
     if "items" in schema and isinstance(schema["items"], dict):
-        _ensure_typed(schema["items"])
         _patch_schema_for_strict_mode(schema["items"])
 
     for key in ["anyOf", "oneOf", "allOf"]:
         if key in schema and isinstance(schema[key], list):
             for branch in schema[key]:
-                _ensure_typed(branch)
                 _patch_schema_for_strict_mode(branch)
 
 
@@ -171,18 +133,18 @@ def _build_json_prompt_suffix(model: type[BaseModel]) -> str:
 # Main client
 # ---------------------------------------------------------------------------
 
-# Uses GitHub Models (OpenAI-compatible endpoint). Locked to gpt-4.1 — this
+# Uses OpenRouter (OpenAI-compatible endpoint). Locked to nvidia/nemotron-nano-12b-v2-vl:free — this
 # model is NOT metered against Copilot Pro's premium request quota (300/month).
 # Do not switch to Opus, o3, or GPT-4.5 here without checking premium quota impact
 # first, since those carry heavy per-request multipliers.
 class SutGenAIClient:
-    """OpenAI-compatible client pointed at the GitHub Models endpoint."""
+    """OpenAI-compatible client pointed at the OpenRouter endpoint."""
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
-        api_key = settings.github_models_token.strip()
+        api_key = settings.openrouter_api_key.strip()
         if not api_key:
-            raise SutGenAICallError("GITHUB_MODELS_TOKEN is not set")
+            raise SutGenAICallError("OPENROUTER_API_KEY is not set")
         self._client = AsyncOpenAI(
             api_key=api_key,
             base_url=_SUT_BASE_URL,
@@ -227,13 +189,16 @@ class SutGenAIClient:
 
         if parsed is None:
             # --- Attempt 2: prompt-level JSON fallback ---
-            fallback_prompt = (
-                "The following response was supposed to be valid JSON matching a "
-                "specific schema, but failed to parse. Return ONLY the corrected, "
-                "valid JSON object — no markdown fences, no commentary.\n\n"
-                f"Schema:\n{json.dumps(response_schema.model_json_schema(), indent=2)}\n\n"
-                f"Response to fix:\n{raw_text}"
-            )
+            if raw_text is None:
+                fallback_prompt = prompt + _build_json_prompt_suffix(response_schema)
+            else:
+                fallback_prompt = (
+                    "The following response was supposed to be valid JSON matching a "
+                    "specific schema, but failed to parse. Return ONLY the corrected, "
+                    "valid JSON object — no markdown fences, no commentary.\n\n"
+                    f"Schema:\n{json.dumps(response_schema.model_json_schema(), indent=2)}\n\n"
+                    f"Response to fix:\n{raw_text}"
+                )
             fallback_messages = [{"role": "user", "content": fallback_prompt}]
             raw_text, raw_response, attempt2_prompt_tokens, attempt2_comp_tokens, attempt2_tot_tokens = await self._call_plain(
                 model=model,
@@ -242,7 +207,7 @@ class SutGenAIClient:
                 request_summary=request_summary,
             )
             logger.warning(
-                "GitHub Models retry triggered for schema=%s — extra tokens spent: "
+                "OpenRouter retry triggered for schema=%s — extra tokens spent: "
                 "attempt1=%s prompt tokens, attempt2=%s prompt tokens",
                 response_schema.__name__,
                 attempt1_prompt_tokens,
@@ -256,13 +221,13 @@ class SutGenAIClient:
 
         if parsed is None:
             raise SutGenAICallError(
-                f"GitHub Models returned unparseable JSON for schema {response_schema.__name__}",
+                f"OpenRouter returned unparseable JSON for schema {response_schema.__name__}",
                 request_summary=request_summary,
                 raw_response=raw_text,
             )
 
         logger.debug(
-            "GitHub Models generate_structured OK schema=%s model=%s",
+            "OpenRouter generate_structured OK schema=%s model=%s",
             response_schema.__name__,
             model,
         )
@@ -335,15 +300,27 @@ class SutGenAIClient:
         parsed = self._try_parse(response_schema, raw_text)
 
         if parsed is None:
-            # --- Attempt 2: prompt-level JSON fallback (text-only repair) ---
-            fallback_prompt = (
-                "The following response was supposed to be valid JSON matching a "
-                "specific schema, but failed to parse. Return ONLY the corrected, "
-                "valid JSON object — no markdown fences, no commentary.\n\n"
-                f"Schema:\n{json.dumps(response_schema.model_json_schema(), indent=2)}\n\n"
-                f"Response to fix:\n{raw_text}"
-            )
-            fallback_messages = [{"role": "user", "content": fallback_prompt}]
+            # --- Attempt 2: prompt-level JSON fallback ---
+            if raw_text is None:
+                fallback_prompt = prompt + _build_json_prompt_suffix(response_schema)
+                fallback_messages = [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "image_url", "image_url": {"url": data_uri, "detail": "high"}},
+                            {"type": "text", "text": fallback_prompt},
+                        ],
+                    }
+                ]
+            else:
+                fallback_prompt = (
+                    "The following response was supposed to be valid JSON matching a "
+                    "specific schema, but failed to parse. Return ONLY the corrected, "
+                    "valid JSON object — no markdown fences, no commentary.\n\n"
+                    f"Schema:\n{json.dumps(response_schema.model_json_schema(), indent=2)}\n\n"
+                    f"Response to fix:\n{raw_text}"
+                )
+                fallback_messages = [{"role": "user", "content": fallback_prompt}]
             raw_text, raw_response, a2_pt, a2_ct, a2_tt = await self._call_plain(
                 model=model,
                 messages=fallback_messages,
@@ -351,7 +328,7 @@ class SutGenAIClient:
                 request_summary=request_summary,
             )
             logger.warning(
-                "GitHub Models vision retry triggered for schema=%s — extra tokens spent",
+                "OpenRouter vision retry triggered for schema=%s — extra tokens spent",
                 response_schema.__name__,
             )
             parsed = self._try_parse(response_schema, raw_text)
@@ -361,13 +338,13 @@ class SutGenAIClient:
 
         if parsed is None:
             raise SutGenAICallError(
-                f"GitHub Models returned unparseable JSON for schema {response_schema.__name__} (vision) [image_size_bytes={len(image_bytes)}, image_media_type={image_media_type}]",
+                f"OpenRouter returned unparseable JSON for schema {response_schema.__name__} (vision) [image_size_bytes={len(image_bytes)}, image_media_type={image_media_type}]",
                 request_summary=request_summary,
                 raw_response=raw_text,
             )
 
         logger.debug(
-            "GitHub Models generate_structured_with_image OK schema=%s model=%s",
+            "OpenRouter generate_structured_with_image OK schema=%s model=%s",
             response_schema.__name__,
             model,
         )
@@ -410,7 +387,7 @@ class SutGenAIClient:
 
         if not raw_text or not raw_text.strip():
             raise SutGenAICallError(
-                "GitHub Models returned an empty text response",
+                "OpenRouter returned an empty text response",
                 request_summary=request_summary,
                 raw_response=raw_response,
             )
@@ -459,7 +436,7 @@ class SutGenAIClient:
             # If the proxy rejects the response_format param entirely, fall
             # through to the plain call path by returning None.
             logger.warning(
-                "GitHub Models: response_format call raised %s: %s — will retry plain.",
+                "OpenRouter: response_format call raised %s: %s — will retry plain.",
                 type(exc).__name__,
                 exc,
                 exc_info=True,
@@ -473,7 +450,7 @@ class SutGenAIClient:
         completion_tokens = getattr(usage, "completion_tokens", None) if usage else None
         total_tokens = getattr(usage, "total_tokens", None) if usage else None
         logger.debug(
-            "GitHub Models _call_with_schema raw_text preview: %s",
+            "OpenRouter _call_with_schema raw_text preview: %s",
             (raw_text or "")[:300],
         )
         return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens
@@ -495,7 +472,7 @@ class SutGenAIClient:
             )
         except Exception as exc:
             raise SutGenAICallError(
-                f"GitHub Models API call failed: {exc}",
+                f"OpenRouter API call failed: {exc}",
                 request_summary=request_summary,
             ) from exc
 
@@ -506,7 +483,7 @@ class SutGenAIClient:
         completion_tokens = getattr(usage, "completion_tokens", None) if usage else None
         total_tokens = getattr(usage, "total_tokens", None) if usage else None
         logger.debug(
-            "GitHub Models _call_plain raw_text preview: %s",
+            "OpenRouter _call_plain raw_text preview: %s",
             (raw_text or "")[:300],
         )
         return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens

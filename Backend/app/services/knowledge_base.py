@@ -261,6 +261,7 @@ class KnowledgeBaseRepository:
                     type=str(f.get("type", "")).strip() or None,
                     likely_required=bool(f.get("required", f.get("likely_required", False))),
                     validation_rule=str(f.get("validation_rule", "")).strip() or None,
+                    alternative_names=f.get("alternative_names", []),
                 )
             )
 

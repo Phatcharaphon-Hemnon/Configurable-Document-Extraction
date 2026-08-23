@@ -41,6 +41,7 @@ class FieldDefinition(BaseModel):
     likely_required: bool = False
     type: str | None = None
     validation_rule: str | None = None
+    alternative_names: list[str] = Field(default_factory=list)
 
 
 class TemplateSchema(BaseModel):

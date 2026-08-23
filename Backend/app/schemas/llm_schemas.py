@@ -30,9 +30,21 @@ class RoutingResponseSchema(BaseModel):
     )
 
 
+class LineItemEntry(BaseModel):
+    description: str | None = None
+    quantity: float | str | None = None
+    unit_price: float | None = None
+    amount: float | None = None
+    date: str | None = None
+    type: str | None = None
+    payment: float | None = None
+    balance: float | None = None
+    total: float | None = None
+
+
 class ExtractedFieldEntry(BaseModel):
     name: str
-    value: Any
+    value: str | float | bool | list[LineItemEntry] | None = None
     confidence: float = Field(ge=0.0, le=1.0)
     source_span: str | None = None
     likely_required: bool = False
