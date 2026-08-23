@@ -1,13 +1,14 @@
-"""SUT GenAI gateway client wrapper, now using OpenRouter.
+"""SUT GenAI gateway client wrapper, using NVIDIA NIM API.
 
-Talks to https://openrouter.ai/api/v1 which is an OpenAI-compatible endpoint.
+Talks to https://integrate.api.nvidia.com/v1 which is an OpenAI-compatible endpoint.
 
-Auth:  Authorization: Bearer <OPENROUTER_API_KEY>
-Model: Locked to nvidia/nemotron-nano-12b-v2-vl:free to avoid premium Copilot request quota.
+Auth:  Authorization: Bearer <NVIDIA_API_KEY>
+Model: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
 """
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import logging
@@ -23,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=BaseModel)
 
-_SUT_BASE_URL = "https://openrouter.ai/api/v1"
+_SUT_BASE_URL = "https://integrate.api.nvidia.com/v1"
 
 
 # ---------------------------------------------------------------------------
@@ -133,21 +134,20 @@ def _build_json_prompt_suffix(model: type[BaseModel]) -> str:
 # Main client
 # ---------------------------------------------------------------------------
 
-# Uses OpenRouter (OpenAI-compatible endpoint). Locked to nvidia/nemotron-nano-12b-v2-vl:free — this
-# model is NOT metered against Copilot Pro's premium request quota (300/month).
-# Do not switch to Opus, o3, or GPT-4.5 here without checking premium quota impact
-# first, since those carry heavy per-request multipliers.
+# Uses NVIDIA NIM API (OpenAI-compatible endpoint).
 class SutGenAIClient:
-    """OpenAI-compatible client pointed at the OpenRouter endpoint."""
+    """OpenAI-compatible client pointed at the NVIDIA NIM API endpoint."""
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
-        api_key = settings.openrouter_api_key.strip()
-        if not api_key:
-            raise SutGenAICallError("OPENROUTER_API_KEY is not set")
+        self._timeout = settings.llm_request_timeout_seconds
+        raw_key = getattr(settings, "nvidia_api_key", None) or getattr(settings, "openrouter_api_key", None) or ""
+        api_key = str(raw_key).strip() or "dummy-key"
         self._client = AsyncOpenAI(
             api_key=api_key,
             base_url=_SUT_BASE_URL,
+            timeout=self._timeout,
+            max_retries=0,  # we have our own schema→plain retry logic
         )
 
     # ------------------------------------------------------------------
@@ -161,6 +161,8 @@ class SutGenAIClient:
         prompt: str,
         response_schema: type[T],
         temperature: float = 0.0,
+        max_tokens: int | None = None,
+        disable_reasoning: bool = False,
     ) -> SutGenAICallResult:
         """Call the model and parse the response into *response_schema*."""
         request_summary: dict[str, Any] = {
@@ -168,27 +170,67 @@ class SutGenAIClient:
             "prompt": _truncate(prompt),
             "response_schema": response_schema.__name__,
             "temperature": temperature,
+            "disable_reasoning": disable_reasoning,
         }
 
         messages = [{"role": "user", "content": prompt}]
 
         # --- Attempt 1: response_format with json_schema ---
-        raw_text, raw_response, attempt1_prompt_tokens, attempt1_comp_tokens, attempt1_tot_tokens = await self._call_with_schema(
-            model=model,
-            messages=messages,
-            response_schema=response_schema,
-            temperature=temperature,
-            request_summary=request_summary,
-        )
+        if not getattr(self.settings, "disable_strict_json_schema", False):
+            logger.info(
+                "Attempt 1 (schema): model=%s schema=%s disable_reasoning=%s",
+                model, response_schema.__name__, disable_reasoning,
+            )
+            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_schema(
+                model=model,
+                messages=messages,
+                response_schema=response_schema,
+                temperature=temperature,
+                request_summary=request_summary,
+                max_tokens=max_tokens,
+                disable_reasoning=disable_reasoning,
+            )
+            parsed = self._try_parse(response_schema, raw_text)
+        else:
+            logger.info(
+                "Skipping Attempt 1 (schema) due to DISABLE_STRICT_JSON_SCHEMA=true for model=%s schema=%s",
+                model, response_schema.__name__,
+            )
+            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = None, None, None, None, None
+            parsed = None
 
-        prompt_tokens = attempt1_prompt_tokens
-        completion_tokens = attempt1_comp_tokens
-        total_tokens = attempt1_tot_tokens
-
-        parsed = self._try_parse(response_schema, raw_text)
-
+        # --- Attempt 2: response_format with json_object ---
         if parsed is None:
-            # --- Attempt 2: prompt-level JSON fallback ---
+            logger.info(
+                "Attempt 2 (json_object): model=%s schema=%s",
+                model, response_schema.__name__,
+            )
+            logger.warning(
+                "OpenRouter retry (json_object) triggered for schema=%s — attempt 1 raw preview: %s",
+                response_schema.__name__,
+                _truncate(raw_text or "(empty)", 300),
+            )
+            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_json_object_mode(
+                model=model,
+                messages=messages,
+                temperature=temperature,
+                request_summary=request_summary,
+                max_tokens=max_tokens,
+                disable_reasoning=disable_reasoning,
+            )
+            parsed = self._try_parse(response_schema, raw_text)
+
+        # --- Attempt 3: prompt-level JSON fallback ---
+        if parsed is None:
+            logger.info(
+                "Attempt 3 (plain prompt fallback): model=%s schema=%s",
+                model, response_schema.__name__,
+            )
+            logger.warning(
+                "OpenRouter retry (plain) triggered for schema=%s — attempt 2 raw preview: %s",
+                response_schema.__name__,
+                _truncate(raw_text or "(empty)", 300),
+            )
             if raw_text is None:
                 fallback_prompt = prompt + _build_json_prompt_suffix(response_schema)
             else:
@@ -200,28 +242,20 @@ class SutGenAIClient:
                     f"Response to fix:\n{raw_text}"
                 )
             fallback_messages = [{"role": "user", "content": fallback_prompt}]
-            raw_text, raw_response, attempt2_prompt_tokens, attempt2_comp_tokens, attempt2_tot_tokens = await self._call_plain(
+            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_plain(
                 model=model,
                 messages=fallback_messages,
                 temperature=temperature,
                 request_summary=request_summary,
-            )
-            logger.warning(
-                "OpenRouter retry triggered for schema=%s — extra tokens spent: "
-                "attempt1=%s prompt tokens, attempt2=%s prompt tokens",
-                response_schema.__name__,
-                attempt1_prompt_tokens,
-                attempt2_prompt_tokens,
+                max_tokens=max_tokens,
+                disable_reasoning=disable_reasoning,
             )
             parsed = self._try_parse(response_schema, raw_text)
 
-            prompt_tokens = attempt2_prompt_tokens
-            completion_tokens = attempt2_comp_tokens
-            total_tokens = attempt2_tot_tokens
-
         if parsed is None:
             raise SutGenAICallError(
-                f"OpenRouter returned unparseable JSON for schema {response_schema.__name__}",
+                f"OpenRouter returned unparseable JSON for schema {response_schema.__name__}. "
+                f"Raw response preview: {_truncate(raw_text or '(empty response)', 300)}",
                 request_summary=request_summary,
                 raw_response=raw_text,
             )
@@ -255,6 +289,8 @@ class SutGenAIClient:
         image_media_type: str,
         response_schema: type[T],
         temperature: float = 0.0,
+        max_tokens: int | None = None,
+        disable_reasoning: bool = False,
     ) -> SutGenAICallResult:
         """Call the model with an image + text prompt and parse the response.
 
@@ -272,6 +308,7 @@ class SutGenAIClient:
             "temperature": temperature,
             "has_image": True,
             "image_size_bytes": len(image_bytes),
+            "disable_reasoning": disable_reasoning,
         }
 
         messages = [
@@ -285,22 +322,61 @@ class SutGenAIClient:
         ]
 
         # --- Attempt 1: response_format with json_schema ---
-        raw_text, raw_response, a1_pt, a1_ct, a1_tt = await self._call_with_schema(
-            model=model,
-            messages=messages,
-            response_schema=response_schema,
-            temperature=temperature,
-            request_summary=request_summary,
-        )
+        if not getattr(self.settings, "disable_strict_json_schema", False):
+            logger.info(
+                "Attempt 1 (schema+vision): model=%s schema=%s image_size=%d disable_reasoning=%s",
+                model, response_schema.__name__, len(image_bytes), disable_reasoning,
+            )
+            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_schema(
+                model=model,
+                messages=messages,
+                response_schema=response_schema,
+                temperature=temperature,
+                request_summary=request_summary,
+                max_tokens=max_tokens,
+                disable_reasoning=disable_reasoning,
+            )
+            parsed = self._try_parse(response_schema, raw_text)
+        else:
+            logger.info(
+                "Skipping Attempt 1 (schema+vision) due to DISABLE_STRICT_JSON_SCHEMA=true for model=%s schema=%s",
+                model, response_schema.__name__,
+            )
+            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = None, None, None, None, None
+            parsed = None
 
-        prompt_tokens = a1_pt
-        completion_tokens = a1_ct
-        total_tokens = a1_tt
-
-        parsed = self._try_parse(response_schema, raw_text)
-
+        # --- Attempt 2: response_format with json_object ---
         if parsed is None:
-            # --- Attempt 2: prompt-level JSON fallback ---
+            logger.info(
+                "Attempt 2 (json_object+vision): model=%s schema=%s image_size=%d",
+                model, response_schema.__name__, len(image_bytes),
+            )
+            logger.warning(
+                "OpenRouter vision retry (json_object) triggered for schema=%s — attempt 1 raw preview: %s",
+                response_schema.__name__,
+                _truncate(raw_text or "(empty)", 300),
+            )
+            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_json_object_mode(
+                model=model,
+                messages=messages,
+                temperature=temperature,
+                request_summary=request_summary,
+                max_tokens=max_tokens,
+                disable_reasoning=disable_reasoning,
+            )
+            parsed = self._try_parse(response_schema, raw_text)
+
+        # --- Attempt 3: prompt-level JSON fallback ---
+        if parsed is None:
+            logger.info(
+                "Attempt 3 (plain prompt fallback+vision): model=%s schema=%s",
+                model, response_schema.__name__,
+            )
+            logger.warning(
+                "OpenRouter vision retry (plain) triggered for schema=%s — attempt 2 raw preview: %s",
+                response_schema.__name__,
+                _truncate(raw_text or "(empty)", 300),
+            )
             if raw_text is None:
                 fallback_prompt = prompt + _build_json_prompt_suffix(response_schema)
                 fallback_messages = [
@@ -321,24 +397,21 @@ class SutGenAIClient:
                     f"Response to fix:\n{raw_text}"
                 )
                 fallback_messages = [{"role": "user", "content": fallback_prompt}]
-            raw_text, raw_response, a2_pt, a2_ct, a2_tt = await self._call_plain(
+            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_plain(
                 model=model,
                 messages=fallback_messages,
                 temperature=temperature,
                 request_summary=request_summary,
-            )
-            logger.warning(
-                "OpenRouter vision retry triggered for schema=%s — extra tokens spent",
-                response_schema.__name__,
+                max_tokens=max_tokens,
+                disable_reasoning=disable_reasoning,
             )
             parsed = self._try_parse(response_schema, raw_text)
-            prompt_tokens = a2_pt
-            completion_tokens = a2_ct
-            total_tokens = a2_tt
 
         if parsed is None:
             raise SutGenAICallError(
-                f"OpenRouter returned unparseable JSON for schema {response_schema.__name__} (vision) [image_size_bytes={len(image_bytes)}, image_media_type={image_media_type}]",
+                f"OpenRouter returned unparseable JSON for schema {response_schema.__name__} "
+                f"(vision) [image_size_bytes={len(image_bytes)}, image_media_type={image_media_type}]. "
+                f"Raw response preview: {_truncate(raw_text or '(empty response)', 300)}",
                 request_summary=request_summary,
                 raw_response=raw_text,
             )
@@ -414,6 +487,8 @@ class SutGenAIClient:
         response_schema: type[BaseModel],
         temperature: float,
         request_summary: dict[str, Any],
+        max_tokens: int | None = None,
+        disable_reasoning: bool = False,
     ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Try calling with response_format json_schema enforcement."""
         json_schema_dict = _pydantic_to_json_schema(response_schema)
@@ -425,23 +500,64 @@ class SutGenAIClient:
                 "schema": json_schema_dict,
             },
         }
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+            "response_format": response_format,
+        }
+        if max_tokens is not None:
+            kwargs["max_tokens"] = max_tokens
+        if disable_reasoning:
+            kwargs["extra_body"] = {"reasoning": {"enabled": False}}
         try:
-            resp = await self._client.chat.completions.create(
-                model=model,
-                messages=messages,  # type: ignore[arg-type]
-                temperature=temperature,
-                response_format=response_format,  # type: ignore[arg-type]
+            resp = await asyncio.wait_for(
+                self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
+                timeout=self._timeout,
             )
-        except Exception as exc:
-            # If the proxy rejects the response_format param entirely, fall
-            # through to the plain call path by returning None.
+        except asyncio.TimeoutError:
             logger.warning(
-                "OpenRouter: response_format call raised %s: %s — will retry plain.",
-                type(exc).__name__,
-                exc,
-                exc_info=True,
+                "OpenRouter: schema call timed out after %.0fs — will retry plain.",
+                self._timeout,
             )
             return None, None, None, None, None
+        except Exception as exc:
+            # If we sent extra_body and the provider rejected it, retry once
+            # on the SAME tier without extra_body before falling through.
+            if "extra_body" in kwargs:
+                logger.warning(
+                    "OpenRouter: schema call with extra_body raised %s: %s — "
+                    "retrying same tier without extra_body.",
+                    type(exc).__name__, exc,
+                )
+                kwargs.pop("extra_body")
+                try:
+                    resp = await asyncio.wait_for(
+                        self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
+                        timeout=self._timeout,
+                    )
+                except asyncio.TimeoutError:
+                    logger.warning(
+                        "OpenRouter: schema call (no extra_body) timed out after %.0fs — will retry plain.",
+                        self._timeout,
+                    )
+                    return None, None, None, None, None
+                except Exception as exc2:
+                    logger.warning(
+                        "OpenRouter: response_format call raised %s: %s — will retry plain.",
+                        type(exc2).__name__, exc2, exc_info=True,
+                    )
+                    return None, None, None, None, None
+            else:
+                # If the proxy rejects the response_format param entirely, fall
+                # through to the plain call path by returning None.
+                logger.warning(
+                    "OpenRouter: response_format call raised %s: %s — will retry plain.",
+                    type(exc).__name__,
+                    exc,
+                    exc_info=True,
+                )
+                return None, None, None, None, None
 
         raw_text = resp.choices[0].message.content if resp.choices else None
         raw_response = resp.model_dump() if hasattr(resp, "model_dump") else str(resp)
@@ -455,6 +571,87 @@ class SutGenAIClient:
         )
         return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens
 
+    async def _call_with_json_object_mode(
+        self,
+        *,
+        model: str,
+        messages: list[dict[str, Any]],
+        temperature: float,
+        request_summary: dict[str, Any],
+        max_tokens: int | None = None,
+        disable_reasoning: bool = False,
+    ) -> tuple[str | None, Any, int | None, int | None, int | None]:
+        """Try calling with response_format={"type": "json_object"} enforcement."""
+        response_format: dict[str, Any] = {"type": "json_object"}
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+            "response_format": response_format,
+        }
+        if max_tokens is not None:
+            kwargs["max_tokens"] = max_tokens
+        if disable_reasoning:
+            kwargs["extra_body"] = {"reasoning": {"enabled": False}}
+        try:
+            resp = await asyncio.wait_for(
+                self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
+                timeout=self._timeout,
+            )
+        except asyncio.TimeoutError:
+            logger.warning(
+                "OpenRouter: json_object call timed out after %.0fs — will retry plain.",
+                self._timeout,
+            )
+            return None, None, None, None, None
+        except Exception as exc:
+            # If we sent extra_body and the provider rejected it, retry once
+            # on the SAME tier without extra_body before falling through.
+            if "extra_body" in kwargs:
+                logger.warning(
+                    "OpenRouter: json_object call with extra_body raised %s: %s — "
+                    "retrying same tier without extra_body.",
+                    type(exc).__name__, exc,
+                )
+                kwargs.pop("extra_body")
+                try:
+                    resp = await asyncio.wait_for(
+                        self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
+                        timeout=self._timeout,
+                    )
+                except asyncio.TimeoutError:
+                    logger.warning(
+                        "OpenRouter: json_object call (no extra_body) timed out after %.0fs — will retry plain.",
+                        self._timeout,
+                    )
+                    return None, None, None, None, None
+                except Exception as exc2:
+                    logger.warning(
+                        "OpenRouter: json_object call raised %s: %s — will retry plain.",
+                        type(exc2).__name__, exc2, exc_info=True,
+                    )
+                    return None, None, None, None, None
+            else:
+                logger.warning(
+                    "OpenRouter: json_object call raised %s: %s — will retry plain.",
+                    type(exc).__name__,
+                    exc,
+                    exc_info=True,
+                )
+                return None, None, None, None, None
+
+        raw_text = resp.choices[0].message.content if resp.choices else None
+        raw_response = resp.model_dump() if hasattr(resp, "model_dump") else str(resp)
+        usage = getattr(resp, "usage", None)
+        prompt_tokens = getattr(usage, "prompt_tokens", None) if usage else None
+        completion_tokens = getattr(usage, "completion_tokens", None) if usage else None
+        total_tokens = getattr(usage, "total_tokens", None) if usage else None
+        logger.debug(
+            "OpenRouter _call_with_json_object_mode raw_text preview: %s",
+            (raw_text or "")[:300],
+        )
+        return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens
+
     async def _call_plain(
         self,
         *,
@@ -462,19 +659,59 @@ class SutGenAIClient:
         messages: list[dict[str, Any]],
         temperature: float,
         request_summary: dict[str, Any],
+        max_tokens: int | None = None,
+        disable_reasoning: bool = False,
     ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Plain chat completion call (no response_format param)."""
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+        }
+        if max_tokens is not None:
+            kwargs["max_tokens"] = max_tokens
+        if disable_reasoning:
+            kwargs["extra_body"] = {"reasoning": {"enabled": False}}
         try:
-            resp = await self._client.chat.completions.create(
-                model=model,
-                messages=messages,  # type: ignore[arg-type]
-                temperature=temperature,
+            resp = await asyncio.wait_for(
+                self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
+                timeout=self._timeout,
+            )
+        except asyncio.TimeoutError:
+            raise SutGenAICallError(
+                f"OpenRouter request timed out after {self._timeout:.0f}s",
+                request_summary=request_summary,
             )
         except Exception as exc:
-            raise SutGenAICallError(
-                f"OpenRouter API call failed: {exc}",
-                request_summary=request_summary,
-            ) from exc
+            # If we sent extra_body and the provider rejected it, retry once
+            # on the SAME tier without extra_body before raising.
+            if "extra_body" in kwargs:
+                logger.warning(
+                    "OpenRouter: plain call with extra_body raised %s: %s — "
+                    "retrying same tier without extra_body.",
+                    type(exc).__name__, exc,
+                )
+                kwargs.pop("extra_body")
+                try:
+                    resp = await asyncio.wait_for(
+                        self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
+                        timeout=self._timeout,
+                    )
+                except asyncio.TimeoutError:
+                    raise SutGenAICallError(
+                        f"OpenRouter request timed out after {self._timeout:.0f}s",
+                        request_summary=request_summary,
+                    )
+                except Exception as exc2:
+                    raise SutGenAICallError(
+                        f"OpenRouter API call failed: {exc2}",
+                        request_summary=request_summary,
+                    ) from exc2
+            else:
+                raise SutGenAICallError(
+                    f"OpenRouter API call failed: {exc}",
+                    request_summary=request_summary,
+                ) from exc
 
         raw_text = resp.choices[0].message.content if resp.choices else None
         raw_response = resp.model_dump() if hasattr(resp, "model_dump") else str(resp)

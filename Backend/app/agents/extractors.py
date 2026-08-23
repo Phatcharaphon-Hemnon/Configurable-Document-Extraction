@@ -157,12 +157,16 @@ class OpenSchemaExtractor:
                 image_bytes=context.image_bytes,
                 image_media_type=context.image_media_type,
                 response_schema=ExtractionResponseSchema,
+                max_tokens=self.settings.extraction_max_tokens,
+                disable_reasoning=True,
             )
         else:
             result = await self._client.generate_structured(
                 model=self.settings.recommended_extraction_model_name,
                 prompt=prompt,
                 response_schema=ExtractionResponseSchema,
+                max_tokens=self.settings.extraction_max_tokens,
+                disable_reasoning=True,
             )
         logger.info(
             "Extractor tokens: doc_type=%s prompt=%s completion=%s total=%s",

@@ -106,3 +106,51 @@ def evaluate(request: EvaluateRequest) -> EvaluateResponse:
         source_text=request.source_text,
         doc_type=request.doc_type,
     )
+
+
+# ---------------------------------------------------------------------------
+# Temporal PoC endpoint — test-only, does NOT replace /extract
+# ---------------------------------------------------------------------------
+
+@router.post("/extract/temporal-poc")
+async def extract_temporal_poc(files: list[UploadFile] = File(...)) -> dict:
+    """**PoC-only** endpoint exercising the Temporal classify workflow.
+
+    Limitations vs. ``/extract``:
+
+    * Only processes ``files[0]`` — multi-page grouping is not wired.
+    * Skips ``LlamaParseClient`` entirely — raw bytes are decoded as
+      UTF-8 and passed straight to the workflow as ``text_hint``.
+    * No image path — vision classification is deferred.
+    """
+    from uuid import uuid4
+
+    from app.temporal.client import TASK_QUEUE, get_temporal_client
+    from app.temporal.workflows import ClassifyDocumentWorkflow
+
+    try:
+        if not files:
+            raise HTTPException(status_code=400, detail="No files uploaded")
+
+        # PoC scope cut: skip LlamaParse / image branching — just treat
+        # raw bytes as plain text.
+        raw_content = await files[0].read()
+        text_hint = raw_content.decode("utf-8", errors="ignore")
+        filename = files[0].filename or "uploaded-document"
+
+        client = await get_temporal_client()
+        handle = await client.start_workflow(
+            ClassifyDocumentWorkflow.run,
+            args=[filename, text_hint],
+            id=f"classify-poc-{uuid4()}",
+            task_queue=TASK_QUEUE,
+        )
+        result = await handle.result()
+        return result  # type: ignore[return-value]
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Temporal worker unavailable or workflow failed: {exc}",
+        ) from exc

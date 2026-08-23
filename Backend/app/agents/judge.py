@@ -50,12 +50,14 @@ class JudgeAgent:
                 image_bytes=image_bytes,
                 image_media_type=image_media_type,
                 response_schema=JudgeResponseSchema,
+                disable_reasoning=True,
             )
         else:
             result = await self._client.generate_structured(
                 model=self.settings.judge_model_name,
                 prompt=prompt,
                 response_schema=JudgeResponseSchema,
+                disable_reasoning=True,
             )
         logger.info(
             "Judge tokens: prompt=%s completion=%s total=%s",

@@ -31,6 +31,7 @@ class _DummySchema(BaseModel):
 def _make_client():
     settings = MagicMock(spec=Settings)
     settings.openrouter_api_key = "test-token"
+    settings.llm_request_timeout_seconds = 90.0
     return SutGenAIClient(settings)
 
 
@@ -66,7 +67,7 @@ async def test_retry_does_not_resend_original_prompt():
         nonlocal call_count
         call_count += 1
         captured_messages.append(kwargs.get("messages", []))
-        if call_count == 1:
+        if call_count in (1, 2):
             return _make_response(malformed_json)
         return _make_response(valid_json)
 
@@ -78,24 +79,24 @@ async def test_retry_does_not_resend_original_prompt():
         response_schema=_DummySchema,
     )
 
-    # Two calls should have been made
-    assert call_count == 2
-    assert len(captured_messages) == 2
+    # Three calls should have been made (json_schema, json_object, plain fallback)
+    assert call_count == 3
+    assert len(captured_messages) == 3
 
     # First call should contain the original prompt
     first_call_content = captured_messages[0][0]["content"]
     assert original_prompt[:50] in first_call_content
 
-    # Second call (retry) should NOT contain the original prompt
-    second_call_content = captured_messages[1][0]["content"]
-    assert original_prompt[:50] not in second_call_content
+    # Third call (plain prompt retry) should NOT contain the original prompt
+    third_call_content = captured_messages[2][0]["content"]
+    assert original_prompt[:50] not in third_call_content
 
-    # Second call SHOULD contain the malformed response
-    assert malformed_json in second_call_content
+    # Third call SHOULD contain the malformed response
+    assert malformed_json in third_call_content
 
-    # Second call should contain the schema
-    assert '"name"' in second_call_content
-    assert 'Schema' in second_call_content
+    # Third call should contain the schema
+    assert '"name"' in third_call_content
+    assert 'Schema' in third_call_content
 
     # Result should be valid
     assert result.parsed is not None
