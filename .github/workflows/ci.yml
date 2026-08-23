@@ -1,0 +1,240 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  # ─────────────────────────────────────────────
+  # Backend lint
+  # ─────────────────────────────────────────────
+  backend-lint:
+    name: "Backend / Lint (ruff)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Run ruff
+        run: ruff check Backend/
+
+  # ─────────────────────────────────────────────
+  # Schema & client tests
+  # ─────────────────────────────────────────────
+  test-schema-client:
+    name: "Backend / Schema & Client Tests"
+    needs: backend-lint
+    runs-on: ubuntu-latest
+    env:
+      OPENROUTER_API_KEY: dummy-token-for-ci
+      LLAMA_CLOUD_API_KEY: dummy-token-for-ci
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio anyio
+
+      - name: Run schema & client tests
+        run: |
+          pytest Backend/tests/test_sut_genai_schema.py \
+                 Backend/tests/test_sut_genai_client_retry.py -v
+
+  # ─────────────────────────────────────────────
+  # Router tests
+  # ─────────────────────────────────────────────
+  test-router:
+    name: "Backend / Router Tests"
+    needs: backend-lint
+    runs-on: ubuntu-latest
+    env:
+      OPENROUTER_API_KEY: dummy-token-for-ci
+      LLAMA_CLOUD_API_KEY: dummy-token-for-ci
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio anyio
+
+      - name: Run router tests
+        run: |
+          pytest Backend/tests/test_reconcile_with_catalog.py \
+                 Backend/tests/test_field_aliases.py \
+                 Backend/tests/test_schema_mode.py -v
+
+  # ─────────────────────────────────────────────
+  # Extractor tests
+  # ─────────────────────────────────────────────
+  test-extractor:
+    name: "Backend / Extractor Tests"
+    needs: backend-lint
+    runs-on: ubuntu-latest
+    env:
+      OPENROUTER_API_KEY: dummy-token-for-ci
+      LLAMA_CLOUD_API_KEY: dummy-token-for-ci
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio anyio
+
+      - name: Run extractor tests
+        run: |
+          pytest Backend/tests/test_empty_extraction.py \
+                 Backend/tests/test_few_shot_and_auto_eval.py -v
+
+  # ─────────────────────────────────────────────
+  # Validator & eval tests
+  # ─────────────────────────────────────────────
+  test-validator-eval:
+    name: "Backend / Validator & Eval Tests"
+    needs: backend-lint
+    runs-on: ubuntu-latest
+    env:
+      OPENROUTER_API_KEY: dummy-token-for-ci
+      LLAMA_CLOUD_API_KEY: dummy-token-for-ci
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio anyio
+
+      - name: Run validator & eval tests
+        run: |
+          pytest Backend/tests/test_value_normalization_evaluate.py -v
+
+  # ─────────────────────────────────────────────
+  # Pipeline integration tests
+  # ─────────────────────────────────────────────
+  test-pipeline-integration:
+    name: "Backend / Pipeline Integration Tests"
+    needs: [test-router, test-extractor, test-validator-eval]
+    runs-on: ubuntu-latest
+    env:
+      OPENROUTER_API_KEY: dummy-token-for-ci
+      LLAMA_CLOUD_API_KEY: dummy-token-for-ci
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio anyio
+
+      - name: Run pipeline integration tests
+        run: |
+          pytest Backend/tests/test_failed_stages.py -v
+
+  # ─────────────────────────────────────────────
+  # Full backend test suite (safety net)
+  # ─────────────────────────────────────────────
+  test-backend-full-suite:
+    name: "Backend / Full Test Suite"
+    needs:
+      - test-schema-client
+      - test-router
+      - test-extractor
+      - test-validator-eval
+      - test-pipeline-integration
+    runs-on: ubuntu-latest
+    env:
+      OPENROUTER_API_KEY: dummy-token-for-ci
+      LLAMA_CLOUD_API_KEY: dummy-token-for-ci
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio anyio
+
+      - name: Run full backend test suite
+        run: |
+          pytest Backend/tests/ -v --durations=10
+
+  # ─────────────────────────────────────────────
+  # Frontend type-check & build
+  # ─────────────────────────────────────────────
+  frontend-typecheck-build:
+    name: "Frontend / Type-check & Build"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check and build
+        run: npm run build

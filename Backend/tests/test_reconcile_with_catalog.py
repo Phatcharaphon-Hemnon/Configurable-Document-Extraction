@@ -30,7 +30,8 @@ for _p in (_REPO_ROOT, _BACKEND_ROOT):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from app.agents.router import RouterAgent, _normalize_name  # noqa: E402
+from app.agents.router import RouterAgent  # noqa: E402
+from app.services.field_matching import _normalize_name  # noqa: E402
 from app.schemas.documents import FieldDefinition  # noqa: E402
 from app.services.knowledge_base import KnowledgeBaseRepository  # noqa: E402
 from app.core.config import Settings  # noqa: E402  (used as spec for MagicMock)
@@ -406,8 +407,8 @@ class TestRouterAgentBackwardCompatibility:
 
     def _make_settings(self) -> Settings:
         settings = MagicMock(spec=Settings)
-        settings.router_model_name = "gpt-4.1"
-        settings.github_models_token = "test-key"
+        settings.router_model_name = "nvidia/nemotron-nano-12b-v2-vl:free"
+        settings.openrouter_api_key = "test-key"
         return settings
 
     def test_init_without_knowledge_base(self) -> None:

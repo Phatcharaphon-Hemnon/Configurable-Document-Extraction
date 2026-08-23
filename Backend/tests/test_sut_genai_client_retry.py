@@ -30,7 +30,7 @@ class _DummySchema(BaseModel):
 
 def _make_client():
     settings = MagicMock(spec=Settings)
-    settings.github_models_token = "test-token"
+    settings.openrouter_api_key = "test-token"
     return SutGenAIClient(settings)
 
 

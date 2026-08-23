@@ -48,7 +48,7 @@ def test_config_validation() -> None:
 def test_router_init_strict_checks() -> None:
     """RouterAgent raises ValueError if strict mode is set but KB or catalog is missing/empty."""
     settings = MagicMock(spec=Settings)
-    settings.github_models_token = "fake-key"
+    settings.openrouter_api_key = "fake-key"
     settings.router_model_name = "mock-model"
 
     # Strict mode + no KB -> ValueError
@@ -66,7 +66,7 @@ def test_router_init_strict_checks() -> None:
 async def test_router_strict_prompt_and_classification() -> None:
     """In strict mode, RouterAgent restricts classification to catalog doc types or applies aliases."""
     settings = MagicMock(spec=Settings)
-    settings.github_models_token = "fake-key"
+    settings.openrouter_api_key = "fake-key"
     settings.router_model_name = "mock-model"
 
     kb = MagicMock(spec=KnowledgeBaseRepository)
@@ -184,8 +184,8 @@ def test_validator_strict_vs_open() -> None:
 @pytest.mark.anyio
 async def test_extraction_service_integration_strict() -> None:
     """Integration checks on DocumentExtractionService routing and validation in strict mode."""
-    tmp_path = Path("/home/phatcharaphon/Project/Configurable-Document-Extraction/Backend/app/data/knowledge_base")
-    with patch.dict(os.environ, {"LLAMA_CLOUD_API_KEY": "fake-llama-key", "GITHUB_MODELS_TOKEN": "fake-github-key"}):
+    tmp_path = Path(__file__).resolve().parents[1] / "app" / "data" / "knowledge_base"
+    with patch.dict(os.environ, {"LLAMA_CLOUD_API_KEY": "fake-llama-key", "OPENROUTER_API_KEY": "fake-github-key"}):
         settings = Settings()
         settings.knowledge_base_path = str(tmp_path)
         settings.schema_mode = "strict"
@@ -222,8 +222,8 @@ async def test_extraction_service_integration_strict() -> None:
 @pytest.mark.anyio
 async def test_extract_group_async() -> None:
     """Verify that extract_group correctly awaits LlamaParseClient.aparse_file and processes results asynchronously."""
-    tmp_path = Path("/home/phatcharaphon/Project/Configurable-Document-Extraction/Backend/app/data/knowledge_base")
-    with patch.dict(os.environ, {"LLAMA_CLOUD_API_KEY": "fake-llama-key", "GITHUB_MODELS_TOKEN": "fake-github-key"}):
+    tmp_path = Path(__file__).resolve().parents[1] / "app" / "data" / "knowledge_base"
+    with patch.dict(os.environ, {"LLAMA_CLOUD_API_KEY": "fake-llama-key", "OPENROUTER_API_KEY": "fake-github-key"}):
         settings = Settings()
         settings.knowledge_base_path = str(tmp_path)
         settings.schema_mode = "strict"

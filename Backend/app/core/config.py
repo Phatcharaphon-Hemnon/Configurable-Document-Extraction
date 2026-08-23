@@ -28,20 +28,20 @@ class Settings:
             )
         self.schema_mode: str = _schema_mode
         self.few_shot_examples_per_doc_type = int(os.getenv("FEW_SHOT_EXAMPLES_PER_DOC_TYPE", "5"))
-        # GitHub Models Token (primary LLM provider)
-        self.github_models_token = os.getenv("GITHUB_MODELS_TOKEN", "")
+        # OpenRouter API Key (primary LLM provider)
+        self.openrouter_api_key = os.getenv("OPENROUTER_API_KEY", "")
         # Llama Cloud API Key for LlamaParse document parsing
         self.llama_cloud_api_key = os.getenv("LLAMA_CLOUD_API_KEY", "")
 
-        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "gpt-4.1")
-        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "gpt-4.1")
-        # Recommended model used for extraction
-        self.recommended_extraction_model_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "gpt-4.1")
-        # NOTE: display name must match the actual model name above — update both together
-        self.recommended_extraction_model_display_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_DISPLAY_NAME", "GPT-4.1 (GitHub Models)")
+        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "nvidia/nemotron-nano-12b-v2-vl:free")
+        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "nvidia/nemotron-nano-12b-v2-vl:free")
+        
+        self.recommended_extraction_model_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "nvidia/nemotron-nano-12b-v2-vl:free")
+        
+        self.recommended_extraction_model_display_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_DISPLAY_NAME", "NVIDIA Nemotron Nano 2 VL (OpenRouter)")
         self.recommended_extraction_model_reason = os.getenv(
             "RECOMMENDED_EXTRACTION_MODEL_REASON",
-            "gpt-4.1 is free under GitHub Student Pack / Copilot Pro and not metered against premium request quota.",
+            "nvidia/nemotron-nano-12b-v2-vl:free is used via OpenRouter.",
         )
 
     @property

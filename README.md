@@ -1,6 +1,6 @@
 # Configurable Document Extraction
 
-FastAPI backend plus a separate React frontend for AI-assisted document extraction with a Router Agent, a single open-schema extractor, a Validator Agent, and a GitHub Models (GPT-4.1)-powered LLM Judge.
+FastAPI backend plus a separate React frontend for AI-assisted document extraction with a Router Agent, a single open-schema extractor, a Validator Agent, and an OpenRouter (nvidia/nemotron-nano-12b-v2-vl:free)-powered LLM Judge.
 
 ## Architecture
 
@@ -34,7 +34,7 @@ precision/recall/F1 evaluation is attached to the result.
 - RAG-ready knowledge base layout
 - Multi-agent orchestration layer (Router → Extractor → Validator → Judge)
 - Pydantic schemas
-- GitHub Models (GPT-4.1) via an OpenAI-compatible client
+- OpenRouter (nvidia/nemotron-nano-12b-v2-vl:free) via an OpenAI-compatible client
 - `.env`-driven configuration
 
 ## Project Layout
@@ -75,7 +75,7 @@ Important variables:
 - `KNOWLEDGE_BASE_PATH`
 - `FEW_SHOT_EXAMPLES_PER_DOC_TYPE`
 - `JUDGE_MODEL_NAME`
-- `GITHUB_MODELS_TOKEN`
+- `OPENROUTER_API_KEY`
 - `FRONTEND_ORIGINS`
 
 Frontend environment:
@@ -100,7 +100,7 @@ Minimum requirements:
 
 1) Backend (FastAPI)
 
-- Copy environment example: `cp .env.example .env` and edit values as needed (notably `GITHUB_MODELS_TOKEN` and `FRONTEND_ORIGINS`).
+- Copy environment example: `cp .env.example .env` and edit values as needed (notably `OPENROUTER_API_KEY` and `FRONTEND_ORIGINS`).
 - Create and activate a virtualenv (recommended):
 
 	```bash
@@ -144,7 +144,7 @@ Minimum requirements:
 
 4) Quick troubleshooting
 
-- If you see errors about missing API keys, set `GITHUB_MODELS_TOKEN` (or other provider keys) in `.env` or set to an empty string for local testing.
+- If you see errors about missing API keys, set `OPENROUTER_API_KEY` (or other provider keys) in `.env` or set to an empty string for local testing.
 - Check backend logs in the terminal where `uvicorn` runs for tracebacks.
 - If frontend cannot reach the backend, ensure `VITE_API_BASE_URL` in `frontend/.env` points to `http://127.0.0.1:8000` and `FRONTEND_ORIGINS` in the backend `.env` allows the origin.
 

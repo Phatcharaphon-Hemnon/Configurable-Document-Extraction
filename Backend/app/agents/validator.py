@@ -122,20 +122,8 @@ class ValidatorAgent:
 
     def _parse_date(self, value: str):
         value = value.strip()
-        formats = [
-            "%Y-%m-%d",
-            "%d/%m/%Y",
-            "%m/%d/%Y",
-            "%d/%m/%y",
-            "%m/%d/%y",
-            "%d-%m-%Y",
-            "%m-%d-%Y",
-            "%d-%m-%y",
-            "%m-%d-%y",
-            "%B %d, %Y",
-            "%b %d, %Y",
-        ]
-        for fmt in formats:
+        from app.services.date_formats import KNOWN_DATE_FORMATS
+        for fmt in KNOWN_DATE_FORMATS:
             try:
                 return datetime.strptime(value, fmt)
             except ValueError:

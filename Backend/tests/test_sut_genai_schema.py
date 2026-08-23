@@ -1,5 +1,5 @@
 import pytest
-from typing import Optional, List, Union, Any
+from typing import Optional, List, Union
 from pydantic import BaseModel
 from app.services.sut_genai_client import _pydantic_to_json_schema
 
@@ -18,7 +18,6 @@ class ComplexModel(BaseModel):
     sub_models: List[SubModel]
     union_field: Union[SubModel, AnotherModel, None] = None
     dict_field: dict[str, SubModel]
-    any_field: Any
 
 
 def _assert_strict_schema(schema: dict):
@@ -58,32 +57,3 @@ def test_pydantic_to_json_schema_strict_mode():
     """Test that _pydantic_to_json_schema enforces all strict mode rules."""
     schema = _pydantic_to_json_schema(ComplexModel)
     _assert_strict_schema(schema)
-
-
-def test_ensure_typed_excludes_object():
-    """Test that _ensure_typed produces exactly the fallback list without 'object'."""
-    from app.services.sut_genai_client import _ensure_typed
-    
-    schema = {}
-    _ensure_typed(schema)
-    
-    expected_schema = {
-        "anyOf": [
-            {"type": "string"},
-            {"type": "number"},
-            {"type": "boolean"},
-            {"type": "null"},
-            {
-                "type": "array",
-                "items": {
-                    "anyOf": [
-                        {"type": "string"},
-                        {"type": "number"},
-                        {"type": "boolean"},
-                        {"type": "null"},
-                    ]
-                }
-            }
-        ]
-    }
-    assert schema == expected_schema

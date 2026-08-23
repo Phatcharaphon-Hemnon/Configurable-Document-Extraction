@@ -6,11 +6,10 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
-from app.agents.router import _normalize_name
 from app.core.config import Settings
 from app.schemas.documents import ExtractionField, FieldDefinition
 from app.schemas.llm_schemas import ExtractionResponseSchema
-from app.services.field_aliases import resolve_field_alias
+from app.services.field_matching import _normalize_name
 from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
 
 logger = logging.getLogger(__name__)
@@ -29,26 +28,35 @@ class ExtractionContext:
 
 def _parse_extraction_response(
     parsed: ExtractionResponseSchema,
-    suggested_names: set[str],
+    suggested_fields: list[FieldDefinition],
     doc_type: str = "",
 ) -> tuple[dict[str, ExtractionField], dict[str, ExtractionField]]:
     """Split extracted fields into (matches a suggested field, extra/unlisted field)."""
     extracted: dict[str, ExtractionField] = {}
     additional: dict[str, ExtractionField] = {}
 
+    # Build lookup keyed by canonical name + all alternative_names
+    suggested_names: set[str] = {sf.name for sf in suggested_fields}
     suggested_lookup: dict[str, str] = {}
-    for name in suggested_names:
-        norm = _normalize_name(name)
-        resolved = resolve_field_alias(doc_type, norm)
-        suggested_lookup[norm] = name
-        suggested_lookup[resolved] = name
+    for sf in suggested_fields:
+        norm = _normalize_name(sf.name)
+        suggested_lookup[norm] = sf.name
+        for alt in sf.alternative_names:
+            alt_norm = _normalize_name(alt)
+            if alt_norm not in suggested_lookup:
+                suggested_lookup[alt_norm] = sf.name
 
     for entry in parsed.fields:
         if entry.value is None:
             logger.debug("Extractor dropped field '%s' (null value) for doc_type=%s", entry.name, doc_type)
             continue
+            
+        value = entry.value
+        if isinstance(value, list):
+            value = [v.model_dump(exclude_none=True) if hasattr(v, "model_dump") else v for v in value]
+            
         item = ExtractionField(
-            value=entry.value,
+            value=value,
             confidence=entry.confidence,
             source_span=entry.source_span,
             likely_required=entry.likely_required,
@@ -57,11 +65,7 @@ def _parse_extraction_response(
             extracted[entry.name] = item
         else:
             norm_entry = _normalize_name(entry.name)
-            resolved_entry = resolve_field_alias(doc_type, norm_entry)
-            if resolved_entry in suggested_lookup:
-                canonical = suggested_lookup[resolved_entry]
-                extracted[canonical] = item
-            elif norm_entry in suggested_lookup:
+            if norm_entry in suggested_lookup:
                 canonical = suggested_lookup[norm_entry]
                 extracted[canonical] = item
             else:
@@ -105,6 +109,12 @@ class OpenSchemaExtractor:
                 f"{compact}\n\n"
             )
 
+        # TODO: The AI sometimes merges subtotal_amount and tax_amount into a single prose field
+        # (e.g. "gst_summary") instead of extracting them as separate fields.
+        # Consider adding a prompt rule like: "If a suggested field's data appears inside a
+        # summary table or combined line alongside other suggested fields, extract each one as
+        # its own separate field value — do not merge multiple suggested fields into a single
+        # descriptive string." (Needs verification against more receipt samples before enabling).
         base_rules = (
             "Rules:\n"
             "- Return a JSON object with a 'fields' array. Each entry MUST have: name, value, "
@@ -183,5 +193,5 @@ class OpenSchemaExtractor:
                 )
 
         assert isinstance(parsed, ExtractionResponseSchema)
-        extracted, additional = _parse_extraction_response(parsed, suggested_names, doc_type=context.doc_type)
+        extracted, additional = _parse_extraction_response(parsed, context.suggested_fields, doc_type=context.doc_type)
         return extracted, additional

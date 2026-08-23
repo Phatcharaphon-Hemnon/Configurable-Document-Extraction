@@ -5,8 +5,8 @@ from app.core.config import Settings
 async def test_schema():
     settings = Settings()
     client = AsyncOpenAI(
-        api_key=settings.github_models_token.strip(),
-        base_url="https://models.github.ai/inference"
+        api_key=settings.openrouter_api_key.strip(),
+        base_url="https://openrouter.ai/api/v1"
     )
     
     schema = {
@@ -32,7 +32,7 @@ async def test_schema():
     
     try:
         response = await client.chat.completions.create(
-            model="gpt-4o",
+            model="nvidia/nemotron-nano-12b-v2-vl:free",
             messages=[{"role": "user", "content": "hello"}],
             response_format={"type": "json_schema", "json_schema": {"name": "test_schema", "schema": schema, "strict": True}},
         )
