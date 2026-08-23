@@ -50,6 +50,7 @@ def test_router_init_strict_checks() -> None:
     settings = MagicMock(spec=Settings)
     settings.openrouter_api_key = "fake-key"
     settings.router_model_name = "mock-model"
+    settings.llm_request_timeout_seconds = 90.0
 
     # Strict mode + no KB -> ValueError
     with pytest.raises(ValueError, match="SCHEMA_MODE=strict requires a knowledge base"):
@@ -68,6 +69,7 @@ async def test_router_strict_prompt_and_classification() -> None:
     settings = MagicMock(spec=Settings)
     settings.openrouter_api_key = "fake-key"
     settings.router_model_name = "mock-model"
+    settings.llm_request_timeout_seconds = 90.0
 
     kb = MagicMock(spec=KnowledgeBaseRepository)
     kb.list_catalog_doc_types.return_value = ["invoice", "po", "delivery_note"]
@@ -185,7 +187,7 @@ def test_validator_strict_vs_open() -> None:
 async def test_extraction_service_integration_strict() -> None:
     """Integration checks on DocumentExtractionService routing and validation in strict mode."""
     tmp_path = Path(__file__).resolve().parents[1] / "app" / "data" / "knowledge_base"
-    with patch.dict(os.environ, {"LLAMA_CLOUD_API_KEY": "fake-llama-key", "OPENROUTER_API_KEY": "fake-github-key"}):
+    with patch.dict(os.environ, {"LLAMA_CLOUD_API_KEY": "fake-llama-key", "NVIDIA_API_KEY": "fake-key", "OPENROUTER_API_KEY": "fake-github-key"}):
         settings = Settings()
         settings.knowledge_base_path = str(tmp_path)
         settings.schema_mode = "strict"
@@ -223,7 +225,7 @@ async def test_extraction_service_integration_strict() -> None:
 async def test_extract_group_async() -> None:
     """Verify that extract_group correctly awaits LlamaParseClient.aparse_file and processes results asynchronously."""
     tmp_path = Path(__file__).resolve().parents[1] / "app" / "data" / "knowledge_base"
-    with patch.dict(os.environ, {"LLAMA_CLOUD_API_KEY": "fake-llama-key", "OPENROUTER_API_KEY": "fake-github-key"}):
+    with patch.dict(os.environ, {"LLAMA_CLOUD_API_KEY": "fake-llama-key", "NVIDIA_API_KEY": "fake-key", "OPENROUTER_API_KEY": "fake-github-key"}):
         settings = Settings()
         settings.knowledge_base_path = str(tmp_path)
         settings.schema_mode = "strict"

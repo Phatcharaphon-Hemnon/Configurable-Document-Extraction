@@ -409,6 +409,7 @@ class TestRouterAgentBackwardCompatibility:
         settings = MagicMock(spec=Settings)
         settings.router_model_name = "nvidia/nemotron-nano-12b-v2-vl:free"
         settings.openrouter_api_key = "test-key"
+        settings.llm_request_timeout_seconds = 90.0
         return settings
 
     def test_init_without_knowledge_base(self) -> None:

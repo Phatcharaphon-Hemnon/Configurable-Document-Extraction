@@ -38,6 +38,7 @@ jobs:
     needs: backend-lint
     runs-on: ubuntu-latest
     env:
+      NVIDIA_API_KEY: dummy-token-for-ci
       OPENROUTER_API_KEY: dummy-token-for-ci
       LLAMA_CLOUD_API_KEY: dummy-token-for-ci
     steps:
@@ -68,6 +69,7 @@ jobs:
     needs: backend-lint
     runs-on: ubuntu-latest
     env:
+      NVIDIA_API_KEY: dummy-token-for-ci
       OPENROUTER_API_KEY: dummy-token-for-ci
       LLAMA_CLOUD_API_KEY: dummy-token-for-ci
     steps:
@@ -99,6 +101,7 @@ jobs:
     needs: backend-lint
     runs-on: ubuntu-latest
     env:
+      NVIDIA_API_KEY: dummy-token-for-ci
       OPENROUTER_API_KEY: dummy-token-for-ci
       LLAMA_CLOUD_API_KEY: dummy-token-for-ci
     steps:
@@ -129,6 +132,7 @@ jobs:
     needs: backend-lint
     runs-on: ubuntu-latest
     env:
+      NVIDIA_API_KEY: dummy-token-for-ci
       OPENROUTER_API_KEY: dummy-token-for-ci
       LLAMA_CLOUD_API_KEY: dummy-token-for-ci
     steps:
@@ -158,6 +162,7 @@ jobs:
     needs: [test-router, test-extractor, test-validator-eval]
     runs-on: ubuntu-latest
     env:
+      NVIDIA_API_KEY: dummy-token-for-ci
       OPENROUTER_API_KEY: dummy-token-for-ci
       LLAMA_CLOUD_API_KEY: dummy-token-for-ci
     steps:
@@ -192,6 +197,7 @@ jobs:
       - test-pipeline-integration
     runs-on: ubuntu-latest
     env:
+      NVIDIA_API_KEY: dummy-token-for-ci
       OPENROUTER_API_KEY: dummy-token-for-ci
       LLAMA_CLOUD_API_KEY: dummy-token-for-ci
     steps:

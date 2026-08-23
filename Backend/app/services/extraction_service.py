@@ -423,6 +423,7 @@ class DocumentExtractionService:
     ) -> ExtractionResult:
         # --- 1. Router ---
         try:
+            logger.info("Starting router.classify for filename=%s", filename)
             routing = await self.router.classify(
                 filename=filename,
                 text_hint=page_text or None,
@@ -462,6 +463,7 @@ class DocumentExtractionService:
         )
         
         try:
+            logger.info("Starting extractor.extract for filename=%s doc_type=%s", filename, routing.doc_type)
             extracted_fields, additional_fields = await self.extractor.extract(context)
         except GeminiCallError as exc:
             return ExtractionResult(
@@ -503,6 +505,7 @@ class DocumentExtractionService:
 
         # --- 3. Validator ---
         try:
+            logger.info("Starting validator.validate for filename=%s doc_type=%s", filename, routing.doc_type)
             validation = self.validator.validate(
                 suggested_fields=routing.suggested_fields,
                 extracted_fields=extracted_fields,
@@ -526,6 +529,7 @@ class DocumentExtractionService:
 
         # --- 4. Judge ---
         try:
+            logger.info("Starting judge.evaluate for filename=%s doc_type=%s", filename, routing.doc_type)
             judge_result = await self.judge.evaluate(
                 prediction={
                     **{name: f.value for name, f in extracted_fields.items()},

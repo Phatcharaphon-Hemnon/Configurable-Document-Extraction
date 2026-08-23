@@ -214,12 +214,14 @@ class RouterAgent:
                     image_bytes=image_bytes,
                     image_media_type=image_media_type,
                     response_schema=RoutingResponseSchema,
+                    disable_reasoning=True,
                 )
             else:
                 result = await self._client.generate_structured(
                     model=self.settings.router_model_name,
                     prompt=prompt,
                     response_schema=RoutingResponseSchema,
+                    disable_reasoning=True,
                 )
         except GeminiCallError:
             raise

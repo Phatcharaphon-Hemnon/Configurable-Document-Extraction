@@ -28,21 +28,31 @@ class Settings:
             )
         self.schema_mode: str = _schema_mode
         self.few_shot_examples_per_doc_type = int(os.getenv("FEW_SHOT_EXAMPLES_PER_DOC_TYPE", "5"))
-        # OpenRouter API Key (primary LLM provider)
-        self.openrouter_api_key = os.getenv("OPENROUTER_API_KEY", "")
+        # NVIDIA API Key (primary LLM provider)
+        self.nvidia_api_key = (os.getenv("NVIDIA_API_KEY") or os.getenv("OPENROUTER_API_KEY") or "").strip()
+        self.openrouter_api_key = self.nvidia_api_key  # backwards-compatible alias
         # Llama Cloud API Key for LlamaParse document parsing
         self.llama_cloud_api_key = os.getenv("LLAMA_CLOUD_API_KEY", "")
+        # Per-attempt timeout (seconds) for LLM requests.
+        # Vision models can be slow; 90s gives headroom without hanging forever.
+        self.llm_request_timeout_seconds = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "90"))
 
-        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "nvidia/nemotron-nano-12b-v2-vl:free")
-        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "nvidia/nemotron-nano-12b-v2-vl:free")
+        self.disable_strict_json_schema = os.getenv("DISABLE_STRICT_JSON_SCHEMA", "false").lower() == "true"
+
+        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
+        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
         
-        self.recommended_extraction_model_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "nvidia/nemotron-nano-12b-v2-vl:free")
+        self.recommended_extraction_model_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
         
-        self.recommended_extraction_model_display_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_DISPLAY_NAME", "NVIDIA Nemotron Nano 2 VL (OpenRouter)")
+        self.recommended_extraction_model_display_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_DISPLAY_NAME", "NVIDIA Nemotron 3 Nano Omni (NVIDIA API, reasoning)")
         self.recommended_extraction_model_reason = os.getenv(
             "RECOMMENDED_EXTRACTION_MODEL_REASON",
-            "nvidia/nemotron-nano-12b-v2-vl:free is used via OpenRouter.",
+            "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning is a reasoning-capable multimodal model via NVIDIA NIM API. Reasoning is disabled for structured-output pipeline calls.",
         )
+
+        # Extraction-specific max_tokens — bumped from 4096 to 8000 to accommodate
+        # reasoning-token overhead from the nemotron reasoning model.
+        self.extraction_max_tokens = int(os.getenv("EXTRACTION_MAX_TOKENS", "8000"))
 
     @property
     def supported_doc_type_list(self) -> list[str]:

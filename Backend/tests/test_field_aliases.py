@@ -65,6 +65,7 @@ def _make_service():
     settings.schema_mode = "open"
     settings.router_model_name = "test-model"
     settings.openrouter_api_key = "test-key"
+    settings.llm_request_timeout_seconds = 90.0
     settings.few_shot_examples_per_doc_type = 0
     settings.recommended_extraction_model_name = "test"
     settings.recommended_extraction_model_display_name = "Test"
