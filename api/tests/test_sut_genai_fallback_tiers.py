@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 import pytest
 from pydantic import BaseModel
 
-_REPO_ROOT = Path(__file__).resolve().parents[3]
+_REPO_ROOT = Path(__file__).resolve().parents[2]
 _API_ROOT = Path(__file__).resolve().parents[1]
 for _p in (_REPO_ROOT, _API_ROOT):
     if str(_p) not in sys.path:

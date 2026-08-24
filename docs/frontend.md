@@ -1,6 +1,6 @@
 # Frontend
 
-React 19 + TypeScript + Vite under `apps/web/`. Palette is restricted to the
+React 19 + TypeScript + Vite under `web/`. Palette is restricted to the
 project colors: `#F2F2F2` page, `#CBCBCB` surfaces, `#174D38` primary,
 `#4D1717` danger.
 
@@ -13,7 +13,7 @@ the top bar and persists to `localStorage` (defaults to OS preference).
 ## Structure
 
 ```
-apps/web/src/
+web/src/
 ├── api/client.ts          # fetch layer (base URL from VITE_API_BASE_URL, MUST include /api)
 ├── types/extraction.ts    # mirrors backend FileExtractionResponse contracts
 ├── hooks/
@@ -46,5 +46,5 @@ apps/web/src/
 
 ## Env
 
-`apps/web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api` (the `/api`
+`web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api` (the `/api`
 suffix is required).

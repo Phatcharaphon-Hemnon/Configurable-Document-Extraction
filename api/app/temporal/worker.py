@@ -1,6 +1,6 @@
 """Standalone Temporal worker process.
 
-Run from the ``apps/api/`` directory:
+Run from the ``api/`` directory:
 
     python -m app.temporal.worker
 

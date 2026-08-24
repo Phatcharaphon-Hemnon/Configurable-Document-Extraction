@@ -26,7 +26,7 @@ from app.schemas.documents import (
     FileExtractionResponse,
     FileUploadMeta,
 )
-from app.services.field_catalog import normalize_field_name
+from app.services.field_catalog import is_registerable_new_field, normalize_field_name
 from app.services.field_matching import values_match
 from app.services.job_store import InMemoryJobStore
 from app.services.knowledge_base import KnowledgeBaseRepository
@@ -248,14 +248,19 @@ class DocumentExtractionService:
             return self._failed(routing, f"Extractor failed: {exc}", "extractor")
 
         # Register AI-discovered field names into the catalog (project rule).
-        # The service is the source of truth for is_new_field: a field is "new"
-        # when its name was NOT in the catalog before this extraction.
+        # The service is the source of truth for is_new_field AND for what is
+        # worth registering: only REAL values (non-placeholder), sane snake_case
+        # names, confidence >= threshold. 'N/A' junk never reaches the catalog.
         known_before = self.catalog.known_names(routing.doc_type)
         fields = [
             f.model_copy(update={"is_new_field": normalize_field_name(f.name) not in known_before})
             for f in fields
         ]
-        new_field_names = [f.name for f in fields if f.is_new_field]
+        new_field_names = [
+            f.name
+            for f in fields
+            if f.is_new_field and is_registerable_new_field(f.name, f.value, f.confidence)
+        ]
         if new_field_names:
             added = self.catalog.add_fields(routing.doc_type, new_field_names)
             if added:

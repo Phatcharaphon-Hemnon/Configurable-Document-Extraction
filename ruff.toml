@@ -1,5 +1,5 @@
 # Ruff configuration for the FastAPI backend.
-# CI runs `ruff check apps/api/`; keep this file next to the package it governs.
+# CI runs `ruff check api/`; keep this file next to the package it governs.
 target-version = "py311"
 line-length = 120
 extend-exclude = ["data", "__pycache__"]
@@ -18,9 +18,9 @@ select = [
 known-first-party = ["app"]
 
 [lint.per-file-ignores]
-# Tests insert apps/api into sys.path before importing `app`, so imports
+# Tests insert api into sys.path before importing `app`, so imports
 # intentionally appear after executable statements.
-"apps/api/tests/**" = ["E402"]
+"api/tests/**" = ["E402"]
 
 [format]
 quote-style = "double"
