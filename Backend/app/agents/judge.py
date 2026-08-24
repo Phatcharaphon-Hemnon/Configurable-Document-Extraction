@@ -6,7 +6,8 @@ import logging
 from app.core.config import Settings
 from app.schemas.documents import JudgeIssue, JudgeResult
 from app.schemas.llm_schemas import JudgeResponseSchema
-from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
+from app.services.sut_genai_client import SutGenAICallError as GeminiCallError
+from app.services.sut_genai_client import SutGenAIClient as GeminiClient
 
 logger = logging.getLogger(__name__)
 

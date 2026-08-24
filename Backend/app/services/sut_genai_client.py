@@ -79,7 +79,7 @@ def _truncate(value: str, limit: int = 500) -> str:
 
 def _patch_schema_for_strict_mode(schema: dict) -> None:
     """Recursively set strict mode constraints on all object schemas.
-    
+
     1. Sets additionalProperties = False
     2. Forces all properties into the required array
     """
@@ -113,9 +113,9 @@ def _pydantic_to_json_schema(model: type[BaseModel]) -> dict[str, Any]:
     schema = model.model_json_schema()
     # Remove Pydantic-specific keys that confuse some proxies.
     schema.pop("title", None)
-    
+
     _patch_schema_for_strict_mode(schema)
-    
+
     return schema
 
 

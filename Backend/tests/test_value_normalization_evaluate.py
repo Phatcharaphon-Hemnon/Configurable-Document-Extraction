@@ -103,7 +103,7 @@ def test_regression_double_encoded_line_items_string_matches_list() -> None:
     # Ground truth is an escaped JSON string of the SAME list
     ground_truth = {
         "line_items": (
-            "[{\"date\":\"10/1/2023\",\"type\":\"Inv\",\"description\":\"Stapler Heavy Duty\"," 
+            "[{\"date\":\"10/1/2023\",\"type\":\"Inv\",\"description\":\"Stapler Heavy Duty\","
             "\"payment\":1000.0,\"amount\":1000.0,\"balance\":0.0}]"
         )
     }

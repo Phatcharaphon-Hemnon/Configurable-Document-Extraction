@@ -41,9 +41,9 @@ class Settings:
 
         self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
         self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
-        
+
         self.recommended_extraction_model_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
-        
+
         self.recommended_extraction_model_display_name = os.getenv("RECOMMENDED_EXTRACTION_MODEL_DISPLAY_NAME", "NVIDIA Nemotron 3 Nano Omni (NVIDIA API, reasoning)")
         self.recommended_extraction_model_reason = os.getenv(
             "RECOMMENDED_EXTRACTION_MODEL_REASON",
@@ -65,6 +65,17 @@ class Settings:
     @property
     def frontend_origin_list(self) -> list[str]:
         return [item.strip() for item in self.frontend_origins.split(",") if item.strip()]
+
+    @property
+    def cors_origins(self) -> list[str]:
+        """Allowed CORS origins: local dev defaults, deployed frontends, then env-configured ones."""
+        defaults = [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "https://configurable-document-extraction.vercel.app",
+            "https://configurable-document-extraction-git-makefrontend-peter-o-manufactor.vercel.app",
+        ]
+        return list(dict.fromkeys([*defaults, *self.frontend_origin_list]))
 
     @property
     def knowledge_base_directory(self) -> Path:

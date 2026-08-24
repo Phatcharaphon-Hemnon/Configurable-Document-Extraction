@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+
 from llama_cloud_services import LlamaParse
+
 
 class LlamaParseClient:
     def __init__(self, api_key: str | None = None) -> None:
@@ -31,7 +33,7 @@ class LlamaParseClient:
                 if not filename:
                     filename = "document.pdf"
                 extra_info = {"file_name": filename}
-            
+
             documents = self._parser.load_data(file_input, extra_info=extra_info)
             if not documents:
                 raise Exception("LlamaParse returned no documents")
@@ -49,7 +51,7 @@ class LlamaParseClient:
                 if not filename:
                     filename = "document.pdf"
                 extra_info = {"file_name": filename}
-            
+
             documents = await self._parser.aload_data(file_input, extra_info=extra_info)
             if not documents:
                 raise Exception("LlamaParse returned no documents")

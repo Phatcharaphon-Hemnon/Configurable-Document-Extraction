@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -24,15 +24,13 @@ for _p in (_REPO_ROOT, _BACKEND_ROOT):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from app.services.knowledge_base import KnowledgeBaseRepository, _cap_by_size, _FEW_SHOT_MAX_CHARS  # noqa: E402
-from app.services.extraction_service import DocumentExtractionService  # noqa: E402
 from app.schemas.documents import (  # noqa: E402
     ExtractionField,
-    ExtractionResult,
-    ValidationResult,
     JudgeResult,
+    ValidationResult,
 )
-
+from app.services.extraction_service import DocumentExtractionService  # noqa: E402
+from app.services.knowledge_base import _FEW_SHOT_MAX_CHARS, KnowledgeBaseRepository, _cap_by_size  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Helpers

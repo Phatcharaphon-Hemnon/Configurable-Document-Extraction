@@ -17,7 +17,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -31,11 +31,10 @@ for _p in (_REPO_ROOT, _BACKEND_ROOT):
         sys.path.insert(0, str(_p))
 
 from app.agents.router import RouterAgent  # noqa: E402
-from app.services.field_matching import _normalize_name  # noqa: E402
-from app.schemas.documents import FieldDefinition  # noqa: E402
-from app.services.knowledge_base import KnowledgeBaseRepository  # noqa: E402
 from app.core.config import Settings  # noqa: E402  (used as spec for MagicMock)
-
+from app.schemas.documents import FieldDefinition  # noqa: E402
+from app.services.field_matching import _normalize_name  # noqa: E402
+from app.services.knowledge_base import KnowledgeBaseRepository  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Helpers

@@ -13,8 +13,8 @@ import asyncio
 
 from temporalio.worker import Worker
 
-from app.temporal.client import TASK_QUEUE, get_temporal_client
 from app.temporal.activities import classify_document
+from app.temporal.client import TASK_QUEUE, get_temporal_client
 from app.temporal.workflows import ClassifyDocumentWorkflow
 
 

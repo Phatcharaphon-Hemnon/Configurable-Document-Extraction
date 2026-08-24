@@ -1,6 +1,7 @@
-import pytest
-from typing import Optional, List, Union
+from typing import List, Optional, Union
+
 from pydantic import BaseModel
+
 from app.services.sut_genai_client import _pydantic_to_json_schema
 
 
@@ -24,7 +25,7 @@ def _assert_strict_schema(schema: dict):
     """Recursively assert strict mode invariants."""
     if not isinstance(schema, dict):
         return
-        
+
     assert any(k in schema for k in ("type", "$ref", "anyOf", "oneOf", "allOf")), f"Schema missing type/ref/anyOf: {schema}"
 
     schema_type = schema.get("type")
@@ -39,7 +40,7 @@ def _assert_strict_schema(schema: dict):
             assert expected_required == actual_required, f"Required properties mismatch. Expected: {expected_required}, Got: {actual_required}"
             for prop in schema["properties"].values():
                 _assert_strict_schema(prop)
-                
+
     if "$defs" in schema and isinstance(schema["$defs"], dict):
         for def_schema in schema["$defs"].values():
             _assert_strict_schema(def_schema)
