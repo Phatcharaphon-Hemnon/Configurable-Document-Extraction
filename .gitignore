@@ -23,17 +23,19 @@ __pycache__/
 # React Frontend Avoidances
 # ==========================================
 # Dependencies (Vercel will install this on its own)
-frontend/node_modules/
+apps/web/node_modules/
 
 # Production build artifacts
-frontend/dist/
-frontend/build/
+apps/web/dist/
+apps/web/build/
 
 # TypeScript build caches
-frontend/*.tsbuildinfo
+apps/web/*.tsbuildinfo
 
 # Local dev/system files
-frontend/.apps/
+apps/web/.apps/
 .DS_Store
 Thumbs.db
-*.png
+
+# Ruff cache
+.ruff_cache/
