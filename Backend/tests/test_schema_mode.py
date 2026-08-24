@@ -13,7 +13,7 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -22,11 +22,11 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from app.core.config import Settings
 from app.agents.router import RouterAgent, RoutingDecision
 from app.agents.validator import ValidatorAgent
+from app.core.config import Settings
+from app.schemas.documents import ExtractionField, FieldDefinition, JudgeResult, ValidationResult
 from app.services.extraction_service import DocumentExtractionService
-from app.schemas.documents import FieldDefinition, ExtractionField, ValidationResult, JudgeResult
 from app.services.knowledge_base import KnowledgeBaseRepository
 
 
@@ -243,7 +243,7 @@ async def test_extract_group_async() -> None:
         from app.services.extraction_service import UploadedFilePart
         parts = [UploadedFilePart(filename="doc.pdf", content_type="application/pdf", raw_content=b"pdf_bytes")]
         response = await service.extract_group(parts)
-        
+
         mock_aparse.assert_called_once_with(b"pdf_bytes", "doc.pdf")
         assert mock_extract.call_count == 2
         assert response.request.filename == "doc.pdf"

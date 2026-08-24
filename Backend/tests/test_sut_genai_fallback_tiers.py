@@ -16,8 +16,8 @@ for _p in (_REPO_ROOT, _BACKEND_ROOT):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from app.services.sut_genai_client import SutGenAIClient, SutGenAICallError
 from app.core.config import Settings
+from app.services.sut_genai_client import SutGenAICallError, SutGenAIClient
 
 
 class _DummySchema(BaseModel):

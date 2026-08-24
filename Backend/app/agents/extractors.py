@@ -5,12 +5,12 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any
 
-
 from app.core.config import Settings
 from app.schemas.documents import ExtractionField, FieldDefinition
 from app.schemas.llm_schemas import ExtractionResponseSchema
 from app.services.field_matching import _normalize_name
-from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
+from app.services.sut_genai_client import SutGenAICallError as GeminiCallError
+from app.services.sut_genai_client import SutGenAIClient as GeminiClient
 
 logger = logging.getLogger(__name__)
 
@@ -50,11 +50,11 @@ def _parse_extraction_response(
         if entry.value is None:
             logger.debug("Extractor dropped field '%s' (null value) for doc_type=%s", entry.name, doc_type)
             continue
-            
+
         value = entry.value
         if isinstance(value, list):
             value = [v.model_dump(exclude_none=True) if hasattr(v, "model_dump") else v for v in value]
-            
+
         item = ExtractionField(
             value=value,
             confidence=entry.confidence,
@@ -92,7 +92,6 @@ class OpenSchemaExtractor:
         if not has_text and not has_image:
             raise GeminiCallError("Extractor requires document text or an image")
 
-        suggested_names = {f.name for f in context.suggested_fields}
         fields_desc = {
             f.name: (f.description or "") + (" [likely required]" if f.likely_required else "")
             for f in context.suggested_fields

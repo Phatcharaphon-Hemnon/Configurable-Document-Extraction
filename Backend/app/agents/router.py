@@ -6,9 +6,10 @@ from typing import TYPE_CHECKING
 
 from app.core.config import Settings
 from app.schemas.documents import DocumentLanguage, FieldDefinition
-from app.services.field_matching import _normalize_name, build_alternative_name_lookup
 from app.schemas.llm_schemas import RoutingResponseSchema
-from app.services.sut_genai_client import SutGenAICallError as GeminiCallError, SutGenAIClient as GeminiClient
+from app.services.field_matching import _normalize_name, build_alternative_name_lookup
+from app.services.sut_genai_client import SutGenAICallError as GeminiCallError
+from app.services.sut_genai_client import SutGenAIClient as GeminiClient
 
 if TYPE_CHECKING:
     from app.services.knowledge_base import KnowledgeBaseRepository
@@ -244,7 +245,7 @@ class RouterAgent:
         if self.schema_mode == "strict":
             norm_dt = doc_type.strip().lower()
             allowed_normalized = {dt.strip().lower(): dt for dt in self._allowed_doc_types}
-            
+
             if norm_dt in allowed_normalized:
                 doc_type = allowed_normalized[norm_dt]
             elif norm_dt in _STRICT_ALIASES:

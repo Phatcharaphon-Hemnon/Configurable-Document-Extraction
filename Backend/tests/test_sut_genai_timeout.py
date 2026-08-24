@@ -15,7 +15,6 @@ from pydantic import BaseModel
 from app.core.config import Settings
 from app.services.sut_genai_client import SutGenAICallError, SutGenAIClient
 
-
 # -- Helpers -----------------------------------------------------------------
 
 class _DummySchema(BaseModel):

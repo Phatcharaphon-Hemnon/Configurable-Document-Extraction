@@ -1,0 +1,26 @@
+# Ruff configuration for the FastAPI backend.
+# CI runs `ruff check Backend/`; keep this file next to the package it governs.
+target-version = "py311"
+line-length = 120
+extend-exclude = ["data", "__pycache__"]
+
+[lint]
+select = [
+    "E4",  # pycodestyle errors (imports, indentation)
+    "E7",  # pycodestyle errors (statements)
+    "E9",  # pycodestyle errors (runtime/syntax hazards)
+    "W",   # pyflakes whitespace warnings
+    "F",   # Pyflakes (unused imports/variables, undefined names)
+    "I",   # isort (import ordering)
+]
+
+[lint.isort]
+known-first-party = ["app"]
+
+[lint.per-file-ignores]
+# Tests insert Backend/ into sys.path before importing `app`, so imports
+# intentionally appear after executable statements.
+"Backend/tests/**" = ["E402"]
+
+[format]
+quote-style = "double"

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 from pydantic import BaseModel
@@ -19,8 +19,8 @@ for _p in (_REPO_ROOT, _BACKEND_ROOT):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from app.services.sut_genai_client import SutGenAIClient  # noqa: E402
 from app.core.config import Settings  # noqa: E402
+from app.services.sut_genai_client import SutGenAIClient  # noqa: E402
 
 
 class _DummySchema(BaseModel):

@@ -6,10 +6,9 @@ Runs against an in-memory Temporal test environment; does NOT require a
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
-
 from temporalio.testing import WorkflowEnvironment
 from temporalio.worker import Worker
 

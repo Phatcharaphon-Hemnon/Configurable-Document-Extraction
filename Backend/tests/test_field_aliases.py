@@ -15,8 +15,6 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
-import pytest
-
 # ---------------------------------------------------------------------------
 # Make sure the Backend package is importable when running from the repo root
 # ---------------------------------------------------------------------------
@@ -26,11 +24,10 @@ for _p in (_REPO_ROOT, _BACKEND_ROOT):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from app.services.field_matching import _normalize_name, build_alternative_name_lookup  # noqa: E402
 from app.agents.router import RouterAgent  # noqa: E402
-from app.schemas.documents import FieldDefinition  # noqa: E402
 from app.core.config import Settings  # noqa: E402
-
+from app.schemas.documents import FieldDefinition  # noqa: E402
+from app.services.field_matching import build_alternative_name_lookup  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -490,7 +487,7 @@ class TestParseExtractionResponse:
 
     def test_alias_matching(self) -> None:
         from app.agents.extractors import _parse_extraction_response
-        from app.schemas.llm_schemas import ExtractionResponseSchema, ExtractedFieldEntry
+        from app.schemas.llm_schemas import ExtractedFieldEntry, ExtractionResponseSchema
 
         parsed = ExtractionResponseSchema(
             fields=[

@@ -213,14 +213,31 @@ body {
 /* Tabs                                                                 */
 /* ------------------------------------------------------------------ */
 
+.tabs {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
 .tabs button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
   font-family: var(--font-family-sans);
   font-weight: 500;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
+.tabs button.active {
+  color: var(--color-text-default);
+  border-bottom: 2px solid var(--color-status-agent);
+}
+
 .tabs button:hover {
-  color: var(--color-text-default) !important;
+  color: var(--color-text-default);
 }
 
 /* ------------------------------------------------------------------ */
@@ -284,6 +301,10 @@ body {
   font-family: var(--font-family-mono);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.step.active .step-label {
+  color: var(--color-status-agent);
 }
 
 /* ------------------------------------------------------------------ */
@@ -445,9 +466,28 @@ body {
 /* Page tabs (multi-page documents)                                    */
 /* ------------------------------------------------------------------ */
 
+.page-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
 .page-tabs button {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-panel-background);
+  color: var(--color-text-default);
+  cursor: pointer;
   font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
   transition: background 0.15s ease, color 0.15s ease;
+}
+
+.page-tabs button.active {
+  background: var(--color-status-agent);
+  color: var(--color-background);
 }
 
 .page-tabs button:hover {
@@ -500,4 +540,189 @@ button:focus-visible,
 .upload-dropzone:focus-visible {
   outline: 2px solid var(--color-status-router);
   outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout & typography helpers                                         */
+/* ------------------------------------------------------------------ */
+
+.panel-pad {
+  padding: var(--spacing-lg);
+}
+
+.console-title {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-xl);
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-title {
+  font-size: var(--font-size-md);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.document-list-empty {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.section-title {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-lg);
+  margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+}
+
+.section-title.flush-top {
+  margin-top: 0;
+}
+
+.hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.hint.spaced {
+  margin: var(--spacing-md) 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Callout box internals                                               */
+/* ------------------------------------------------------------------ */
+
+.warning-box h3,
+.info-box h3 {
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.box-title-lg {
+  font-size: var(--font-size-lg);
+}
+
+.box-text {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.box-text.spaced {
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.box-list {
+  list-style-type: disc;
+  margin-left: var(--spacing-md);
+}
+
+.judge-review {
+  margin-top: var(--spacing-md);
+}
+
+.flush-warning {
+  margin-top: var(--spacing-sm);
+}
+
+/* ------------------------------------------------------------------ */
+/* Extraction tab                                                      */
+/* ------------------------------------------------------------------ */
+
+.completeness-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-md) 0;
+}
+
+.completeness-bar {
+  flex: 1;
+  max-width: 300px;
+}
+
+.source-span-cell {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.actions-row {
+  margin-top: var(--spacing-lg);
+  text-align: right;
+}
+
+.actions-row .button-secondary {
+  margin-right: var(--spacing-sm);
+}
+
+/* ------------------------------------------------------------------ */
+/* Evaluation tab                                                      */
+/* ------------------------------------------------------------------ */
+
+.controls-row {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.run-row {
+  margin: var(--spacing-md) 0 var(--spacing-lg) 0;
+}
+
+.ground-truth-input {
+  width: 100%;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  background: var(--color-panel-background);
+  color: var(--color-text-default);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm);
+  resize: vertical;
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
+
+.button-primary {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: none;
+  background: var(--color-status-agent);
+  color: var(--color-background);
+  cursor: pointer;
+}
+
+.button-primary:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.button-secondary {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-panel-background);
+  color: var(--color-text-default);
+  cursor: pointer;
+}
+
+.pill-button {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-panel-background);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  display: inline-flex;
+  align-items: center;
 }
