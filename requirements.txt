@@ -1,8 +1,0 @@
-fastapi==0.138.2
-uvicorn[standard]==0.34.0
-pydantic==2.13.4
-python-multipart==0.0.20
-python-dotenv==1.1.0
-openai>=1.30.0
-llama-cloud-services==0.6.94
-temporalio==1.31.0
