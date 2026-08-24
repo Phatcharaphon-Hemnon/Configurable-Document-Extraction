@@ -18,20 +18,20 @@ if [ ! -d "$ROOT/.venv" ]; then
     # shellcheck disable=SC1091
     source "$ROOT/.venv/bin/activate"
     pip install --upgrade pip >/dev/null
-    pip install -r "$ROOT/apps/api/requirements.txt" pytest pytest-asyncio anyio ruff >/dev/null
+    pip install -r "$ROOT/api/requirements.txt" pytest pytest-asyncio anyio ruff >/dev/null
 else
     # shellcheck disable=SC1091
     source "$ROOT/.venv/bin/activate"
 fi
 
-[ -f "$ROOT/apps/api/.env" ] || cp "$ROOT/apps/api/.env.example" "$ROOT/apps/api/.env"
+[ -f "$ROOT/api/.env" ] || cp "$ROOT/api/.env.example" "$ROOT/api/.env"
 
 echo "==> Starting API on http://127.0.0.1:8000 (docs: /docs)"
-(cd "$ROOT/apps/api" && python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000) &
+(cd "$ROOT/api" && python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000) &
 
 # --- Web (React) ---
 echo "==> Starting Web on http://localhost:5173"
-(cd "$ROOT/apps/web" && [ -d node_modules ] || npm install; npm run dev) &
+(cd "$ROOT/web" && [ -d node_modules ] || npm install; npm run dev) &
 
 echo
 echo "==> Ready: UI http://localhost:5173 · API http://127.0.0.1:8000/docs"

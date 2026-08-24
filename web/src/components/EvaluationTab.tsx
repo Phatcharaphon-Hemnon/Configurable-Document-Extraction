@@ -24,7 +24,11 @@ export function EvaluationTab({ groupId, docIndex, doc, combinedFields }: Evalua
   } = useEvaluation({ evalKey, docType: doc?.doc_type ?? null, combinedFields });
 
   if (!doc) {
-    return <div className="empty-state">Select a document from the queue to evaluate its extraction.</div>;
+    return (
+      <div className="empty-state">
+        <p>Select a document from the queue to evaluate its extraction.</p>
+      </div>
+    );
   }
 
   const canRun = !isEvaluating && draft.trim().length > 0;
@@ -34,8 +38,8 @@ export function EvaluationTab({ groupId, docIndex, doc, combinedFields }: Evalua
       <h3 className="section-title flush-top">Evaluation Metrics</h3>
 
       <p className="hint">
-        Paste or upload the expected (ground truth) field values as JSON to score this document's extracted fields
-        against them.
+        Paste or upload the expected (ground truth) field values as JSON to score this document's extracted
+        fields against them.
       </p>
 
       <div className="controls-row">
@@ -57,7 +61,7 @@ export function EvaluationTab({ groupId, docIndex, doc, combinedFields }: Evalua
       />
 
       {error && (
-        <div className="warning-box flush-warning">
+        <div className="callout callout-danger judge-review">
           <AlertTriangleIcon />
           <div>
             <p className="box-text">{error}</p>
@@ -72,7 +76,9 @@ export function EvaluationTab({ groupId, docIndex, doc, combinedFields }: Evalua
       </div>
 
       {!evaluation ? (
-        <div className="empty-state">No evaluation run yet.</div>
+        <div className="empty-state">
+          <p>No evaluation run yet.</p>
+        </div>
       ) : (
         <>
           <div className="evaluation-metrics">
@@ -98,25 +104,30 @@ export function EvaluationTab({ groupId, docIndex, doc, combinedFields }: Evalua
 
           {evaluation.mismatches.length > 0 && (
             <>
-              <h3 className="section-title">Mismatches ({evaluation.mismatches.length})</h3>
-              <table className="extracted-fields-table">
-                <thead>
-                  <tr>
-                    <th>Field Name</th>
-                    <th>Predicted</th>
-                    <th>Expected</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {evaluation.mismatches.map((m, idx) => (
-                    <tr key={`${m.field}-${idx}`}>
-                      <td>{m.field}</td>
-                      <td>{formatFieldValue(m.predicted, '—')}</td>
-                      <td>{formatFieldValue(m.expected, '—')}</td>
+              <div className="section-head">
+                <h3 className="section-title">Mismatches</h3>
+                <span className="field-count">{evaluation.mismatches.length} fields</span>
+              </div>
+              <div className="table-wrap">
+                <table className="fields-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Predicted</th>
+                      <th>Expected</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {evaluation.mismatches.map((m, idx) => (
+                      <tr key={`${m.field}-${idx}`}>
+                        <td><span className="field-name">{m.field}</span></td>
+                        <td className="field-value">{formatFieldValue(m.predicted, '—')}</td>
+                        <td className="field-value">{formatFieldValue(m.expected, '—')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </>
           )}
         </>

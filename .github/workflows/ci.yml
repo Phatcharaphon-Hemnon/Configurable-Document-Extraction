@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install ruff
-      - run: ruff check apps/api/
+      - run: ruff check api/
 
   backend-tests:
     name: "Backend / Tests (pytest)"
@@ -34,23 +34,23 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: |
-          pip install -r apps/api/requirements.txt
+          pip install -r api/requirements.txt
           pip install pytest pytest-asyncio anyio
       - name: Run backend tests
-        run: pytest apps/api/tests/ -v --durations=10
+        run: pytest api/tests/ -v --durations=10
 
   frontend-build:
     name: "Frontend / Type-check & Build"
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/web
+        working-directory: web
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: apps/web/package-lock.json
+          cache-dependency-path: web/package-lock.json
       - run: npm ci
       - run: npm run build

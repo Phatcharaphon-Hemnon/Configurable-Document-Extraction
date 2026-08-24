@@ -1,6 +1,6 @@
 # Backend
 
-FastAPI app under `apps/api/app/`. Run from inside `apps/api/` so `.env` and the
+FastAPI app under `api/app/`. Run from inside `api/` so `.env` and the
 `app` package resolve: `python -m uvicorn app.main:app --reload`.
 
 ## Modules
@@ -35,7 +35,7 @@ FastAPI app under `apps/api/app/`. Run from inside `apps/api/` so `.env` and the
 ## Knowledge base layout
 
 ```
-apps/api/app/data/knowledge_base/
+api/app/data/knowledge_base/
 ├── field_catalog/    invoice_fields.json · po_fields.json · delivery_note_fields.json
 ├── few_shot/         invoice/ po/ delivery_note/   (optional examples)
 ├── ground_truth/     <stem>.json auto-eval targets

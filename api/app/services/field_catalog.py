@@ -24,6 +24,18 @@ _FILE_BY_DOC_TYPE: dict[DocType, str] = {
     "delivery_note": "delivery_note_fields.json",
 }
 
+# Values that mean "the field is absent" — never extracted, never registered.
+PLACEHOLDER_VALUES: frozenset[str] = frozenset({
+    "", "n/a", "na", "-", "--", "—", "–", "null", "none", "nil",
+    "not available", "not applicable", "no value", "?", "??", "tbd",
+})
+
+# A field name must look like a clean snake_case identifier to be catalog-worthy.
+_SANE_NAME_RE = re.compile(r"^[a-z][a-z0-9_]{0,47}$")
+
+# Minimum confidence for an AI-discovered field to be written into the catalog.
+NEW_FIELD_MIN_CONFIDENCE = 0.6
+
 _lock = threading.Lock()
 
 
@@ -36,6 +48,30 @@ def normalize_field_name(name: str) -> str:
     s = re.sub(r"[\s\-]+", "_", s)
     s = re.sub(r"_+", "_", s)
     return s.strip("_")
+
+
+def is_placeholder_value(value: object) -> bool:
+    """True when a value is a placeholder meaning 'absent' (e.g. 'N/A')."""
+    if value is None:
+        return True
+    if not isinstance(value, str):
+        return False
+    return value.strip().lower() in PLACEHOLDER_VALUES
+
+
+def is_sane_field_name(name: str) -> bool:
+    """True when the name is a clean snake_case identifier worth keeping."""
+    return bool(_SANE_NAME_RE.match(name))
+
+
+def is_registerable_new_field(name: str, value: object, confidence: float) -> bool:
+    """A new field may only be auto-registered when it is REAL:
+    non-placeholder value, sane snake_case name, sufficient confidence."""
+    return (
+        not is_placeholder_value(value)
+        and confidence >= NEW_FIELD_MIN_CONFIDENCE
+        and is_sane_field_name(name)
+    )
 
 
 class FieldCatalog:
@@ -117,7 +153,7 @@ class FieldCatalog:
 
             added: list[str] = []
             for original, normalized in zip(names, new_normalized):
-                if normalized in existing:
+                if normalized in existing or not is_sane_field_name(normalized):
                     continue
                 fields.append(
                     {

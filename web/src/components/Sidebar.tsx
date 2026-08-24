@@ -23,22 +23,33 @@ export function Sidebar({ groups, selectedGroupId, onSelect, onFiles }: SidebarP
   };
 
   return (
-    <div className="sidebar">
-      <h2 className="sidebar-title">
-        Document Queue <span className="text-muted">({groups.length})</span>
-      </h2>
+    <aside className="sidebar">
+      <div className="sidebar-head">
+        <h2 className="sidebar-title">Document Queue</h2>
+        <span className="count-badge">{groups.length}</span>
+      </div>
 
       <div
         className="upload-dropzone"
         onClick={() => fileInputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
       >
         <UploadIcon />
-        <span>Drag &amp; Drop or Click to Upload Files</span>
+        <span>Drag &amp; Drop or Click to Upload</span>
         <span>Select multiple files together to treat them as pages of one document</span>
       </div>
-      <input ref={fileInputRef} type="file" multiple accept="image/*,application/pdf" className="hidden-file-input" onChange={handleFileChange} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="image/*,application/pdf"
+        className="hidden-file-input"
+        onChange={handleFileChange}
+      />
 
       <ul className="document-list">
         {groups.length === 0 ? (
@@ -50,12 +61,14 @@ export function Sidebar({ groups, selectedGroupId, onSelect, onFiles }: SidebarP
               className={`document-list-item ${group.id === selectedGroupId ? 'active' : ''}`}
               onClick={() => onSelect(group.id)}
             >
-              <span className="file-name">{group.label}</span>
-              <span className={`status-indicator ${group.status}`} />
+              <span className="file-name" title={group.label}>{group.label}</span>
+              <span className={`status-indicator ${group.status}`} title={group.status} />
             </li>
           ))
         )}
       </ul>
-    </div>
+
+      <p className="sidebar-footnote">Invoice · Purchase Order · Delivery Note</p>
+    </aside>
   );
 }

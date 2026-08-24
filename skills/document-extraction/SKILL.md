@@ -32,24 +32,24 @@ Upload → [image? vision path : LlamaParse OCR path]
 
 ## Where things live
 
-- Schemas: `apps/api/app/schemas/documents.py` (ExtractedField,
+- Schemas: `api/app/schemas/documents.py` (ExtractedField,
   ExtractionResult, FieldDefinition, EvaluateResponse…)
-- Catalog read/write: `apps/api/app/services/field_catalog.py`
-- Injection guard: `apps/api/app/core/security.py`
-- Orchestration: `apps/api/app/services/extraction_service.py`
-- LLM transport (retry + 3-tier JSON fallback): `apps/api/app/services/sut_genai_client.py`
-- Langfuse: `apps/api/app/observability/langfuse.py`
-- Temporal: `apps/api/app/temporal/{workflows,activities,worker,client}.py`
+- Catalog read/write: `api/app/services/field_catalog.py`
+- Injection guard: `api/app/core/security.py`
+- Orchestration: `api/app/services/extraction_service.py`
+- LLM transport (retry + 3-tier JSON fallback): `api/app/services/sut_genai_client.py`
+- Langfuse: `api/app/observability/langfuse.py`
+- Temporal: `api/app/temporal/{workflows,activities,worker,client}.py`
 - Frontend API shape mirrors `FileExtractionResponse` in
-  `apps/web/src/types/extraction.ts`
+  `web/src/types/extraction.ts`
 
 ## Verification checklist (run after changes)
 
 ```bash
 source .venv/bin/activate
-ruff check apps/api/
-python -m pytest apps/api/tests/ -q
-cd apps/web && npm run build
+ruff check api/
+python -m pytest api/tests/ -q
+cd web && npm run build
 ```
 
 ## UI palette
