@@ -39,3 +39,6 @@ Thumbs.db
 
 # Ruff cache
 .ruff_cache/
+# Compiled vite config artifacts (tsc -b output)
+web/vite.config.js
+web/vite.config.d.ts

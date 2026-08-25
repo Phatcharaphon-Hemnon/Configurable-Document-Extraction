@@ -78,7 +78,7 @@ See `api/.env.example` for the full list.
 ## Commands
 
 ```bash
-./scripts/run_all.sh                 # API :8000 + Web :5173 (one command)
+./scripts/run_all.sh                 # full setup (venv, deps, .env) + run API :8000 + Web :5173
 source .venv/bin/activate
 ruff check backend/ && python -m pytest api/tests/ -q   # verify
 cd web && npm run build                                 # typecheck+build
