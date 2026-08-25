@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { extractFiles } from '../api/client';
+import { pushToast } from '../lib/toast';
 import type { DocumentGroup, ExtractionResult } from '../types/extraction';
 
 function toErrorMessage(err: unknown): string {
@@ -17,13 +18,27 @@ export function useDocumentQueue() {
 
   const processGroup = useCallback(
     async (group: DocumentGroup) => {
-      patchGroup(group.id, { status: 'uploading' });
+      patchGroup(group.id, { status: 'uploading', error: undefined });
 
       try {
         const response = await extractFiles(group.files, group.label);
         patchGroup(group.id, { status: 'done', response });
+
+        const docs: ExtractionResult[] = response.documents ?? [];
+        const flagged = docs.filter((d) => d.needs_review).length;
+        if (response.error) {
+          pushToast('error', response.error, 7000);
+        } else if (docs.length === 0) {
+          pushToast('error', 'No documents detected in the upload.', 7000);
+        } else if (flagged > 0) {
+          pushToast('info', `${docs.length} document${docs.length > 1 ? 's' : ''} extracted — ${flagged} need${flagged > 1 ? '' : 's'} review.`);
+        } else {
+          pushToast('success', `${docs.length} document${docs.length > 1 ? 's' : ''} extracted successfully.`);
+        }
       } catch (err) {
-        patchGroup(group.id, { status: 'error', error: toErrorMessage(err) });
+        const message = toErrorMessage(err);
+        patchGroup(group.id, { status: 'error', error: message });
+        pushToast('error', message, 8000);
       }
     },
     [patchGroup],
@@ -44,6 +59,14 @@ export function useDocumentQueue() {
     [processGroup],
   );
 
+  const retryGroup = useCallback(
+    (id: string) => {
+      const group = groups.find((g) => g.id === id);
+      if (group) void processGroup(group);
+    },
+    [groups, processGroup],
+  );
+
   const selectGroup = useCallback((id: string) => {
     setSelectedGroupId(id);
     setSelectedDocIndex(0);
@@ -61,5 +84,6 @@ export function useDocumentQueue() {
     selectDocIndex: setSelectedDocIndex,
     selectGroup,
     addFiles,
+    retryGroup,
   };
 }

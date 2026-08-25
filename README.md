@@ -11,8 +11,9 @@ hallucination guards, and full LLM observability.
   (enforced end-to-end by Pydantic `Literal`).
 - **Multi-agent pipeline** — Router → Extractor (one agent per type) →
   Validator → Judge.
-- **OCR + ICR** — images go directly to the NVIDIA Nemotron vision model
-  (handles handwriting); PDFs are OCR-split per page by LlamaParse.
+- **OCR + ICR** — text stages run `nemotron-3.5-lightning-free` via the
+  OpenCode Zen gateway; image uploads use a vision model (default `hy3-free`)
+  or fall back to LlamaParse OCR. PDFs are OCR-split per page by LlamaParse.
 - **Multi-document files** — one uploaded PDF can contain several documents;
   every page becomes its own extraction result.
 - **Field catalog discipline** — field names match the catalog EXACTLY (no
@@ -71,9 +72,10 @@ Copy `api/.env.example` → `api/.env`:
 
 | Variable | Purpose |
 |---|---|
-| `NVIDIA_API_KEY` / `OPENROUTER_API_KEY` | LLM provider (NVIDIA tried first). |
+| `OPENCODE_API_KEY` | OpenCode Zen API key (free tier: `public`). |
 | `LLAMA_CLOUD_API_KEY` | PDF OCR path (images skip it). |
-| `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Model per stage. |
+| `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Model per stage (default `nemotron-3.5-lightning-free`). |
+| `VISION_MODEL_NAME` | Model for image uploads (default `hy3-free`; empty = LlamaParse OCR). |
 | `FEW_SHOT_EXAMPLES_PER_DOC_TYPE` | Few-shot injection count (default 0 = cheapest). |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_HOST` | Optional tracing. |
 | `TEMPORAL_ENABLED` | `false` (default) = in-process pipeline; `true` = Temporal workflow (run `python -m app.temporal.worker` from `api/`). |

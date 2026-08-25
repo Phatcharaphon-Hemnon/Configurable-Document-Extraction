@@ -26,8 +26,10 @@ _FILE_BY_DOC_TYPE: dict[DocType, str] = {
 
 # Values that mean "the field is absent" — never extracted, never registered.
 PLACEHOLDER_VALUES: frozenset[str] = frozenset({
-    "", "n/a", "na", "-", "--", "—", "–", "null", "none", "nil",
-    "not available", "not applicable", "no value", "?", "??", "tbd",
+    "", "n/a", "n.a", "n.a.", "na", "-", "--", "—", "–", "null", "none", "nil",
+    "not available", "not applicable", "not answerable", "unanswerable",
+    "no answer", "not provided", "not stated", "not found", "unknown",
+    "no value", "?", "??", "tbd", "blank", "empty",
 })
 
 # A field name must look like a clean snake_case identifier to be catalog-worthy.
@@ -56,7 +58,8 @@ def is_placeholder_value(value: object) -> bool:
         return True
     if not isinstance(value, str):
         return False
-    return value.strip().lower() in PLACEHOLDER_VALUES
+    normalized = value.strip().lower().replace("_", " ")
+    return normalized in PLACEHOLDER_VALUES
 
 
 def is_sane_field_name(name: str) -> bool:

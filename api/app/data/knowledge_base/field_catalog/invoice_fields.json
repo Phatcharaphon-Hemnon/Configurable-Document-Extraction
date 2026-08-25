@@ -168,27 +168,6 @@
       "type": "array",
       "required": false,
       "validation_rule": "Array of objects with description, quantity, unit_price, amount"
-    },
-    {
-      "name": "gst_summary",
-      "type": "string",
-      "required": false,
-      "validation_rule": "Discovered automatically from an uploaded document",
-      "source": "ai_discovered"
-    },
-    {
-      "name": "total",
-      "type": "string",
-      "required": false,
-      "validation_rule": "Discovered automatically from an uploaded document",
-      "source": "ai_discovered"
-    },
-    {
-      "name": "thank_you",
-      "type": "string",
-      "required": false,
-      "validation_rule": "Discovered automatically from an uploaded document",
-      "source": "ai_discovered"
     }
   ]
 }

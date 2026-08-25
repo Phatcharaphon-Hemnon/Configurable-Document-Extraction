@@ -1,6 +1,6 @@
 """SUT GenAI gateway client wrapper, using NVIDIA NIM API.
 
-Talks to https://integrate.api.nvidia.com/v1 which is an OpenAI-compatible endpoint.
+Talks to the OpenCode Zen gateway (https://opencode.ai/zen/v1), an OpenAI-compatible endpoint.
 
 Auth:  Authorization: Bearer <NVIDIA_API_KEY>
 Model: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=BaseModel)
 
-_SUT_BASE_URL = "https://integrate.api.nvidia.com/v1"
+_SUT_BASE_URL = "https://opencode.ai/zen/v1"
 
 
 # ---------------------------------------------------------------------------
@@ -75,6 +75,20 @@ def _truncate(value: str, limit: int = 500) -> str:
     if len(value) <= limit:
         return value
     return f"{value[:limit]}… [truncated, {len(value)} chars total]"
+
+
+# Provider rate-limit handling: the NVIDIA endpoint enforces a worker request
+# limit (e.g. "ResourceExhausted: Worker local total request limit reached
+# (16/16)" → HTTP 503). Degrading tiers on these errors wastes calls — back
+# off and retry the SAME call instead.
+_RATE_LIMIT_MARKERS = ("429", "503", "resourceexhausted", "rate limit", "quota", "request limit", "overloaded")
+RATE_LIMIT_MAX_RETRIES = 4
+RATE_LIMIT_BACKOFF_SECONDS = 3.0
+
+
+def _is_rate_limit_error(exc: BaseException) -> bool:
+    text = f"{type(exc).__name__} {exc}".lower()
+    return any(marker in text for marker in _RATE_LIMIT_MARKERS)
 
 
 def _patch_schema_for_strict_mode(schema: dict) -> None:
@@ -141,7 +155,12 @@ class SutGenAIClient:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self._timeout = settings.llm_request_timeout_seconds
-        raw_key = getattr(settings, "nvidia_api_key", None) or getattr(settings, "openrouter_api_key", None) or ""
+        raw_key = (
+            getattr(settings, "opencode_api_key", None)
+            or getattr(settings, "nvidia_api_key", None)
+            or getattr(settings, "openrouter_api_key", None)
+            or ""
+        )
         api_key = str(raw_key).strip() or "dummy-key"
         self._client = AsyncOpenAI(
             api_key=api_key,
@@ -149,6 +168,34 @@ class SutGenAIClient:
             timeout=self._timeout,
             max_retries=0,  # we have our own schema→plain retry logic
         )
+
+    async def _chat_with_retry(self, **kwargs: Any):
+        """chat.completions.create with exponential backoff on rate limits.
+
+        TimeoutError and non-rate-limit errors propagate unchanged so the
+        existing tier-fallback logic keeps working.
+        """
+        for attempt in range(RATE_LIMIT_MAX_RETRIES):
+            try:
+                return await asyncio.wait_for(
+                    self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
+                    timeout=self._timeout,
+                )
+            except Exception as exc:
+                if attempt < RATE_LIMIT_MAX_RETRIES - 1 and _is_rate_limit_error(exc):
+                    wait = RATE_LIMIT_BACKOFF_SECONDS * (2**attempt)
+                    logger.warning(
+                        "Provider rate limit (%s: %s) — backing off %.0fs (attempt %d/%d)",
+                        type(exc).__name__,
+                        _truncate(str(exc), 120),
+                        wait,
+                        attempt + 1,
+                        RATE_LIMIT_MAX_RETRIES,
+                    )
+                    await asyncio.sleep(wait)
+                    continue
+                raise
+        raise RuntimeError("unreachable")
 
     # ------------------------------------------------------------------
     # generate_structured
@@ -511,13 +558,10 @@ class SutGenAIClient:
         if disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
         try:
-            resp = await asyncio.wait_for(
-                self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
-                timeout=self._timeout,
-            )
+            resp = await self._chat_with_retry(**kwargs)
         except asyncio.TimeoutError:
             logger.warning(
-                "OpenRouter: schema call timed out after %.0fs — will retry plain.",
+                "LLM: schema call timed out after %.0fs — will retry plain.",
                 self._timeout,
             )
             return None, None, None, None, None
@@ -526,25 +570,22 @@ class SutGenAIClient:
             # on the SAME tier without extra_body before falling through.
             if "extra_body" in kwargs:
                 logger.warning(
-                    "OpenRouter: schema call with extra_body raised %s: %s — "
+                    "LLM: schema call with extra_body raised %s: %s — "
                     "retrying same tier without extra_body.",
                     type(exc).__name__, exc,
                 )
                 kwargs.pop("extra_body")
                 try:
-                    resp = await asyncio.wait_for(
-                        self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
-                        timeout=self._timeout,
-                    )
+                    resp = await self._chat_with_retry(**kwargs)
                 except asyncio.TimeoutError:
                     logger.warning(
-                        "OpenRouter: schema call (no extra_body) timed out after %.0fs — will retry plain.",
+                        "LLM: schema call (no extra_body) timed out after %.0fs — will retry plain.",
                         self._timeout,
                     )
                     return None, None, None, None, None
                 except Exception as exc2:
                     logger.warning(
-                        "OpenRouter: response_format call raised %s: %s — will retry plain.",
+                        "LLM: response_format call raised %s: %s — will retry plain.",
                         type(exc2).__name__, exc2, exc_info=True,
                     )
                     return None, None, None, None, None
@@ -552,7 +593,7 @@ class SutGenAIClient:
                 # If the proxy rejects the response_format param entirely, fall
                 # through to the plain call path by returning None.
                 logger.warning(
-                    "OpenRouter: response_format call raised %s: %s — will retry plain.",
+                    "LLM: response_format call raised %s: %s — will retry plain.",
                     type(exc).__name__,
                     exc,
                     exc_info=True,
@@ -594,13 +635,10 @@ class SutGenAIClient:
         if disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
         try:
-            resp = await asyncio.wait_for(
-                self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
-                timeout=self._timeout,
-            )
+            resp = await self._chat_with_retry(**kwargs)
         except asyncio.TimeoutError:
             logger.warning(
-                "OpenRouter: json_object call timed out after %.0fs — will retry plain.",
+                "LLM: json_object call timed out after %.0fs — will retry plain.",
                 self._timeout,
             )
             return None, None, None, None, None
@@ -609,31 +647,28 @@ class SutGenAIClient:
             # on the SAME tier without extra_body before falling through.
             if "extra_body" in kwargs:
                 logger.warning(
-                    "OpenRouter: json_object call with extra_body raised %s: %s — "
+                    "LLM: json_object call with extra_body raised %s: %s — "
                     "retrying same tier without extra_body.",
                     type(exc).__name__, exc,
                 )
                 kwargs.pop("extra_body")
                 try:
-                    resp = await asyncio.wait_for(
-                        self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
-                        timeout=self._timeout,
-                    )
+                    resp = await self._chat_with_retry(**kwargs)
                 except asyncio.TimeoutError:
                     logger.warning(
-                        "OpenRouter: json_object call (no extra_body) timed out after %.0fs — will retry plain.",
+                        "LLM: json_object call (no extra_body) timed out after %.0fs — will retry plain.",
                         self._timeout,
                     )
                     return None, None, None, None, None
                 except Exception as exc2:
                     logger.warning(
-                        "OpenRouter: json_object call raised %s: %s — will retry plain.",
+                        "LLM: json_object call raised %s: %s — will retry plain.",
                         type(exc2).__name__, exc2, exc_info=True,
                     )
                     return None, None, None, None, None
             else:
                 logger.warning(
-                    "OpenRouter: json_object call raised %s: %s — will retry plain.",
+                    "LLM: json_object call raised %s: %s — will retry plain.",
                     type(exc).__name__,
                     exc,
                     exc_info=True,
@@ -673,10 +708,7 @@ class SutGenAIClient:
         if disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
         try:
-            resp = await asyncio.wait_for(
-                self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
-                timeout=self._timeout,
-            )
+            resp = await self._chat_with_retry(**kwargs)
         except asyncio.TimeoutError:
             raise SutGenAICallError(
                 f"OpenRouter request timed out after {self._timeout:.0f}s",
@@ -687,16 +719,13 @@ class SutGenAIClient:
             # on the SAME tier without extra_body before raising.
             if "extra_body" in kwargs:
                 logger.warning(
-                    "OpenRouter: plain call with extra_body raised %s: %s — "
+                    "LLM: plain call with extra_body raised %s: %s — "
                     "retrying same tier without extra_body.",
                     type(exc).__name__, exc,
                 )
                 kwargs.pop("extra_body")
                 try:
-                    resp = await asyncio.wait_for(
-                        self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
-                        timeout=self._timeout,
-                    )
+                    resp = await self._chat_with_retry(**kwargs)
                 except asyncio.TimeoutError:
                     raise SutGenAICallError(
                         f"OpenRouter request timed out after {self._timeout:.0f}s",
