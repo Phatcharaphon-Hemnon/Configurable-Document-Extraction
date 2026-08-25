@@ -33,10 +33,13 @@ hallucination guards, and full LLM observability.
 ## Quick start
 
 ```bash
-./scripts/run_all.sh       # ONE command: API :8000 + Web :5173
+./scripts/run_all.sh       # ONE command: installs everything, then runs API :8000 + Web :5173
 ```
 
-First run creates `.venv`, installs dependencies and copies `.env` files automatically.
+The script handles the FULL setup automatically: verifies prerequisites
+(Python 3.10+, Node 18+), creates the `.venv`, installs API + web
+dependencies, creates `.env` files from templates, and starts both servers.
+Re-running skips everything already installed. Ctrl+C stops both.
 
 - UI: http://localhost:5173
 - API docs: http://127.0.0.1:8000/docs
@@ -108,6 +111,32 @@ source .venv/bin/activate
 ruff check backend/ && python -m pytest api/tests/ -q   # lint + tests
 cd web && npm run build                                # typecheck + build
 ```
+
+## Deployment (Vercel + hosted backend)
+
+The web app deploys to Vercel; the FastAPI backend needs a long-running host
+(Render, Railway, Fly.io — not Vercel serverless).
+
+**Web (Vercel):**
+1. Import the repo, set **Root Directory** to `web`.
+2. Environment variable: `VITE_API_BASE_URL` = your backend URL + `/api`
+   (e.g. `https://your-backend.onrender.com/api`).
+   > **Important:** leave the **"Sensitive" checkbox UNCHECKED**. `VITE_`
+   > variables are compiled into the browser bundle — Vercel rejects them as
+   > Sensitive with *"Remove the public framework prefix…"*. The URL contains
+   > no secrets, so a normal variable is correct.
+3. Never put API keys (`OPENCODE_API_KEY`, `LLAMA_CLOUD_API_KEY`, Langfuse
+   keys) in the web project — anything prefixed `VITE_` is public. Keys belong
+   in the backend host's environment.
+
+**Backend (Render/Railway):**
+- Start command: `pip install -r api/requirements.txt && cd api && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- Set `OPENCODE_API_KEY`, `LLAMA_CLOUD_API_KEY` (+ optional Langfuse keys).
+- CORS: the backend already allows `*.vercel.app` previews via
+  `allow_origin_regex`; add your production domain to `FRONTEND_ORIGINS`.
+
+**Local dev without any .env:** `web/.env` is optional — the Vite dev server
+proxies `/api` to `http://127.0.0.1:8000` automatically.
 
 ## CI/CD
 

@@ -1,6 +1,10 @@
 import type { ApiRoot, EvaluateResponse, FileExtractionResponse } from '../types/extraction';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+// Public by design (no secrets): points at the FastAPI backend.
+// Defaults to the relative "/api" — the Vite dev proxy handles local dev,
+// and same-origin deployments (e.g. a reverse proxy in front of both apps)
+// work with zero configuration.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 async function requestJson<T>(url: string, init: RequestInit | undefined, fallbackError: string): Promise<T> {
   const res = await fetch(url, init);
