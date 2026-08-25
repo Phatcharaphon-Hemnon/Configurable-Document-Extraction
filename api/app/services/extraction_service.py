@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import socket
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -44,6 +45,20 @@ _IMAGE_CONTENT_TYPES = {
 def _is_image_file(filename: str, content_type: str | None) -> bool:
     ext = Path(filename or "").suffix.lower()
     return ext in _IMAGE_EXTENSIONS or (content_type in _IMAGE_CONTENT_TYPES)
+
+
+def _assert_llamaparse_reachable() -> None:
+    """Fail fast with a CLEAR message when LlamaParse's endpoint cannot be
+    resolved (VPN/proxy/no internet) instead of letting the SDK retry for
+    ~30s and surface a cryptic RetryError."""
+    try:
+        socket.getaddrinfo("api.cloud.llamaindex.ai", 443)
+    except socket.gaierror as exc:
+        raise RuntimeError(
+            "Cannot reach LlamaParse (DNS/network failure). "
+            "Check your internet connection or VPN — the domain "
+            "api.cloud.llamaindex.ai must be reachable."
+        ) from exc
 
 
 def _image_media_type(filename: str, content_type: str | None) -> str:
@@ -144,8 +159,14 @@ class DocumentExtractionService:
 
         # Per-file routing: images → direct vision (OCR/ICR via VL model),
         # everything else → LlamaParse (one result per parsed page).
-        image_parts = [(i, p) for i, p in enumerate(parts) if _is_image_file(p.filename, p.content_type)]
-        doc_parts = [(i, p) for i, p in enumerate(parts) if not _is_image_file(p.filename, p.content_type)]
+        # Images take the direct-vision fast path ONLY when a vision model is
+        # configured; otherwise they flow through LlamaParse OCR like PDFs.
+        vision_enabled = bool(self.settings.vision_model_name.strip())
+        image_parts = [
+            (i, p) for i, p in enumerate(parts)
+            if vision_enabled and _is_image_file(p.filename, p.content_type)
+        ]
+        doc_parts = [(i, p) for i, p in enumerate(parts) if (i, p) not in image_parts]
         results_by_index: dict[int, list[ExtractionResult]] = {}
 
         if image_parts:
@@ -163,6 +184,7 @@ class DocumentExtractionService:
 
         if doc_parts:
             try:
+                _assert_llamaparse_reachable()
                 parse_results = await asyncio.gather(*[
                     self.llamaparse.aparse_file(part.raw_content, part.filename)
                     for _, part in doc_parts
@@ -246,6 +268,32 @@ class DocumentExtractionService:
             trace.span("extractor", output={"error": str(exc)})
             self.tracer.flush()
             return self._failed(routing, f"Extractor failed: {exc}", "extractor")
+
+        # --- Vision → OCR fallback ---
+        # If the image went through the vision path but produced no fields
+        # (model blind, rate-limited, or weak), OCR the image with LlamaParse
+        # and re-run the extractor on the text. Keeps image uploads working
+        # without a vision-capable model.
+        if image_bytes and not fields:
+            try:
+                logger.info("Vision extraction empty for %s — falling back to LlamaParse OCR", filename)
+                ocr_pages = await self.llamaparse.aparse_file(image_bytes, filename)
+                ocr_text = "\n\n".join(p for p in ocr_pages if p.strip())
+            except Exception as exc:
+                logger.warning("LlamaParse OCR fallback failed for %s: %s", filename, exc)
+                ocr_text = ""
+            if ocr_text.strip():
+                page_text = ocr_text
+                try:
+                    fields, _ = await self.extractors[routing.doc_type].extract(
+                        text=page_text,
+                        few_shot=few_shot,
+                    )
+                    trace.span("extractor-ocr-fallback", output={"fields": len(fields)})
+                except Exception as exc:
+                    trace.span("extractor-ocr-fallback", output={"error": str(exc)})
+                    self.tracer.flush()
+                    return self._failed(routing, f"Extractor failed (OCR fallback): {exc}", "extractor")
 
         # Register AI-discovered field names into the catalog (project rule).
         # The service is the source of truth for is_new_field AND for what is

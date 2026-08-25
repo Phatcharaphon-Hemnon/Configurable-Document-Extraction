@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Sidebar } from './components/Sidebar';
+import { ToastStack } from './components/ToastStack';
 import { ExtractionTab } from './components/ExtractionTab';
 import { EvaluationTab } from './components/EvaluationTab';
 import { MoonIcon, SunIcon } from './components/icons';
@@ -22,6 +23,7 @@ function App() {
     selectDocIndex,
     selectGroup,
     addFiles,
+    retryGroup,
   } = useDocumentQueue();
   const [currentTab, setCurrentTab] = useState<TabId>('extraction');
 
@@ -73,6 +75,7 @@ function App() {
                 doc={selectedDoc}
                 docIndex={selectedDocIndex}
                 onSelectDoc={selectDocIndex}
+                onRetry={retryGroup}
                 combinedFields={combinedFields}
               />
             ) : (
@@ -86,6 +89,7 @@ function App() {
           </div>
         </main>
       </div>
+      <ToastStack />
     </div>
   );
 }

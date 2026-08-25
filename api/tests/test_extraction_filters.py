@@ -18,7 +18,7 @@ from app.services.field_catalog import (  # noqa: E402
 )
 
 
-@pytest.mark.parametrize("raw", ["N/A", "n/a", "NA", "-", "—", "null", "None", "", " ", "not available"])
+@pytest.mark.parametrize("raw", ["N/A", "n/a", "N.A.", "NA", "-", "—", "null", "None", "", " ", "not available", "Not answerable", "not_answerable", "Unknown"])
 def test_placeholders_detected(raw):
     assert is_placeholder_value(raw)
 

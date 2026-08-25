@@ -24,16 +24,28 @@ class Settings:
         # Fixed 3-document-type system. Few-shot examples cost tokens → default OFF.
         self.few_shot_examples_per_doc_type = int(os.getenv("FEW_SHOT_EXAMPLES_PER_DOC_TYPE", "0"))
 
-        # --- AI provider (OpenAI-compatible; NVIDIA NIM or OpenRouter) ---
-        self.nvidia_api_key = (os.getenv("NVIDIA_API_KEY") or os.getenv("OPENROUTER_API_KEY") or "").strip()
-        self.openrouter_api_key = self.nvidia_api_key  # backwards-compatible alias
-        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
-        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
+        # --- AI provider: OpenCode Zen (https://opencode.ai/zen) — OpenAI-compatible ---
+        self.opencode_api_key = (
+            os.getenv("OPENCODE_API_KEY")
+            or os.getenv("NVIDIA_API_KEY")  # legacy fallbacks
+            or os.getenv("OPENROUTER_API_KEY")
+            or ""
+        ).strip()
+        self.nvidia_api_key = self.opencode_api_key  # backwards-compatible alias
+        self.openrouter_api_key = self.opencode_api_key  # backwards-compatible alias
+        _DEFAULT_MODEL = "nemotron-3.5-lightning-free"
+        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", _DEFAULT_MODEL)
+        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", _DEFAULT_MODEL)
         self.extraction_model_name = os.getenv(
             "EXTRACTION_MODEL_NAME",
-            os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"),
+            os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", _DEFAULT_MODEL),
         )
-        self.extraction_max_tokens = int(os.getenv("EXTRACTION_MAX_TOKENS", "4000"))
+        # Vision model for image uploads. Default EMPTY: no free model on the
+        # OpenCode Zen gateway can actually read images (the gateway silently
+        # strips image parts), so images go through LlamaParse OCR instead.
+        # Set e.g. VISION_MODEL_NAME=<model> ONLY if you have a vision-capable model.
+        self.vision_model_name = os.getenv("VISION_MODEL_NAME", "")
+        self.extraction_max_tokens = int(os.getenv("EXTRACTION_MAX_TOKENS", "8000"))
         self.llm_request_timeout_seconds = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "90"))
         self.disable_strict_json_schema = os.getenv("DISABLE_STRICT_JSON_SCHEMA", "false").lower() == "true"
 

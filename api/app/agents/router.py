@@ -52,7 +52,7 @@ class RouterAgent:
 
         if has_image and image_bytes and image_media_type:
             result = await self._client.generate_structured_with_image(
-                model=self.settings.router_model_name,
+                model=self.settings.vision_model_name,
                 prompt=prompt,
                 image_bytes=image_bytes,
                 image_media_type=image_media_type,

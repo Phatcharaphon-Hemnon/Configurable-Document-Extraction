@@ -41,6 +41,8 @@ def _settings(tmp_path: Path) -> Settings:
 
 def _make_service(tmp_path: Path, routing, extraction, judge) -> DocumentExtractionService:
     service = DocumentExtractionService(settings=_settings(tmp_path))
+    service.llamaparse = MagicMock()
+    service.llamaparse.aparse_file = AsyncMock(return_value=["Invoice No: INV-001 Total: 100"])
     service.router = MagicMock()
     service.router.classify = AsyncMock(return_value=routing)
     for extractor in service.extractors.values():
@@ -140,6 +142,8 @@ async def test_low_judge_score_flags_needs_review(tmp_path):
 @pytest.mark.asyncio
 async def test_router_failure_returns_failed_stage(tmp_path):
     service = DocumentExtractionService(settings=_settings(tmp_path))
+    service.llamaparse = MagicMock()
+    service.llamaparse.aparse_file = AsyncMock(return_value=["Invoice No: INV-001 Total: 100"])
     service.router = MagicMock()
     service.router.classify = AsyncMock(side_effect=RuntimeError("LLM down"))
 

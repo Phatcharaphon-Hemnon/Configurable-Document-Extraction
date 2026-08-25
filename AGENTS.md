@@ -11,7 +11,7 @@ multi-agent AI pipeline.
 
 - **Fixed 3 document types**: `invoice`, `purchase_order`, `delivery_note`
 - **OCR + ICR**: printed text via LlamaParse, handwriting via direct
-  vision-model calls (NVIDIA Nemotron VL through an OpenAI-compatible API)
+  vision-model calls (vision model through the OpenCode Zen gateway)
 - **Multi-document PDFs**: one uploaded PDF may contain several documents
   (e.g. invoice + PO); each PDF page becomes its own extraction result
 - **Agent pipeline**: `Router → Extractor (per doc type) → Validator → Judge`
@@ -66,7 +66,10 @@ multi-agent AI pipeline.
 
 ## Environment (api/.env)
 
-AI provider keys: `NVIDIA_API_KEY` (falls back to `OPENROUTER_API_KEY`).
+AI provider: OpenCode Zen gateway (`https://opencode.ai/zen/v1`), key
+`OPENCODE_API_KEY` (free tier: `public`). Default model
+`nemotron-3.5-lightning-free` (text-only) + `VISION_MODEL_NAME=hy3-free` for
+image uploads.
 Parsing: `LLAMA_CLOUD_API_KEY` (PDF/OCR path; images skip it).
 Monitoring: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST`
 (all optional — Langfuse disabled when missing).
