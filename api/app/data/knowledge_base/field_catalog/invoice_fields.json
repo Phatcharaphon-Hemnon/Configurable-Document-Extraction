@@ -1,0 +1,173 @@
+{
+  "doc_type": "invoice",
+  "description": "Tax invoice / sales invoice / POS receipt",
+  "fields": [
+    {
+      "name": "invoice_number",
+      "type": "string",
+      "required": true,
+      "validation_rule": "Non-empty alphanumeric identifier",
+      "alternative_names": [
+        "invoice_no",
+        "invoice_id",
+        "inv_no",
+        "inv_number",
+        "receipt_number"
+      ]
+    },
+    {
+      "name": "invoice_date",
+      "type": "date",
+      "required": true,
+      "validation_rule": "Date in any recognisable format",
+      "alternative_names": [
+        "order_date",
+        "issue_date",
+        "date",
+        "billing_date",
+        "transaction_date"
+      ]
+    },
+    {
+      "name": "seller_name",
+      "type": "string",
+      "required": true,
+      "validation_rule": "Non-empty string",
+      "alternative_names": [
+        "vendor_name",
+        "merchant_name",
+        "supplier_name",
+        "from_name",
+        "company_name"
+      ]
+    },
+    {
+      "name": "total_amount",
+      "type": "number",
+      "required": true,
+      "validation_rule": "Positive numeric value",
+      "alternative_names": [
+        "grand_total",
+        "amount_due",
+        "total",
+        "net_total",
+        "invoice_total"
+      ]
+    },
+    {
+      "name": "bill_to_name",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "alternative_names": [
+        "bill_to",
+        "customer_name",
+        "to_name",
+        "buyer_name",
+        "client_name"
+      ]
+    },
+    {
+      "name": "bill_to_address",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string"
+    },
+    {
+      "name": "seller_address",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string"
+    },
+    {
+      "name": "seller_phone",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Valid phone number"
+    },
+    {
+      "name": "seller_email",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Valid email address"
+    },
+    {
+      "name": "tax_id",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty tax identification number",
+      "alternative_names": [
+        "gst_id",
+        "vat_id",
+        "gst_no",
+        "tax_number"
+      ]
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false,
+      "validation_rule": "ISO 4217 code or symbol (PHP, USD, THB, EUR …)"
+    },
+    {
+      "name": "payment_due_date",
+      "type": "date",
+      "required": false,
+      "validation_rule": "Date in any recognisable format",
+      "alternative_names": [
+        "due_date",
+        "payment_due",
+        "pay_by_date"
+      ]
+    },
+    {
+      "name": "subtotal_amount",
+      "type": "number",
+      "required": false,
+      "validation_rule": "Positive numeric value",
+      "alternative_names": [
+        "subtotal",
+        "net_amount"
+      ]
+    },
+    {
+      "name": "tax_amount",
+      "type": "number",
+      "required": false,
+      "validation_rule": "Numeric value",
+      "alternative_names": [
+        "vat",
+        "gst",
+        "vat_amount",
+        "gst_amount",
+        "sales_tax"
+      ]
+    },
+    {
+      "name": "paid_amount",
+      "type": "number",
+      "required": false,
+      "validation_rule": "Positive numeric value",
+      "alternative_names": [
+        "tendered_amount",
+        "amount_tendered"
+      ]
+    },
+    {
+      "name": "change_amount",
+      "type": "number",
+      "required": false,
+      "validation_rule": "Numeric value",
+      "alternative_names": [
+        "change",
+        "change_due"
+      ]
+    },
+    {
+      "name": "line_items",
+      "type": "array",
+      "required": false,
+      "validation_rule": "Array of objects with description, quantity, unit_price, amount"
+    }
+  ]
+}

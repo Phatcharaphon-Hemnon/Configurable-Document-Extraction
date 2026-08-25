@@ -11,7 +11,7 @@ multi-agent AI pipeline.
 
 - **Fixed 3 document types**: `invoice`, `purchase_order`, `delivery_note`
 - **OCR + ICR**: printed text via LlamaParse, handwriting via direct
-  vision-model calls (NVIDIA Nemotron VL through an OpenAI-compatible API)
+  vision-model calls (vision model through the OpenCode Zen gateway)
 - **Multi-document PDFs**: one uploaded PDF may contain several documents
   (e.g. invoice + PO); each PDF page becomes its own extraction result
 - **Agent pipeline**: `Router → Extractor (per doc type) → Validator → Judge`
@@ -20,7 +20,7 @@ multi-agent AI pipeline.
 
 ## Non-negotiable rules
 
-1. **Field names come from the field catalog** (`apps/api/app/data/knowledge_base/field_catalog/*.json`).
+1. **Field names come from the field catalog** (`api/app/data/knowledge_base/field_catalog/*.json`).
    Matching is EXACT (case/underscore normalization only). **Never use aliases
    or synonyms to map field names.** If the AI finds a labeled value whose name
    is not in the catalog, the pipeline ADDS the new key to the catalog file.
@@ -53,40 +53,43 @@ multi-agent AI pipeline.
 
 | Path | Purpose |
 |---|---|
-| `apps/api/app/agents/` | router, extractors (3), validator, judge |
-| `apps/api/app/core/` | config (env), security (injection guard) |
-| `apps/api/app/observability/` | Langfuse tracing wrapper |
-| `apps/api/app/schemas/` | Pydantic contracts |
-| `apps/api/app/services/` | extraction orchestration, LLM client, KB, catalog |
-| `apps/api/app/temporal/` | Temporal workflow + activities + worker |
-| `apps/api/app/data/knowledge_base/` | field_catalog/, few_shot/, ground_truth/, documents/ |
-| `apps/web/src/` | api/, components/, hooks/, types/, utils/ |
+| `api/app/agents/` | router, extractors (3), validator, judge |
+| `api/app/core/` | config (env), security (injection guard) |
+| `api/app/observability/` | Langfuse tracing wrapper |
+| `api/app/schemas/` | Pydantic contracts |
+| `api/app/services/` | extraction orchestration, LLM client, KB, catalog |
+| `api/app/temporal/` | Temporal workflow + activities + worker |
+| `api/app/data/knowledge_base/` | field_catalog/, few_shot/, ground_truth/, documents/ |
+| `web/src/` | api/, components/, hooks/, types/, utils/ |
 | `docs/` | architecture docs & ADRs |
 | `scripts/run_all.sh` | the ONLY script: runs API + Web with one command |
 
-## Environment (apps/api/.env)
+## Environment (api/.env)
 
-AI provider keys: `NVIDIA_API_KEY` (falls back to `OPENROUTER_API_KEY`).
+AI provider: OpenCode Zen gateway (`https://opencode.ai/zen/v1`), key
+`OPENCODE_API_KEY` (free tier: `public`). Default model
+`nemotron-3.5-lightning-free` (text-only) + `VISION_MODEL_NAME=hy3-free` for
+image uploads.
 Parsing: `LLAMA_CLOUD_API_KEY` (PDF/OCR path; images skip it).
 Monitoring: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST`
 (all optional — Langfuse disabled when missing).
-See `apps/api/.env.example` for the full list.
+See `api/.env.example` for the full list.
 
 ## Commands
 
 ```bash
 ./scripts/run_all.sh                 # API :8000 + Web :5173 (one command)
 source .venv/bin/activate
-ruff check backend/ && python -m pytest apps/api/tests/ -q   # verify
-cd apps/web && npm run build                                 # typecheck+build
+ruff check backend/ && python -m pytest api/tests/ -q   # verify
+cd web && npm run build                                 # typecheck+build
 ```
 
 ## Gotchas
 
 - Frontend `VITE_API_BASE_URL` MUST include the `/api` prefix
   (e.g. `http://localhost:8000/api`) — the backend mounts routes under `/api`.
-- Run uvicorn from inside `apps/api/` so `.env` and the `app` package resolve.
-- CI runs `ruff check backend/` and `pytest apps/api/tests/`; config in
+- Run uvicorn from inside `api/` so `.env` and the `app` package resolve.
+- CI runs `ruff check backend/` and `pytest api/tests/`; config in
   root `ruff.toml`.
 - Temporal worker is optional: `TEMPORAL_ENABLED=false` (default) keeps the
-  in-process pipeline; set true + run `python -m app.temporal.worker` from `apps/api/` to use it.
+  in-process pipeline; set true + run `python -m app.temporal.worker` from `api/` to use it.

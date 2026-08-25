@@ -11,8 +11,9 @@ hallucination guards, and full LLM observability.
   (enforced end-to-end by Pydantic `Literal`).
 - **Multi-agent pipeline** — Router → Extractor (one agent per type) →
   Validator → Judge.
-- **OCR + ICR** — images go directly to the NVIDIA Nemotron vision model
-  (handles handwriting); PDFs are OCR-split per page by LlamaParse.
+- **OCR + ICR** — text stages run `nemotron-3.5-lightning-free` via the
+  OpenCode Zen gateway; image uploads use a vision model (default `hy3-free`)
+  or fall back to LlamaParse OCR. PDFs are OCR-split per page by LlamaParse.
 - **Multi-document files** — one uploaded PDF can contain several documents;
   every page becomes its own extraction result.
 - **Field catalog discipline** — field names match the catalog EXACTLY (no
@@ -43,22 +44,21 @@ First run creates `.venv`, installs dependencies and copies `.env` files automat
 ## Project layout
 
 ```text
-├── apps/
-│   ├── api/                    # FastAPI backend
-│   │   ├── app/
-│   │   │   ├── agents/            # router · 3 extractors · validator · judge
-│   │   │   ├── api/routes.py      # /extract /templates /evaluate /jobs
-│   │   │   ├── core/              # config (env) · security (injection guard)
-│   │   │   ├── observability/     # Langfuse tracing
-│   │   │   ├── schemas/           # Pydantic contracts (ExtractedField, ExtractionResult)
-│   │   │   ├── services/          # orchestration · LLM client · field catalog · KB
-│   │   │   ├── temporal/          # durable workflow (optional)
-│   │   │   └── data/knowledge_base/  # field_catalog · few_shot · ground_truth · documents
-│   │   ├── tests/                 # pytest
-│   │   ├── .env.example
-│   │   └── requirements.txt
-│   └── web/                    # React + TypeScript + Vite frontend
-│       └── src/{api,components,hooks,types,utils}
+├── api/                        # FastAPI backend
+│   ├── app/
+│   │   ├── agents/            # router · 3 extractors · validator · judge
+│   │   ├── api/routes.py      # /extract /templates /evaluate /jobs
+│   │   ├── core/              # config (env) · security (injection guard)
+│   │   ├── observability/     # Langfuse tracing
+│   │   ├── schemas/           # Pydantic contracts (ExtractedField, ExtractionResult)
+│   │   ├── services/          # orchestration · LLM client · field catalog · KB
+│   │   ├── temporal/          # durable workflow (optional)
+│   │   └── data/knowledge_base/  # field_catalog · few_shot · ground_truth · documents
+│   ├── tests/                 # pytest
+│   ├── .env.example
+│   └── requirements.txt
+├── web/                       # React + TypeScript + Vite frontend
+│   └── src/{api,components,hooks,types,utils}
 ├── docs/                      # architecture.md · backend.md · frontend.md · adr/
 ├── skills/document-extraction/SKILL.md   # AI-agent skill file
 ├── AGENTS.md                  # AI-agent project memory
@@ -68,18 +68,19 @@ First run creates `.venv`, installs dependencies and copies `.env` files automat
 
 ## Configuration
 
-Copy `apps/api/.env.example` → `apps/api/.env`:
+Copy `api/.env.example` → `api/.env`:
 
 | Variable | Purpose |
 |---|---|
-| `NVIDIA_API_KEY` / `OPENROUTER_API_KEY` | LLM provider (NVIDIA tried first). |
+| `OPENCODE_API_KEY` | OpenCode Zen API key (free tier: `public`). |
 | `LLAMA_CLOUD_API_KEY` | PDF OCR path (images skip it). |
-| `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Model per stage. |
+| `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Model per stage (default `nemotron-3.5-lightning-free`). |
+| `VISION_MODEL_NAME` | Model for image uploads (default `hy3-free`; empty = LlamaParse OCR). |
 | `FEW_SHOT_EXAMPLES_PER_DOC_TYPE` | Few-shot injection count (default 0 = cheapest). |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_HOST` | Optional tracing. |
-| `TEMPORAL_ENABLED` | `false` (default) = in-process pipeline; `true` = Temporal workflow (run `python -m app.temporal.worker` from `apps/api/`). |
+| `TEMPORAL_ENABLED` | `false` (default) = in-process pipeline; `true` = Temporal workflow (run `python -m app.temporal.worker` from `api/`). |
 
-Frontend: `apps/web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api`
+Frontend: `web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api`
 (the `/api` prefix is required).
 
 ## API contract
@@ -104,8 +105,8 @@ Core result shape (one per document/page):
 
 ```bash
 source .venv/bin/activate
-ruff check backend/ && python -m pytest apps/api/tests/ -q   # lint + tests
-cd apps/web && npm run build                                # typecheck + build
+ruff check backend/ && python -m pytest api/tests/ -q   # lint + tests
+cd web && npm run build                                # typecheck + build
 ```
 
 ## CI/CD
