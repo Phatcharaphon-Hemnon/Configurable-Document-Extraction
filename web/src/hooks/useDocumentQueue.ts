@@ -1,16 +1,39 @@
-import { useCallback, useState } from 'react';
-import { extractFiles } from '../api/client';
+import { useCallback, useRef, useState } from 'react';
+import { extractFiles, pollJobStatus } from '../api/client';
 import { pushToast } from '../lib/toast';
-import type { DocumentGroup, ExtractionResult } from '../types/extraction';
+import type { DocumentGroup, ExtractionResult, FileExtractionResponse } from '../types/extraction';
 
 function toErrorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
+}
+
+function applyResult(
+  group: DocumentGroup,
+  response: FileExtractionResponse,
+  patchGroup: (id: string, patch: Partial<DocumentGroup>) => void,
+): void {
+  patchGroup(group.id, { status: 'done', response });
+
+  const docs: ExtractionResult[] = response.documents ?? [];
+  const flagged = docs.filter((d) => d.needs_review).length;
+  if (response.error) {
+    pushToast('error', response.error, 7000);
+  } else if (docs.length === 0) {
+    pushToast('error', 'No documents detected in the upload.', 7000);
+  } else if (flagged > 0) {
+    pushToast('info', `${docs.length} document${docs.length > 1 ? 's' : ''} extracted — ${flagged} need${flagged > 1 ? '' : 's'} review.`);
+  } else {
+    pushToast('success', `${docs.length} document${docs.length > 1 ? 's' : ''} extracted successfully.`);
+  }
 }
 
 export function useDocumentQueue() {
   const [groups, setGroups] = useState<DocumentGroup[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [selectedDocIndex, setSelectedDocIndex] = useState(0);
+  // Guards against double-scheduling the same group (rapid Retry clicks):
+  // only one pipeline run per group at a time.
+  const processingRef = useRef<Set<string>>(new Set());
 
   const patchGroup = useCallback((id: string, patch: Partial<DocumentGroup>) => {
     setGroups((prev) => prev.map((g) => (g.id === id ? { ...g, ...patch } : g)));
@@ -18,27 +41,28 @@ export function useDocumentQueue() {
 
   const processGroup = useCallback(
     async (group: DocumentGroup) => {
+      if (processingRef.current.has(group.id)) {
+        pushToast('info', 'This upload is already processing — please wait.');
+        return;
+      }
+      processingRef.current.add(group.id);
       patchGroup(group.id, { status: 'uploading', error: undefined });
 
       try {
-        const response = await extractFiles(group.files, group.label);
-        patchGroup(group.id, { status: 'done', response });
-
-        const docs: ExtractionResult[] = response.documents ?? [];
-        const flagged = docs.filter((d) => d.needs_review).length;
-        if (response.error) {
-          pushToast('error', response.error, 7000);
-        } else if (docs.length === 0) {
-          pushToast('error', 'No documents detected in the upload.', 7000);
-        } else if (flagged > 0) {
-          pushToast('info', `${docs.length} document${docs.length > 1 ? 's' : ''} extracted — ${flagged} need${flagged > 1 ? '' : 's'} review.`);
-        } else {
-          pushToast('success', `${docs.length} document${docs.length > 1 ? 's' : ''} extracted successfully.`);
+        // 202 immediately; the pipeline runs server-side. Polling survives
+        // refresh/ retry churn: a duplicate upload reuses the running job.
+        const accepted = await extractFiles(group.files, group.label);
+        const job = await pollJobStatus(accepted.job_id);
+        if (job.status === 'failed' || !job.result) {
+          throw new Error(job.error || 'Extraction failed.');
         }
+        applyResult(group, job.result, patchGroup);
       } catch (err) {
         const message = toErrorMessage(err);
         patchGroup(group.id, { status: 'error', error: message });
         pushToast('error', message, 8000);
+      } finally {
+        processingRef.current.delete(group.id);
       }
     },
     [patchGroup],
@@ -62,7 +86,12 @@ export function useDocumentQueue() {
   const retryGroup = useCallback(
     (id: string) => {
       const group = groups.find((g) => g.id === id);
-      if (group) void processGroup(group);
+      if (!group) return;
+      if (group.status === 'uploading' || processingRef.current.has(id)) {
+        pushToast('info', 'This upload is already processing — please wait.');
+        return;
+      }
+      void processGroup(group);
     },
     [groups, processGroup],
   );

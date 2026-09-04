@@ -5,7 +5,7 @@
 #   ./scripts/run_all.sh
 #
 # Does EVERYTHING needed to install and run the project from scratch:
-#   1. Verifies prerequisites (Python 3.10+, Node 18+)
+#   1. Verifies prerequisites (Python 3.11+, Node 18+)
 #   2. Creates the Python virtualenv (.venv) and installs API dependencies
 #   3. Creates api/.env and web/.env from their .env.example templates
 #   4. Installs web dependencies (npm)
@@ -27,10 +27,10 @@ fail() { printf '\033[1;31mERROR:\033[0m %s\n' "$*" >&2; exit 1; }
 # ---------------------------------------------------------------------------
 step "Checking prerequisites"
 
-command -v python3 >/dev/null 2>&1 || fail "python3 not found. Install Python 3.10+ first (https://python.org)."
+command -v python3 >/dev/null 2>&1 || fail "python3 not found. Install Python 3.11+ first (https://python.org)."
 PY_MAJOR=$(python3 -c 'import sys; print(sys.version_info[0])')
 PY_MINOR=$(python3 -c 'import sys; print(sys.version_info[1])')
-[ "$PY_MAJOR" -eq 3 ] && [ "$PY_MINOR" -ge 10 ] || fail "Python 3.10+ required, found $(python3 -V 2>&1)."
+[ "$PY_MAJOR" -eq 3 ] && [ "$PY_MINOR" -ge 11 ] || fail "Python 3.11+ required, found $(python3 -V 2>&1)."
 echo "    python3 ......... $(python3 -V 2>&1) ✓"
 
 command -v node >/dev/null 2>&1 || fail "node not found. Install Node.js 18+ first (https://nodejs.org)."
@@ -67,7 +67,7 @@ step "Checking environment files"
 if [ ! -f "$ROOT/api/.env" ]; then
     cp "$ROOT/api/.env.example" "$ROOT/api/.env"
     echo "    created api/.env from template"
-    warn "API keys in api/.env are placeholders — edit OPENCODE_API_KEY / LLAMA_CLOUD_API_KEY for real extractions."
+    warn "OPENCODE_API_KEY in api/.env is a placeholder — edit it for real extractions."
 else
     echo "    api/.env exists ✓"
 fi
@@ -92,7 +92,50 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 5. Run
+# 5. Cleanup old processes
+# ---------------------------------------------------------------------------
+step "Checking for existing processes"
+
+# Use lsof if available, otherwise use fuser or netstat
+if command -v lsof >/dev/null 2>&1; then
+    # Kill any existing uvicorn processes on port 8000
+    if lsof -ti :8000 >/dev/null 2>&1; then
+        echo "    stopping existing API process on port 8000..."
+        kill $(lsof -ti :8000) 2>/dev/null || true
+        sleep 1
+        # Force kill if still running
+        kill -9 $(lsof -ti :8000) 2>/dev/null || true
+    fi
+
+    # Kill any existing vite/node processes on port 5173
+    if lsof -ti :5173 >/dev/null 2>&1; then
+        echo "    stopping existing Web process on port 5173..."
+        kill $(lsof -ti :5173) 2>/dev/null || true
+        sleep 1
+        # Force kill if still running
+        kill -9 $(lsof -ti :5173) 2>/dev/null || true
+    fi
+elif command -v fuser >/dev/null 2>&1; then
+    # Alternative: use fuser if lsof is not available
+    if fuser 8000/tcp >/dev/null 2>&1; then
+        echo "    stopping existing API process on port 8000..."
+        fuser -k 8000/tcp 2>/dev/null || true
+        sleep 1
+    fi
+    if fuser 5173/tcp >/dev/null 2>&1; then
+        echo "    stopping existing Web process on port 5173..."
+        fuser -k 5173/tcp 2>/dev/null || true
+        sleep 1
+    fi
+else
+    warn "neither lsof nor fuser available — cannot auto-kill old processes"
+    warn "if you see 'Address already in use', manually kill the processes first"
+fi
+
+echo "    ports 8000 and 5173 are free ✓"
+
+# ---------------------------------------------------------------------------
+# 6. Run
 # ---------------------------------------------------------------------------
 cleanup() {
     echo

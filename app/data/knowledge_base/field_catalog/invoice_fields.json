@@ -1,0 +1,83 @@
+{
+  "doc_type": "invoice",
+  "description": "",
+  "fields": [
+    {
+      "name": "invoice_number",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "seller",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "buyer",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "item",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "quantity",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "unit_price",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "subtotal",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "tax_amount",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "total_amount",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Discovered automatically from an uploaded document",
+      "source": "ai_discovered"
+    }
+  ]
+}

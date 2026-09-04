@@ -39,6 +39,7 @@ class ValidatorAgent:
         doc_type: str,
         fields: list[ExtractedField],
         document_text: str | None = None,
+        is_image_extraction: bool = False,
     ) -> tuple[list[str], float, bool]:
         """Returns (validation_errors, completeness_score, needs_review)."""
         errors: list[str] = []
@@ -61,7 +62,13 @@ class ValidatorAgent:
 
         # 3) Hallucination guard — evidence must exist in the document.
         for field in fields:
-            problem = check_evidence(field.name, field.value, field.source_span, document_text)
+            problem = check_evidence(
+                field.name,
+                field.value,
+                field.source_span,
+                document_text,
+                is_image_extraction=is_image_extraction,
+            )
             if problem:
                 errors.append(problem)
 

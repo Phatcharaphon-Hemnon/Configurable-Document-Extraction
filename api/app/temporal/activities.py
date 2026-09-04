@@ -17,7 +17,7 @@ from app.core.security import sanitize_document_text
 from app.schemas.documents import ExtractedField
 from app.services.field_catalog import FieldCatalog
 from app.services.knowledge_base import KnowledgeBaseRepository
-from app.services.llamaparse_client import LlamaParseClient
+from app.services.rapidocr_client import RapidOCRClient
 
 
 def _settings():
@@ -28,14 +28,22 @@ def _catalog() -> FieldCatalog:
     return KnowledgeBaseRepository(Path(_settings().knowledge_base_path)).catalog
 
 
+def _ocr_client() -> RapidOCRClient:
+    s = _settings()
+    return RapidOCRClient(
+        dpi=getattr(s, "ocr_dpi", 300),
+        enable_cache=getattr(s, "ocr_cache_enabled", True),
+    )
+
+
 @activity.defn
 async def parse_activity(filename: str, raw_content: bytes) -> list[str]:
-    """OCR path: parse a document into page texts (images → [""], vision later)."""
-    client = LlamaParseClient(_settings().llama_cloud_api_key)
+    """OCR path: parse a document into page texts (local RapidOCR)."""
+    client = _ocr_client()
     try:
         return await client.aparse_file(raw_content, filename)
     except Exception:
-        # No LlamaParse key / parse failure → let the vision path handle it.
+        # OCR failure → downstream text stages handle empty text.
         return [""]
 
 

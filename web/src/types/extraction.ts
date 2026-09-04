@@ -27,6 +27,7 @@ export type ExtractionResult = {
   full_text?: string | null;
   error?: string | null;
   failed_stage?: 'router' | 'extractor' | 'validator' | 'judge' | null;
+  extraction_source?: 'vision' | 'ocr' | 'text' | null;
   auto_evaluation?: EvaluateResponse | null;
 };
 
@@ -39,6 +40,19 @@ export type FileUploadMeta = {
 export type FileExtractionResponse = {
   request: FileUploadMeta;
   documents: ExtractionResult[];
+  error?: string | null;
+  job_id?: string | null;
+};
+
+export type JobAcceptedResponse = {
+  job_id: string;
+  status: string;
+};
+
+export type JobStatusResponse = {
+  job_id: string;
+  status: string;
+  result?: FileExtractionResponse | null;
   error?: string | null;
 };
 

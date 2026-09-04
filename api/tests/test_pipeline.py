@@ -35,14 +35,13 @@ def _settings(tmp_path: Path) -> Settings:
     }), encoding="utf-8")
     s = Settings()
     s.knowledge_base_path = str(kb)
-    s.llama_cloud_api_key = ""
     return s
 
 
 def _make_service(tmp_path: Path, routing, extraction, judge) -> DocumentExtractionService:
     service = DocumentExtractionService(settings=_settings(tmp_path))
-    service.llamaparse = MagicMock()
-    service.llamaparse.aparse_file = AsyncMock(return_value=["Invoice No: INV-001 Total: 100"])
+    service.ocr = MagicMock()
+    service.ocr.aparse_file = AsyncMock(return_value=["Invoice No: INV-001 Total: 100"])
     service.router = MagicMock()
     service.router.classify = AsyncMock(return_value=routing)
     for extractor in service.extractors.values():
@@ -84,7 +83,10 @@ async def test_full_pipeline_happy_path(tmp_path):
     assert [f.name for f in doc.fields] == ["invoice_number", "total_amount"]
     assert doc.validation_errors == []
     assert doc.needs_review is False
-    assert doc.judge is not None and doc.judge.score == 0.9
+    # Clean extraction (100% completeness, no errors, all confidences high):
+    # the Judge LLM stage is skipped.
+    assert doc.judge is None
+    service.judge.evaluate.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -132,7 +134,16 @@ async def test_missing_evidence_flags_needs_review(tmp_path):
 
 @pytest.mark.asyncio
 async def test_low_judge_score_flags_needs_review(tmp_path):
-    service = _make_service(tmp_path, _routing(), _extraction(), JudgeResult(score=0.3, issues=[], notes="bad"))
+    # Confidence 0.7 passes the validator (>= 0.6) but is below the judge-skip
+    # threshold (0.85), so the Judge still runs and its low score flags review.
+    extraction = (
+        [
+            ExtractedField(name="invoice_number", value="INV-001", confidence=0.7, source_span="Invoice No: INV-001"),
+            ExtractedField(name="total_amount", value=100.0, confidence=0.7, source_span="Total: 100"),
+        ],
+        [],
+    )
+    service = _make_service(tmp_path, _routing(), extraction, JudgeResult(score=0.3, issues=[], notes="bad"))
     response = await service.extract_group([
         UploadedFilePart("scan.png", "image/png", b"img"),
     ])
@@ -140,10 +151,40 @@ async def test_low_judge_score_flags_needs_review(tmp_path):
 
 
 @pytest.mark.asyncio
+async def test_judge_skipped_when_clean(tmp_path):
+    service = _make_service(tmp_path, _routing(), _extraction(), _judge())
+    response = await service.extract_group([
+        UploadedFilePart("scan.png", "image/png", b"img"),
+    ])
+
+    doc = response.documents[0]
+    assert doc.validation_errors == []
+    assert doc.judge is None
+    assert doc.needs_review is False
+    service.judge.evaluate.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_judge_runs_when_confidence_below_skip_threshold(tmp_path):
+    extraction = (
+        [
+            ExtractedField(name="invoice_number", value="INV-001", confidence=0.7, source_span="Invoice No: INV-001"),
+            ExtractedField(name="total_amount", value=100.0, confidence=0.95, source_span="Total: 100"),
+        ],
+        [],
+    )
+    service = _make_service(tmp_path, _routing(), extraction, _judge())
+    await service.extract_group([
+        UploadedFilePart("scan.png", "image/png", b"img"),
+    ])
+    service.judge.evaluate.assert_called_once()
+
+
+@pytest.mark.asyncio
 async def test_router_failure_returns_failed_stage(tmp_path):
     service = DocumentExtractionService(settings=_settings(tmp_path))
-    service.llamaparse = MagicMock()
-    service.llamaparse.aparse_file = AsyncMock(return_value=["Invoice No: INV-001 Total: 100"])
+    service.ocr = MagicMock()
+    service.ocr.aparse_file = AsyncMock(return_value=["Invoice No: INV-001 Total: 100"])
     service.router = MagicMock()
     service.router.classify = AsyncMock(side_effect=RuntimeError("LLM down"))
 
