@@ -8,7 +8,7 @@ description: Context and procedures for working on the Configurable Document Ext
 ## Pipeline (in order)
 
 ```
-Upload → [image? vision path : LlamaParse OCR path]
+Upload → RapidOCR (local: images direct, PDFs rendered at 300 DPI)
        → Router (classify: invoice | purchase_order | delivery_note)
        → Extractor for that doc type (catalog-guided, JSON-schema output)
        → Validator (required/format checks → validation_errors, needs_review)

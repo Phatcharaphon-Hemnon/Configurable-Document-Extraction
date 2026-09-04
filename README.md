@@ -2,18 +2,19 @@
 
 Extract structured data from scanned or photographed business documents
 (invoices, purchase orders, delivery notes) with a multi-agent AI pipeline —
-OCR for printed text, ICR (handwriting) via a vision model, strict JSON output,
+local OCR for printed text and handwriting, strict JSON output,
 hallucination guards, and full LLM observability.
 
 ## Features
 
 - **Fixed 3 document types** — `invoice`, `purchase_order`, `delivery_note`
   (enforced end-to-end by Pydantic `Literal`).
-- **Multi-agent pipeline** — Router → Extractor (one agent per type) →
-  Validator → Judge.
-- **OCR + ICR** — text stages run `nemotron-3.5-lightning-free` via the
-  OpenCode Zen gateway; image uploads use a vision model (default `hy3-free`)
-  or fall back to LlamaParse OCR. PDFs are OCR-split per page by LlamaParse.
+- **Multi-agent pipeline** — RapidOCR → Router → Extractor (one agent per
+  type) → Validator → Judge.
+- **Local OCR + single text model** — all uploads (images + PDFs) are OCR'd
+  on-host with RapidOCR (ONNX, CPU, no API key, works offline);
+  extraction uses one text model via the OpenCode Zen gateway
+  (default `nemotron-3.5-lightning-free`). No vision model required.
 - **Multi-document files** — one uploaded PDF can contain several documents;
   every page becomes its own extraction result.
 - **Field catalog discipline** — field names match the catalog EXACTLY (no
@@ -37,7 +38,7 @@ hallucination guards, and full LLM observability.
 ```
 
 The script handles the FULL setup automatically: verifies prerequisites
-(Python 3.10+, Node 18+), creates the `.venv`, installs API + web
+(Python 3.11+, Node 18+), creates the `.venv`, installs API + web
 dependencies, creates `.env` files from templates, and starts both servers.
 Re-running skips everything already installed. Ctrl+C stops both.
 
@@ -75,10 +76,11 @@ Copy `api/.env.example` → `api/.env`:
 
 | Variable | Purpose |
 |---|---|
-| `OPENCODE_API_KEY` | OpenCode Zen API key (free tier: `public`). |
-| `LLAMA_CLOUD_API_KEY` | PDF OCR path (images skip it). |
+| `OPENCODE_API_KEY` | OpenCode Zen API key (free tier: `public`). Single text model for Router + Extractor + Judge. |
+| `PADDLEOCR_LANG` | OCR language (`en` default, `th` for Thai documents). |
+| `PADDLEOCR_USE_GPU` | `true` (default) = GPU with CPU fallback; `false` = force CPU. |
+| `PADDLEOCR_DPI` | PDF render resolution (default `300`). |
 | `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Model per stage (default `nemotron-3.5-lightning-free`). |
-| `VISION_MODEL_NAME` | Model for image uploads (default `hy3-free`; empty = LlamaParse OCR). |
 | `FEW_SHOT_EXAMPLES_PER_DOC_TYPE` | Few-shot injection count (default 0 = cheapest). |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_HOST` | Optional tracing. |
 | `TEMPORAL_ENABLED` | `false` (default) = in-process pipeline; `true` = Temporal workflow (run `python -m app.temporal.worker` from `api/`). |
@@ -125,13 +127,14 @@ The web app deploys to Vercel; the FastAPI backend needs a long-running host
    > variables are compiled into the browser bundle — Vercel rejects them as
    > Sensitive with *"Remove the public framework prefix…"*. The URL contains
    > no secrets, so a normal variable is correct.
-3. Never put API keys (`OPENCODE_API_KEY`, `LLAMA_CLOUD_API_KEY`, Langfuse
-   keys) in the web project — anything prefixed `VITE_` is public. Keys belong
-   in the backend host's environment.
+3. Never put API keys (`OPENCODE_API_KEY`, Langfuse
+    keys) in the web project — anything prefixed `VITE_` is public. Keys belong
+    in the backend host's environment. (OCR needs no key — RapidOCR runs locally.)
 
 **Backend (Render/Railway):**
 - Start command: `pip install -r api/requirements.txt && cd api && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-- Set `OPENCODE_API_KEY`, `LLAMA_CLOUD_API_KEY` (+ optional Langfuse keys).
+- Set `OPENCODE_API_KEY` (+ optional Langfuse keys). No OCR key needed.
+- RapidOCR runs on CPU (~1 s/page); no GPU setup required.
 - CORS: the backend already allows `*.vercel.app` previews via
   `allow_origin_regex`; add your production domain to `FRONTEND_ORIGINS`.
 
@@ -146,8 +149,12 @@ proxies `/api` to `http://127.0.0.1:8000` automatically.
 
 ## Documentation
 
+- `CHANGELOG.md` — what changed, newest first
 - `docs/architecture.md` — pipeline, security model, token strategy
 - `docs/backend.md` — module map + API + KB layout
 - `docs/frontend.md` — component structure + behaviour
+- `docs/local_ocr.md` — local RapidOCR pipeline notes
+- `docs/langfuse_tracing.md` — Langfuse v4 trace design + audit
+- `docs/async_jobs.md` — async upload/poll job flow
 - `docs/adr/` — architecture decision records
 - `AGENTS.md` — persistent memory for AI coding agents

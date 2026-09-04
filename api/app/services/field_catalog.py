@@ -80,6 +80,8 @@ def is_registerable_new_field(name: str, value: object, confidence: float) -> bo
 class FieldCatalog:
     def __init__(self, knowledge_base_dir: Path) -> None:
         self.catalog_dir = knowledge_base_dir / "field_catalog"
+        self._cache: dict[DocType, list[FieldDefinition]] = {}
+        self._cache_mtimes: dict[DocType, float] = {}
 
     # ------------------------------------------------------------------
     # Read
@@ -88,14 +90,34 @@ class FieldCatalog:
     def _path_for(self, doc_type: DocType) -> Path:
         return self.catalog_dir / _FILE_BY_DOC_TYPE[doc_type]
 
+    def _get_cache_mtime(self, doc_type: DocType) -> float:
+        """Get file modification time for cache invalidation."""
+        path = self._path_for(doc_type)
+        if path.exists():
+            return path.stat().st_mtime
+        return 0.0
+
     def get_fields(self, doc_type: DocType) -> list[FieldDefinition]:
+        """Get fields with caching. Cache is invalidated when file changes."""
+        # Check if cache is valid
+        current_mtime = self._get_cache_mtime(doc_type)
+        if doc_type in self._cache and self._cache_mtimes.get(doc_type) == current_mtime:
+            return self._cache[doc_type]
+
+        # Cache miss or invalid - read from disk
         path = self._path_for(doc_type)
         if not path.exists():
+            self._cache[doc_type] = []
+            self._cache_mtimes[doc_type] = 0.0
             return []
+
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
+            self._cache[doc_type] = []
+            self._cache_mtimes[doc_type] = 0.0
             return []
+
         fields: list[FieldDefinition] = []
         for entry in data.get("fields", []):
             if not isinstance(entry, dict) or not entry.get("name"):
@@ -109,6 +131,11 @@ class FieldCatalog:
                     source=str(entry.get("source", "catalog")),
                 )
             )
+
+        # Update cache
+        self._cache[doc_type] = fields
+        self._cache_mtimes[doc_type] = current_mtime
+
         return fields
 
     def get_field_names(self, doc_type: DocType) -> list[str]:
@@ -175,6 +202,10 @@ class FieldCatalog:
                 tmp = path.with_suffix(".json.tmp")
                 tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
                 tmp.replace(path)
+                # Invalidate cache after write
+                if doc_type in self._cache:
+                    del self._cache[doc_type]
+                    del self._cache_mtimes[doc_type]
             return added
 
     # ------------------------------------------------------------------

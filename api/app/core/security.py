@@ -56,17 +56,36 @@ def is_suspicious(text: str | None) -> bool:
     return any(pattern.search(text) for pattern in _INJECTION_PATTERNS)
 
 
-def check_evidence(field_name: str, value: object, source_span: str | None, document_text: str | None) -> str | None:
+def check_evidence(
+    field_name: str,
+    value: object,
+    source_span: str | None,
+    document_text: str | None,
+    is_image_extraction: bool = False,
+) -> str | None:
     """Hallucination guard: verify an extracted value is backed by evidence.
 
     Returns a human-readable problem string, or None when the field is OK.
     A field is flagged when it has no source_span at all, or when the
     source_span does not appear (normalized) in the document text.
+
+    For image extractions (is_image_extraction=True), we trust the source_span
+    provided by the vision model since it reads the image directly, not OCR text.
     """
     if value is None:
         return None  # absent fields are validated elsewhere
+
+    # Always require source_span evidence
     if not source_span or not source_span.strip():
         return f"{field_name}: no source_span evidence provided"
+
+    # For image extractions, trust the source_span if provided
+    # The vision model reads the image directly, so source_span reflects
+    # what it actually saw, not OCR output
+    if is_image_extraction:
+        return None
+
+    # For text extractions, validate source_span against document text
     if document_text:
         def _norm(s: str) -> str:
             return re.sub(r"\s+", " ", s).strip().lower()

@@ -4,6 +4,11 @@ pydantic>=2.7
 python-dotenv>=1.0
 python-multipart>=0.0.9
 openai>=1.40
-llama-cloud-services>=0.5
 temporalio>=1.7
-langfuse>=2.50
+langfuse>=4.0
+# Local OCR (on-host, no API key, no network).
+# NOTE: small ONNX models (~15MB) auto-download on first run, then cached.
+rapidocr_onnxruntime==1.2.3
+pymupdf>=1.24
+pillow>=10.0
+numpy>=1.26

@@ -25,7 +25,6 @@ jobs:
     env:
       NVIDIA_API_KEY: dummy-token-for-ci
       OPENROUTER_API_KEY: dummy-token-for-ci
-      LLAMA_CLOUD_API_KEY: dummy-token-for-ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

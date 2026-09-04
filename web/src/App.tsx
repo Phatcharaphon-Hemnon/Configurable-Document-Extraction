@@ -3,13 +3,14 @@ import { Sidebar } from './components/Sidebar';
 import { ToastStack } from './components/ToastStack';
 import { ExtractionTab } from './components/ExtractionTab';
 import { EvaluationTab } from './components/EvaluationTab';
+import { HistoryTab } from './components/HistoryTab';
 import { MoonIcon, SunIcon } from './components/icons';
 import { useDocumentQueue } from './hooks/useDocumentQueue';
 import { useRecommendedModel } from './hooks/useRecommendedModel';
 import { useTheme } from './hooks/useTheme';
 import type { CombinedField } from './types/extraction';
 
-type TabId = 'extraction' | 'evaluation';
+type TabId = 'extraction' | 'evaluation' | 'history';
 
 function App() {
   const modelName = useRecommendedModel();
@@ -66,6 +67,9 @@ function App() {
                 <button className={currentTab === 'evaluation' ? 'active' : ''} onClick={() => setCurrentTab('evaluation')}>
                   Evaluation
                 </button>
+                <button className={currentTab === 'history' ? 'active' : ''} onClick={() => setCurrentTab('history')}>
+                  History
+                </button>
               </div>
             </div>
 
@@ -78,13 +82,15 @@ function App() {
                 onRetry={retryGroup}
                 combinedFields={combinedFields}
               />
-            ) : (
+            ) : currentTab === 'evaluation' ? (
               <EvaluationTab
                 groupId={selectedGroupId}
                 docIndex={selectedDocIndex}
                 doc={selectedDoc}
                 combinedFields={combinedFields}
               />
+            ) : (
+              <HistoryTab />
             )}
           </div>
         </main>
