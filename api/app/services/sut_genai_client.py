@@ -85,6 +85,13 @@ _RATE_LIMIT_MARKERS = ("429", "503", "resourceexhausted", "rate limit", "quota",
 RATE_LIMIT_MAX_RETRIES = 4
 RATE_LIMIT_BACKOFF_SECONDS = 3.0
 
+# Transient gateway stalls (no response within the request timeout) are
+# retried on the SAME tier before falling through to the next output mode:
+# a stall says nothing about the request shape, while the next tier returns
+# differently-shaped output. Probe: api/scripts/time_gateway_modes.py.
+TIMEOUT_MAX_RETRIES = 1
+TIMEOUT_RETRY_BACKOFF_SECONDS = 2.0
+
 
 def _is_rate_limit_error(exc: BaseException) -> bool:
     text = f"{type(exc).__name__} {exc}".lower()
@@ -155,6 +162,10 @@ class SutGenAIClient:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self._timeout = settings.llm_request_timeout_seconds
+        # Token counts of the most recent successful call, for observability.
+        # Read synchronously right after awaiting a call (same task) — the
+        # service attaches these to Langfuse generations for cost tracking.
+        self.last_usage: dict[str, int | None] | None = None
         raw_key = (
             getattr(settings, "opencode_api_key", None)
             or getattr(settings, "nvidia_api_key", None)
@@ -172,30 +183,64 @@ class SutGenAIClient:
     async def _chat_with_retry(self, **kwargs: Any):
         """chat.completions.create with exponential backoff on rate limits.
 
-        TimeoutError and non-rate-limit errors propagate unchanged so the
-        existing tier-fallback logic keeps working.
+        A stalled call (asyncio.TimeoutError) is retried TIMEOUT_MAX_RETRIES
+        times on the SAME call before surfacing: stalls are transient and say
+        nothing about the request shape, so degrading a tier would only trade
+        a slow answer for an unparseable one.
+
+        TimeoutError and non-rate-limit errors otherwise propagate unchanged
+        so the existing tier-fallback logic keeps working.
         """
-        for attempt in range(RATE_LIMIT_MAX_RETRIES):
+        timeout_attempts = 0
+        while True:
             try:
-                return await asyncio.wait_for(
-                    self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
-                    timeout=self._timeout,
+                for attempt in range(RATE_LIMIT_MAX_RETRIES):
+                    try:
+                        return await asyncio.wait_for(
+                            self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
+                            timeout=self._timeout,
+                        )
+                    except Exception as exc:
+                        if attempt < RATE_LIMIT_MAX_RETRIES - 1 and _is_rate_limit_error(exc):
+                            wait = RATE_LIMIT_BACKOFF_SECONDS * (2**attempt)
+                            logger.warning(
+                                "Provider rate limit (%s: %s) — backing off %.0fs (attempt %d/%d)",
+                                type(exc).__name__,
+                                _truncate(str(exc), 120),
+                                wait,
+                                attempt + 1,
+                                RATE_LIMIT_MAX_RETRIES,
+                            )
+                            await asyncio.sleep(wait)
+                            continue
+                        raise
+            except asyncio.TimeoutError:
+                timeout_attempts += 1
+                if timeout_attempts > TIMEOUT_MAX_RETRIES:
+                    raise
+                logger.warning(
+                    "Provider stall (no response in %.0fs) — retrying same call "
+                    "(timeout retry %d/%d)",
+                    self._timeout,
+                    timeout_attempts,
+                    TIMEOUT_MAX_RETRIES,
                 )
-            except Exception as exc:
-                if attempt < RATE_LIMIT_MAX_RETRIES - 1 and _is_rate_limit_error(exc):
-                    wait = RATE_LIMIT_BACKOFF_SECONDS * (2**attempt)
-                    logger.warning(
-                        "Provider rate limit (%s: %s) — backing off %.0fs (attempt %d/%d)",
-                        type(exc).__name__,
-                        _truncate(str(exc), 120),
-                        wait,
-                        attempt + 1,
-                        RATE_LIMIT_MAX_RETRIES,
-                    )
-                    await asyncio.sleep(wait)
-                    continue
-                raise
+                await asyncio.sleep(TIMEOUT_RETRY_BACKOFF_SECONDS)
+                continue
         raise RuntimeError("unreachable")
+
+    def _record_usage(
+        self,
+        prompt_tokens: int | None,
+        completion_tokens: int | None,
+        total_tokens: int | None,
+    ) -> None:
+        """Stash token counts of the latest successful call for observability."""
+        self.last_usage = {
+            "input_tokens": prompt_tokens,
+            "output_tokens": completion_tokens,
+            "total_tokens": total_tokens,
+        }
 
     # ------------------------------------------------------------------
     # generate_structured
@@ -313,6 +358,7 @@ class SutGenAIClient:
             model,
         )
 
+        self._record_usage(prompt_tokens, completion_tokens, total_tokens)
         return SutGenAICallResult(
             parsed=parsed,
             raw_text=raw_text,
@@ -469,6 +515,7 @@ class SutGenAIClient:
             model,
         )
 
+        self._record_usage(prompt_tokens, completion_tokens, total_tokens)
         return SutGenAICallResult(
             parsed=parsed,
             raw_text=raw_text,
@@ -512,6 +559,7 @@ class SutGenAIClient:
                 raw_response=raw_response,
             )
 
+        self._record_usage(prompt_tokens, completion_tokens, total_tokens)
         return SutGenAICallResult(
             parsed=None,
             raw_text=raw_text.strip(),

@@ -98,8 +98,21 @@ async def test_non_rate_limit_error_not_retried(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_timeout_not_swallowed(monkeypatch):
+    # Timeouts still surface as TimeoutError — but only after the one
+    # same-tier retry is exhausted (2 calls total).
     client, calls = _client_with_responses([asyncio.TimeoutError()])
 
     with pytest.raises(asyncio.TimeoutError):
         await client._chat_with_retry(model="m", messages=[])
-    assert calls["n"] == 1
+    assert calls["n"] == 2
+
+
+@pytest.mark.asyncio
+async def test_timeout_retries_same_call_then_succeeds(monkeypatch):
+    # A transient stall followed by success: same call retried once.
+    sentinel = MagicMock()
+    client, calls = _client_with_responses([asyncio.TimeoutError(), sentinel])
+
+    result = await client._chat_with_retry(model="m", messages=[])
+    assert result is sentinel
+    assert calls["n"] == 2

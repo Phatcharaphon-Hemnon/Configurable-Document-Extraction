@@ -1,7 +1,7 @@
 # AGENTS.md — Project Memory
 
 > Read this file first. It is the persistent memory for any AI agent (or human)
-> working on this repository. Last updated: 2026-08-24.
+> working on this repository. Last updated: 2026-09-03.
 
 ## What this project is
 
@@ -10,11 +10,12 @@ structured data from scanned/photographed business documents using a
 multi-agent AI pipeline.
 
 - **Fixed 3 document types**: `invoice`, `purchase_order`, `delivery_note`
-- **OCR + ICR**: printed text via LlamaParse, handwriting via direct
-  vision-model calls (vision model through the OpenCode Zen gateway)
+- **OCR (local)**: all uploads (images + PDFs) OCR'd on-host with RapidOCR
+  (`api/app/services/rapidocr_client.py`; PDFs rendered at 300 DPI via
+  PyMuPDF). Single text model only — no vision model required.
 - **Multi-document PDFs**: one uploaded PDF may contain several documents
   (e.g. invoice + PO); each PDF page becomes its own extraction result
-- **Agent pipeline**: `Router → Extractor (per doc type) → Validator → Judge`
+- **Agent pipeline**: `RapidOCR → Router → Extractor (per doc type) → Validator → Judge`
 - **Stack**: FastAPI + Temporal (workflow) + Langfuse (LLM observability) +
   React/TypeScript frontend
 
@@ -57,7 +58,7 @@ multi-agent AI pipeline.
 | `api/app/core/` | config (env), security (injection guard) |
 | `api/app/observability/` | Langfuse tracing wrapper |
 | `api/app/schemas/` | Pydantic contracts |
-| `api/app/services/` | extraction orchestration, LLM client, KB, catalog |
+| `api/app/services/` | extraction orchestration, LLM client, RapidOCR, KB, catalog |
 | `api/app/temporal/` | Temporal workflow + activities + worker |
 | `api/app/data/knowledge_base/` | field_catalog/, few_shot/, ground_truth/, documents/ |
 | `web/src/` | api/, components/, hooks/, types/, utils/ |
@@ -68,9 +69,8 @@ multi-agent AI pipeline.
 
 AI provider: OpenCode Zen gateway (`https://opencode.ai/zen/v1`), key
 `OPENCODE_API_KEY` (free tier: `public`). Default model
-`nemotron-3.5-lightning-free` (text-only) + `VISION_MODEL_NAME=hy3-free` for
-image uploads.
-Parsing: `LLAMA_CLOUD_API_KEY` (PDF/OCR path; images skip it).
+`nemotron-3.5-lightning-free` (text-only, used for Router + Extractor + Judge).
+Parsing: local RapidOCR (`OCR_DPI`; see `docs/local_ocr.md`).
 Monitoring: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST`
 (all optional — Langfuse disabled when missing).
 See `api/.env.example` for the full list.

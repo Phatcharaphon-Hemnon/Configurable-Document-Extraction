@@ -81,8 +81,10 @@ async def test_generate_structured_with_image_raises_on_timeout():
 async def test_schema_timeout_triggers_plain_fallback():
     """A timeout on attempt 1 (schema) should trigger attempt 2 (plain).
 
-    We count calls to ``create``: it should be called twice -- once for the
-    schema attempt and once for the plain fallback -- before the final raise.
+    Each tier gets one same-tier timeout retry first, so with an endpoint
+    that hangs forever the call sequence is: schema, schema-retry,
+    json_object, json_object-retry, plain, plain-retry — 6 calls — before
+    the final raise.
     """
     settings = _fast_settings()
 
@@ -100,9 +102,9 @@ async def test_schema_timeout_triggers_plain_fallback():
                 response_schema=_DummySchema,
             )
 
-        # Attempt 1 (schema) + Attempt 2 (json_object) + Attempt 3 (plain) = 3 calls
-        assert mock_create.call_count == 3, (
-            f"Expected 3 calls (schema + json_object + plain fallback), got {mock_create.call_count}"
+        # (schema + retry) + (json_object + retry) + (plain + retry) = 6 calls
+        assert mock_create.call_count == 6, (
+            f"Expected 6 calls (3 tiers x (1 + 1 timeout retry)), got {mock_create.call_count}"
         )
 
 

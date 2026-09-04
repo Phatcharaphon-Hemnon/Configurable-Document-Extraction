@@ -104,6 +104,10 @@ class ExtractionResult(BaseModel):
     full_text: str | None = None
     error: str | None = None
     failed_stage: Literal["router", "extractor", "validator", "judge"] | None = None
+    extraction_source: Literal["vision", "ocr", "text"] | None = Field(
+        default=None,
+        description="How the document was processed: vision (direct image), ocr (OCR fallback), text (PDF text).",
+    )
     extracted_at: datetime = Field(default_factory=datetime.utcnow)
     auto_evaluation: EvaluateResponse | None = None  # noqa: F821 (forward ref resolved below)
 
@@ -118,6 +122,7 @@ class FileExtractionResponse(BaseModel):
     request: FileUploadMeta
     documents: list[ExtractionResult] = Field(default_factory=list)
     error: str | None = None
+    job_id: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -163,6 +168,7 @@ class BatchStatusResponse(BaseModel):
     job_id: UUID
     status: str
     result: FileExtractionResponse | None = None
+    error: str | None = None
 
 
 ExtractionResult.model_rebuild()
