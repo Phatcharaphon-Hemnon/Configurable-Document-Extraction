@@ -112,6 +112,7 @@ def _get_image_dimensions(image_bytes: bytes, media_type: str) -> tuple[int, int
 async def validate_file_upload(
     file: UploadFile,
     *,
+    content: bytes | None = None,
     max_file_size: int | None = None,
     max_image_size: int | None = None,
     max_pdf_size: int | None = None,
@@ -123,6 +124,7 @@ async def validate_file_upload(
 
     Args:
         file: FastAPI UploadFile to validate.
+        content: Optional pre-read file content to avoid reading the upload twice.
         max_file_size: Override maximum file size in bytes.
         max_image_size: Override maximum image size in bytes.
         max_pdf_size: Override maximum PDF size in bytes.
@@ -140,7 +142,9 @@ async def validate_file_upload(
         raise InputValidationError("No filename provided", "missing_filename")
 
     # 2. Read file content for validation
-    content = await file.read()
+    read_from_file = content is None
+    if read_from_file:
+        content = await file.read()
     file_size = len(content)
 
     # 3. Check file size
@@ -193,8 +197,8 @@ async def validate_file_upload(
                     "image_dimensions_too_large",
                 )
 
-    # 7. Reset file position for downstream processing
-    await file.seek(0)
+    if read_from_file:
+        await file.seek(0)
 
     logger.debug(
         "File validated: %s (%s, %d bytes)",

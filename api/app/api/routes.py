@@ -127,9 +127,10 @@ async def extract_document(
         parts: list[UploadedFilePart] = []
         # Validate each file
         for f in files:
+            contents = await f.read()
             if settings.guards_enabled:
                 try:
-                    await validate_file_upload(f)
+                    await validate_file_upload(f, content=contents)
                 except InputValidationError as exc:
                     audit_logger.log_file_validation_failed(
                         client_id,
@@ -139,7 +140,6 @@ async def extract_document(
                     )
                     raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-            contents = await f.read()
             parts.append(
                 UploadedFilePart(
                     filename=f.filename or "uploaded-document",

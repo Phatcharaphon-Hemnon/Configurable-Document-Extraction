@@ -93,7 +93,7 @@ class SQLiteJobStore:
             error = result.get("error", "No documents extracted")
             self.repo.update_job_status(job_id, "failed", error)
 
-        return JobRecord(job_id=job_id, status="completed", result=result)
+        return JobRecord(job_id=job_id, status="completed" if documents else "failed", result=result)
 
     def get(self, job_id: UUID) -> JobRecord | None:
         """Get a job from the database."""
