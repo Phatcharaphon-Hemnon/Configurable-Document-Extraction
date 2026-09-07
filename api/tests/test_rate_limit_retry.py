@@ -16,17 +16,17 @@ for _p in (_REPO_ROOT, _API_ROOT):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from app.services.sut_genai_client import (  # noqa: E402
+from app.services.client import (  # noqa: E402
     RATE_LIMIT_BACKOFF_SECONDS,
     RATE_LIMIT_MAX_RETRIES,
-    SutGenAIClient,
+    Client,
     _is_rate_limit_error,
 )
 
 
 def _client_with_responses(responses):
-    """SutGenAIClient whose OpenAI client returns *responses* in order."""
-    client = SutGenAIClient.__new__(SutGenAIClient)
+    """Client whose OpenAI client returns *responses* in order."""
+    client = Client.__new__(Client)
     client._timeout = 5.0
     client._client = MagicMock()
     calls = {"n": 0}
@@ -69,7 +69,7 @@ async def test_rate_limit_retries_same_call_then_succeeds(monkeypatch):
     result = await client._chat_with_retry(model="m", messages=[])
     assert result is ok
     assert calls["n"] == 2
-    assert sleeps and sleeps[0] == RATE_LIMIT_BACKOFF_SECONDS
+    assert sleeps and RATE_LIMIT_BACKOFF_SECONDS <= sleeps[0] <= RATE_LIMIT_BACKOFF_SECONDS + 0.5
 
 
 @pytest.mark.asyncio

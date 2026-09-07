@@ -34,7 +34,7 @@ Trace-level scores: `judge-score`, `completeness`, `needs_review`
      generation per logical stage reads correctly.
   3. No risk of leaking wrapper kwargs (`name`, `metadata`, …) to the
      third-party OpenAI-compatible gateway.
-- **Token usage without signature changes:** `SutGenAIClient.last_usage`
+- **Token usage without signature changes:** `Client.last_usage`
   records each successful call's counts; the service reads it synchronously
   right after awaiting (same task — concurrency-safe). Verified `isinstance`
   dict so mocked agents yield `None`, never garbage.

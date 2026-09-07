@@ -1,0 +1,82 @@
+[
+  {
+    "issue": "Issue 1: source_span prompt-only, never schema-enforced (medium)",
+    "file": "api/app/schemas/llm_schemas.py",
+    "change_summary": "ExtractedFieldEntry.source_span changed from Optional[str]=None to required str with min_length=1, so span-less LLM output fails parsing and triggers retry tiers instead of flowing downstream. Output contract ExtractedField.source_span stays Optional; validator still flags span-less fields with needs_review.",
+    "test": "api/tests/test_schemas.py::test_issue1_spanless_entry_rejected_by_schema",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 2: plain-prompt fallback drops document and rules (high)",
+    "file": "api/app/services/sut_genai_client.py",
+    "change_summary": "Attempt 3 repair prompt now embeds the original extraction request (document text + catalog + never-guess/source_span rules) alongside the broken fragment and schema, so the repair stays grounded.",
+    "test": "api/tests/test_sut_genai_fallback_tiers.py::test_issue2_fallback_repair_keeps_document_and_rules",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 3: 'invent a name' encourages fabricated new fields (medium)",
+    "file": "api/app/services/field_catalog.py",
+    "change_summary": "Closed by the Issue 9 evidence gate: an invented name is only registered when its source_span verifies against the document text (check_evidence clean). Invented-but-unverifiable names are refused with an evidence reason.",
+    "test": "api/tests/test_field_catalog.py::test_issue3_invented_name_without_label_not_registered",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 4: token-overlap passes scattered/generic/short spans (high)",
+    "file": "api/app/core/security.py",
+    "change_summary": "Old: unordered token overlap >= 0.75 accepted for spans of any length. New: short spans (<=3 tokens) must be a contiguous normalized substring with no overlap fallback; longer spans keep the 0.75 overlap fallback for OCR noise only.",
+    "test": "api/tests/test_security.py::test_issue4_scattered_span_rejected",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 5: empty document text disables evidence checking (high)",
+    "file": "api/app/core/security.py",
+    "change_summary": "check_evidence now returns a 'no document text to verify against (possible hallucination)' problem when document_text is empty/None and the field carries a value, instead of falling through to pass.",
+    "test": "api/tests/test_security.py::test_issue5_empty_document_text_flags",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 6: is_image_extraction unconditional-trust bypass (low)",
+    "file": "api/app/core/security.py",
+    "change_summary": "Removed the is_image_extraction early-return bypass; spans are always verified against OCR text when text exists (parameter kept for caller compatibility). Empty-text image case is covered by the Issue 5 flag.",
+    "test": "api/tests/test_security.py::test_issue6_image_bypass_still_verifies",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 7: validator checks serialized blob, not array rows (high)",
+    "file": "api/app/agents/validator.py",
+    "change_summary": "Added per-row evidence check (_check_array_rows): JSON-serialized array field values are parsed and each row's text is verified against the document (substring or 0.75 token overlap); first unverifiable row yields a validation error + needs_review. Field itself is never dropped.",
+    "test": "api/tests/test_pipeline.py::test_issue7_phantom_array_rows_flagged",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 8: judge_skip_when_clean launders confidently-wrong results (high)",
+    "file": "api/app/services/extraction_service.py, api/app/agents/judge.py",
+    "change_summary": "Skip now additionally requires every numeric field's source_span to be a contiguous substring of the page text (_all_numeric_spans_verbatim); non-verbatim numeric spans always get a judge review. Judge prompt now includes per-field source_spans (provenance block) so it can verify provenance, not just values.",
+    "test": "api/tests/test_pipeline.py::test_issue8_judge_not_skipped_for_nonverbatim_numeric_span",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 9: hallucinated names permanently written to catalog (high)",
+    "file": "api/app/services/field_catalog.py, api/app/services/extraction_service.py, api/app/temporal/activities.py",
+    "change_summary": "Registration gate now requires check_evidence clean when document_text is provided (both production paths pass page_text) and raises the effective bar from max(configured, 0.6) to max(configured, 0.8) via NEW_FIELD_CONFIDENCE_FLOOR. Refusals are reported in skipped with reasons, never silent.",
+    "test": "api/tests/test_field_catalog.py::test_issue9_hallucinated_new_field_not_registered",
+    "status": "fixed",
+    "test_result": "pass"
+  },
+  {
+    "issue": "Issue 10: validation flags but never blocks (medium)",
+    "file": "api/app/agents/validator.py (no change)",
+    "change_summary": "Deferred: proper fix needs an ExtractionResult quarantine/audit field (schema + service + Temporal + frontend contract change) so rejected values stop shipping in .fields without being silently dropped. Current flag behavior (validation_errors + needs_review=True) retained.",
+    "test": "n/a (deferred)",
+    "status": "deferred",
+    "test_result": "pass"
+  }
+]

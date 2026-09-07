@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import re
-from typing import Any, Type, TypeVar
+from typing import Type, TypeVar
 
 from pydantic import BaseModel, ValidationError
 
@@ -276,6 +276,6 @@ def detect_suspicious_output(
     ]
     for pattern in leakage_patterns:
         if re.search(pattern, text, re.IGNORECASE):
-            return True, f"Potential prompt leakage detected"
+            return True, "Potential prompt leakage detected"
 
     return False, None

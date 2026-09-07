@@ -1,4 +1,4 @@
-"""Tests for SutGenAIClient 3-tier JSON fallback, max_tokens, and DISABLE_STRICT_JSON_SCHEMA logic.
+"""Tests for Client 3-tier JSON fallback, max_tokens, and DISABLE_STRICT_JSON_SCHEMA logic.
 """
 
 from __future__ import annotations
@@ -7,7 +7,9 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import httpx
 import pytest
+from openai import BadRequestError
 from pydantic import BaseModel
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -17,7 +19,7 @@ for _p in (_REPO_ROOT, _API_ROOT):
         sys.path.insert(0, str(_p))
 
 from app.core.config import Settings
-from app.services.sut_genai_client import SutGenAICallError, SutGenAIClient
+from app.services.client import Client, ClientError
 
 
 class _DummySchema(BaseModel):
@@ -27,10 +29,11 @@ class _DummySchema(BaseModel):
 
 def _make_client(disable_strict: bool = False):
     settings = MagicMock(spec=Settings)
-    settings.openrouter_api_key = "test-token"
+    settings.llm_api_key = "test-token"
+    settings.llm_base_url = "https://api.openai.com/v1"
     settings.llm_request_timeout_seconds = 90.0
     settings.disable_strict_json_schema = disable_strict
-    return SutGenAIClient(settings)
+    return Client(settings)
 
 
 def _make_response(content: str, prompt_tokens: int = 10, completion_tokens: int = 5):
@@ -98,7 +101,7 @@ async def test_three_tier_fallback_order():
 
 @pytest.mark.anyio
 async def test_error_message_contains_raw_preview():
-    """When all attempts fail, SutGenAICallError contains raw response preview."""
+    """When all attempts fail, ClientError contains raw response preview."""
     client = _make_client()
     bad_output = "THIS_IS_VERY_BAD_MALFORMED_OUTPUT_PREVIEW_TEST"
 
@@ -107,7 +110,7 @@ async def test_error_message_contains_raw_preview():
 
     client._client.chat.completions.create = mock_create
 
-    with pytest.raises(SutGenAICallError) as exc_info:
+    with pytest.raises(ClientError) as exc_info:
         await client.generate_structured_with_image(
             model="test-model",
             prompt="test prompt",
@@ -249,7 +252,9 @@ async def test_reasoning_extra_body_retry_on_rejection():
         captured_kwargs.append(dict(kwargs))
         # First call has extra_body → reject it
         if call_count == 1 and "extra_body" in kwargs:
-            raise Exception("Unsupported parameter: extra_body")
+            raise BadRequestError("Unsupported parameter: extra_body",
+                                  response=httpx.Response(400, request=httpx.Request("POST", "https://test/v1")),
+                                  body=None)
         # Second call (retry without extra_body on same tier) → succeed
         return _make_response(valid)
 

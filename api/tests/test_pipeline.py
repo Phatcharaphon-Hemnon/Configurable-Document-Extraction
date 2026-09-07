@@ -212,3 +212,16 @@ def test_evaluate_precision_recall(tmp_path):
 def test_request_meta_shape(tmp_path):
     meta = FileUploadMeta(filename="x.pdf", size_bytes=10)
     assert meta.filename == "x.pdf"
+
+
+@pytest.mark.asyncio
+async def test_empty_extraction_fails_before_validator_and_judge(tmp_path):
+    service = _make_service(tmp_path, _routing(), ([], []), _judge())
+    service.validator = MagicMock()
+    response = await service.extract_group([UploadedFilePart("scan.png", "image/png", b"img")])
+    doc = response.documents[0]
+    assert doc.failed_stage == "extractor"
+    assert doc.needs_review and "No usable fields" in doc.error
+    assert doc.judge is None
+    service.validator.validate.assert_not_called()
+    service.judge.evaluate.assert_not_called()

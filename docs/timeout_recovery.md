@@ -22,7 +22,11 @@ handled by retry (below).
 
 ## How recovery works now
 
-1. **Same-tier retry** (`sut_genai_client.py::_chat_with_retry`): a stalled
+See [LLM request queue](llm_request_queue.md) for the current shared concurrency
+limit and four-attempt generation budget. Exhausted timeouts/rate limits never
+trigger an output-format fallback. Queue waiting occurs before stage timers.
+
+1. **Same-tier retry** (`client.py::_chat_with_retry`): a stalled
    call is retried once on the SAME tier after
    `TIMEOUT_RETRY_BACKOFF_SECONDS` (2s). A stall says nothing about the
    request shape, so tier-degradation only happens for genuinely

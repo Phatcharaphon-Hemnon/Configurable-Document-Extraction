@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime
-from typing import Any
 from uuid import UUID
 
 from app.database.models import Database
@@ -84,9 +82,9 @@ class JobRepository:
             )
 
     def fail_stale_queued_jobs(self, error: str = "Interrupted (server restarted or request cancelled)") -> int:
-        """Mark jobs left 'queued' by killed requests as failed.
+        """Mark queued and processing jobs interrupted by restart as failed.
 
-        Called once at startup: any row still queued cannot have a live
+        Called once at startup: any pending row cannot have a live
         worker (workers are in-process tasks), so it is an orphan.
         Returns the number of rows marked.
         """
@@ -95,7 +93,7 @@ class JobRepository:
                 """
                 UPDATE extraction_jobs
                 SET status = 'failed', error = ?, updated_at = CURRENT_TIMESTAMP
-                WHERE status = 'queued'
+                WHERE status IN ('queued', 'processing')
                 """,
                 (error,),
             )

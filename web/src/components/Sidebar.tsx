@@ -62,6 +62,7 @@ export function Sidebar({ groups, selectedGroupId, onSelect, onFiles }: SidebarP
               onClick={() => onSelect(group.id)}
             >
               <span className="file-name" title={group.label}>{group.label}</span>
+              <span>{group.status === 'queued' ? 'Queued' : group.status === 'processing' ? 'Processing' : ''}</span>
               <span className={`status-indicator ${group.status}`} title={group.status} />
             </li>
           ))

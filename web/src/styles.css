@@ -1226,3 +1226,5 @@ button:focus-visible,
   border-radius: var(--radius-sm);
   cursor: pointer;
 }
+
+.status-indicator.processing { background: #174D38; animation: pulse 1.2s ease-in-out infinite; }

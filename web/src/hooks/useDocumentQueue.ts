@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { extractFiles, pollJobStatus } from '../api/client';
 import { pushToast } from '../lib/toast';
 import type { DocumentGroup, ExtractionResult, FileExtractionResponse } from '../types/extraction';
@@ -34,6 +34,14 @@ export function useDocumentQueue() {
   // Guards against double-scheduling the same group (rapid Retry clicks):
   // only one pipeline run per group at a time.
   const processingRef = useRef<Set<string>>(new Set());
+  const controllers = useRef(new Map<string, AbortController>());
+  useEffect(() => {
+    const active = controllers.current;
+    return () => {
+      active.forEach((controller) => controller.abort());
+      active.clear();
+    };
+  }, []);
 
   const patchGroup = useCallback((id: string, patch: Partial<DocumentGroup>) => {
     setGroups((prev) => prev.map((g) => (g.id === id ? { ...g, ...patch } : g)));
@@ -46,22 +54,43 @@ export function useDocumentQueue() {
         return;
       }
       processingRef.current.add(group.id);
-      patchGroup(group.id, { status: 'uploading', error: undefined });
+      const controller = new AbortController();
+      controllers.current.set(group.id, controller);
+      let jobId = group.jobId;
+      let terminalFailure = false;
+      patchGroup(group.id, { status: jobId ? 'queued' : 'uploading', error: undefined });
 
       try {
         // 202 immediately; the pipeline runs server-side. Polling survives
         // refresh/ retry churn: a duplicate upload reuses the running job.
-        const accepted = await extractFiles(group.files, group.label);
-        const job = await pollJobStatus(accepted.job_id);
+        if (!jobId) {
+          const accepted = await extractFiles(group.files, group.label, controller.signal);
+          jobId = accepted.job_id;
+          if (controller.signal.aborted) return;
+          patchGroup(group.id, { jobId, status: 'queued' });
+        }
+        const job = await pollJobStatus(jobId, {
+          signal: controller.signal,
+          onStatus: (current) => {
+            if (current.status === 'queued' || current.status === 'processing') {
+              patchGroup(group.id, { status: current.status });
+            }
+          },
+        });
         if (job.status === 'failed' || !job.result) {
+          terminalFailure = true;
           throw new Error(job.error || 'Extraction failed.');
         }
         applyResult(group, job.result, patchGroup);
       } catch (err) {
-        const message = toErrorMessage(err);
-        patchGroup(group.id, { status: 'error', error: message });
+        if (controller.signal.aborted) return;
+        const message = jobId && !terminalFailure
+          ? `Could not check job status. The job may still be running. ${toErrorMessage(err)}`
+          : toErrorMessage(err);
+        patchGroup(group.id, { status: 'error', error: message, jobId: terminalFailure ? undefined : jobId });
         pushToast('error', message, 8000);
       } finally {
+        controllers.current.delete(group.id);
         processingRef.current.delete(group.id);
       }
     },

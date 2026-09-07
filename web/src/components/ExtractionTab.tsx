@@ -89,10 +89,10 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
       <div className="callout callout-danger">
         <AlertTriangleIcon />
         <div className="callout-body">
-          <h3>Upload Failed</h3>
+          <h3>{group.jobId ? 'Status Check Interrupted' : 'Extraction Failed'}</h3>
           <p className="box-text">{group.error}</p>
           <button className="button-secondary retry-button" onClick={() => onRetry(group.id)}>
-            Retry Upload
+            {group.jobId ? 'Reconnect' : 'Retry Upload'}
           </button>
         </div>
       </div>
@@ -102,7 +102,7 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
   if (group.status !== 'done') {
     return (
       <div className="empty-state">
-        <p>Processing document…</p>
+        <p>{group.status === 'queued' ? 'Queued — waiting for an available slot…' : group.status === 'uploading' ? 'Uploading document…' : 'Processing document…'}</p>
       </div>
     );
   }
@@ -117,7 +117,7 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
           <h3>No Documents Detected</h3>
           <p className="box-text">{group.response?.error || 'No readable pages were found in the uploaded file(s).'}</p>
           <button className="button-secondary retry-button" onClick={() => onRetry(group.id)}>
-            Retry Upload
+            {group.jobId ? 'Reconnect' : 'Retry Upload'}
           </button>
         </div>
       </div>

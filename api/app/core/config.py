@@ -37,28 +37,45 @@ class Settings:
         # same document skip OCR entirely).
         self.ocr_cache_enabled = os.getenv("OCR_CACHE_ENABLED", "true").lower() == "true"
 
-        # --- AI provider: OpenCode Zen (https://opencode.ai/zen) — OpenAI-compatible ---
-        self.opencode_api_key = (
-            os.getenv("OPENCODE_API_KEY")
-            or os.getenv("NVIDIA_API_KEY")  # legacy fallbacks
-            or os.getenv("OPENROUTER_API_KEY")
-            or ""
-        ).strip()
-        self.nvidia_api_key = self.opencode_api_key  # backwards-compatible alias
-        self.openrouter_api_key = self.opencode_api_key  # backwards-compatible alias
-        _DEFAULT_MODEL = "nemotron-3.5-lightning-free"
-        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", _DEFAULT_MODEL)
-        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", _DEFAULT_MODEL)
-        self.extraction_model_name = os.getenv(
-            "EXTRACTION_MODEL_NAME",
-            os.getenv("RECOMMENDED_EXTRACTION_MODEL_NAME", _DEFAULT_MODEL),
-        )
+        # --- AI provider: one text model for Router + Extractor + Judge ---
+        # Three variables control everything — change provider/model by editing
+        # LLM_PROVIDER / LLM_API_KEY / LLM_MODEL only.
+        self.llm_provider = (os.getenv("LLM_PROVIDER", "ollama-cloud").strip().lower() or "ollama-cloud")
+        _PROVIDER_BASE_URLS = {
+            "openai": "https://api.openai.com/v1",
+            "ollama-cloud": "https://ollama.com/v1",
+            "ollama-local": "http://localhost:11434/v1",
+        }
+        if self.llm_provider not in _PROVIDER_BASE_URLS:
+            raise ValueError(
+                f"Unknown LLM_PROVIDER={self.llm_provider!r} — "
+                f"expected one of: {sorted(_PROVIDER_BASE_URLS)}"
+            )
+        _NATIVE_KEY_VARS = {"openai": "OPENAI_API_KEY", "ollama-cloud": "OLLAMA_API_KEY", "ollama-local": ""}
+        _native_key_var = _NATIVE_KEY_VARS[self.llm_provider]
+        _native_key = os.getenv(_native_key_var, "") if _native_key_var else ""
+        self.llm_api_key = (os.getenv("LLM_API_KEY", "") or _native_key).strip()
+        self.llm_base_url = os.getenv("LLM_BASE_URL", "").strip() or _PROVIDER_BASE_URLS[self.llm_provider]
+        self.llm_model = os.getenv("LLM_MODEL", "gpt-oss:20b").strip() or "gpt-oss:20b"
+        self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "").strip() or self.llm_model
+        self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "").strip() or self.llm_model
+        self.extraction_model_name = os.getenv("EXTRACTION_MODEL_NAME", "").strip() or self.llm_model
+        # gpt-oss reasons in Harmony format and degrades on low temperatures
+        # (OpenAI recommends 1.0 for it). Other providers keep 0.0.
+        _temp_default = 1.0 if self.llm_provider == "ollama-cloud" else 0.0
+        try:
+            self.llm_temperature = float(os.getenv("LLM_TEMPERATURE", "") or _temp_default)
+        except ValueError:
+            self.llm_temperature = _temp_default
         # Vision model is LEGACY/optional: the pipeline no longer needs it.
         # All uploads (images + PDFs) go through local RapidOCR into the
         # text-only pipeline using the single text model above.
         self.vision_model_name = os.getenv("VISION_MODEL_NAME", "")
         self.extraction_max_tokens = int(os.getenv("EXTRACTION_MAX_TOKENS", "8000"))
         self.llm_request_timeout_seconds = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "90"))
+        self.llm_max_concurrent_requests = int(os.getenv("LLM_MAX_CONCURRENT_REQUESTS", "1"))
+        if self.llm_max_concurrent_requests < 1:
+            raise ValueError("LLM_MAX_CONCURRENT_REQUESTS must be at least 1")
         self.disable_strict_json_schema = os.getenv("DISABLE_STRICT_JSON_SCHEMA", "false").lower() == "true"
 
         # --- Document parsing (local RapidOCR — no API key, no network) ---

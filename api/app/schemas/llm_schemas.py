@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Literal, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class RoutingResponseSchema(BaseModel):
@@ -24,7 +24,9 @@ class ExtractedFieldEntry(BaseModel):
 
 
 class ExtractionResponseSchema(BaseModel):
-    fields: list[ExtractedFieldEntry] = Field(default_factory=list)
+    model_config = ConfigDict(extra="forbid")
+
+    fields: list[ExtractedFieldEntry]
 
 
 class JudgeIssueEntry(BaseModel):

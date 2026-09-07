@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchApiRoot } from '../api/client';
 
-export function useRecommendedModel(fallback = 'Nemotron VL'): string {
+export function useRecommendedModel(fallback = 'gpt-oss:20b'): string {
   const [modelName, setModelName] = useState(fallback);
 
   useEffect(() => {

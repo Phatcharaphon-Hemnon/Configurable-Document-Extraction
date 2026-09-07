@@ -8,6 +8,8 @@ from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from typing import Any, Awaitable, Callable, TypeVar
 
+from app.services.request_control import stage_context, stage_deadline
+
 logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
@@ -160,6 +162,8 @@ class TimeoutGuard:
         """
         timeout = self._get_timeout(stage)
         start = asyncio.get_event_loop().time()
+        stage_token = stage_context.set(stage)
+        deadline_token = stage_deadline.set(start + timeout)
 
         try:
             async with asyncio.timeout(timeout):
@@ -171,6 +175,10 @@ class TimeoutGuard:
         else:
             duration = asyncio.get_event_loop().time() - start
             self._record_timing(stage, duration)
+
+        finally:
+            stage_context.reset(stage_token)
+            stage_deadline.reset(deadline_token)
 
     def get_timings(self) -> dict[str, list[float]]:
         """Get all recorded timings."""

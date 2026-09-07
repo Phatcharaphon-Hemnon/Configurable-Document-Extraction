@@ -23,9 +23,13 @@ class InMemoryJobStore:
         self._jobs[job.job_id] = job
         return job
 
+    def mark_processing(self, job_id: UUID) -> None:
+        if job_id in self._jobs:
+            self._jobs[job_id].status = "processing"
+
     def save_result(self, job_id: UUID, result: dict[str, Any]) -> JobRecord:
         job = self._jobs[job_id]
-        job.status = "completed"
+        job.status = "failed" if result.get("error") and not result.get("documents") else "completed"
         job.result = result
         return job
 
@@ -63,6 +67,9 @@ class SQLiteJobStore:
         job_id = uuid4()
         self.repo.create_job(job_id, filename, content_type, size_bytes)
         return JobRecord(job_id=job_id, status="queued")
+
+    def mark_processing(self, job_id: UUID) -> None:
+        self.repo.update_job_status(job_id, "processing")
 
     def save_result(self, job_id: UUID, result: dict[str, Any]) -> JobRecord:
         """Save extraction result to the database."""
@@ -158,5 +165,5 @@ class SQLiteJobStore:
         return None
 
     def fail_stale_queued(self) -> int:
-        """Mark orphaned queued rows (killed requests) as failed."""
+        """Mark orphaned queued/processing rows as failed."""
         return self.repo.fail_stale_queued_jobs()

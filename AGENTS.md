@@ -1,7 +1,7 @@
 # AGENTS.md — Project Memory
 
 > Read this file first. It is the persistent memory for any AI agent (or human)
-> working on this repository. Last updated: 2026-09-03.
+> working on this repository. Last updated: 2026-09-08.
 
 ## What this project is
 
@@ -67,9 +67,9 @@ multi-agent AI pipeline.
 
 ## Environment (api/.env)
 
-AI provider: OpenCode Zen gateway (`https://opencode.ai/zen/v1`), key
-`OPENCODE_API_KEY` (free tier: `public`). Default model
-`nemotron-3.5-lightning-free` (text-only, used for Router + Extractor + Judge).
+AI provider: 3 vars (`LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL`).
+This branch: Ollama Cloud (`https://ollama.com/v1`), model `gpt-oss:20b`
+(text-only, used for Router + Extractor + Judge). See `docs/ai_provider.md`.
 Parsing: local RapidOCR (`OCR_DPI`; see `docs/local_ocr.md`).
 Monitoring: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST`
 (all optional — Langfuse disabled when missing).
@@ -80,7 +80,7 @@ See `api/.env.example` for the full list.
 ```bash
 ./scripts/run_all.sh                 # full setup (venv, deps, .env) + run API :8000 + Web :5173
 source .venv/bin/activate
-ruff check backend/ && python -m pytest api/tests/ -q   # verify
+ruff check api/ && python -m pytest api/tests/ -q   # verify
 cd web && npm run build                                 # typecheck+build
 ```
 
@@ -89,7 +89,10 @@ cd web && npm run build                                 # typecheck+build
 - Frontend `VITE_API_BASE_URL` MUST include the `/api` prefix
   (e.g. `http://localhost:8000/api`) — the backend mounts routes under `/api`.
 - Run uvicorn from inside `api/` so `.env` and the `app` package resolve.
-- CI runs `ruff check backend/` and `pytest api/tests/`; config in
+- CI runs `ruff check api/` and `pytest api/tests/`; config in
   root `ruff.toml`.
+- Ollama Free: `LLM_MAX_CONCURRENT_REQUESTS=1`. Jobs queue before OCR; pages
+  run sequentially. Provider retries share a four-attempt budget across formats.
+  See `docs/llm_request_queue.md`. Use one API process per account.
 - Temporal worker is optional: `TEMPORAL_ENABLED=false` (default) keeps the
   in-process pipeline; set true + run `python -m app.temporal.worker` from `api/` to use it.

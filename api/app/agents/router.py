@@ -9,8 +9,7 @@ from app.core.config import Settings
 from app.core.security import sanitize_document_text
 from app.schemas.documents import RoutingDecision
 from app.schemas.llm_schemas import RoutingResponseSchema
-from app.services.sut_genai_client import SutGenAICallError as GeminiCallError
-from app.services.sut_genai_client import SutGenAIClient as GeminiClient
+from app.services.client import Client, ClientError
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +25,9 @@ _ROUTER_PROMPT = (
 
 
 class RouterAgent:
-    def __init__(self, settings: Settings, client: GeminiClient | None = None) -> None:
+    def __init__(self, settings: Settings, client: Client | None = None) -> None:
         self.settings = settings
-        self._client = client or GeminiClient(settings)
+        self._client = client or Client(settings)
 
     async def classify(
         self,
@@ -40,7 +39,7 @@ class RouterAgent:
         has_text = bool(text_hint and text_hint.strip())
         has_image = bool(image_bytes)
         if not has_text and not has_image:
-            raise GeminiCallError("Router requires document text or an image to classify")
+            raise ClientError("Router requires document text or an image to classify")
 
         prompt = (
             f"{_ROUTER_PROMPT}\nFilename (weak hint): {filename}\n"

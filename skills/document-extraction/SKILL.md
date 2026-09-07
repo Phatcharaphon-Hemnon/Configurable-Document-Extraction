@@ -37,7 +37,7 @@ Upload → RapidOCR (local: images direct, PDFs rendered at 300 DPI)
 - Catalog read/write: `api/app/services/field_catalog.py`
 - Injection guard: `api/app/core/security.py`
 - Orchestration: `api/app/services/extraction_service.py`
-- LLM transport (retry + 3-tier JSON fallback): `api/app/services/sut_genai_client.py`
+- LLM transport (retry + 3-tier JSON fallback): `api/app/services/client.py`
 - Langfuse: `api/app/observability/langfuse.py`
 - Temporal: `api/app/temporal/{workflows,activities,worker,client}.py`
 - Frontend API shape mirrors `FileExtractionResponse` in

@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel
 
-from app.services.sut_genai_client import _pydantic_to_json_schema
+from app.services.client import _pydantic_to_json_schema
 
 
 class SubModel(BaseModel):

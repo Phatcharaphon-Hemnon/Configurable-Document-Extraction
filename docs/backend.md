@@ -17,7 +17,7 @@ FastAPI app under `api/app/`. Run from inside `api/` so `.env` and the
 | `app/services/field_catalog.py` | Catalog read/write. **Exact matching only** (`normalize_field_name`); aliases are never consulted; `add_fields()` appends AI-discovered names atomically. |
 | `app/services/knowledge_base.py` | Few-shot (token-capped), ground truth, templates. |
 | `app/services/extraction_service.py` | Orchestration + Langfuse tracing + auto-eval + catalog registration. |
-| `app/services/sut_genai_client.py` | OpenAI-compatible LLM transport with 3-tier JSON fallback and retries. |
+| `app/services/client.py` | Direct OpenAI LLM transport with 3-tier JSON fallback and retries. |
 | `app/observability/langfuse.py` | Optional Langfuse tracer (no-op without keys). |
 | `app/temporal/` | Durable workflow variant: `parse → classify → extract → validate → judge` activities. |
 

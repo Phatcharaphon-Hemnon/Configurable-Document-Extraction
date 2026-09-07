@@ -1,8 +1,7 @@
-"""Tests for SutGenAIClient.generate_structured retry path.
+"""Tests for Client.generate_structured retry path.
 
-Verifies that on a parse failure, the retry does NOT resend the full
-original prompt (which contains the document text), but instead sends
-only the malformed response + schema for correction.
+Verifies that regeneration retains the original source and schema instead of
+letting a malformed model response replace the task's evidence.
 """
 from __future__ import annotations
 
@@ -20,7 +19,7 @@ for _p in (_REPO_ROOT, _API_ROOT):
         sys.path.insert(0, str(_p))
 
 from app.core.config import Settings  # noqa: E402
-from app.services.sut_genai_client import SutGenAIClient  # noqa: E402
+from app.services.client import Client  # noqa: E402
 
 
 class _DummySchema(BaseModel):
@@ -30,9 +29,10 @@ class _DummySchema(BaseModel):
 
 def _make_client():
     settings = MagicMock(spec=Settings)
-    settings.openrouter_api_key = "test-token"
+    settings.llm_api_key = "test-token"
+    settings.llm_base_url = "https://api.openai.com/v1"
     settings.llm_request_timeout_seconds = 90.0
-    return SutGenAIClient(settings)
+    return Client(settings)
 
 
 def _make_response(content: str, prompt_tokens: int = 10, completion_tokens: int = 5):
@@ -52,8 +52,8 @@ def _make_response(content: str, prompt_tokens: int = 10, completion_tokens: int
 
 
 @pytest.mark.anyio
-async def test_retry_does_not_resend_original_prompt():
-    """On parse failure, the retry should NOT contain the original prompt."""
+async def test_retry_preserves_original_source():
+    """On parse failure, regenerate from the original source, not model output."""
     client = _make_client()
 
     original_prompt = "Extract data from this very long document text... " * 100
@@ -87,14 +87,10 @@ async def test_retry_does_not_resend_original_prompt():
     first_call_content = captured_messages[0][0]["content"]
     assert original_prompt[:50] in first_call_content
 
-    # Third call (plain prompt retry) should NOT contain the original prompt
+    # Plain regeneration retains the document and schema; previous output is not evidence.
     third_call_content = captured_messages[2][0]["content"]
-    assert original_prompt[:50] not in third_call_content
-
-    # Third call SHOULD contain the malformed response
-    assert malformed_json in third_call_content
-
-    # Third call should contain the schema
+    assert original_prompt[:50] in third_call_content
+    assert malformed_json not in str(captured_messages[2])
     assert '"name"' in third_call_content
     assert 'Schema' in third_call_content
 

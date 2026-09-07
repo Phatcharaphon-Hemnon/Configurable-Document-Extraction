@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import asyncio
 import sys
-import time
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -29,15 +28,14 @@ from app.guards.output_guard import (
     sanitize_error_message,
     validate_output_schema,
 )
-from app.guards.pii_detector import PIIDetector, PIIMatch, PIIType
-from app.guards.rate_limiter import RateLimiter, RateLimitConfig
+from app.guards.pii_detector import PIIDetector, PIIType
+from app.guards.rate_limiter import RateLimitConfig, RateLimiter
 from app.guards.timeout_guard import (
     StageTimeoutConfig,
     StageTimeoutError,
     TimeoutGuard,
     stage_timeout,
 )
-
 
 # ============================================================================
 # Rate Limiter Tests
@@ -411,7 +409,7 @@ class TestInputGuard:
         mock_file = MagicMock()
         mock_file.filename = "test.pdf"
         mock_file.content_type = "application/pdf"
-        
+
         # Make read() a coroutine that returns empty bytes
         async def mock_read():
             return b""
@@ -429,7 +427,7 @@ class TestInputGuard:
         mock_file = MagicMock()
         mock_file.filename = "test.pdf"
         mock_file.content_type = "application/pdf"
-        
+
         # Make read() a coroutine that returns 60MB
         async def mock_read():
             return b"x" * (60 * 1024 * 1024)
@@ -555,11 +553,12 @@ class TestCheckEvidence:
 
 class TestValidatorWithImageExtraction:
     def test_validator_image_extraction_no_hallucination_error(self):
+        import tempfile
+        from pathlib import Path
+
         from app.agents.validator import ValidatorAgent
         from app.schemas.documents import ExtractedField
         from app.services.field_catalog import FieldCatalog
-        from pathlib import Path
-        import tempfile
 
         # Create a minimal catalog for testing
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -587,11 +586,12 @@ class TestValidatorWithImageExtraction:
             assert len(hallucination_errors) == 0
 
     def test_validator_text_extraction_hallucination_error(self):
+        import tempfile
+        from pathlib import Path
+
         from app.agents.validator import ValidatorAgent
         from app.schemas.documents import ExtractedField
         from app.services.field_catalog import FieldCatalog
-        from pathlib import Path
-        import tempfile
 
         # Create a minimal catalog for testing
         with tempfile.TemporaryDirectory() as tmpdir:

@@ -36,6 +36,7 @@ from app.services.field_matching import values_match
 from app.services.job_store import InMemoryJobStore, JobRecord, SQLiteJobStore
 from app.services.knowledge_base import KnowledgeBaseRepository
 from app.services.rapidocr_client import RapidOCRClient
+from app.services.request_control import job_context
 
 logger = logging.getLogger(__name__)
 
@@ -91,6 +92,7 @@ class UploadedFilePart:
 class DocumentExtractionService:
     def __init__(self, settings: Settings, job_store: InMemoryJobStore | None = None) -> None:
         self.settings = settings
+        self._job_lock = asyncio.Lock()
         self.knowledge_base = KnowledgeBaseRepository(Path(settings.knowledge_base_path))
         self.catalog = self.knowledge_base.catalog
         # Local OCR (RapidOCR, ONNX): handles both PDFs (rendered at OCR_DPI
@@ -113,13 +115,13 @@ class DocumentExtractionService:
             self.job_store = job_store or InMemoryJobStore()
             logger.info("Using in-memory job store")
 
-        # Boot-cleanup: rows left 'queued' belong to requests killed before
+        # Boot-cleanup: rows left 'queued' or 'processing' belong to requests killed before
         # saving (server restart / client disconnect) — no live worker can
         # own them, so mark them failed for a truthful History tab.
         try:
             orphaned = self.job_store.fail_stale_queued()
             if orphaned:
-                logger.info("Marked %d orphaned queued job(s) as failed", orphaned)
+                logger.info("Marked %d orphaned pending job(s) as failed", orphaned)
         except Exception as exc:
             logger.warning("Stale-job cleanup skipped: %s", exc)
 
@@ -251,10 +253,10 @@ class DocumentExtractionService:
                 for page_text in parsed_pages
             ]
 
-            text_docs = await asyncio.gather(*[
-                self._extract_one_page(filename=combined_name, page_text=page_text)
+            text_docs = [
+                await self._extract_one_page(filename=combined_name, page_text=page_text)
                 for _, page_text in pages_with_index
-            ])
+            ]
             results_by_index: dict[int, list[ExtractionResult]] = {}
             for (idx, _), document in zip(pages_with_index, text_docs):
                 results_by_index.setdefault(idx, []).append(document)
@@ -404,6 +406,9 @@ class DocumentExtractionService:
                     text=page_text or "",
                     few_shot=few_shot,
                 )
+            if not fields:
+                raise ValueError("No usable fields were extracted from the OCR text. "
+                                 "Check the OCR text or retry extraction with a suitable text model.")
             extract_gen.end(
                 output={"fields": [{"name": f.name, "confidence": f.confidence} for f in fields],
                         "new_fields": new_field_names},
@@ -619,15 +624,27 @@ class DocumentExtractionService:
     async def run_job(self, job_id: UUID, parts: list[UploadedFilePart]) -> None:
         """Background-task entry point: run extraction for an existing job.
 
-        Never raises — all outcomes are persisted via extract_group's own
-        save paths (completed / failed / cancelled).
+        Waits before OCR/stage timers. Failures are persisted; cancellation
+        is persisted and re-raised so the background-task owner can clean up.
         """
+        logger.info("Job %s queued", job_id)
+        token = job_context.set(str(job_id))
         try:
-            await self.extract_group(parts, job_id=job_id)
+            async with self._job_lock:
+                self.job_store.mark_processing(job_id)
+                logger.info("Job %s processing", job_id)
+                await self.extract_group(parts, job_id=job_id)
+                job = self.job_store.get(job_id)
+                logger.info("Job %s %s", job_id, job.status if job else "unknown")
         except asyncio.CancelledError:
+            self.job_store.fail_job(job_id, "Cancelled (server shutdown)")
+            logger.info("Job %s cancelled", job_id)
             raise
         except Exception as exc:
-            logger.error("Background extraction %s failed: %s", job_id, exc, exc_info=True)
+            self.job_store.fail_job(job_id, str(exc))
+            logger.error("Background extraction %s failed: %s", job_id, type(exc).__name__)
+        finally:
+            job_context.reset(token)
 
 
 def coerce_field_dates(fields: list[ExtractedField], date_field_names: set[str]) -> list[ExtractedField]:

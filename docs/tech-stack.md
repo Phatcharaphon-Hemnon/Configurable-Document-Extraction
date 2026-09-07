@@ -42,8 +42,8 @@
 | **Backend API** | `FastAPI >=0.115` + `uvicorn[standard] >=0.30` | REST under `/api`: `POST /api/extract`, `GET /api/templates`, `POST /api/evaluate`, `POST /api/extract/batch` + `GET /api/jobs/{id}`. Run from `api/` so `.env` + `app` package resolve. |
 | **Contracts** | `Pydantic >=2.7` | `app/schemas/` — API + internal types. Single source of truth. |
 | **Config / Upload** | `python-dotenv >=1.0`, `python-multipart >=0.0.9` | Env-driven `Settings` (`app/core/config.py`); multipart file uploads, `MAX_UPLOAD_MB=10`. |
-| **LLM transport** | `openai >=1.40` (OpenAI-compatible) | Talks to **OpenCode Zen gateway** (`https://opencode.ai/zen/v1`) via `app/services/sut_genai_client.py`. 3-tier structured output: `json_schema` → `json_object` → repair prompt + retries. |
-| **LLM model** | `nemotron-3.5-lightning-free` (text-only) | Single model for Router + Extractor + Judge (env overridable per stage). No vision model required. Free tier key = `public`. |
+| **LLM transport** | `openai >=1.40` (OpenAI-compatible) | Talks to the active provider (`LLM_PROVIDER`: openai / ollama-cloud / ollama-local) via `app/services/client.py`. 3-tier structured output: `json_schema` → `json_object` → repair prompt + retries. See `docs/ai_provider.md`. |
+| **LLM model** | `gpt-oss:20b` (text-only, this branch) | Single model (`LLM_MODEL`) for Router + Extractor + Judge (env overridable per stage). No vision model required. Key = `LLM_API_KEY`. |
 | **OCR (local)** | `rapidocr_onnxruntime==1.2.3`, `pymupdf>=1.24`, `pillow>=10.0`, `numpy>=1.26` | All uploads OCR'd on-host (ONNX, CPU, offline, ~1s/page). PDFs rendered at `OCR_DPI=300` via PyMuPDF. Wrapper: `app/services/rapidocr_client.py`. SHA-256 in-memory cache. See `docs/local_ocr.md`. |
 | **Workflow** | `temporalio>=1.7` | Optional durable workflow `parse → classify → extract → validate → judge` (`app/temporal/`). Default `TEMPORAL_ENABLED=false` = in-process pipeline. |
 | **Observability** | `langfuse>=4.0` (SDK v4) | One trace `extract-document` per page with `classify-document` / `extract-fields` / `validate-fields` / `judge-extraction` children. No-op without keys. See `docs/langfuse_tracing.md`. |
@@ -59,7 +59,7 @@
 ```mermaid
 flowchart LR
     U[Upload<br/>images / PDF] --> P[RapidOCR<br/>local, one text per page]
-    P --> R[R Router<br/>nemotron-3.5-lightning-free]
+    P --> R[R Router<br/>gpt-oss:20b]
     R --> E[Extractor x3<br/>catalog-constrained JSON]
     E --> C[(Field Catalog<br/>exact names)]
     E --> VA[Validator<br/>deterministic]
@@ -89,4 +89,4 @@ ruff check api/ && python -m pytest api/tests/ -q
 cd web && npm run build
 ```
 
-Config: copy `api/.env.example → api/.env` (`OPENCODE_API_KEY`, `OCR_DPI`, Langfuse, `TEMPORAL_ENABLED`). Frontend `web/.env`: `VITE_API_BASE_URL=http://localhost:8000/api` (the `/api` suffix is required).
+Config: copy `api/.env.example → api/.env` (`LLM_PROVIDER`, `LLM_API_KEY`, `LLM_MODEL`, `OCR_DPI`, Langfuse, `TEMPORAL_ENABLED`). Frontend `web/.env`: `VITE_API_BASE_URL=http://localhost:8000/api` (the `/api` suffix is required).

@@ -67,7 +67,7 @@ step "Checking environment files"
 if [ ! -f "$ROOT/api/.env" ]; then
     cp "$ROOT/api/.env.example" "$ROOT/api/.env"
     echo "    created api/.env from template"
-    warn "OPENCODE_API_KEY in api/.env is a placeholder — edit it for real extractions."
+    warn "LLM_API_KEY in api/.env is empty — set it for real extractions."
 else
     echo "    api/.env exists ✓"
 fi

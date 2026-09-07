@@ -20,9 +20,8 @@ from app.core.config import Settings
 from app.core.security import sanitize_document_text
 from app.schemas.documents import DOC_TYPES, DocType, ExtractedField
 from app.schemas.llm_schemas import ExtractionResponseSchema
+from app.services.client import Client, ClientError
 from app.services.field_catalog import FieldCatalog, is_placeholder_value, normalize_field_name
-from app.services.sut_genai_client import SutGenAICallError as GeminiCallError
-from app.services.sut_genai_client import SutGenAIClient as GeminiClient
 
 logger = logging.getLogger(__name__)
 
@@ -87,10 +86,10 @@ class BaseExtractor:
     doc_type: DocType
     doc_label: str
 
-    def __init__(self, settings: Settings, catalog: FieldCatalog, client: GeminiClient | None = None) -> None:
+    def __init__(self, settings: Settings, catalog: FieldCatalog, client: Client | None = None) -> None:
         self.settings = settings
         self.catalog = catalog
-        self._client = client or GeminiClient(settings)
+        self._client = client or Client(settings)
 
     async def extract(
         self,
@@ -99,10 +98,10 @@ class BaseExtractor:
         image_media_type: str | None = None,
         few_shot: list[dict] | None = None,
     ) -> tuple[list[ExtractedField], list[str]]:
-        """Returns (fields, new_field_names). Raises GeminiCallError on transport failure."""
+        """Returns (fields, new_field_names). Raises ClientError on transport failure."""
         has_text = bool(text and text.strip())
         if not has_text and not image_bytes:
-            raise GeminiCallError(f"{self.doc_label} extractor requires text or an image")
+            raise ClientError(f"{self.doc_label} extractor requires text or an image")
 
         known = self.catalog.known_names(self.doc_type)
         prompt = _build_prompt(

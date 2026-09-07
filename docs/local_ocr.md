@@ -12,7 +12,7 @@
 
 The downstream pipeline is unchanged: Router → Extractor → Validator →
 Judge run on OCR text with the single configured text model
-(`nemotron-3.5-lightning-free` by default). Field catalog, validation rules,
+(`gpt-oss:20b` on this branch — see `docs/ai_provider.md`). Field catalog, validation rules,
 `source_span` evidence, and hallucination guards all behave as before.
 
 ## How it works (`api/app/services/rapidocr_client.py`)

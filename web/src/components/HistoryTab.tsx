@@ -104,6 +104,7 @@ export function HistoryTab() {
       case 'completed': return '#174D38';
       case 'failed': return '#4D1717';
       case 'queued': return '#CBCBCB';
+      case 'processing': return '#174D38';
       default: return '#666';
     }
   };

@@ -1,9 +1,11 @@
-"""SUT GenAI gateway client wrapper, using NVIDIA NIM API.
+"""Generic LLM client wrapper (OpenAI-compatible chat.completions).
 
-Talks to the OpenCode Zen gateway (https://opencode.ai/zen/v1), an OpenAI-compatible endpoint.
+Target is chosen by Settings: LLM_PROVIDER selects the base URL
+(openai / ollama-cloud / ollama-local) and LLM_MODEL the model.
 
-Auth:  Authorization: Bearer <NVIDIA_API_KEY>
-Model: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+Auth:  Authorization: Bearer <LLM_API_KEY>
+Model: configurable via LLM_MODEL (per-stage ROUTER/EXTRACTION/JUDGE_MODEL_NAME
+       overrides supported).
 """
 
 from __future__ import annotations
@@ -12,27 +14,37 @@ import asyncio
 import base64
 import json
 import logging
+import random
+import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from typing import Any, TypeVar
 
-from openai import AsyncOpenAI
+from openai import APITimeoutError, AsyncOpenAI
 from pydantic import BaseModel
 
 from app.core.config import Settings
+from app.services.request_control import (
+    job_context,
+    limited_generation,
+    request_budget,
+    stage_context,
+    stage_deadline,
+)
 
 logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=BaseModel)
 
-_SUT_BASE_URL = "https://opencode.ai/zen/v1"
+_DEFAULT_BASE_URL = "https://api.openai.com/v1"
 
 
 # ---------------------------------------------------------------------------
-# Public exception / result types (mirror the old GeminiCallError interface
-# so all existing call sites keep working with a simple import swap).
+# Public exception / result types.
 # ---------------------------------------------------------------------------
 
-class SutGenAICallError(Exception):
+class ClientError(Exception):
     """Raised when an API call fails."""
 
     def __init__(
@@ -47,13 +59,8 @@ class SutGenAICallError(Exception):
         self.raw_response = raw_response
 
 
-# Keep the old name as an alias so any code that still imports GeminiCallError
-# from this module doesn't break during the transition.
-GeminiCallError = SutGenAICallError
-
-
 @dataclass(slots=True)
-class SutGenAICallResult:
+class ClientResult:
     parsed: BaseModel | None
     raw_text: str | None
     raw_response: Any
@@ -61,10 +68,6 @@ class SutGenAICallResult:
     prompt_tokens: int | None = None
     completion_tokens: int | None = None
     total_tokens: int | None = None
-
-
-# Keep old name as alias.
-GeminiCallResult = SutGenAICallResult
 
 
 # ---------------------------------------------------------------------------
@@ -77,11 +80,99 @@ def _truncate(value: str, limit: int = 500) -> str:
     return f"{value[:limit]}… [truncated, {len(value)} chars total]"
 
 
-# Provider rate-limit handling: the NVIDIA endpoint enforces a worker request
-# limit (e.g. "ResourceExhausted: Worker local total request limit reached
-# (16/16)" → HTTP 503). Degrading tiers on these errors wastes calls — back
-# off and retry the SAME call instead.
-_RATE_LIMIT_MARKERS = ("429", "503", "resourceexhausted", "rate limit", "quota", "request limit", "overloaded")
+_THINK_BLOCK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
+_THINK_OPEN_RE = re.compile(r"<think>", re.IGNORECASE)
+
+
+def _strip_think_blocks(text: str) -> str:
+    """Remove reasoning-model <think>...</think> blocks from raw output.
+
+    Handles multiple blocks and a truncated (unclosed) trailing block:
+    an unclosed "<think>" marker and everything after it up to the last
+    JSON-looking brace is dropped conservatively — actually we keep the
+    text after the marker (reasoning text is removed, JSON kept) by
+    stripping only the marker itself when no closing tag exists.
+    """
+    if not text or "<think" not in text.lower():
+        return text
+    # Remove all closed blocks first.
+    stripped = _THINK_BLOCK_RE.sub("", text)
+    # If an unclosed <think> remains, drop the marker but keep the rest
+    # (the JSON payload usually follows the truncated reasoning).
+    if _THINK_OPEN_RE.search(stripped):
+        stripped = _THINK_OPEN_RE.sub("", stripped)
+    return stripped
+
+
+# Provider billing / quota errors fail fast: retrying or degrading tiers
+# only burns calls — the account needs billing action. Per-minute
+# throttling (rate_limit_exceeded, 429 rate limit) must keep backing off.
+_BILLING_URLS = {
+    "openai": "https://platform.openai.com/account/billing",
+    "ollama-cloud": "https://ollama.com/settings",
+    "ollama-local": "",
+}
+_PAYMENT_MARKERS = (
+    "insufficient_quota",
+    "billing_hard_limit",
+    "billing account",
+    "you exceeded your current quota",
+    "no active payment",
+    "billing_hard_limit_exceeded",
+)
+_PER_DAY_QUOTA_MARKERS = (
+    "per day",
+    "perday",
+    "daily",
+    "limit 250 per day",
+)
+
+
+def _is_payment_error(exc: BaseException) -> bool:
+    """True for provider billing/quota errors that will not recover on retry."""
+    text = f"{type(exc).__name__} {exc}".lower()
+    if any(marker in text for marker in _PAYMENT_MARKERS):
+        # Per-minute throttling mentions rate limits without billing —
+        # never treat those as payment errors.
+        if "perminute" in text.replace("-", "").replace("_", "").replace(" ", "") and "freelimit" in text.replace("-", "").replace(" ", ""):
+            return False
+        return True
+    if any(marker in text for marker in ("weekly usage limit", "daily usage limit", "credits exhausted")):
+        return True
+    # Legacy daily-quota shape ("Quota exceeded ... per day") fails fast.
+    if "quota exceeded" in text and any(m in text for m in _PER_DAY_QUOTA_MARKERS):
+        return True
+    # Bare 403 (no rate-limit marker) is an auth/billing stop, not throttling.
+    if "403" in text and "rate limit" not in text and "429" not in text:
+        return True
+    return False
+
+
+def _billing_url(settings: Settings) -> str:
+    """Billing dashboard for the active provider ("" when N/A, e.g. local)."""
+    provider = _get_setting_str(settings, "llm_provider", "openai").lower() or "openai"
+    return _BILLING_URLS.get(provider, _BILLING_URLS["openai"])
+
+
+def _payment_error_message(exc: BaseException, billing_url: str) -> str:
+    text = str(exc)
+    hint = f" See {billing_url}" if billing_url else ""
+    if "per day" in text.lower() or "perday" in text.lower().replace(" ", ""):
+        return (
+            f"LLM billing/quota exhausted (daily limit): {text[:200]}."
+            f" Resets at midnight Pacific.{hint}"
+        )
+    return (
+        f"LLM billing/quota error: {text[:200]}. "
+        f"Enable billing or check usage.{hint}"
+    )
+
+
+# Provider rate-limit handling: transient 429/503/overloaded errors back
+# off and retry the SAME call instead of degrading tiers. "quota exceeded"
+# alone is throttling (retry); billing-specific quota shapes are detected
+# by _is_payment_error first and never reach here as rate limits.
+_RATE_LIMIT_MARKERS = ("429", "503", "resourceexhausted", "rate limit", "request limit", "overloaded", "quota exceeded")
 RATE_LIMIT_MAX_RETRIES = 4
 RATE_LIMIT_BACKOFF_SECONDS = 3.0
 
@@ -94,8 +185,39 @@ TIMEOUT_RETRY_BACKOFF_SECONDS = 2.0
 
 
 def _is_rate_limit_error(exc: BaseException) -> bool:
+    if _is_payment_error(exc):
+        return False
+    status = getattr(exc, "status_code", None)
+    if isinstance(status, int):
+        return status in (429, 503)
     text = f"{type(exc).__name__} {exc}".lower()
     return any(marker in text for marker in _RATE_LIMIT_MARKERS)
+
+
+def _unsupported_parameter(exc: Exception, names: tuple[str, ...]) -> bool:
+    status = getattr(exc, "status_code", None)
+    if status not in (400, 422):
+        return False
+    message = str(exc).lower()
+    return any(name in message for name in names) and any(
+        marker in message for marker in ("unsupported", "not supported", "unrecognized", "unknown", "not allowed")
+    )
+
+
+def _retry_after_seconds(exc: Exception) -> float | None:
+    response = getattr(exc, "response", None)
+    headers = getattr(response, "headers", {})
+    value = headers.get("retry-after")
+    if not isinstance(value, str):
+        return None
+    try:
+        seconds = float(value)
+        return seconds if 0 <= seconds < float("inf") else None
+    except ValueError:
+        try:
+            return max(0.0, (parsedate_to_datetime(value) - datetime.now(timezone.utc)).total_seconds())
+        except (ValueError, TypeError, OverflowError):
+            return None
 
 
 def _patch_schema_for_strict_mode(schema: dict) -> None:
@@ -141,23 +263,42 @@ def _pydantic_to_json_schema(model: type[BaseModel]) -> dict[str, Any]:
 
 
 def _build_json_prompt_suffix(model: type[BaseModel]) -> str:
-    """Fallback: append explicit JSON instructions to the prompt."""
+    """Compact output contract for every mode, including schema-optional providers."""
     schema = model.model_json_schema()
     return (
         "\n\nIMPORTANT: You MUST respond with a single valid JSON object that "
         "strictly conforms to the following JSON Schema. Do NOT include any "
         "markdown fences, commentary, or extra text — only the raw JSON object.\n\n"
-        f"Schema:\n{json.dumps(schema, indent=2)}"
+        f"Schema:\n{json.dumps(schema, ensure_ascii=False, separators=(',', ':'))}"
     )
+
+
+def _get_setting_str(settings: Settings, name: str, default: str = "") -> str:
+    value = getattr(settings, name, default)
+    if not isinstance(value, str):
+        return default
+    value = value.strip()
+    return value or default
+
+
+def _resolve_temperature(settings: Settings, temperature: float | None) -> float:
+    """Method-level temperature wins; otherwise the provider default."""
+    if isinstance(temperature, (int, float)):
+        return float(temperature)
+    fallback = getattr(settings, "llm_temperature", 0.0)
+    return float(fallback) if isinstance(fallback, (int, float)) else 0.0
 
 
 # ---------------------------------------------------------------------------
 # Main client
 # ---------------------------------------------------------------------------
 
-# Uses NVIDIA NIM API (OpenAI-compatible endpoint).
-class SutGenAIClient:
-    """OpenAI-compatible client pointed at the NVIDIA NIM API endpoint."""
+class Client:
+    """Provider-agnostic LLM client (OpenAI-compatible chat.completions).
+
+    Target is chosen by Settings: LLM_PROVIDER selects the base URL
+    (openai / ollama-cloud / ollama-local) and LLM_MODEL the model.
+    """
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -166,68 +307,82 @@ class SutGenAIClient:
         # Read synchronously right after awaiting a call (same task) — the
         # service attaches these to Langfuse generations for cost tracking.
         self.last_usage: dict[str, int | None] | None = None
-        raw_key = (
-            getattr(settings, "opencode_api_key", None)
-            or getattr(settings, "nvidia_api_key", None)
-            or getattr(settings, "openrouter_api_key", None)
-            or ""
-        )
-        api_key = str(raw_key).strip() or "dummy-key"
+        raw_key = _get_setting_str(settings, "llm_api_key")
+        api_key = raw_key or "dummy-key"
+        base_url = _get_setting_str(settings, "llm_base_url", _DEFAULT_BASE_URL)
         self._client = AsyncOpenAI(
             api_key=api_key,
-            base_url=_SUT_BASE_URL,
+            base_url=base_url,
             timeout=self._timeout,
-            max_retries=0,  # we have our own schema→plain retry logic
+            max_retries=0,  # one shared generation budget owns retries
         )
 
+    @limited_generation
     async def _chat_with_retry(self, **kwargs: Any):
-        """chat.completions.create with exponential backoff on rate limits.
-
-        A stalled call (asyncio.TimeoutError) is retried TIMEOUT_MAX_RETRIES
-        times on the SAME call before surfacing: stalls are transient and say
-        nothing about the request shape, so degrading a tier would only trade
-        a slow answer for an unparseable one.
-
-        TimeoutError and non-rate-limit errors otherwise propagate unchanged
-        so the existing tier-fallback logic keeps working.
-        """
-        timeout_attempts = 0
-        while True:
+        """Retry transient failures within the generation's shared HTTP budget."""
+        budget = request_budget.get()
+        assert budget is not None
+        started = asyncio.get_running_loop().time()
+        while budget.attempts < RATE_LIMIT_MAX_RETRIES:
+            budget.attempts += 1
+            logger.info(
+                "LLM request job=%s stage=%s attempt=%d/%d elapsed=%.1fs",
+                job_context.get(), stage_context.get(), budget.attempts,
+                RATE_LIMIT_MAX_RETRIES, asyncio.get_running_loop().time() - started,
+            )
             try:
-                for attempt in range(RATE_LIMIT_MAX_RETRIES):
-                    try:
-                        return await asyncio.wait_for(
-                            self._client.chat.completions.create(**kwargs),  # type: ignore[arg-type]
-                            timeout=self._timeout,
-                        )
-                    except Exception as exc:
-                        if attempt < RATE_LIMIT_MAX_RETRIES - 1 and _is_rate_limit_error(exc):
-                            wait = RATE_LIMIT_BACKOFF_SECONDS * (2**attempt)
-                            logger.warning(
-                                "Provider rate limit (%s: %s) — backing off %.0fs (attempt %d/%d)",
-                                type(exc).__name__,
-                                _truncate(str(exc), 120),
-                                wait,
-                                attempt + 1,
-                                RATE_LIMIT_MAX_RETRIES,
-                            )
-                            await asyncio.sleep(wait)
-                            continue
-                        raise
-            except asyncio.TimeoutError:
-                timeout_attempts += 1
-                if timeout_attempts > TIMEOUT_MAX_RETRIES:
-                    raise
-                logger.warning(
-                    "Provider stall (no response in %.0fs) — retrying same call "
-                    "(timeout retry %d/%d)",
-                    self._timeout,
-                    timeout_attempts,
-                    TIMEOUT_MAX_RETRIES,
+                return await asyncio.wait_for(
+                    self._client.chat.completions.create(**kwargs), timeout=self._timeout,
                 )
-                await asyncio.sleep(TIMEOUT_RETRY_BACKOFF_SECONDS)
-                continue
-        raise RuntimeError("unreachable")
+            except Exception as exc:
+                if _is_payment_error(exc):
+                    raise
+                if isinstance(exc, (asyncio.TimeoutError, APITimeoutError)):
+                    if budget.timeout_retries >= TIMEOUT_MAX_RETRIES:
+                        raise asyncio.TimeoutError() from exc
+                    budget.timeout_retries += 1
+                    delay = TIMEOUT_RETRY_BACKOFF_SECONDS
+                elif _is_rate_limit_error(exc):
+                    delay = RATE_LIMIT_BACKOFF_SECONDS * 2 ** (budget.attempts - 1)
+                    delay += random.uniform(0, 0.5)
+                    retry_after = _retry_after_seconds(exc)
+                    if retry_after is not None:
+                        delay = max(delay, retry_after)
+                else:
+                    raise
+                if budget.attempts >= RATE_LIMIT_MAX_RETRIES:
+                    raise
+                deadline = stage_deadline.get()
+                if deadline is not None and asyncio.get_running_loop().time() + delay >= deadline:
+                    raise ClientError("Provider retry delay exceeds remaining stage deadline") from exc
+                logger.warning(
+                    "LLM retry job=%s stage=%s attempt=%d/%d reason=%s delay=%.1fs",
+                    job_context.get(), stage_context.get(), budget.attempts,
+                    RATE_LIMIT_MAX_RETRIES, type(exc).__name__, delay,
+                )
+                await asyncio.sleep(delay)
+        raise ClientError("LLM request budget exhausted (4 HTTP attempts)")
+
+    async def _request_mode(self, kwargs: dict[str, Any], request_summary: dict[str, Any]):
+        """Only explicit parameter incompatibility permits changing a request."""
+        try:
+            return await self._chat_with_retry(**kwargs)
+        except (asyncio.TimeoutError, APITimeoutError) as exc:
+            raise ClientError("LLM request timed out", request_summary=request_summary) from exc
+        except Exception as exc:
+            self._fail_fast_if_payment_error(exc, request_summary)
+            if "extra_body" in kwargs and _unsupported_parameter(exc, ("reasoning", "extra_body")):
+                # Retry only an explicitly rejected optional parameter.
+                kwargs = {key: value for key, value in kwargs.items() if key != "extra_body"}
+                return await self._request_mode(kwargs, request_summary)
+            if "response_format" in kwargs and _unsupported_parameter(
+                exc, ("response_format", "json_schema", "json_object")
+            ):
+                return None
+            if isinstance(exc, ClientError):
+                raise
+            reason = "Provider rate limit exhausted" if _is_rate_limit_error(exc) else "LLM API call failed"
+            raise ClientError(f"{reason} ({type(exc).__name__})", request_summary=request_summary) from exc
 
     def _record_usage(
         self,
@@ -242,21 +397,31 @@ class SutGenAIClient:
             "total_tokens": total_tokens,
         }
 
+    def _fail_fast_if_payment_error(self, exc: Exception, request_summary: dict[str, Any]) -> None:
+        """Raise ClientError immediately for billing errors (no tier fallback)."""
+        if _is_payment_error(exc):
+            raise ClientError(
+                _payment_error_message(exc, _billing_url(self.settings)),
+                request_summary=request_summary,
+            ) from exc
+
     # ------------------------------------------------------------------
     # generate_structured
     # ------------------------------------------------------------------
 
+    @limited_generation
     async def generate_structured(
         self,
         *,
         model: str,
         prompt: str,
         response_schema: type[T],
-        temperature: float = 0.0,
+        temperature: float | None = None,
         max_tokens: int | None = None,
         disable_reasoning: bool = False,
-    ) -> SutGenAICallResult:
+    ) -> ClientResult:
         """Call the model and parse the response into *response_schema*."""
+        temperature = _resolve_temperature(self.settings, temperature)
         request_summary: dict[str, Any] = {
             "model": model,
             "prompt": _truncate(prompt),
@@ -265,7 +430,7 @@ class SutGenAIClient:
             "disable_reasoning": disable_reasoning,
         }
 
-        messages = [{"role": "user", "content": prompt}]
+        messages = [{"role": "user", "content": prompt + _build_json_prompt_suffix(response_schema)}]
 
         # --- Attempt 1: response_format with json_schema ---
         if not getattr(self.settings, "disable_strict_json_schema", False):
@@ -298,9 +463,8 @@ class SutGenAIClient:
                 model, response_schema.__name__,
             )
             logger.warning(
-                "OpenRouter retry (json_object) triggered for schema=%s — attempt 1 raw preview: %s",
+                "LLM retry (json_object) triggered for schema=%s — attempt 1 returned invalid JSON",
                 response_schema.__name__,
-                _truncate(raw_text or "(empty)", 300),
             )
             raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_json_object_mode(
                 model=model,
@@ -319,21 +483,14 @@ class SutGenAIClient:
                 model, response_schema.__name__,
             )
             logger.warning(
-                "OpenRouter retry (plain) triggered for schema=%s — attempt 2 raw preview: %s",
+                "LLM retry (plain) triggered for schema=%s — attempt 2 returned invalid JSON",
                 response_schema.__name__,
-                _truncate(raw_text or "(empty)", 300),
             )
-            if raw_text is None:
-                fallback_prompt = prompt + _build_json_prompt_suffix(response_schema)
-            else:
-                fallback_prompt = (
-                    "The following response was supposed to be valid JSON matching a "
-                    "specific schema, but failed to parse. Return ONLY the corrected, "
-                    "valid JSON object — no markdown fences, no commentary.\n\n"
-                    f"Schema:\n{json.dumps(response_schema.model_json_schema(), indent=2)}\n\n"
-                    f"Response to fix:\n{raw_text}"
-                )
-            fallback_messages = [{"role": "user", "content": fallback_prompt}]
+            fallback_messages = [*messages, {
+                "role": "user",
+                "content": "The previous response failed schema validation. Repeat the original task "
+                           "using only the original source data. Return only JSON matching the supplied Schema.",
+            }]
             raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_plain(
                 model=model,
                 messages=fallback_messages,
@@ -345,21 +502,21 @@ class SutGenAIClient:
             parsed = self._try_parse(response_schema, raw_text)
 
         if parsed is None:
-            raise SutGenAICallError(
-                f"OpenRouter returned unparseable JSON for schema {response_schema.__name__}. "
+            raise ClientError(
+                f"LLM returned unparseable JSON for schema {response_schema.__name__}. "
                 f"Raw response preview: {_truncate(raw_text or '(empty response)', 300)}",
                 request_summary=request_summary,
                 raw_response=raw_text,
             )
 
         logger.debug(
-            "OpenRouter generate_structured OK schema=%s model=%s",
+            "LLM generate_structured OK schema=%s model=%s",
             response_schema.__name__,
             model,
         )
 
         self._record_usage(prompt_tokens, completion_tokens, total_tokens)
-        return SutGenAICallResult(
+        return ClientResult(
             parsed=parsed,
             raw_text=raw_text,
             raw_response=raw_response,
@@ -373,6 +530,7 @@ class SutGenAIClient:
     # generate_structured_with_image (vision / multimodal)
     # ------------------------------------------------------------------
 
+    @limited_generation
     async def generate_structured_with_image(
         self,
         *,
@@ -381,16 +539,17 @@ class SutGenAIClient:
         image_bytes: bytes,
         image_media_type: str,
         response_schema: type[T],
-        temperature: float = 0.0,
+        temperature: float | None = None,
         max_tokens: int | None = None,
         disable_reasoning: bool = False,
-    ) -> SutGenAICallResult:
+    ) -> ClientResult:
         """Call the model with an image + text prompt and parse the response.
 
         Uses the OpenAI vision API format: the user message contains a list
         of content parts — one ``image_url`` (base64 data-URI) and one
         ``text`` part.
         """
+        temperature = _resolve_temperature(self.settings, temperature)
         b64 = base64.b64encode(image_bytes).decode("ascii")
         data_uri = f"data:{image_media_type};base64,{b64}"
 
@@ -409,7 +568,7 @@ class SutGenAIClient:
                 "role": "user",
                 "content": [
                     {"type": "image_url", "image_url": {"url": data_uri, "detail": "high"}},
-                    {"type": "text", "text": prompt},
+                    {"type": "text", "text": prompt + _build_json_prompt_suffix(response_schema)},
                 ],
             }
         ]
@@ -445,9 +604,8 @@ class SutGenAIClient:
                 model, response_schema.__name__, len(image_bytes),
             )
             logger.warning(
-                "OpenRouter vision retry (json_object) triggered for schema=%s — attempt 1 raw preview: %s",
+                "OpenAI vision retry (json_object) triggered for schema=%s — attempt 1 returned invalid JSON",
                 response_schema.__name__,
-                _truncate(raw_text or "(empty)", 300),
             )
             raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_json_object_mode(
                 model=model,
@@ -466,30 +624,14 @@ class SutGenAIClient:
                 model, response_schema.__name__,
             )
             logger.warning(
-                "OpenRouter vision retry (plain) triggered for schema=%s — attempt 2 raw preview: %s",
+                "OpenAI vision retry (plain) triggered for schema=%s — attempt 2 returned invalid JSON",
                 response_schema.__name__,
-                _truncate(raw_text or "(empty)", 300),
             )
-            if raw_text is None:
-                fallback_prompt = prompt + _build_json_prompt_suffix(response_schema)
-                fallback_messages = [
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "image_url", "image_url": {"url": data_uri, "detail": "high"}},
-                            {"type": "text", "text": fallback_prompt},
-                        ],
-                    }
-                ]
-            else:
-                fallback_prompt = (
-                    "The following response was supposed to be valid JSON matching a "
-                    "specific schema, but failed to parse. Return ONLY the corrected, "
-                    "valid JSON object — no markdown fences, no commentary.\n\n"
-                    f"Schema:\n{json.dumps(response_schema.model_json_schema(), indent=2)}\n\n"
-                    f"Response to fix:\n{raw_text}"
-                )
-                fallback_messages = [{"role": "user", "content": fallback_prompt}]
+            fallback_messages = [*messages, {
+                "role": "user",
+                "content": "The previous response failed schema validation. Repeat the original task "
+                           "using only the original source data. Return only JSON matching the supplied Schema.",
+            }]
             raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_plain(
                 model=model,
                 messages=fallback_messages,
@@ -501,8 +643,8 @@ class SutGenAIClient:
             parsed = self._try_parse(response_schema, raw_text)
 
         if parsed is None:
-            raise SutGenAICallError(
-                f"OpenRouter returned unparseable JSON for schema {response_schema.__name__} "
+            raise ClientError(
+                f"LLM returned unparseable JSON for schema {response_schema.__name__} "
                 f"(vision) [image_size_bytes={len(image_bytes)}, image_media_type={image_media_type}]. "
                 f"Raw response preview: {_truncate(raw_text or '(empty response)', 300)}",
                 request_summary=request_summary,
@@ -510,13 +652,13 @@ class SutGenAIClient:
             )
 
         logger.debug(
-            "OpenRouter generate_structured_with_image OK schema=%s model=%s",
+            "LLM generate_structured_with_image OK schema=%s model=%s",
             response_schema.__name__,
             model,
         )
 
         self._record_usage(prompt_tokens, completion_tokens, total_tokens)
-        return SutGenAICallResult(
+        return ClientResult(
             parsed=parsed,
             raw_text=raw_text,
             raw_response=raw_response,
@@ -530,14 +672,16 @@ class SutGenAIClient:
     # generate_text
     # ------------------------------------------------------------------
 
+    @limited_generation
     async def generate_text(
         self,
         *,
         model: str,
         prompt: str,
-        temperature: float = 0.0,
-    ) -> SutGenAICallResult:
+        temperature: float | None = None,
+    ) -> ClientResult:
         """Call the model for a plain-text response."""
+        temperature = _resolve_temperature(self.settings, temperature)
         request_summary: dict[str, Any] = {
             "model": model,
             "prompt": _truncate(prompt),
@@ -553,14 +697,14 @@ class SutGenAIClient:
         )
 
         if not raw_text or not raw_text.strip():
-            raise SutGenAICallError(
-                "OpenRouter returned an empty text response",
+            raise ClientError(
+                "LLM returned an empty text response",
                 request_summary=request_summary,
                 raw_response=raw_response,
             )
 
         self._record_usage(prompt_tokens, completion_tokens, total_tokens)
-        return SutGenAICallResult(
+        return ClientResult(
             parsed=None,
             raw_text=raw_text.strip(),
             raw_response=raw_response,
@@ -605,48 +749,9 @@ class SutGenAIClient:
             kwargs["max_tokens"] = max_tokens
         if disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
-        try:
-            resp = await self._chat_with_retry(**kwargs)
-        except asyncio.TimeoutError:
-            logger.warning(
-                "LLM: schema call timed out after %.0fs — will retry plain.",
-                self._timeout,
-            )
+        resp = await self._request_mode(kwargs, request_summary)
+        if resp is None:
             return None, None, None, None, None
-        except Exception as exc:
-            # If we sent extra_body and the provider rejected it, retry once
-            # on the SAME tier without extra_body before falling through.
-            if "extra_body" in kwargs:
-                logger.warning(
-                    "LLM: schema call with extra_body raised %s: %s — "
-                    "retrying same tier without extra_body.",
-                    type(exc).__name__, exc,
-                )
-                kwargs.pop("extra_body")
-                try:
-                    resp = await self._chat_with_retry(**kwargs)
-                except asyncio.TimeoutError:
-                    logger.warning(
-                        "LLM: schema call (no extra_body) timed out after %.0fs — will retry plain.",
-                        self._timeout,
-                    )
-                    return None, None, None, None, None
-                except Exception as exc2:
-                    logger.warning(
-                        "LLM: response_format call raised %s: %s — will retry plain.",
-                        type(exc2).__name__, exc2, exc_info=True,
-                    )
-                    return None, None, None, None, None
-            else:
-                # If the proxy rejects the response_format param entirely, fall
-                # through to the plain call path by returning None.
-                logger.warning(
-                    "LLM: response_format call raised %s: %s — will retry plain.",
-                    type(exc).__name__,
-                    exc,
-                    exc_info=True,
-                )
-                return None, None, None, None, None
 
         raw_text = resp.choices[0].message.content if resp.choices else None
         raw_response = resp.model_dump() if hasattr(resp, "model_dump") else str(resp)
@@ -654,10 +759,6 @@ class SutGenAIClient:
         prompt_tokens = getattr(usage, "prompt_tokens", None) if usage else None
         completion_tokens = getattr(usage, "completion_tokens", None) if usage else None
         total_tokens = getattr(usage, "total_tokens", None) if usage else None
-        logger.debug(
-            "OpenRouter _call_with_schema raw_text preview: %s",
-            (raw_text or "")[:300],
-        )
         return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens
 
     async def _call_with_json_object_mode(
@@ -682,46 +783,9 @@ class SutGenAIClient:
             kwargs["max_tokens"] = max_tokens
         if disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
-        try:
-            resp = await self._chat_with_retry(**kwargs)
-        except asyncio.TimeoutError:
-            logger.warning(
-                "LLM: json_object call timed out after %.0fs — will retry plain.",
-                self._timeout,
-            )
+        resp = await self._request_mode(kwargs, request_summary)
+        if resp is None:
             return None, None, None, None, None
-        except Exception as exc:
-            # If we sent extra_body and the provider rejected it, retry once
-            # on the SAME tier without extra_body before falling through.
-            if "extra_body" in kwargs:
-                logger.warning(
-                    "LLM: json_object call with extra_body raised %s: %s — "
-                    "retrying same tier without extra_body.",
-                    type(exc).__name__, exc,
-                )
-                kwargs.pop("extra_body")
-                try:
-                    resp = await self._chat_with_retry(**kwargs)
-                except asyncio.TimeoutError:
-                    logger.warning(
-                        "LLM: json_object call (no extra_body) timed out after %.0fs — will retry plain.",
-                        self._timeout,
-                    )
-                    return None, None, None, None, None
-                except Exception as exc2:
-                    logger.warning(
-                        "LLM: json_object call raised %s: %s — will retry plain.",
-                        type(exc2).__name__, exc2, exc_info=True,
-                    )
-                    return None, None, None, None, None
-            else:
-                logger.warning(
-                    "LLM: json_object call raised %s: %s — will retry plain.",
-                    type(exc).__name__,
-                    exc,
-                    exc_info=True,
-                )
-                return None, None, None, None, None
 
         raw_text = resp.choices[0].message.content if resp.choices else None
         raw_response = resp.model_dump() if hasattr(resp, "model_dump") else str(resp)
@@ -729,10 +793,6 @@ class SutGenAIClient:
         prompt_tokens = getattr(usage, "prompt_tokens", None) if usage else None
         completion_tokens = getattr(usage, "completion_tokens", None) if usage else None
         total_tokens = getattr(usage, "total_tokens", None) if usage else None
-        logger.debug(
-            "OpenRouter _call_with_json_object_mode raw_text preview: %s",
-            (raw_text or "")[:300],
-        )
         return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens
 
     async def _call_plain(
@@ -755,40 +815,9 @@ class SutGenAIClient:
             kwargs["max_tokens"] = max_tokens
         if disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
-        try:
-            resp = await self._chat_with_retry(**kwargs)
-        except asyncio.TimeoutError:
-            raise SutGenAICallError(
-                f"OpenRouter request timed out after {self._timeout:.0f}s",
-                request_summary=request_summary,
-            )
-        except Exception as exc:
-            # If we sent extra_body and the provider rejected it, retry once
-            # on the SAME tier without extra_body before raising.
-            if "extra_body" in kwargs:
-                logger.warning(
-                    "LLM: plain call with extra_body raised %s: %s — "
-                    "retrying same tier without extra_body.",
-                    type(exc).__name__, exc,
-                )
-                kwargs.pop("extra_body")
-                try:
-                    resp = await self._chat_with_retry(**kwargs)
-                except asyncio.TimeoutError:
-                    raise SutGenAICallError(
-                        f"OpenRouter request timed out after {self._timeout:.0f}s",
-                        request_summary=request_summary,
-                    )
-                except Exception as exc2:
-                    raise SutGenAICallError(
-                        f"OpenRouter API call failed: {exc2}",
-                        request_summary=request_summary,
-                    ) from exc2
-            else:
-                raise SutGenAICallError(
-                    f"OpenRouter API call failed: {exc}",
-                    request_summary=request_summary,
-                ) from exc
+        resp = await self._request_mode(kwargs, request_summary)
+        if resp is None:
+            return None, None, None, None, None
 
         raw_text = resp.choices[0].message.content if resp.choices else None
         raw_response = resp.model_dump() if hasattr(resp, "model_dump") else str(resp)
@@ -796,10 +825,6 @@ class SutGenAIClient:
         prompt_tokens = getattr(usage, "prompt_tokens", None) if usage else None
         completion_tokens = getattr(usage, "completion_tokens", None) if usage else None
         total_tokens = getattr(usage, "total_tokens", None) if usage else None
-        logger.debug(
-            "OpenRouter _call_plain raw_text preview: %s",
-            (raw_text or "")[:300],
-        )
         return raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens
 
     @staticmethod
@@ -807,7 +832,9 @@ class SutGenAIClient:
         """Try to parse *raw_text* as JSON into *schema*. Returns None on failure."""
         if not raw_text or not raw_text.strip():
             return None
-        text = raw_text.strip()
+        text = _strip_think_blocks(raw_text).strip()
+        if not text:
+            return None
         # Strip markdown fences if the model wrapped the JSON.
         if text.startswith("```"):
             lines = text.splitlines()
@@ -815,7 +842,7 @@ class SutGenAIClient:
                 line for line in lines[1:]
                 if not line.strip().startswith("```")
             )
-            text = inner.strip()
+            text = _strip_think_blocks(inner).strip()
         try:
             return schema.model_validate_json(text)
         except Exception:

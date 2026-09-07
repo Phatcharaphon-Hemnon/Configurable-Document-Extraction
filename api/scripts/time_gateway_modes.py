@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.core.config import Settings  # noqa: E402
 from app.schemas.llm_schemas import RoutingResponseSchema  # noqa: E402
-from app.services.sut_genai_client import SutGenAIClient  # noqa: E402
+from app.services.client import Client  # noqa: E402
 
 CAP_SECONDS = 60.0
 
@@ -54,7 +54,7 @@ async def _timed(label: str, coro) -> dict:
                 "detail": f"{type(exc).__name__}: {exc}"}
     secs = round(time.perf_counter() - started, 1)
     preview = (raw_text or "(empty)")[:120].replace("\n", " ")
-    parsed = SutGenAIClient._try_parse(RoutingResponseSchema, raw_text)
+    parsed = Client._try_parse(RoutingResponseSchema, raw_text)
     return {"mode": label, "ok": parsed is not None, "secs": secs,
             "detail": f"prompt_tok={prompt_tok} completion_tok={completion_tok} "
                       f"parsed={parsed is not None} preview={preview!r}"}
@@ -62,7 +62,7 @@ async def _timed(label: str, coro) -> dict:
 
 async def main() -> None:
     settings = Settings()
-    client = SutGenAIClient(settings)
+    client = Client(settings)
     model = settings.router_model_name
     messages = [{"role": "user", "content": PROMPT}]
     summary = {"model": model, "probe": True}

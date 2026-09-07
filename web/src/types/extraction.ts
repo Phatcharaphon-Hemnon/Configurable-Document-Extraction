@@ -1,6 +1,6 @@
 export type DocType = 'invoice' | 'purchase_order' | 'delivery_note';
 
-export type GroupStatus = 'queued' | 'uploading' | 'done' | 'error';
+export type GroupStatus = 'queued' | 'uploading' | 'processing' | 'done' | 'error';
 
 export type ExtractedField = {
   name: string;
@@ -71,6 +71,7 @@ export type DocumentGroup = {
   id: string;
   label: string;
   files: File[];
+  jobId?: string;
   status: GroupStatus;
   response?: FileExtractionResponse;
   error?: string;
