@@ -45,7 +45,12 @@ _DEFAULT_BASE_URL = "https://api.openai.com/v1"
 # ---------------------------------------------------------------------------
 
 class ClientError(Exception):
-    """Raised when an API call fails."""
+    """Raised when an API call fails.
+
+    Carries redacted provider details so callers can surface the real
+    gateway message (status/code/request_id) instead of only the exception
+    type name. See extract_provider_error().
+    """
 
     def __init__(
         self,
@@ -53,10 +58,12 @@ class ClientError(Exception):
         *,
         request_summary: dict[str, Any] | None = None,
         raw_response: Any = None,
+        provider_details: dict[str, Any] | None = None,
     ) -> None:
         super().__init__(message)
         self.request_summary = request_summary or {}
         self.raw_response = raw_response
+        self.provider_details = provider_details or {}
 
 
 @dataclass(slots=True)
@@ -78,6 +85,86 @@ def _truncate(value: str, limit: int = 500) -> str:
     if len(value) <= limit:
         return value
     return f"{value[:limit]}… [truncated, {len(value)} chars total]"
+
+
+# Full provider errors live in the OpenAI SDK exception body
+# (body.error.message/code), NOT in str(exc) — str(exc) is only the short
+# message. This helper extracts a redacted, JSON-safe dict so the pipeline
+# can surface status/code/request_id end to end. See docs/provider_errors.md.
+PROVIDER_MESSAGE_LIMIT = 2000
+
+_SECRET_PATTERNS = (
+    re.compile(r"(api[_-]?key|secret|token|password)\s*[:=]\s*\S+", re.IGNORECASE),
+    re.compile(r"Bearer\s+[A-Za-z0-9\-._~+/=]+", re.IGNORECASE),
+    re.compile(r"\bsk-[A-Za-z0-9\-_]{8,}\b"),
+    re.compile(r"\bllx-[A-Za-z0-9\-_]{8,}\b"),
+)
+
+
+def _redact_provider_text(value: str) -> str:
+    """Strip secrets from provider messages (keys/tokens stay server-side)."""
+    redacted = value
+    for pattern in _SECRET_PATTERNS:
+        redacted = pattern.sub("[REDACTED]", redacted)
+    return redacted
+
+
+def extract_provider_error(exc: BaseException) -> dict[str, Any]:
+    """Extract redacted provider details from an OpenAI-compatible SDK error.
+
+    Handles both body shapes: flat {"message": ...} and nested
+    {"error": {"message/code/param/type": ...}}. Never includes raw bodies,
+    headers, or keys — only status/code/message/request_id for display.
+    """
+    error_type = type(exc).__name__
+    status = getattr(exc, "status_code", None)
+    if not isinstance(status, int):
+        status = None
+    request_id = getattr(exc, "request_id", None)
+    if not isinstance(request_id, str) or not request_id:
+        response = getattr(exc, "response", None)
+        headers = getattr(response, "headers", None)
+        try:
+            request_id = headers.get("x-request-id") if headers else None
+        except Exception:
+            request_id = None
+    if not isinstance(request_id, str) or not request_id:
+        request_id = None
+
+    code: Any = getattr(exc, "code", None)
+    param: Any = getattr(exc, "param", None)
+    err_type: Any = getattr(exc, "type", None)
+    message: Any = getattr(exc, "message", None)
+    body = getattr(exc, "body", None)
+    if isinstance(body, dict):
+        nested = body.get("error")
+        err_obj = nested if isinstance(nested, dict) else body
+        if isinstance(err_obj.get("message"), str) and err_obj["message"]:
+            message = err_obj["message"]
+        if err_obj.get("code") is not None:
+            code = err_obj.get("code")
+        if err_obj.get("param") is not None:
+            param = err_obj.get("param")
+        if err_obj.get("type") is not None:
+            err_type = err_obj.get("type")
+    if not isinstance(message, str) or not message:
+        message = str(exc) or error_type
+    message = _redact_provider_text(message)
+    if len(message) > PROVIDER_MESSAGE_LIMIT:
+        message = f"{message[:PROVIDER_MESSAGE_LIMIT]}… [truncated, {len(message)} chars total]"
+
+    details: dict[str, Any] = {"error_type": error_type, "message": message}
+    if status is not None:
+        details["status"] = status
+    if isinstance(code, str) and code:
+        details["code"] = code
+    if isinstance(param, str) and param:
+        details["param"] = param
+    if isinstance(err_type, str) and err_type:
+        details["type"] = err_type
+    if request_id:
+        details["request_id"] = request_id
+    return details
 
 
 _THINK_BLOCK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
@@ -365,9 +452,10 @@ class Client:
                 if deadline is not None and asyncio.get_running_loop().time() + delay >= deadline:
                     raise ClientError("Provider retry delay exceeds remaining stage deadline") from exc
                 logger.warning(
-                    "LLM retry job=%s stage=%s attempt=%d/%d reason=%s delay=%.1fs",
+                    "LLM retry job=%s stage=%s attempt=%d/%d reason=%s delay=%.1fs details=%s",
                     job_context.get(), stage_context.get(), budget.attempts,
                     RATE_LIMIT_MAX_RETRIES, type(exc).__name__, delay,
+                    extract_provider_error(exc),
                 )
                 await asyncio.sleep(delay)
         raise ClientError("LLM request budget exhausted (4 HTTP attempts)")
@@ -377,7 +465,11 @@ class Client:
         try:
             return await self._chat_with_retry(**kwargs)
         except (asyncio.TimeoutError, APITimeoutError) as exc:
-            raise ClientError("LLM request timed out", request_summary=request_summary) from exc
+            raise ClientError(
+                "LLM request timed out",
+                request_summary=request_summary,
+                provider_details={**extract_provider_error(exc), "timeout": True},
+            ) from exc
         except Exception as exc:
             self._fail_fast_if_payment_error(exc, request_summary)
             if "extra_body" in kwargs and _unsupported_parameter(exc, ("reasoning", "extra_body")):
@@ -390,8 +482,22 @@ class Client:
                 return None
             if isinstance(exc, ClientError):
                 raise
+            details = extract_provider_error(exc)
+            # Log the full redacted provider body server-side; the raised
+            # message stays short for UI display, details travel structured.
+            logger.error(
+                "LLM provider error job=%s stage=%s model=%s status=%s code=%s request_id=%s message=%.2000s",
+                job_context.get(), stage_context.get(),
+                kwargs.get("model"), details.get("status"),
+                details.get("code"), details.get("request_id"),
+                details.get("message", ""),
+            )
             reason = "Provider rate limit exhausted" if _is_rate_limit_error(exc) else "LLM API call failed"
-            raise ClientError(f"{reason} ({type(exc).__name__})", request_summary=request_summary) from exc
+            raise ClientError(
+                f"{reason} ({details.get('error_type', type(exc).__name__)})",
+                request_summary=request_summary,
+                provider_details=details,
+            ) from exc
 
     def _record_usage(
         self,
@@ -412,6 +518,7 @@ class Client:
             raise ClientError(
                 _payment_error_message(exc, _billing_url(self.settings)),
                 request_summary=request_summary,
+                provider_details=extract_provider_error(exc),
             ) from exc
 
     # ------------------------------------------------------------------

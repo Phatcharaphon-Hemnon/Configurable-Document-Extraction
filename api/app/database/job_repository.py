@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import sqlite3
 from uuid import UUID
 
 from app.database.models import Database
@@ -110,33 +111,33 @@ class JobRepository:
         validation_errors: list[str],
         fields: list[dict],
         judge_result: dict | None = None,
+        error_details: dict | None = None,
     ) -> None:
         """Complete a job with extraction results."""
         with self.db.connect() as conn:
-            # Update job
-            conn.execute(
-                """
-                UPDATE extraction_jobs
-                SET status = 'completed',
-                    doc_type = ?,
-                    language = ?,
-                    extraction_source = ?,
-                    completeness_score = ?,
-                    needs_review = ?,
-                    validation_errors = ?,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = ?
-                """,
-                (
-                    doc_type,
-                    language,
-                    extraction_source,
-                    completeness_score,
-                    int(needs_review),
-                    json.dumps(validation_errors),
-                    str(job_id),
-                ),
-            )
+            # Update job. Tolerate pre-migration DB files lacking the
+            # error_details column: degrade (drop details) instead of failing
+            # the whole upload with "no such column".
+            try:
+                self._update_job_completion(
+                    conn, job_id, doc_type, language, extraction_source,
+                    completeness_score, needs_review, validation_errors,
+                    error_details, include_error_details=True,
+                )
+            except sqlite3.OperationalError as exc:
+                message = str(exc).lower()
+                if "no such column" in message and "error_details" in message:
+                    logger.warning(
+                        "job %s: error_details column missing, saving without provider details",
+                        job_id,
+                    )
+                    self._update_job_completion(
+                        conn, job_id, doc_type, language, extraction_source,
+                        completeness_score, needs_review, validation_errors,
+                        None, include_error_details=False,
+                    )
+                else:
+                    raise
 
             # Insert fields
             for field in fields:
@@ -173,6 +174,72 @@ class JobRepository:
                         judge_result.get("notes", ""),
                     ),
                 )
+
+    @staticmethod
+    def _update_job_completion(
+        conn,
+        job_id: UUID,
+        doc_type: str,
+        language: str | None,
+        extraction_source: str | None,
+        completeness_score: float,
+        needs_review: bool,
+        validation_errors: list[str],
+        error_details: dict | None,
+        *,
+        include_error_details: bool,
+    ) -> None:
+        """Run the job-completion UPDATE, optionally without error_details."""
+        if include_error_details:
+            conn.execute(
+                """
+                UPDATE extraction_jobs
+                SET status = 'completed',
+                    doc_type = ?,
+                    language = ?,
+                    extraction_source = ?,
+                    completeness_score = ?,
+                    needs_review = ?,
+                    validation_errors = ?,
+                    error_details = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                """,
+                (
+                    doc_type,
+                    language,
+                    extraction_source,
+                    completeness_score,
+                    int(needs_review),
+                    json.dumps(validation_errors),
+                    json.dumps(error_details) if error_details else None,
+                    str(job_id),
+                ),
+            )
+        else:
+            conn.execute(
+                """
+                UPDATE extraction_jobs
+                SET status = 'completed',
+                    doc_type = ?,
+                    language = ?,
+                    extraction_source = ?,
+                    completeness_score = ?,
+                    needs_review = ?,
+                    validation_errors = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                """,
+                (
+                    doc_type,
+                    language,
+                    extraction_source,
+                    completeness_score,
+                    int(needs_review),
+                    json.dumps(validation_errors),
+                    str(job_id),
+                ),
+            )
 
     def list_jobs(
         self,

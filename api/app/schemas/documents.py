@@ -88,6 +88,25 @@ class RoutingDecision(BaseModel):
     reason: str | None = None
 
 
+class ProviderErrorDetails(BaseModel):
+    """Redacted provider failure for UI <details> + logs/Langfuse.
+
+    Never carries raw bodies, headers, or keys — only status/code/message
+    plus routing context (stage/model/provider) to identify the cause.
+    """
+
+    stage: str | None = None
+    provider: str | None = None
+    model: str | None = None
+    error_type: str | None = None
+    status: int | None = None
+    code: str | None = None
+    param: str | None = None
+    type: str | None = None
+    message: str | None = None
+    request_id: str | None = None
+
+
 class ExtractionResult(BaseModel):
     """Result for ONE document. A single upload may yield several results
     (multi-page / multi-document files) — see FileExtractionResponse."""
@@ -104,6 +123,10 @@ class ExtractionResult(BaseModel):
     full_text: str | None = None
     error: str | None = None
     failed_stage: Literal["router", "extractor", "validator", "judge"] | None = None
+    error_details: ProviderErrorDetails | None = Field(
+        default=None,
+        description="Redacted provider failure (status/code/message/request_id) for UI details.",
+    )
     extraction_source: Literal["vision", "ocr", "text"] | None = Field(
         default=None,
         description="How the document was processed: vision (direct image), ocr (OCR fallback), text (PDF text).",

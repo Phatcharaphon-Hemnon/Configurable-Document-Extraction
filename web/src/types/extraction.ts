@@ -14,6 +14,19 @@ export type JudgeIssue = { field: string; message: string; severity: string };
 
 export type JudgeResult = { score: number; issues: JudgeIssue[]; notes: string };
 
+export type ProviderErrorDetails = {
+  stage?: string | null;
+  provider?: string | null;
+  model?: string | null;
+  error_type?: string | null;
+  status?: number | null;
+  code?: string | null;
+  param?: string | null;
+  type?: string | null;
+  message?: string | null;
+  request_id?: string | null;
+};
+
 export type ExtractionResult = {
   id: string;
   doc_type: DocType;
@@ -27,6 +40,7 @@ export type ExtractionResult = {
   full_text?: string | null;
   error?: string | null;
   failed_stage?: 'router' | 'extractor' | 'validator' | 'judge' | null;
+  error_details?: ProviderErrorDetails | null;
   extraction_source?: 'vision' | 'ocr' | 'text' | null;
   auto_evaluation?: EvaluateResponse | null;
 };

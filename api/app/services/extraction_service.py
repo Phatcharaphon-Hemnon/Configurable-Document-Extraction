@@ -30,7 +30,9 @@ from app.schemas.documents import (
     ExtractionResult,
     FileExtractionResponse,
     FileUploadMeta,
+    ProviderErrorDetails,
 )
+from app.services.client import ClientError
 from app.services.field_catalog import is_registerable_new_field, normalize_field_name
 from app.services.field_matching import values_match
 from app.services.job_store import InMemoryJobStore, JobRecord, SQLiteJobStore
@@ -39,6 +41,43 @@ from app.services.rapidocr_client import RapidOCRClient
 from app.services.request_control import job_context
 
 logger = logging.getLogger(__name__)
+
+
+def _provider_error_details(
+    exc: BaseException,
+    *,
+    stage: str,
+    model: str | None,
+    provider: str | None,
+) -> ProviderErrorDetails | None:
+    """Walk the exception chain for ClientError.provider_details.
+
+    Returns None when no provider call was involved (e.g. OCR/validator
+    failures) so UI <details> only appears for real gateway errors.
+    """
+    seen: ProviderErrorDetails | None = None
+    current: BaseException | None = exc
+    while current is not None:
+        details = getattr(current, "provider_details", None)
+        if isinstance(details, dict) and details:
+            seen = ProviderErrorDetails(
+                stage=stage,
+                provider=provider,
+                model=model,
+                error_type=details.get("error_type"),
+                status=details.get("status"),
+                code=details.get("code"),
+                param=details.get("param"),
+                type=details.get("type"),
+                message=details.get("message"),
+                request_id=details.get("request_id"),
+            )
+            break
+        current = current.__cause__ or current.__context__
+    if seen is None and isinstance(exc, ClientError):
+        # Timeout/budget ClientErrors without SDK body still get context.
+        seen = ProviderErrorDetails(stage=stage, provider=provider, model=model)
+    return seen
 
 _IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tiff", ".tif"}
 _IMAGE_CONTENT_TYPES = {
@@ -375,16 +414,34 @@ class DocumentExtractionService:
                 usage=_agent_usage(self.router),
             )
         except Exception as exc:
-            router_gen.end(output={"error": str(exc)}, level="ERROR", status_message=str(exc)[:500])
+            details = _provider_error_details(
+                exc,
+                stage="router",
+                model=self.settings.router_model_name,
+                provider=self.settings.llm_provider,
+            )
+            router_gen.end(
+                output={"error": str(exc), "provider": details.model_dump() if details else None},
+                level="ERROR",
+                status_message=str(exc)[:500],
+            )
             trace.end(level="ERROR")
             self.tracer.flush()
+            if details is not None:
+                logger.error(
+                    "Router provider error model=%s status=%s code=%s request_id=%s message=%.2000s",
+                    details.model, details.status, details.code,
+                    details.request_id, details.message or "",
+                )
             return ExtractionResult(
                 doc_type="invoice",  # placeholder; overwritten below by schema-safe error path
                 fields=[],
                 validation_errors=[f"Router failed: {exc}"],
                 needs_review=True,
+                completeness_score=0.0,
                 error=f"Router failed: {exc}",
                 failed_stage="router",
+                error_details=details,
             )
 
         # --- 2. Extractor (per doc type) ---
@@ -415,10 +472,20 @@ class DocumentExtractionService:
                 usage=_agent_usage(self.extractors[routing.doc_type]),
             )
         except Exception as exc:
-            extract_gen.end(output={"error": str(exc)}, level="ERROR", status_message=str(exc)[:500])
+            details = _provider_error_details(
+                exc,
+                stage="extractor",
+                model=self.settings.extraction_model_name,
+                provider=self.settings.llm_provider,
+            )
+            extract_gen.end(
+                output={"error": str(exc), "provider": details.model_dump() if details else None},
+                level="ERROR",
+                status_message=str(exc)[:500],
+            )
             trace.end(level="ERROR")
             self.tracer.flush()
-            return self._failed(routing, f"Extractor failed: {exc}", "extractor")
+            return self._failed(routing, f"Extractor failed: {exc}", "extractor", error_details=details)
 
         # Determine extraction source. The unified pipeline always OCRs with
         # RapidOCR first, so successful extractions are "ocr". "text" is kept
@@ -508,8 +575,17 @@ class DocumentExtractionService:
                 )
                 needs_review = needs_review or judge_result.score < JUDGE_PASS_SCORE
             except Exception as exc:
-                judge_gen.end(output={"error": str(exc)}, level="ERROR",
-                              status_message=str(exc)[:500])
+                details = _provider_error_details(
+                    exc,
+                    stage="judge",
+                    model=self.settings.judge_model_name,
+                    provider=self.settings.llm_provider,
+                )
+                judge_gen.end(
+                    output={"error": str(exc), "provider": details.model_dump() if details else None},
+                    level="ERROR",
+                    status_message=str(exc)[:500],
+                )
                 validation_errors.append(f"Judge unavailable: {exc}")
                 needs_review = True
                 judge_result = None
@@ -580,6 +656,7 @@ class DocumentExtractionService:
         message: str,
         stage,
         fields: list[ExtractedField] | None = None,
+        error_details: ProviderErrorDetails | None = None,
     ) -> ExtractionResult:
         return ExtractionResult(
             doc_type=routing.doc_type,
@@ -588,8 +665,10 @@ class DocumentExtractionService:
             fields=fields or [],
             validation_errors=[message],
             needs_review=True,
+            completeness_score=0.0,
             error=message,
             failed_stage=stage,
+            error_details=error_details,
         )
 
     # ------------------------------------------------------------------
@@ -642,7 +721,10 @@ class DocumentExtractionService:
             raise
         except Exception as exc:
             self.job_store.fail_job(job_id, str(exc))
-            logger.error("Background extraction %s failed: %s", job_id, type(exc).__name__)
+            logger.error(
+                "Background extraction %s failed: %s: %.500s",
+                job_id, type(exc).__name__, exc,
+            )
         finally:
             job_context.reset(token)
 

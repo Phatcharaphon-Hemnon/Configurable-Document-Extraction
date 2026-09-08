@@ -26,7 +26,20 @@ class Database:
         """Initialize database schema."""
         with self.connect() as conn:
             conn.executescript(SCHEMA_SQL)
-            logger.info("Database initialized: %s", self.db_path)
+        # Lightweight migration for pre-existing DBs, in its own connection:
+        # executescript() above manages its own transaction state, so a
+        # follow-up ALTER on the same handle is not guaranteed to persist.
+        # Check PRAGMA instead of matching exception text (wording varies).
+        # See docs/provider_errors.md.
+        try:
+            with self.connect() as conn:
+                columns = [row["name"] for row in conn.execute("PRAGMA table_info(extraction_jobs)")]
+                if "error_details" not in columns:
+                    conn.execute("ALTER TABLE extraction_jobs ADD COLUMN error_details TEXT")
+                    logger.info("Migrated %s: added error_details column", self.db_path)
+        except Exception as exc:
+            logger.warning("error_details migration skipped for %s: %s", self.db_path, exc)
+        logger.info("Database initialized: %s", self.db_path)
 
     @contextmanager
     def connect(self) -> Generator[sqlite3.Connection, None, None]:
@@ -62,6 +75,7 @@ CREATE TABLE IF NOT EXISTS extraction_jobs (
     validation_errors TEXT DEFAULT '[]',
     error TEXT,
     failed_stage TEXT,
+    error_details TEXT,
     extracted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

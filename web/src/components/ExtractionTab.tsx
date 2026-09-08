@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { PipelineStepper } from './PipelineStepper';
 import { AlertTriangleIcon, CheckCircleIcon } from './icons';
 import { JUDGE_PASS_SCORE, formatFieldValue, getPipelineStage, mergeFieldValues } from '../utils/pipeline';
-import type { CombinedField, DocumentGroup, ExtractionResult } from '../types/extraction';
+import type { CombinedField, DocumentGroup, ExtractionResult, ProviderErrorDetails } from '../types/extraction';
 
 interface ExtractionTabProps {
   group: DocumentGroup | null;
@@ -61,6 +61,40 @@ function downloadJson(fields: CombinedField[], label: string) {
   a.download = `${(label || 'document').replace(/\.[^/.]+$/, '')}.json`;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function ProviderErrorBlock({ details }: { details: ProviderErrorDetails }) {
+  const rows: Array<[string, string]> = [];
+  if (details.provider) rows.push(['Provider', details.provider]);
+  if (details.model) rows.push(['Model', details.model]);
+  if (details.stage) rows.push(['Stage', details.stage]);
+  if (details.status != null) rows.push(['HTTP status', String(details.status)]);
+  if (details.code) rows.push(['Code', details.code]);
+  if (details.error_type) rows.push(['Error type', details.error_type]);
+  if (details.request_id) rows.push(['Request ID', details.request_id]);
+  const copyText = JSON.stringify(details, null, 2);
+  return (
+    <details style={{ marginTop: '8px' }}>
+      <summary className="box-text" style={{ cursor: 'pointer', color: '#CBCBCB' }}>
+        Provider error details (redacted)
+      </summary>
+      <div style={{ marginTop: '6px', overflowX: 'auto' }}>
+        {rows.map(([k, v]) => (
+          <p key={k} className="box-text">
+            <strong>{k}:</strong> {v}
+          </p>
+        ))}
+        {details.message && <p className="box-text" style={{ whiteSpace: 'pre-wrap' }}>{details.message}</p>}
+        <button
+          className="button-secondary"
+          style={{ marginTop: '6px' }}
+          onClick={() => navigator.clipboard.writeText(copyText)}
+        >
+          Copy details
+        </button>
+      </div>
+    </details>
+  );
 }
 
 export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, combinedFields }: ExtractionTabProps) {
@@ -155,6 +189,7 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
           <div className="callout-body">
             <h3>Processing Error</h3>
             <p className="box-text">{doc.error}</p>
+            {doc.error_details && <ProviderErrorBlock details={doc.error_details} />}
           </div>
         </div>
       )}
@@ -169,6 +204,7 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
                 <li key={index}>{error}</li>
               ))}
             </ul>
+            {doc?.error_details && <ProviderErrorBlock details={doc.error_details} />}
           </div>
         </div>
       )}

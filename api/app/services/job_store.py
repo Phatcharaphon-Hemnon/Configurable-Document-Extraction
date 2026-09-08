@@ -87,6 +87,7 @@ class SQLiteJobStore:
                 validation_errors=doc.get("validation_errors", []),
                 fields=doc.get("fields", []),
                 judge_result=doc.get("judge"),
+                error_details=doc.get("error_details"),
             )
         else:
             # No documents, mark as failed
@@ -109,6 +110,12 @@ class SQLiteJobStore:
                 validation_errors = json.loads(validation_errors)
             except ValueError:
                 validation_errors = []
+        error_details = job.get("error_details")
+        if isinstance(error_details, str):
+            try:
+                error_details = json.loads(error_details)
+            except ValueError:
+                error_details = None
         judge = job.get("judge")
         if isinstance(judge, dict) and isinstance(judge.get("issues"), str):
             try:
@@ -135,6 +142,7 @@ class SQLiteJobStore:
                 "judge": judge,
                 "error": job.get("error"),
                 "failed_stage": job.get("failed_stage"),
+                "error_details": error_details,
             }]
         }
 
