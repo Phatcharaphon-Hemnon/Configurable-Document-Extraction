@@ -72,11 +72,45 @@ Re-running skips everything already installed. Ctrl+C stops both.
 
 ## Configuration
 
-Copy `api/.env.example` → `api/.env`:
+### Backend: `api/.env`
+
+1. **Create it.** `./scripts/run_all.sh` creates `api/.env` from
+   `api/.env.example` automatically (and warns if `LLM_API_KEY` is empty).
+   Manual alternative: `cp api/.env.example api/.env`. Never commit this
+   file — it holds live secrets and is git-ignored.
+2. **Edit the 3 lines** that control the whole pipeline:
+   ```bash
+   LLM_PROVIDER=opencode
+   LLM_API_KEY=public       # free-tier key; paste a real key to unlock everything
+   LLM_MODEL=mimo-v2.5-free # any model ID of the active provider
+   ```
+   A standard cloud setup looks the same, e.g.:
+   ```bash
+   LLM_PROVIDER=ollama-cloud
+   LLM_API_KEY=<paste key from https://ollama.com/settings/keys>
+   LLM_MODEL=gpt-oss:20b
+   ```
+   Key sources for all providers: `docs/ai_provider.md`. `LLM_MODEL`
+   accepts **any** model ID of the active provider (registry defaults are
+   just fallbacks).
+3. **Watch the three gotchas:** `deepseek` fails at startup without an
+   explicit `LLM_MODEL` (it ships no default, by design); `openclaw`
+   needs its gateway Chat Completions endpoint enabled first
+   (`gateway.http.endpoints.chatCompletions.enabled: true`); `LLM_BASE_URL`
+   overrides the automatic URL (e.g. Kimi China region
+   `https://api.moonshot.cn/v1`).
+4. **Restart the API** after any `.env` change — config is read at
+   startup, and uvicorn must run from inside `api/` so `.env` resolves.
+5. **Verify.** Fast offline check (from `api/`):
+   ```bash
+   ../.venv/bin/python -c "from app.core.config import Settings; s=Settings(); print(s.llm_provider, s.llm_base_url, s.llm_model)"
+   ```
+   Live check: `python scripts/time_gateway_modes.py`, or extract a
+   document in the UI.
 
 | Variable | Purpose |
 |---|---|
-| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider, the only secret, and the single text model for Router + Extractor + Judge. `LLM_PROVIDER`: `openai` \| `xai` \| `gemini` \| `openrouter` \| `deepseek` \| `kimi` \| `ollama-cloud` \| `ollama-local` \| `mistral` \| `openclaw` \| `opencode` (no native Claude entry — reach it via `openrouter`/`opencode`). `LLM_MODEL` accepts **any** model ID of the active provider (defaults per provider; required for `deepseek`). See `docs/ai_provider.md`. |
+| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider (11 options, see table below), the only secret, and the single text model for Router + Extractor + Judge. No native Claude entry — reach it via `openrouter`/`opencode`. |
 | `OCR_DPI` | PDF render resolution for local RapidOCR (default `300`). |
 | `SUPPORTED_LANGUAGES` | OCR languages (default `en,th`). |
 | `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Optional per-stage overrides (default: `LLM_MODEL`). |
@@ -84,8 +118,15 @@ Copy `api/.env.example` → `api/.env`:
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_HOST` | Optional tracing. |
 | `TEMPORAL_ENABLED` | `false` (default) = in-process pipeline; `true` = Temporal workflow (run `python -m app.temporal.worker` from `api/`). |
 
-Frontend: `web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api`
-(the `/api` prefix is required).
+### Frontend: `web/.env`
+
+Created from `web/.env.example` by `run_all.sh` (or `cp` manually). The
+only variable is the backend URL — local dev works with the file's empty
+default (the Vite dev proxy forwards `/api` to `http://127.0.0.1:8000`
+automatically); production sets e.g.
+`VITE_API_BASE_URL=https://your-backend.onrender.com/api`. The `/api`
+prefix is required. Never put secrets behind `VITE_` — it compiles into
+the browser bundle (on Vercel, leave "Sensitive" unchecked).
 
 ### Provider base URLs (automatic per `LLM_PROVIDER`)
 
@@ -105,13 +146,7 @@ Frontend: `web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api`
 
 `LLM_API_KEY` falls back to the provider's native key var when set; either
 one works. `LLM_BASE_URL` overrides the table (e.g. Kimi China region
-`https://api.moonshot.cn/v1`). Example — any Zen model ID works as-is:
-
-```bash
-LLM_PROVIDER=opencode
-LLM_API_KEY=<your key>
-LLM_MODEL=nemotron-3.5-lightning-free   # or gpt-5.4-mini, kimi-k2.6, …
-```
+`https://api.moonshot.cn/v1`). Full per-provider setup: `docs/ai_provider.md`.
 
 ## API contract
 
