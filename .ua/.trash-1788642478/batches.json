@@ -1,0 +1,3042 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "louvain",
+  "totalFiles": 189,
+  "totalBatches": 20,
+  "exportsByPath": {
+    "api/app/__init__.py": [],
+    "api/app/agents/__init__.py": [],
+    "api/app/agents/extractors.py": [
+      "_build_prompt",
+      "_coerce_value",
+      "BaseExtractor",
+      "InvoiceExtractor",
+      "PurchaseOrderExtractor",
+      "DeliveryNoteExtractor",
+      "build_extractors"
+    ],
+    "api/app/agents/judge.py": [
+      "JudgeAgent"
+    ],
+    "api/app/agents/router.py": [
+      "RouterAgent",
+      "image_data_url"
+    ],
+    "api/app/agents/validator.py": [
+      "_check_array_rows",
+      "_try_parse_date",
+      "ValidatorAgent"
+    ],
+    "api/app/api/__init__.py": [],
+    "api/app/api/routes.py": [
+      "_get_client_id",
+      "_content_fingerprint",
+      "home",
+      "health",
+      "extract_document",
+      "list_templates",
+      "create_batch",
+      "get_job",
+      "evaluate",
+      "list_jobs",
+      "get_stats",
+      "get_job_history",
+      "delete_job"
+    ],
+    "api/app/core/__init__.py": [],
+    "api/app/core/config.py": [
+      "Settings",
+      "get_settings"
+    ],
+    "api/app/core/security.py": [
+      "sanitize_document_text",
+      "is_suspicious",
+      "check_evidence"
+    ],
+    "api/app/database/__init__.py": [],
+    "api/app/database/job_repository.py": [
+      "JobRepository"
+    ],
+    "api/app/database/models.py": [
+      "Database"
+    ],
+    "api/app/guards/__init__.py": [],
+    "api/app/guards/audit_logger.py": [
+      "SecurityEventType",
+      "SecurityEvent",
+      "AuditLogger"
+    ],
+    "api/app/guards/content_guard.py": [
+      "ContentLimits",
+      "ContentValidationError",
+      "validate_document_text",
+      "validate_prompt_text",
+      "validate_field_name",
+      "validate_field_value",
+      "validate_source_span",
+      "validate_extraction_fields",
+      "validate_extraction_errors"
+    ],
+    "api/app/guards/input_guard.py": [
+      "InputValidationError",
+      "_detect_mime_type",
+      "_get_image_dimensions",
+      "validate_file_upload",
+      "validate_image_dimensions"
+    ],
+    "api/app/guards/output_guard.py": [
+      "OutputValidationError",
+      "clean_llm_output",
+      "validate_output_schema",
+      "sanitize_error_message",
+      "validate_llm_response_length",
+      "detect_suspicious_output"
+    ],
+    "api/app/guards/pii_detector.py": [
+      "PIIType",
+      "PIIMatch",
+      "PIIDetector"
+    ],
+    "api/app/guards/rate_limiter.py": [
+      "RateLimitConfig",
+      "RateLimitState",
+      "RateLimiter"
+    ],
+    "api/app/guards/timeout_guard.py": [
+      "StageTimeoutConfig",
+      "StageTimeoutError",
+      "stage_timeout",
+      "run_with_timeout",
+      "TimeoutGuard"
+    ],
+    "api/app/main.py": [
+      "root_health_check"
+    ],
+    "api/app/observability/__init__.py": [],
+    "api/app/observability/langfuse.py": [
+      "_truncate_text",
+      "build_mask_function",
+      "LangfuseTracer",
+      "_Trace",
+      "_Span"
+    ],
+    "api/app/schemas/__init__.py": [],
+    "api/app/schemas/documents.py": [
+      "DocumentLanguage",
+      "FieldDefinition",
+      "CatalogReconcileReport",
+      "ExtractedField",
+      "ValidationResult",
+      "JudgeIssue",
+      "JudgeResult",
+      "RoutingDecision",
+      "ExtractionResult",
+      "FileUploadMeta",
+      "FileExtractionResponse",
+      "TemplateSchema",
+      "EvaluateRequest",
+      "EvaluateResponse",
+      "BatchCreateResponse",
+      "BatchStatusResponse"
+    ],
+    "api/app/schemas/llm_schemas.py": [
+      "RoutingResponseSchema",
+      "ExtractedFieldEntry",
+      "ExtractionResponseSchema",
+      "JudgeIssueEntry",
+      "JudgeResponseSchema"
+    ],
+    "api/app/services/__init__.py": [],
+    "api/app/services/date_formats.py": [],
+    "api/app/services/extraction_service.py": [
+      "_is_image_file",
+      "_image_media_type",
+      "_is_numeric_value",
+      "_all_numeric_spans_verbatim",
+      "_agent_usage",
+      "UploadedFilePart",
+      "DocumentExtractionService",
+      "coerce_field_dates"
+    ],
+    "api/app/services/field_catalog.py": [
+      "min_new_field_confidence",
+      "normalize_field_name",
+      "is_placeholder_value",
+      "is_sane_field_name",
+      "is_registerable_new_field",
+      "skip_reason",
+      "RegistrationOutcome",
+      "register_discovered_fields",
+      "FieldCatalog"
+    ],
+    "api/app/services/field_matching.py": [
+      "_normalize_name",
+      "build_alternative_name_lookup",
+      "_try_parse_number",
+      "_try_parse_date",
+      "_try_parse_json_container",
+      "_normalize_ws",
+      "values_match"
+    ],
+    "api/app/services/job_store.py": [
+      "JobRecord",
+      "InMemoryJobStore",
+      "SQLiteJobStore"
+    ],
+    "api/app/services/knowledge_base.py": [
+      "_cap_by_size",
+      "KnowledgeBaseRepository"
+    ],
+    "api/app/services/rag_retriever.py": [
+      "tokenize",
+      "example_text",
+      "_tfidf_cosine",
+      "rank_examples",
+      "build_index",
+      "score_against_index"
+    ],
+    "api/app/services/rapidocr_client.py": [
+      "RapidOCRError",
+      "_sha256",
+      "_is_pdf_bytes",
+      "RapidOCRClient"
+    ],
+    "api/app/services/sut_genai_client.py": [
+      "SutGenAICallError",
+      "SutGenAICallResult",
+      "_truncate",
+      "_is_rate_limit_error",
+      "_patch_schema_for_strict_mode",
+      "_pydantic_to_json_schema",
+      "_build_json_prompt_suffix",
+      "SutGenAIClient"
+    ],
+    "api/app/temporal/__init__.py": [],
+    "api/app/temporal/activities.py": [
+      "_settings",
+      "_catalog",
+      "_ocr_client",
+      "parse_activity",
+      "classify_activity",
+      "extract_activity",
+      "validate_activity",
+      "judge_activity"
+    ],
+    "api/app/temporal/client.py": [
+      "get_temporal_client"
+    ],
+    "api/app/temporal/worker.py": [
+      "main"
+    ],
+    "api/app/temporal/workflows.py": [
+      "_timeout",
+      "ExtractDocumentWorkflow"
+    ],
+    "api/data/extraction.db": [],
+    "api/logs/security_audit.jsonl": [],
+    "api/scripts/ingest_kb.py": [
+      "_read_json",
+      "ingest",
+      "main"
+    ],
+    "api/scripts/review_discovered_fields.py": [
+      "_catalog_dir",
+      "_norm",
+      "_flag",
+      "collect",
+      "main"
+    ],
+    "api/scripts/run_eval.py": [
+      "expected_doc_type",
+      "load_gold",
+      "mock_predict",
+      "summarize",
+      "build_report",
+      "_eval_one_real",
+      "_eval_one_mock",
+      "run_real",
+      "main"
+    ],
+    "api/scripts/time_gateway_modes.py": [
+      "_timed",
+      "main"
+    ],
+    "api/tests/__init__.py": [],
+    "api/tests/test_all.py": [
+      "_sample_images",
+      "test_is_pdf_bytes_detects_magic_and_extension",
+      "test_parse_file_rejects_empty_content",
+      "test_parse_file_rejects_unsupported_type",
+      "test_missing_rapidocr_raises_clear_error",
+      "test_raw_to_lines_box_shape",
+      "test_raw_to_lines_sorts_reading_order",
+      "test_raw_to_lines_empty_result",
+      "test_cache_returns_without_rerunning_engine",
+      "_mocked_service",
+      "test_extract_group_uses_local_ocr_not_cloud",
+      "test_extraction_source_is_ocr",
+      "test_image_bytes_fallback_ocrs_without_vision",
+      "test_quality_images_produce_text",
+      "test_quality_end_to_end_with_real_ocr"
+    ],
+    "api/tests/test_async_jobs.py": [
+      "_settings",
+      "_service",
+      "test_extract_group_reuses_caller_job_id",
+      "test_cancelled_extraction_marks_job_failed",
+      "test_run_job_swallows_unexpected_errors",
+      "test_get_batch_status_surfaces_failed_error",
+      "test_sqlite_fail_stale_queued",
+      "test_service_init_cleans_stale_queued"
+    ],
+    "api/tests/test_catalog_registration.py": [
+      "_catalog",
+      "_field",
+      "test_known_field_not_marked_new",
+      "test_new_field_registered_with_reasons_for_skips",
+      "test_rerun_is_idempotent",
+      "test_threshold_env_override",
+      "test_invalid_threshold_env_falls_back",
+      "test_temporal_extract_activity_registers_new_fields"
+    ],
+    "api/tests/test_extraction_filters.py": [
+      "test_placeholders_detected",
+      "test_real_values_not_placeholders",
+      "test_sane_names",
+      "test_registerable_requires_real_value_and_confidence"
+    ],
+    "api/tests/test_field_catalog.py": [
+      "catalog",
+      "test_normalize_is_case_and_spacing_only",
+      "test_exact_lookup_matches_normalization_only",
+      "test_aliases_are_NEVER_used",
+      "test_add_fields_appends_and_dedups",
+      "test_compact_prompt_is_small",
+      "test_issue9_hallucinated_new_field_not_registered",
+      "test_issue9_evidenced_new_field_still_registered",
+      "test_issue3_invented_name_without_label_not_registered"
+    ],
+    "api/tests/test_guards.py": [
+      "TestRateLimiter",
+      "TestContentGuard",
+      "TestTimeoutGuard",
+      "TestAuditLogger",
+      "TestPIIDetector",
+      "TestOutputGuard",
+      "TestInputGuard",
+      "TestCheckEvidence",
+      "TestValidatorWithImageExtraction"
+    ],
+    "api/tests/test_langfuse_tracing.py": [
+      "FakeHandle",
+      "FakeClient",
+      "_settings",
+      "test_disabled_tracer_is_noop",
+      "test_nested_generations_carry_model_and_usage",
+      "test_mask_redacts_pii_and_truncates",
+      "test_mask_none_detector_returns_none",
+      "test_agent_usage_reads_last_usage",
+      "test_agent_usage_ignores_mocks_and_missing",
+      "test_service_emits_nested_trace_with_scores"
+    ],
+    "api/tests/test_pipeline.py": [
+      "_settings",
+      "_make_service",
+      "_routing",
+      "_extraction",
+      "_judge",
+      "test_full_pipeline_happy_path",
+      "test_new_field_is_registered_in_catalog",
+      "test_missing_evidence_flags_needs_review",
+      "test_low_judge_score_flags_needs_review",
+      "test_judge_skipped_when_clean",
+      "test_judge_runs_when_confidence_below_skip_threshold",
+      "test_router_failure_returns_failed_stage",
+      "test_evaluate_precision_recall",
+      "test_request_meta_shape",
+      "test_issue7_phantom_array_rows_flagged",
+      "test_issue7_real_array_rows_pass",
+      "test_issue8_judge_not_skipped_for_nonverbatim_numeric_span",
+      "test_issue8_judge_prompt_includes_source_spans"
+    ],
+    "api/tests/test_rag_retriever.py": [
+      "_examples",
+      "test_tokenize_basic",
+      "test_rank_prefers_lexically_similar",
+      "test_rank_limit_and_empty_query_stable_order",
+      "test_build_index_and_score_roundtrip",
+      "test_ingest_reads_real_kb_layout"
+    ],
+    "api/tests/test_rate_limit_retry.py": [
+      "_client_with_responses",
+      "test_rate_limit_detection",
+      "test_rate_limit_retries_same_call_then_succeeds",
+      "test_rate_limit_gives_up_after_max_retries",
+      "test_non_rate_limit_error_not_retried",
+      "test_timeout_not_swallowed",
+      "test_timeout_retries_same_call_then_succeeds"
+    ],
+    "api/tests/test_review_discovered_fields.py": [
+      "_write_catalog",
+      "test_collect_lists_only_ai_discovered",
+      "test_collect_flags_suspicious_names",
+      "test_collect_handles_missing_and_broken_files"
+    ],
+    "api/tests/test_run_eval.py": [
+      "test_default_subset_covers_all_doc_types",
+      "test_expected_doc_type_prefixes",
+      "test_mock_predict_drops_one_adds_one",
+      "test_summarize_and_report_shape"
+    ],
+    "api/tests/test_schemas.py": [
+      "test_doc_type_is_fixed_to_three_types",
+      "test_extracted_field_value_union",
+      "test_extraction_result_defaults",
+      "test_issue1_spanless_entry_rejected_by_schema"
+    ],
+    "api/tests/test_security.py": [
+      "test_sanitize_neutralizes_injection_phrases",
+      "test_sanitize_strips_role_tags",
+      "test_sanitize_caps_length",
+      "test_is_suspicious",
+      "test_evidence_missing_span_is_flagged",
+      "test_evidence_span_not_in_document_is_flagged",
+      "test_evidence_matching_span_passes",
+      "test_evidence_null_value_passes",
+      "test_issue4_scattered_span_rejected",
+      "test_issue4_short_span_requires_contiguous",
+      "test_issue5_empty_document_text_flags",
+      "test_issue5_none_document_text_flags",
+      "test_issue6_image_bypass_still_verifies"
+    ],
+    "api/tests/test_sut_genai_client_retry.py": [
+      "_DummySchema",
+      "_make_client",
+      "_make_response",
+      "test_retry_resends_original_prompt_for_grounding",
+      "test_retry_reports_token_usage"
+    ],
+    "api/tests/test_sut_genai_fallback_tiers.py": [
+      "_DummySchema",
+      "_make_client",
+      "_make_response",
+      "test_three_tier_fallback_order",
+      "test_error_message_contains_raw_preview",
+      "test_max_tokens_passed_through",
+      "test_disable_strict_skips_tier_one",
+      "test_disable_reasoning_sends_extra_body",
+      "test_no_reasoning_extra_body_by_default",
+      "test_reasoning_extra_body_retry_on_rejection",
+      "test_issue2_fallback_repair_keeps_document_and_rules"
+    ],
+    "api/tests/test_sut_genai_schema.py": [
+      "SubModel",
+      "AnotherModel",
+      "ComplexModel",
+      "_assert_strict_schema",
+      "test_pydantic_to_json_schema_strict_mode"
+    ],
+    "api/tests/test_sut_genai_timeout.py": [
+      "_DummySchema",
+      "_fast_settings",
+      "_hang_forever",
+      "test_generate_structured_raises_on_timeout",
+      "test_generate_structured_with_image_raises_on_timeout",
+      "test_schema_timeout_triggers_plain_fallback",
+      "test_generate_text_raises_on_timeout"
+    ],
+    "data/extraction.db": [],
+    "logs/security_audit.jsonl": [],
+    "web/src/App.tsx": [],
+    "web/src/api/client.ts": [
+      "fetchApiRoot",
+      "extractFiles",
+      "getJobStatus",
+      "pollJobStatus",
+      "evaluateExtraction"
+    ],
+    "web/src/components/EvaluationTab.tsx": [
+      "EvaluationTab"
+    ],
+    "web/src/components/ExtractionTab.tsx": [
+      "ExtractionTab"
+    ],
+    "web/src/components/HistoryTab.tsx": [
+      "HistoryTab"
+    ],
+    "web/src/components/PipelineStepper.tsx": [
+      "PipelineStepper"
+    ],
+    "web/src/components/Sidebar.tsx": [
+      "Sidebar"
+    ],
+    "web/src/components/ToastStack.tsx": [
+      "ToastStack"
+    ],
+    "web/src/components/icons.tsx": [
+      "UploadIcon",
+      "AlertTriangleIcon",
+      "CheckCircleIcon",
+      "FileTextIcon",
+      "SunIcon",
+      "MoonIcon",
+      "InfoIcon"
+    ],
+    "web/src/hooks/useDocumentQueue.ts": [
+      "useDocumentQueue"
+    ],
+    "web/src/hooks/useEvaluation.ts": [
+      "useEvaluation"
+    ],
+    "web/src/hooks/useRecommendedModel.ts": [
+      "useRecommendedModel"
+    ],
+    "web/src/hooks/useTheme.ts": [
+      "useTheme"
+    ],
+    "web/src/lib/toast.ts": [
+      "getToasts",
+      "subscribeToasts",
+      "pushToast",
+      "dismissToast"
+    ],
+    "web/src/main.tsx": [],
+    "web/src/types/extraction.ts": [],
+    "web/src/utils/pipeline.ts": [
+      "PIPELINE_STEPS",
+      "JUDGE_PASS_SCORE",
+      "getPipelineStage",
+      "mergeFieldValues",
+      "formatFieldValue"
+    ],
+    "web/src/vite-env.d.ts": [],
+    "web/vite.config.ts": []
+  },
+  "batches": [
+    {
+      "batchIndex": 1,
+      "files": [
+        {
+          "path": "web/src/App.tsx",
+          "language": "typescript",
+          "sizeLines": 112,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/api/client.ts",
+          "language": "typescript",
+          "sizeLines": 89,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/components/EvaluationTab.tsx",
+          "language": "typescript",
+          "sizeLines": 137,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/components/ExtractionTab.tsx",
+          "language": "typescript",
+          "sizeLines": 328,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/components/HistoryTab.tsx",
+          "language": "typescript",
+          "sizeLines": 227,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/components/PipelineStepper.tsx",
+          "language": "typescript",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/components/Sidebar.tsx",
+          "language": "typescript",
+          "sizeLines": 74,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/components/ToastStack.tsx",
+          "language": "typescript",
+          "sizeLines": 22,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/components/icons.tsx",
+          "language": "typescript",
+          "sizeLines": 78,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/hooks/useDocumentQueue.ts",
+          "language": "typescript",
+          "sizeLines": 118,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/hooks/useEvaluation.ts",
+          "language": "typescript",
+          "sizeLines": 107,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/hooks/useRecommendedModel.ts",
+          "language": "typescript",
+          "sizeLines": 19,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/hooks/useTheme.ts",
+          "language": "typescript",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/lib/toast.ts",
+          "language": "typescript",
+          "sizeLines": 41,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/main.tsx",
+          "language": "typescript",
+          "sizeLines": 10,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/types/extraction.ts",
+          "language": "typescript",
+          "sizeLines": 86,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/src/utils/pipeline.ts",
+          "language": "typescript",
+          "sizeLines": 32,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "web/src/App.tsx": [
+          "web/src/components/EvaluationTab.tsx",
+          "web/src/components/ExtractionTab.tsx",
+          "web/src/components/HistoryTab.tsx",
+          "web/src/components/Sidebar.tsx",
+          "web/src/components/ToastStack.tsx",
+          "web/src/components/icons.tsx",
+          "web/src/hooks/useDocumentQueue.ts",
+          "web/src/hooks/useRecommendedModel.ts",
+          "web/src/hooks/useTheme.ts",
+          "web/src/types/extraction.ts"
+        ],
+        "web/src/api/client.ts": [
+          "web/src/types/extraction.ts"
+        ],
+        "web/src/components/EvaluationTab.tsx": [
+          "web/src/components/icons.tsx",
+          "web/src/hooks/useEvaluation.ts",
+          "web/src/types/extraction.ts",
+          "web/src/utils/pipeline.ts"
+        ],
+        "web/src/components/ExtractionTab.tsx": [
+          "web/src/components/PipelineStepper.tsx",
+          "web/src/components/icons.tsx",
+          "web/src/types/extraction.ts",
+          "web/src/utils/pipeline.ts"
+        ],
+        "web/src/components/HistoryTab.tsx": [],
+        "web/src/components/PipelineStepper.tsx": [
+          "web/src/utils/pipeline.ts"
+        ],
+        "web/src/components/Sidebar.tsx": [
+          "web/src/components/icons.tsx",
+          "web/src/types/extraction.ts"
+        ],
+        "web/src/components/ToastStack.tsx": [
+          "web/src/components/icons.tsx",
+          "web/src/lib/toast.ts"
+        ],
+        "web/src/components/icons.tsx": [],
+        "web/src/hooks/useDocumentQueue.ts": [
+          "web/src/api/client.ts",
+          "web/src/lib/toast.ts",
+          "web/src/types/extraction.ts"
+        ],
+        "web/src/hooks/useEvaluation.ts": [
+          "web/src/api/client.ts",
+          "web/src/types/extraction.ts"
+        ],
+        "web/src/hooks/useRecommendedModel.ts": [
+          "web/src/api/client.ts"
+        ],
+        "web/src/hooks/useTheme.ts": [],
+        "web/src/lib/toast.ts": [],
+        "web/src/main.tsx": [
+          "web/src/App.tsx",
+          "web/src/styles.css"
+        ],
+        "web/src/types/extraction.ts": [],
+        "web/src/utils/pipeline.ts": [
+          "web/src/types/extraction.ts"
+        ]
+      },
+      "neighborMap": {
+        "web/src/main.tsx": [
+          {
+            "path": "web/src/styles.css",
+            "batchIndex": 20,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 2,
+      "files": [
+        {
+          "path": "api/app/api/routes.py",
+          "language": "python",
+          "sizeLines": 327,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/guards/__init__.py",
+          "language": "python",
+          "sizeLines": 50,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/guards/audit_logger.py",
+          "language": "python",
+          "sizeLines": 309,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/guards/content_guard.py",
+          "language": "python",
+          "sizeLines": 268,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/guards/input_guard.py",
+          "language": "python",
+          "sizeLines": 248,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/guards/output_guard.py",
+          "language": "python",
+          "sizeLines": 281,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/guards/pii_detector.py",
+          "language": "python",
+          "sizeLines": 166,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/guards/rate_limiter.py",
+          "language": "python",
+          "sizeLines": 155,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/guards/timeout_guard.py",
+          "language": "python",
+          "sizeLines": 187,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/main.py",
+          "language": "python",
+          "sizeLines": 29,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/observability/langfuse.py",
+          "language": "python",
+          "sizeLines": 305,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/extraction_service.py",
+          "language": "python",
+          "sizeLines": 684,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/field_matching.py",
+          "language": "python",
+          "sizeLines": 196,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_guards.py",
+          "language": "python",
+          "sizeLines": 626,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_langfuse_tracing.py",
+          "language": "python",
+          "sizeLines": 199,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_pipeline.py",
+          "language": "python",
+          "sizeLines": 300,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "api/app/api/routes.py": [
+          "api/app/core/config.py",
+          "api/app/guards/audit_logger.py",
+          "api/app/guards/input_guard.py",
+          "api/app/guards/output_guard.py",
+          "api/app/guards/rate_limiter.py",
+          "api/app/schemas/documents.py",
+          "api/app/services/extraction_service.py"
+        ],
+        "api/app/guards/__init__.py": [
+          "api/app/guards/audit_logger.py",
+          "api/app/guards/content_guard.py",
+          "api/app/guards/input_guard.py",
+          "api/app/guards/output_guard.py",
+          "api/app/guards/pii_detector.py",
+          "api/app/guards/rate_limiter.py",
+          "api/app/guards/timeout_guard.py"
+        ],
+        "api/app/guards/audit_logger.py": [],
+        "api/app/guards/content_guard.py": [],
+        "api/app/guards/input_guard.py": [],
+        "api/app/guards/output_guard.py": [],
+        "api/app/guards/pii_detector.py": [],
+        "api/app/guards/rate_limiter.py": [],
+        "api/app/guards/timeout_guard.py": [],
+        "api/app/main.py": [
+          "api/app/api/routes.py",
+          "api/app/core/config.py"
+        ],
+        "api/app/observability/langfuse.py": [
+          "api/app/core/config.py"
+        ],
+        "api/app/services/extraction_service.py": [
+          "api/app/agents/extractors.py",
+          "api/app/agents/judge.py",
+          "api/app/agents/router.py",
+          "api/app/agents/validator.py",
+          "api/app/core/config.py",
+          "api/app/core/security.py",
+          "api/app/guards/audit_logger.py",
+          "api/app/guards/content_guard.py",
+          "api/app/guards/pii_detector.py",
+          "api/app/guards/timeout_guard.py",
+          "api/app/observability/langfuse.py",
+          "api/app/schemas/documents.py",
+          "api/app/services/field_catalog.py",
+          "api/app/services/field_matching.py",
+          "api/app/services/job_store.py",
+          "api/app/services/knowledge_base.py",
+          "api/app/services/rapidocr_client.py"
+        ],
+        "api/app/services/field_matching.py": [],
+        "api/tests/test_guards.py": [
+          "api/app/guards/audit_logger.py",
+          "api/app/guards/content_guard.py",
+          "api/app/guards/output_guard.py",
+          "api/app/guards/pii_detector.py",
+          "api/app/guards/rate_limiter.py",
+          "api/app/guards/timeout_guard.py"
+        ],
+        "api/tests/test_langfuse_tracing.py": [
+          "api/app/guards/pii_detector.py",
+          "api/app/observability/langfuse.py",
+          "api/app/services/extraction_service.py"
+        ],
+        "api/tests/test_pipeline.py": [
+          "api/app/core/config.py",
+          "api/app/schemas/documents.py",
+          "api/app/services/extraction_service.py"
+        ]
+      },
+      "neighborMap": {
+        "api/app/api/routes.py": [
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          },
+          {
+            "path": "api/app/schemas/documents.py",
+            "batchIndex": 3,
+            "symbols": [
+              "DocumentLanguage",
+              "FieldDefinition",
+              "CatalogReconcileReport",
+              "ExtractedField",
+              "ValidationResult",
+              "JudgeIssue",
+              "JudgeResult",
+              "RoutingDecision",
+              "ExtractionResult",
+              "FileUploadMeta",
+              "FileExtractionResponse",
+              "TemplateSchema",
+              "EvaluateRequest",
+              "EvaluateResponse",
+              "BatchCreateResponse",
+              "BatchStatusResponse"
+            ]
+          }
+        ],
+        "api/app/main.py": [
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          }
+        ],
+        "api/app/observability/langfuse.py": [
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          }
+        ],
+        "api/app/services/extraction_service.py": [
+          {
+            "path": "api/app/agents/extractors.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_build_prompt",
+              "_coerce_value",
+              "BaseExtractor",
+              "InvoiceExtractor",
+              "PurchaseOrderExtractor",
+              "DeliveryNoteExtractor",
+              "build_extractors"
+            ]
+          },
+          {
+            "path": "api/app/agents/judge.py",
+            "batchIndex": 4,
+            "symbols": [
+              "JudgeAgent"
+            ]
+          },
+          {
+            "path": "api/app/agents/router.py",
+            "batchIndex": 4,
+            "symbols": [
+              "RouterAgent",
+              "image_data_url"
+            ]
+          },
+          {
+            "path": "api/app/agents/validator.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_check_array_rows",
+              "_try_parse_date",
+              "ValidatorAgent"
+            ]
+          },
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          },
+          {
+            "path": "api/app/core/security.py",
+            "batchIndex": 3,
+            "symbols": [
+              "sanitize_document_text",
+              "is_suspicious",
+              "check_evidence"
+            ]
+          },
+          {
+            "path": "api/app/schemas/documents.py",
+            "batchIndex": 3,
+            "symbols": [
+              "DocumentLanguage",
+              "FieldDefinition",
+              "CatalogReconcileReport",
+              "ExtractedField",
+              "ValidationResult",
+              "JudgeIssue",
+              "JudgeResult",
+              "RoutingDecision",
+              "ExtractionResult",
+              "FileUploadMeta",
+              "FileExtractionResponse",
+              "TemplateSchema",
+              "EvaluateRequest",
+              "EvaluateResponse",
+              "BatchCreateResponse",
+              "BatchStatusResponse"
+            ]
+          },
+          {
+            "path": "api/app/services/field_catalog.py",
+            "batchIndex": 3,
+            "symbols": [
+              "min_new_field_confidence",
+              "normalize_field_name",
+              "is_placeholder_value",
+              "is_sane_field_name",
+              "is_registerable_new_field",
+              "skip_reason",
+              "RegistrationOutcome",
+              "register_discovered_fields",
+              "FieldCatalog"
+            ]
+          },
+          {
+            "path": "api/app/services/job_store.py",
+            "batchIndex": 5,
+            "symbols": [
+              "JobRecord",
+              "InMemoryJobStore",
+              "SQLiteJobStore"
+            ]
+          },
+          {
+            "path": "api/app/services/knowledge_base.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_cap_by_size",
+              "KnowledgeBaseRepository"
+            ]
+          },
+          {
+            "path": "api/app/services/rapidocr_client.py",
+            "batchIndex": 3,
+            "symbols": [
+              "RapidOCRError",
+              "_sha256",
+              "_is_pdf_bytes",
+              "RapidOCRClient"
+            ]
+          },
+          {
+            "path": "api/tests/test_async_jobs.py",
+            "batchIndex": 5,
+            "symbols": [
+              "_settings",
+              "_service",
+              "test_extract_group_reuses_caller_job_id",
+              "test_cancelled_extraction_marks_job_failed",
+              "test_run_job_swallows_unexpected_errors",
+              "test_get_batch_status_surfaces_failed_error",
+              "test_sqlite_fail_stale_queued",
+              "test_service_init_cleans_stale_queued"
+            ]
+          }
+        ],
+        "api/tests/test_pipeline.py": [
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          },
+          {
+            "path": "api/app/schemas/documents.py",
+            "batchIndex": 3,
+            "symbols": [
+              "DocumentLanguage",
+              "FieldDefinition",
+              "CatalogReconcileReport",
+              "ExtractedField",
+              "ValidationResult",
+              "JudgeIssue",
+              "JudgeResult",
+              "RoutingDecision",
+              "ExtractionResult",
+              "FileUploadMeta",
+              "FileExtractionResponse",
+              "TemplateSchema",
+              "EvaluateRequest",
+              "EvaluateResponse",
+              "BatchCreateResponse",
+              "BatchStatusResponse"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 3,
+      "files": [
+        {
+          "path": "api/app/agents/extractors.py",
+          "language": "python",
+          "sizeLines": 187,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/agents/validator.py",
+          "language": "python",
+          "sizeLines": 160,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/core/security.py",
+          "language": "python",
+          "sizeLines": 112,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/schemas/documents.py",
+          "language": "python",
+          "sizeLines": 174,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/date_formats.py",
+          "language": "python",
+          "sizeLines": 17,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/field_catalog.py",
+          "language": "python",
+          "sizeLines": 325,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/knowledge_base.py",
+          "language": "python",
+          "sizeLines": 98,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/rapidocr_client.py",
+          "language": "python",
+          "sizeLines": 254,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/temporal/activities.py",
+          "language": "python",
+          "sizeLines": 108,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_all.py",
+          "language": "python",
+          "sizeLines": 267,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_catalog_registration.py",
+          "language": "python",
+          "sizeLines": 129,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_extraction_filters.py",
+          "language": "python",
+          "sizeLines": 43,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_field_catalog.py",
+          "language": "python",
+          "sizeLines": 138,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_schemas.py",
+          "language": "python",
+          "sizeLines": 64,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_security.py",
+          "language": "python",
+          "sizeLines": 90,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "api/app/agents/extractors.py": [
+          "api/app/core/config.py",
+          "api/app/core/security.py",
+          "api/app/schemas/documents.py",
+          "api/app/schemas/llm_schemas.py",
+          "api/app/services/field_catalog.py",
+          "api/app/services/sut_genai_client.py"
+        ],
+        "api/app/agents/validator.py": [
+          "api/app/core/security.py",
+          "api/app/schemas/documents.py",
+          "api/app/services/date_formats.py",
+          "api/app/services/field_catalog.py"
+        ],
+        "api/app/core/security.py": [],
+        "api/app/schemas/documents.py": [],
+        "api/app/services/date_formats.py": [],
+        "api/app/services/field_catalog.py": [
+          "api/app/schemas/documents.py"
+        ],
+        "api/app/services/knowledge_base.py": [
+          "api/app/schemas/documents.py",
+          "api/app/services/field_catalog.py",
+          "api/app/services/rag_retriever.py"
+        ],
+        "api/app/services/rapidocr_client.py": [],
+        "api/app/temporal/activities.py": [
+          "api/app/core/config.py",
+          "api/app/core/security.py",
+          "api/app/schemas/documents.py",
+          "api/app/services/field_catalog.py",
+          "api/app/services/knowledge_base.py",
+          "api/app/services/rapidocr_client.py"
+        ],
+        "api/tests/test_all.py": [
+          "api/app/services/rapidocr_client.py"
+        ],
+        "api/tests/test_catalog_registration.py": [
+          "api/app/schemas/documents.py",
+          "api/app/services/field_catalog.py"
+        ],
+        "api/tests/test_extraction_filters.py": [
+          "api/app/services/field_catalog.py"
+        ],
+        "api/tests/test_field_catalog.py": [
+          "api/app/services/field_catalog.py"
+        ],
+        "api/tests/test_schemas.py": [
+          "api/app/schemas/documents.py"
+        ],
+        "api/tests/test_security.py": [
+          "api/app/core/security.py"
+        ]
+      },
+      "neighborMap": {
+        "api/app/agents/extractors.py": [
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          },
+          {
+            "path": "api/app/schemas/llm_schemas.py",
+            "batchIndex": 4,
+            "symbols": [
+              "RoutingResponseSchema",
+              "ExtractedFieldEntry",
+              "ExtractionResponseSchema",
+              "JudgeIssueEntry",
+              "JudgeResponseSchema"
+            ]
+          },
+          {
+            "path": "api/app/services/sut_genai_client.py",
+            "batchIndex": 4,
+            "symbols": [
+              "SutGenAICallError",
+              "SutGenAICallResult",
+              "_truncate",
+              "_is_rate_limit_error",
+              "_patch_schema_for_strict_mode",
+              "_pydantic_to_json_schema",
+              "_build_json_prompt_suffix",
+              "SutGenAIClient"
+            ]
+          },
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/app/agents/validator.py": [
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/app/core/security.py": [
+          {
+            "path": "api/app/agents/judge.py",
+            "batchIndex": 4,
+            "symbols": [
+              "JudgeAgent"
+            ]
+          },
+          {
+            "path": "api/app/agents/router.py",
+            "batchIndex": 4,
+            "symbols": [
+              "RouterAgent",
+              "image_data_url"
+            ]
+          },
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/app/schemas/documents.py": [
+          {
+            "path": "api/app/agents/judge.py",
+            "batchIndex": 4,
+            "symbols": [
+              "JudgeAgent"
+            ]
+          },
+          {
+            "path": "api/app/agents/router.py",
+            "batchIndex": 4,
+            "symbols": [
+              "RouterAgent",
+              "image_data_url"
+            ]
+          },
+          {
+            "path": "api/app/api/routes.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_get_client_id",
+              "_content_fingerprint",
+              "home",
+              "health",
+              "extract_document",
+              "list_templates",
+              "create_batch",
+              "get_job",
+              "evaluate",
+              "list_jobs",
+              "get_stats",
+              "get_job_history",
+              "delete_job"
+            ]
+          },
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          },
+          {
+            "path": "api/tests/test_async_jobs.py",
+            "batchIndex": 5,
+            "symbols": [
+              "_settings",
+              "_service",
+              "test_extract_group_reuses_caller_job_id",
+              "test_cancelled_extraction_marks_job_failed",
+              "test_run_job_swallows_unexpected_errors",
+              "test_get_batch_status_surfaces_failed_error",
+              "test_sqlite_fail_stale_queued",
+              "test_service_init_cleans_stale_queued"
+            ]
+          },
+          {
+            "path": "api/tests/test_pipeline.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_settings",
+              "_make_service",
+              "_routing",
+              "_extraction",
+              "_judge",
+              "test_full_pipeline_happy_path",
+              "test_new_field_is_registered_in_catalog",
+              "test_missing_evidence_flags_needs_review",
+              "test_low_judge_score_flags_needs_review",
+              "test_judge_skipped_when_clean",
+              "test_judge_runs_when_confidence_below_skip_threshold",
+              "test_router_failure_returns_failed_stage",
+              "test_evaluate_precision_recall",
+              "test_request_meta_shape",
+              "test_issue7_phantom_array_rows_flagged",
+              "test_issue7_real_array_rows_pass",
+              "test_issue8_judge_not_skipped_for_nonverbatim_numeric_span",
+              "test_issue8_judge_prompt_includes_source_spans"
+            ]
+          }
+        ],
+        "api/app/services/field_catalog.py": [
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/app/services/knowledge_base.py": [
+          {
+            "path": "api/app/services/rag_retriever.py",
+            "batchIndex": 6,
+            "symbols": [
+              "tokenize",
+              "example_text",
+              "_tfidf_cosine",
+              "rank_examples",
+              "build_index",
+              "score_against_index"
+            ]
+          },
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/app/services/rapidocr_client.py": [
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/app/temporal/activities.py": [
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          },
+          {
+            "path": "api/app/temporal/worker.py",
+            "batchIndex": 7,
+            "symbols": [
+              "main"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 4,
+      "files": [
+        {
+          "path": "api/app/agents/judge.py",
+          "language": "python",
+          "sizeLines": 97,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/agents/router.py",
+          "language": "python",
+          "sizeLines": 90,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/core/config.py",
+          "language": "python",
+          "sizeLines": 141,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/schemas/llm_schemas.py",
+          "language": "python",
+          "sizeLines": 49,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/sut_genai_client.py",
+          "language": "python",
+          "sizeLines": 837,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/scripts/time_gateway_modes.py",
+          "language": "python",
+          "sizeLines": 108,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_rate_limit_retry.py",
+          "language": "python",
+          "sizeLines": 118,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_sut_genai_client_retry.py",
+          "language": "python",
+          "sizeLines": 137,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_sut_genai_fallback_tiers.py",
+          "language": "python",
+          "sizeLines": 314,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_sut_genai_schema.py",
+          "language": "python",
+          "sizeLines": 60,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_sut_genai_timeout.py",
+          "language": "python",
+          "sizeLines": 126,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "api/app/agents/judge.py": [
+          "api/app/core/config.py",
+          "api/app/core/security.py",
+          "api/app/schemas/documents.py",
+          "api/app/schemas/llm_schemas.py",
+          "api/app/services/sut_genai_client.py"
+        ],
+        "api/app/agents/router.py": [
+          "api/app/core/config.py",
+          "api/app/core/security.py",
+          "api/app/schemas/documents.py",
+          "api/app/schemas/llm_schemas.py",
+          "api/app/services/sut_genai_client.py"
+        ],
+        "api/app/core/config.py": [],
+        "api/app/schemas/llm_schemas.py": [],
+        "api/app/services/sut_genai_client.py": [
+          "api/app/core/config.py"
+        ],
+        "api/scripts/time_gateway_modes.py": [
+          "api/app/core/config.py",
+          "api/app/schemas/llm_schemas.py",
+          "api/app/services/sut_genai_client.py"
+        ],
+        "api/tests/test_rate_limit_retry.py": [
+          "api/app/services/sut_genai_client.py"
+        ],
+        "api/tests/test_sut_genai_client_retry.py": [
+          "api/app/core/config.py",
+          "api/app/services/sut_genai_client.py"
+        ],
+        "api/tests/test_sut_genai_fallback_tiers.py": [
+          "api/app/core/config.py",
+          "api/app/services/sut_genai_client.py"
+        ],
+        "api/tests/test_sut_genai_schema.py": [
+          "api/app/services/sut_genai_client.py"
+        ],
+        "api/tests/test_sut_genai_timeout.py": [
+          "api/app/core/config.py",
+          "api/app/services/sut_genai_client.py"
+        ]
+      },
+      "neighborMap": {
+        "api/app/agents/judge.py": [
+          {
+            "path": "api/app/core/security.py",
+            "batchIndex": 3,
+            "symbols": [
+              "sanitize_document_text",
+              "is_suspicious",
+              "check_evidence"
+            ]
+          },
+          {
+            "path": "api/app/schemas/documents.py",
+            "batchIndex": 3,
+            "symbols": [
+              "DocumentLanguage",
+              "FieldDefinition",
+              "CatalogReconcileReport",
+              "ExtractedField",
+              "ValidationResult",
+              "JudgeIssue",
+              "JudgeResult",
+              "RoutingDecision",
+              "ExtractionResult",
+              "FileUploadMeta",
+              "FileExtractionResponse",
+              "TemplateSchema",
+              "EvaluateRequest",
+              "EvaluateResponse",
+              "BatchCreateResponse",
+              "BatchStatusResponse"
+            ]
+          },
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/app/agents/router.py": [
+          {
+            "path": "api/app/core/security.py",
+            "batchIndex": 3,
+            "symbols": [
+              "sanitize_document_text",
+              "is_suspicious",
+              "check_evidence"
+            ]
+          },
+          {
+            "path": "api/app/schemas/documents.py",
+            "batchIndex": 3,
+            "symbols": [
+              "DocumentLanguage",
+              "FieldDefinition",
+              "CatalogReconcileReport",
+              "ExtractedField",
+              "ValidationResult",
+              "JudgeIssue",
+              "JudgeResult",
+              "RoutingDecision",
+              "ExtractionResult",
+              "FileUploadMeta",
+              "FileExtractionResponse",
+              "TemplateSchema",
+              "EvaluateRequest",
+              "EvaluateResponse",
+              "BatchCreateResponse",
+              "BatchStatusResponse"
+            ]
+          },
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/app/core/config.py": [
+          {
+            "path": "api/app/agents/extractors.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_build_prompt",
+              "_coerce_value",
+              "BaseExtractor",
+              "InvoiceExtractor",
+              "PurchaseOrderExtractor",
+              "DeliveryNoteExtractor",
+              "build_extractors"
+            ]
+          },
+          {
+            "path": "api/app/api/routes.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_get_client_id",
+              "_content_fingerprint",
+              "home",
+              "health",
+              "extract_document",
+              "list_templates",
+              "create_batch",
+              "get_job",
+              "evaluate",
+              "list_jobs",
+              "get_stats",
+              "get_job_history",
+              "delete_job"
+            ]
+          },
+          {
+            "path": "api/app/main.py",
+            "batchIndex": 2,
+            "symbols": [
+              "root_health_check"
+            ]
+          },
+          {
+            "path": "api/app/observability/langfuse.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_truncate_text",
+              "build_mask_function",
+              "LangfuseTracer",
+              "_Trace",
+              "_Span"
+            ]
+          },
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          },
+          {
+            "path": "api/app/temporal/activities.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_settings",
+              "_catalog",
+              "_ocr_client",
+              "parse_activity",
+              "classify_activity",
+              "extract_activity",
+              "validate_activity",
+              "judge_activity"
+            ]
+          },
+          {
+            "path": "api/app/temporal/client.py",
+            "batchIndex": 7,
+            "symbols": [
+              "get_temporal_client"
+            ]
+          },
+          {
+            "path": "api/tests/test_async_jobs.py",
+            "batchIndex": 5,
+            "symbols": [
+              "_settings",
+              "_service",
+              "test_extract_group_reuses_caller_job_id",
+              "test_cancelled_extraction_marks_job_failed",
+              "test_run_job_swallows_unexpected_errors",
+              "test_get_batch_status_surfaces_failed_error",
+              "test_sqlite_fail_stale_queued",
+              "test_service_init_cleans_stale_queued"
+            ]
+          },
+          {
+            "path": "api/tests/test_pipeline.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_settings",
+              "_make_service",
+              "_routing",
+              "_extraction",
+              "_judge",
+              "test_full_pipeline_happy_path",
+              "test_new_field_is_registered_in_catalog",
+              "test_missing_evidence_flags_needs_review",
+              "test_low_judge_score_flags_needs_review",
+              "test_judge_skipped_when_clean",
+              "test_judge_runs_when_confidence_below_skip_threshold",
+              "test_router_failure_returns_failed_stage",
+              "test_evaluate_precision_recall",
+              "test_request_meta_shape",
+              "test_issue7_phantom_array_rows_flagged",
+              "test_issue7_real_array_rows_pass",
+              "test_issue8_judge_not_skipped_for_nonverbatim_numeric_span",
+              "test_issue8_judge_prompt_includes_source_spans"
+            ]
+          }
+        ],
+        "api/app/schemas/llm_schemas.py": [
+          {
+            "path": "api/app/agents/extractors.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_build_prompt",
+              "_coerce_value",
+              "BaseExtractor",
+              "InvoiceExtractor",
+              "PurchaseOrderExtractor",
+              "DeliveryNoteExtractor",
+              "build_extractors"
+            ]
+          }
+        ],
+        "api/app/services/sut_genai_client.py": [
+          {
+            "path": "api/app/agents/extractors.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_build_prompt",
+              "_coerce_value",
+              "BaseExtractor",
+              "InvoiceExtractor",
+              "PurchaseOrderExtractor",
+              "DeliveryNoteExtractor",
+              "build_extractors"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 5,
+      "files": [
+        {
+          "path": "api/app/database/__init__.py",
+          "language": "python",
+          "sizeLines": 6,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/database/job_repository.py",
+          "language": "python",
+          "sizeLines": 269,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/database/models.py",
+          "language": "python",
+          "sizeLines": 98,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/job_store.py",
+          "language": "python",
+          "sizeLines": 162,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_async_jobs.py",
+          "language": "python",
+          "sizeLines": 124,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "api/app/database/__init__.py": [
+          "api/app/database/job_repository.py",
+          "api/app/database/models.py"
+        ],
+        "api/app/database/job_repository.py": [
+          "api/app/database/models.py"
+        ],
+        "api/app/database/models.py": [],
+        "api/app/services/job_store.py": [
+          "api/app/database/job_repository.py",
+          "api/app/database/models.py"
+        ],
+        "api/tests/test_async_jobs.py": [
+          "api/app/core/config.py",
+          "api/app/schemas/documents.py",
+          "api/app/services/extraction_service.py",
+          "api/app/services/job_store.py"
+        ]
+      },
+      "neighborMap": {
+        "api/app/services/job_store.py": [
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ],
+        "api/tests/test_async_jobs.py": [
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          },
+          {
+            "path": "api/app/schemas/documents.py",
+            "batchIndex": 3,
+            "symbols": [
+              "DocumentLanguage",
+              "FieldDefinition",
+              "CatalogReconcileReport",
+              "ExtractedField",
+              "ValidationResult",
+              "JudgeIssue",
+              "JudgeResult",
+              "RoutingDecision",
+              "ExtractionResult",
+              "FileUploadMeta",
+              "FileExtractionResponse",
+              "TemplateSchema",
+              "EvaluateRequest",
+              "EvaluateResponse",
+              "BatchCreateResponse",
+              "BatchStatusResponse"
+            ]
+          },
+          {
+            "path": "api/app/services/extraction_service.py",
+            "batchIndex": 2,
+            "symbols": [
+              "_is_image_file",
+              "_image_media_type",
+              "_is_numeric_value",
+              "_all_numeric_spans_verbatim",
+              "_agent_usage",
+              "UploadedFilePart",
+              "DocumentExtractionService",
+              "coerce_field_dates"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 6,
+      "files": [
+        {
+          "path": "api/app/services/rag_retriever.py",
+          "language": "python",
+          "sizeLines": 132,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/scripts/ingest_kb.py",
+          "language": "python",
+          "sizeLines": 122,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_rag_retriever.py",
+          "language": "python",
+          "sizeLines": 86,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "api/app/services/rag_retriever.py": [],
+        "api/scripts/ingest_kb.py": [
+          "api/app/services/rag_retriever.py"
+        ],
+        "api/tests/test_rag_retriever.py": [
+          "api/app/services/rag_retriever.py",
+          "api/scripts/ingest_kb.py"
+        ]
+      },
+      "neighborMap": {
+        "api/app/services/rag_retriever.py": [
+          {
+            "path": "api/app/services/knowledge_base.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_cap_by_size",
+              "KnowledgeBaseRepository"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 7,
+      "files": [
+        {
+          "path": "api/app/temporal/client.py",
+          "language": "python",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/temporal/worker.py",
+          "language": "python",
+          "sizeLines": 47,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/temporal/workflows.py",
+          "language": "python",
+          "sizeLines": 78,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "api/app/temporal/client.py": [
+          "api/app/core/config.py"
+        ],
+        "api/app/temporal/worker.py": [
+          "api/app/temporal/activities.py",
+          "api/app/temporal/client.py",
+          "api/app/temporal/workflows.py"
+        ],
+        "api/app/temporal/workflows.py": []
+      },
+      "neighborMap": {
+        "api/app/temporal/client.py": [
+          {
+            "path": "api/app/core/config.py",
+            "batchIndex": 4,
+            "symbols": [
+              "Settings",
+              "get_settings"
+            ]
+          }
+        ],
+        "api/app/temporal/worker.py": [
+          {
+            "path": "api/app/temporal/activities.py",
+            "batchIndex": 3,
+            "symbols": [
+              "_settings",
+              "_catalog",
+              "_ocr_client",
+              "parse_activity",
+              "classify_activity",
+              "extract_activity",
+              "validate_activity",
+              "judge_activity"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 8,
+      "files": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "language": "yaml",
+          "sizeLines": 79,
+          "fileCategory": "infra"
+        },
+        {
+          "path": ".github/workflows/sonarcloud.yml",
+          "language": "yaml",
+          "sizeLines": 26,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        ".github/workflows/ci.yml": [],
+        ".github/workflows/sonarcloud.yml": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 9,
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "language": "markdown",
+          "sizeLines": 95,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "language": "markdown",
+          "sizeLines": 207,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.md",
+          "language": "markdown",
+          "sizeLines": 160,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "eval_report.md",
+          "language": "markdown",
+          "sizeLines": 80,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "ruff.toml",
+          "language": "toml",
+          "sizeLines": 26,
+          "fileCategory": "config"
+        },
+        {
+          "path": "sonar-project.properties",
+          "language": "properties",
+          "sizeLines": 31,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "AGENTS.md": [],
+        "CHANGELOG.md": [],
+        "README.md": [],
+        "eval_report.md": [],
+        "ruff.toml": [],
+        "sonar-project.properties": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 10,
+      "files": [
+        {
+          "path": "api/app/data/knowledge_base/few_shot/delivery_note/example_01.json",
+          "language": "json",
+          "sizeLines": 20,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/delivery_note/example_02.json",
+          "language": "json",
+          "sizeLines": 18,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/delivery_note/example_03.json",
+          "language": "json",
+          "sizeLines": 17,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/delivery_note/example_04.json",
+          "language": "json",
+          "sizeLines": 19,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/delivery_note/example_05.json",
+          "language": "json",
+          "sizeLines": 15,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "api/app/data/knowledge_base/few_shot/delivery_note/example_01.json": [],
+        "api/app/data/knowledge_base/few_shot/delivery_note/example_02.json": [],
+        "api/app/data/knowledge_base/few_shot/delivery_note/example_03.json": [],
+        "api/app/data/knowledge_base/few_shot/delivery_note/example_04.json": [],
+        "api/app/data/knowledge_base/few_shot/delivery_note/example_05.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 11,
+      "files": [
+        {
+          "path": "api/app/data/knowledge_base/few_shot/invoice/example_01.json",
+          "language": "json",
+          "sizeLines": 30,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/invoice/example_02.json",
+          "language": "json",
+          "sizeLines": 18,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/invoice/example_03.json",
+          "language": "json",
+          "sizeLines": 18,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/invoice/example_04.json",
+          "language": "json",
+          "sizeLines": 23,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/invoice/example_05.json",
+          "language": "json",
+          "sizeLines": 16,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "api/app/data/knowledge_base/few_shot/invoice/example_01.json": [],
+        "api/app/data/knowledge_base/few_shot/invoice/example_02.json": [],
+        "api/app/data/knowledge_base/few_shot/invoice/example_03.json": [],
+        "api/app/data/knowledge_base/few_shot/invoice/example_04.json": [],
+        "api/app/data/knowledge_base/few_shot/invoice/example_05.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 12,
+      "files": [
+        {
+          "path": "api/app/data/knowledge_base/few_shot/po/example_01.json",
+          "language": "json",
+          "sizeLines": 21,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/po/example_02.json",
+          "language": "json",
+          "sizeLines": 22,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/po/example_03.json",
+          "language": "json",
+          "sizeLines": 19,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/po/example_04.json",
+          "language": "json",
+          "sizeLines": 21,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/few_shot/po/example_05.json",
+          "language": "json",
+          "sizeLines": 11,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "api/app/data/knowledge_base/few_shot/po/example_01.json": [],
+        "api/app/data/knowledge_base/few_shot/po/example_02.json": [],
+        "api/app/data/knowledge_base/few_shot/po/example_03.json": [],
+        "api/app/data/knowledge_base/few_shot/po/example_04.json": [],
+        "api/app/data/knowledge_base/few_shot/po/example_05.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 13,
+      "files": [
+        {
+          "path": "api/app/data/knowledge_base/field_catalog/delivery_note_fields.json",
+          "language": "json",
+          "sizeLines": 22,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/field_catalog/invoice_fields.json",
+          "language": "json",
+          "sizeLines": 173,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/field_catalog/po_fields.json",
+          "language": "json",
+          "sizeLines": 24,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "api/app/data/knowledge_base/field_catalog/delivery_note_fields.json": [],
+        "api/app/data/knowledge_base/field_catalog/invoice_fields.json": [],
+        "api/app/data/knowledge_base/field_catalog/po_fields.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 14,
+      "files": [
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/delivery_note_01.json",
+          "language": "json",
+          "sizeLines": 20,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/delivery_note_02.json",
+          "language": "json",
+          "sizeLines": 20,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/delivery_note_03.json",
+          "language": "json",
+          "sizeLines": 28,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/delivery_note_04.json",
+          "language": "json",
+          "sizeLines": 24,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/delivery_note_05.json",
+          "language": "json",
+          "sizeLines": 20,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/delivery_note_06.json",
+          "language": "json",
+          "sizeLines": 20,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/invoice_01.json",
+          "language": "json",
+          "sizeLines": 25,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/invoice_02.json",
+          "language": "json",
+          "sizeLines": 25,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/invoice_03.json",
+          "language": "json",
+          "sizeLines": 25,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/invoice_04.json",
+          "language": "json",
+          "sizeLines": 25,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/invoice_05.json",
+          "language": "json",
+          "sizeLines": 41,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/invoice_06.json",
+          "language": "json",
+          "sizeLines": 33,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/invoice_07.json",
+          "language": "json",
+          "sizeLines": 33,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/po_01.json",
+          "language": "json",
+          "sizeLines": 37,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/po_02.json",
+          "language": "json",
+          "sizeLines": 25,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/po_03.json",
+          "language": "json",
+          "sizeLines": 31,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/po_04.json",
+          "language": "json",
+          "sizeLines": 25,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/po_05.json",
+          "language": "json",
+          "sizeLines": 37,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/po_06.json",
+          "language": "json",
+          "sizeLines": 31,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/ground_truth/po_07.json",
+          "language": "json",
+          "sizeLines": 31,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "api/app/data/knowledge_base/ground_truth/delivery_note_01.json": [],
+        "api/app/data/knowledge_base/ground_truth/delivery_note_02.json": [],
+        "api/app/data/knowledge_base/ground_truth/delivery_note_03.json": [],
+        "api/app/data/knowledge_base/ground_truth/delivery_note_04.json": [],
+        "api/app/data/knowledge_base/ground_truth/delivery_note_05.json": [],
+        "api/app/data/knowledge_base/ground_truth/delivery_note_06.json": [],
+        "api/app/data/knowledge_base/ground_truth/invoice_01.json": [],
+        "api/app/data/knowledge_base/ground_truth/invoice_02.json": [],
+        "api/app/data/knowledge_base/ground_truth/invoice_03.json": [],
+        "api/app/data/knowledge_base/ground_truth/invoice_04.json": [],
+        "api/app/data/knowledge_base/ground_truth/invoice_05.json": [],
+        "api/app/data/knowledge_base/ground_truth/invoice_06.json": [],
+        "api/app/data/knowledge_base/ground_truth/invoice_07.json": [],
+        "api/app/data/knowledge_base/ground_truth/po_01.json": [],
+        "api/app/data/knowledge_base/ground_truth/po_02.json": [],
+        "api/app/data/knowledge_base/ground_truth/po_03.json": [],
+        "api/app/data/knowledge_base/ground_truth/po_04.json": [],
+        "api/app/data/knowledge_base/ground_truth/po_05.json": [],
+        "api/app/data/knowledge_base/ground_truth/po_06.json": [],
+        "api/app/data/knowledge_base/ground_truth/po_07.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 15,
+      "files": [
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51008164525.json",
+          "language": "json",
+          "sizeLines": 23,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51008164969.json",
+          "language": "json",
+          "sizeLines": 36,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51008164991.json",
+          "language": "json",
+          "sizeLines": 26,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51008164992.json",
+          "language": "json",
+          "sizeLines": 38,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51008164996.json",
+          "language": "json",
+          "sizeLines": 36,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51008164997.json",
+          "language": "json",
+          "sizeLines": 31,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51008164998.json",
+          "language": "json",
+          "sizeLines": 26,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51008164999.json",
+          "language": "json",
+          "sizeLines": 46,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51009453801.json",
+          "language": "json",
+          "sizeLines": 19,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/data/knowledge_base/raw_data/X51009453804.json",
+          "language": "json",
+          "sizeLines": 16,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "api/app/data/knowledge_base/raw_data/X51008164525.json": [],
+        "api/app/data/knowledge_base/raw_data/X51008164969.json": [],
+        "api/app/data/knowledge_base/raw_data/X51008164991.json": [],
+        "api/app/data/knowledge_base/raw_data/X51008164992.json": [],
+        "api/app/data/knowledge_base/raw_data/X51008164996.json": [],
+        "api/app/data/knowledge_base/raw_data/X51008164997.json": [],
+        "api/app/data/knowledge_base/raw_data/X51008164998.json": [],
+        "api/app/data/knowledge_base/raw_data/X51008164999.json": [],
+        "api/app/data/knowledge_base/raw_data/X51009453801.json": [],
+        "api/app/data/knowledge_base/raw_data/X51009453804.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 16,
+      "files": [
+        {
+          "path": "docs/ai_guardrails.md",
+          "language": "markdown",
+          "sizeLines": 1112,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/architecture.md",
+          "language": "markdown",
+          "sizeLines": 43,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/async_jobs.md",
+          "language": "markdown",
+          "sizeLines": 62,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/backend.md",
+          "language": "markdown",
+          "sizeLines": 44,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/catalog_review.md",
+          "language": "markdown",
+          "sizeLines": 49,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/frontend.md",
+          "language": "markdown",
+          "sizeLines": 50,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/hallucination_audit_2026-09-06.md",
+          "language": "markdown",
+          "sizeLines": 79,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/hallucination_fixes_2026-09-06.md",
+          "language": "markdown",
+          "sizeLines": 265,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/hallucination_fixes_manifest_2026-09-06.json",
+          "language": "json",
+          "sizeLines": 81,
+          "fileCategory": "config"
+        },
+        {
+          "path": "docs/langfuse_tracing.md",
+          "language": "markdown",
+          "sizeLines": 83,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/local_ocr.md",
+          "language": "markdown",
+          "sizeLines": 79,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/rag_kb.md",
+          "language": "markdown",
+          "sizeLines": 46,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/timeout_recovery.md",
+          "language": "markdown",
+          "sizeLines": 74,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/ai_guardrails.md": [],
+        "docs/architecture.md": [],
+        "docs/async_jobs.md": [],
+        "docs/backend.md": [],
+        "docs/catalog_review.md": [],
+        "docs/frontend.md": [],
+        "docs/hallucination_audit_2026-09-06.md": [],
+        "docs/hallucination_fixes_2026-09-06.md": [],
+        "docs/hallucination_fixes_manifest_2026-09-06.json": [],
+        "docs/langfuse_tracing.md": [],
+        "docs/local_ocr.md": [],
+        "docs/rag_kb.md": [],
+        "docs/timeout_recovery.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 17,
+      "files": [
+        {
+          "path": "skills/langfuse/references/ci-cd.md",
+          "language": "markdown",
+          "sizeLines": 41,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/cli.md",
+          "language": "markdown",
+          "sizeLines": 60,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/create-dataset.md",
+          "language": "markdown",
+          "sizeLines": 35,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/error-analysis.md",
+          "language": "markdown",
+          "sizeLines": 87,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/instrumentation.md",
+          "language": "markdown",
+          "sizeLines": 122,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/judge-calibration.md",
+          "language": "markdown",
+          "sizeLines": 293,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/prompt-engineering.md",
+          "language": "markdown",
+          "sizeLines": 35,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/prompt-migration.md",
+          "language": "markdown",
+          "sizeLines": 79,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/sdk-upgrade.md",
+          "language": "markdown",
+          "sizeLines": 34,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/setting-up-evals.md",
+          "language": "markdown",
+          "sizeLines": 65,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/skill-feedback.md",
+          "language": "markdown",
+          "sizeLines": 35,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/trace-evaluator-upgrade.md",
+          "language": "markdown",
+          "sizeLines": 76,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/user-feedback.md",
+          "language": "markdown",
+          "sizeLines": 66,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/references/v4-project-migration.md",
+          "language": "markdown",
+          "sizeLines": 75,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "skills/langfuse/references/ci-cd.md": [],
+        "skills/langfuse/references/cli.md": [],
+        "skills/langfuse/references/create-dataset.md": [],
+        "skills/langfuse/references/error-analysis.md": [],
+        "skills/langfuse/references/instrumentation.md": [],
+        "skills/langfuse/references/judge-calibration.md": [],
+        "skills/langfuse/references/prompt-engineering.md": [],
+        "skills/langfuse/references/prompt-migration.md": [],
+        "skills/langfuse/references/sdk-upgrade.md": [],
+        "skills/langfuse/references/setting-up-evals.md": [],
+        "skills/langfuse/references/skill-feedback.md": [],
+        "skills/langfuse/references/trace-evaluator-upgrade.md": [],
+        "skills/langfuse/references/user-feedback.md": [],
+        "skills/langfuse/references/v4-project-migration.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 18,
+      "files": [
+        {
+          "path": "web/.env.example",
+          "language": "config",
+          "sizeLines": 15,
+          "fileCategory": "config"
+        },
+        {
+          "path": "web/index.html",
+          "language": "html",
+          "sizeLines": 12,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "web/package.json",
+          "language": "json",
+          "sizeLines": 23,
+          "fileCategory": "config"
+        },
+        {
+          "path": "web/tsconfig.json",
+          "language": "json",
+          "sizeLines": 21,
+          "fileCategory": "config"
+        },
+        {
+          "path": "web/tsconfig.node.json",
+          "language": "json",
+          "sizeLines": 11,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "web/.env.example": [],
+        "web/index.html": [],
+        "web/package.json": [],
+        "web/tsconfig.json": [],
+        "web/tsconfig.node.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 19,
+      "files": [
+        {
+          "path": "api/.env.example",
+          "language": "config",
+          "sizeLines": 63,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/agents/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/api/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/core/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/data/knowledge_base/README.md",
+          "language": "markdown",
+          "sizeLines": 12,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "api/app/data/knowledge_base/rag_index.json",
+          "language": "json",
+          "sizeLines": 1319,
+          "fileCategory": "config"
+        },
+        {
+          "path": "api/app/observability/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/schemas/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/services/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/app/temporal/__init__.py",
+          "language": "python",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/data/extraction.db",
+          "language": "db",
+          "sizeLines": 324,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/logs/security_audit.jsonl",
+          "language": "jsonl",
+          "sizeLines": 190,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/requirements.txt",
+          "language": "txt",
+          "sizeLines": 14,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "api/scripts/review_discovered_fields.py",
+          "language": "python",
+          "sizeLines": 115,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/scripts/run_eval.py",
+          "language": "python",
+          "sizeLines": 324,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_review_discovered_fields.py",
+          "language": "python",
+          "sizeLines": 60,
+          "fileCategory": "code"
+        },
+        {
+          "path": "api/tests/test_run_eval.py",
+          "language": "python",
+          "sizeLines": 61,
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/data/knowledge_base/field_catalog/invoice_fields.json",
+          "language": "json",
+          "sizeLines": 82,
+          "fileCategory": "config"
+        },
+        {
+          "path": "data/extraction.db",
+          "language": "db",
+          "sizeLines": 128,
+          "fileCategory": "code"
+        },
+        {
+          "path": "docs/adr/0001-schema-mode.md",
+          "language": "markdown",
+          "sizeLines": 13,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/adr/0002-fixed-three-doc-types.md",
+          "language": "markdown",
+          "sizeLines": 32,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "img_test/README.md",
+          "language": "markdown",
+          "sizeLines": 27,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "logs/security_audit.jsonl",
+          "language": "jsonl",
+          "sizeLines": 168,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "api/.env.example": [],
+        "api/app/__init__.py": [],
+        "api/app/agents/__init__.py": [],
+        "api/app/api/__init__.py": [],
+        "api/app/core/__init__.py": [],
+        "api/app/data/knowledge_base/README.md": [],
+        "api/app/data/knowledge_base/rag_index.json": [],
+        "api/app/observability/__init__.py": [],
+        "api/app/schemas/__init__.py": [],
+        "api/app/services/__init__.py": [],
+        "api/app/temporal/__init__.py": [],
+        "api/data/extraction.db": [],
+        "api/logs/security_audit.jsonl": [],
+        "api/requirements.txt": [],
+        "api/scripts/review_discovered_fields.py": [],
+        "api/scripts/run_eval.py": [],
+        "api/tests/__init__.py": [],
+        "api/tests/test_review_discovered_fields.py": [],
+        "api/tests/test_run_eval.py": [
+          "api/scripts/run_eval.py"
+        ],
+        "app/data/knowledge_base/field_catalog/invoice_fields.json": [],
+        "data/extraction.db": [],
+        "docs/adr/0001-schema-mode.md": [],
+        "docs/adr/0002-fixed-three-doc-types.md": [],
+        "img_test/README.md": [],
+        "logs/security_audit.jsonl": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 20,
+      "files": [
+        {
+          "path": "scripts/run_all.sh",
+          "language": "shell",
+          "sizeLines": 160,
+          "fileCategory": "script"
+        },
+        {
+          "path": "skills/document-extraction/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 58,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "skills/langfuse/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 150,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "web/src/styles.css",
+          "language": "css",
+          "sizeLines": 1228,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "web/src/vite-env.d.ts",
+          "language": "typescript",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "web/vite.config.ts",
+          "language": "typescript",
+          "sizeLines": 16,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "scripts/run_all.sh": [],
+        "skills/document-extraction/SKILL.md": [],
+        "skills/langfuse/SKILL.md": [],
+        "web/src/styles.css": [],
+        "web/src/vite-env.d.ts": [],
+        "web/vite.config.ts": []
+      },
+      "neighborMap": {
+        "web/src/styles.css": [
+          {
+            "path": "web/src/main.tsx",
+            "batchIndex": 1,
+            "symbols": []
+          }
+        ]
+      }
+    }
+  ]
+}

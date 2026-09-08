@@ -1,0 +1,1506 @@
+{
+  "nodes": [
+    {
+      "id": "file:api/app/services/field_matching.py",
+      "type": "file",
+      "name": "field_matching.py",
+      "filePath": "api/app/services/field_matching.py",
+      "summary": "Value comparison helpers with number, date and JSON-container normalization used by evaluation.",
+      "tags": [
+        "utility",
+        "evaluation",
+        "normalization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:api/tests/test_guards.py",
+      "type": "file",
+      "name": "test_guards.py",
+      "filePath": "api/tests/test_guards.py",
+      "summary": "Guard test suite covering rate limiting, content limits, timeouts, audit logging, PII, output guards, input validation and evidence checks.",
+      "tags": [
+        "test",
+        "security",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:api/tests/test_langfuse_tracing.py",
+      "type": "file",
+      "name": "test_langfuse_tracing.py",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "summary": "Tracing tests covering disabled noop mode, nested generations, PII masking and agent usage extraction.",
+      "tags": [
+        "test",
+        "observability",
+        "tracing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:api/tests/test_pipeline.py",
+      "type": "file",
+      "name": "test_pipeline.py",
+      "filePath": "api/tests/test_pipeline.py",
+      "summary": "End-to-end pipeline tests with mocked agents covering happy path, catalog registration, review flags and judge gating.",
+      "tags": [
+        "test",
+        "extraction",
+        "evaluation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:api/app/services/field_matching.py:_normalize_name",
+      "type": "function",
+      "name": "_normalize_name",
+      "filePath": "api/app/services/field_matching.py",
+      "lineRange": [
+        22,
+        47
+      ],
+      "summary": "Normalizes field names for case-insensitive comparison.",
+      "tags": [
+        "utility",
+        "evaluation",
+        "normalization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/services/field_matching.py:build_alternative_name_lookup",
+      "type": "function",
+      "name": "build_alternative_name_lookup",
+      "filePath": "api/app/services/field_matching.py",
+      "lineRange": [
+        50,
+        81
+      ],
+      "summary": "Builds a normalized-name lookup over catalog fields for evaluation matching.",
+      "tags": [
+        "utility",
+        "evaluation",
+        "catalog"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/services/field_matching.py:_try_parse_number",
+      "type": "function",
+      "name": "_try_parse_number",
+      "filePath": "api/app/services/field_matching.py",
+      "lineRange": [
+        84,
+        102
+      ],
+      "summary": "Parses a value into a float when numerically shaped.",
+      "tags": [
+        "utility",
+        "evaluation",
+        "normalization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/services/field_matching.py:_try_parse_date",
+      "type": "function",
+      "name": "_try_parse_date",
+      "filePath": "api/app/services/field_matching.py",
+      "lineRange": [
+        105,
+        122
+      ],
+      "summary": "Parses a value into a date across common document formats.",
+      "tags": [
+        "utility",
+        "evaluation",
+        "normalization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/services/field_matching.py:_try_parse_json_container",
+      "type": "function",
+      "name": "_try_parse_json_container",
+      "filePath": "api/app/services/field_matching.py",
+      "lineRange": [
+        125,
+        138
+      ],
+      "summary": "Parses JSON-encoded array or object containers in field values.",
+      "tags": [
+        "utility",
+        "evaluation",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/services/field_matching.py:_normalize_ws",
+      "type": "function",
+      "name": "_normalize_ws",
+      "filePath": "api/app/services/field_matching.py",
+      "lineRange": [
+        141,
+        142
+      ],
+      "summary": "Collapses whitespace for tolerant string comparison.",
+      "tags": [
+        "utility",
+        "evaluation",
+        "normalization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/services/field_matching.py:values_match",
+      "type": "function",
+      "name": "values_match",
+      "filePath": "api/app/services/field_matching.py",
+      "lineRange": [
+        145,
+        196
+      ],
+      "summary": "Compares predicted and expected values with number, date and whitespace tolerance.",
+      "tags": [
+        "utility",
+        "evaluation",
+        "comparison"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestRateLimiter",
+      "type": "class",
+      "name": "TestRateLimiter",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        47,
+        106
+      ],
+      "summary": "Tests sliding-window limits, concurrency caps, client isolation and reset behavior.",
+      "tags": [
+        "test",
+        "rate-limiting",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestContentGuard",
+      "type": "class",
+      "name": "TestContentGuard",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        114,
+        171
+      ],
+      "summary": "Tests document, field-name, value and span validation including truncation and strict modes.",
+      "tags": [
+        "test",
+        "validation",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestTimeoutGuard",
+      "type": "class",
+      "name": "TestTimeoutGuard",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        179,
+        227
+      ],
+      "summary": "Tests stage timeouts, timing tracking and average computation.",
+      "tags": [
+        "test",
+        "reliability",
+        "timeout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestAuditLogger",
+      "type": "class",
+      "name": "TestAuditLogger",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        235,
+        273
+      ],
+      "summary": "Tests security event logging across injection, PII, rate-limit and validation events.",
+      "tags": [
+        "test",
+        "security",
+        "audit-logging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestPIIDetector",
+      "type": "class",
+      "name": "TestPIIDetector",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        281,
+        327
+      ],
+      "summary": "Tests credit card, email and phone detection plus redaction behavior.",
+      "tags": [
+        "test",
+        "privacy",
+        "detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestOutputGuard",
+      "type": "class",
+      "name": "TestOutputGuard",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        335,
+        398
+      ],
+      "summary": "Tests output cleaning, schema validation, error sanitization and repetition detection.",
+      "tags": [
+        "test",
+        "llm-output",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestInputGuard",
+      "type": "class",
+      "name": "TestInputGuard",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        406,
+        453
+      ],
+      "summary": "Tests empty-file rejection, size caps and MIME sniffing for uploads.",
+      "tags": [
+        "test",
+        "file-upload",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestCheckEvidence",
+      "type": "class",
+      "name": "TestCheckEvidence",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        461,
+        550
+      ],
+      "summary": "Tests evidence verification for text and image extractions with missing-span cases.",
+      "tags": [
+        "test",
+        "extraction",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_guards.py:TestValidatorWithImageExtraction",
+      "type": "class",
+      "name": "TestValidatorWithImageExtraction",
+      "filePath": "api/tests/test_guards.py",
+      "lineRange": [
+        558,
+        622
+      ],
+      "summary": "Tests validator hallucination checks differing between image and text extraction.",
+      "tags": [
+        "test",
+        "extraction",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_langfuse_tracing.py:FakeHandle",
+      "type": "class",
+      "name": "FakeHandle",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        23,
+        51
+      ],
+      "summary": "Fake Langfuse observation handle recording updates, scores and child observations.",
+      "tags": [
+        "test",
+        "observability",
+        "mock"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/tests/test_langfuse_tracing.py:FakeClient",
+      "type": "class",
+      "name": "FakeClient",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        54,
+        67
+      ],
+      "summary": "Fake Langfuse client capturing started observations for assertions.",
+      "tags": [
+        "test",
+        "observability",
+        "mock"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_langfuse_tracing.py:_settings",
+      "type": "function",
+      "name": "_settings",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        70,
+        75
+      ],
+      "summary": "Builds test settings enabling the tracer with fake credentials.",
+      "tags": [
+        "test",
+        "observability",
+        "fixture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_langfuse_tracing.py:test_disabled_tracer_is_noop",
+      "type": "function",
+      "name": "test_disabled_tracer_is_noop",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        78,
+        87
+      ],
+      "summary": "Verifies a disabled tracer performs no client calls.",
+      "tags": [
+        "test",
+        "observability",
+        "tracing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_langfuse_tracing.py:test_nested_generations_carry_model_and_usage",
+      "type": "function",
+      "name": "test_nested_generations_carry_model_and_usage",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        90,
+        115
+      ],
+      "summary": "Verifies nested generations propagate model name and token usage.",
+      "tags": [
+        "test",
+        "observability",
+        "tracing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_langfuse_tracing.py:test_mask_redacts_pii_and_truncates",
+      "type": "function",
+      "name": "test_mask_redacts_pii_and_truncates",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        118,
+        128
+      ],
+      "summary": "Verifies the mask function redacts PII and truncates long text.",
+      "tags": [
+        "test",
+        "privacy",
+        "observability"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_langfuse_tracing.py:test_mask_none_detector_returns_none",
+      "type": "function",
+      "name": "test_mask_none_detector_returns_none",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        131,
+        132
+      ],
+      "summary": "Verifies mask building without a detector returns None.",
+      "tags": [
+        "test",
+        "observability",
+        "privacy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_langfuse_tracing.py:test_agent_usage_reads_last_usage",
+      "type": "function",
+      "name": "test_agent_usage_reads_last_usage",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        135,
+        138
+      ],
+      "summary": "Verifies usage extraction reads the last agent call usage.",
+      "tags": [
+        "test",
+        "observability",
+        "metrics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_langfuse_tracing.py:test_agent_usage_ignores_mocks_and_missing",
+      "type": "function",
+      "name": "test_agent_usage_ignores_mocks_and_missing",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        141,
+        146
+      ],
+      "summary": "Verifies usage extraction tolerates mocks and missing attributes.",
+      "tags": [
+        "test",
+        "observability",
+        "metrics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_langfuse_tracing.py:test_service_emits_nested_trace_with_scores",
+      "type": "function",
+      "name": "test_service_emits_nested_trace_with_scores",
+      "filePath": "api/tests/test_langfuse_tracing.py",
+      "lineRange": [
+        150,
+        199
+      ],
+      "summary": "Verifies the extraction service emits nested traces with quality scores.",
+      "tags": [
+        "test",
+        "observability",
+        "extraction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:_settings",
+      "type": "function",
+      "name": "_settings",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        26,
+        38
+      ],
+      "summary": "Builds isolated service settings backed by a temporary directory.",
+      "tags": [
+        "test",
+        "extraction",
+        "fixture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:_make_service",
+      "type": "function",
+      "name": "_make_service",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        41,
+        52
+      ],
+      "summary": "Builds a DocumentExtractionService with mocked routing, extraction and judge agents.",
+      "tags": [
+        "test",
+        "extraction",
+        "fixture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:_routing",
+      "type": "function",
+      "name": "_routing",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        55,
+        56
+      ],
+      "summary": "Returns a canned routing decision fixture for pipeline tests.",
+      "tags": [
+        "test",
+        "extraction",
+        "fixture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:_extraction",
+      "type": "function",
+      "name": "_extraction",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        59,
+        66
+      ],
+      "summary": "Returns a canned extraction result fixture for pipeline tests.",
+      "tags": [
+        "test",
+        "extraction",
+        "fixture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:_judge",
+      "type": "function",
+      "name": "_judge",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        69,
+        70
+      ],
+      "summary": "Returns a canned judge result fixture for pipeline tests.",
+      "tags": [
+        "test",
+        "extraction",
+        "fixture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_full_pipeline_happy_path",
+      "type": "function",
+      "name": "test_full_pipeline_happy_path",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        74,
+        89
+      ],
+      "summary": "Verifies the full mocked pipeline produces a clean extraction without review.",
+      "tags": [
+        "test",
+        "extraction",
+        "happy-path"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_new_field_is_registered_in_catalog",
+      "type": "function",
+      "name": "test_new_field_is_registered_in_catalog",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        93,
+        116
+      ],
+      "summary": "Verifies newly discovered fields are registered in the field catalog.",
+      "tags": [
+        "test",
+        "extraction",
+        "catalog"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_missing_evidence_flags_needs_review",
+      "type": "function",
+      "name": "test_missing_evidence_flags_needs_review",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        120,
+        135
+      ],
+      "summary": "Verifies fields with missing evidence trigger needs-review.",
+      "tags": [
+        "test",
+        "extraction",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_low_judge_score_flags_needs_review",
+      "type": "function",
+      "name": "test_low_judge_score_flags_needs_review",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        139,
+        153
+      ],
+      "summary": "Verifies low judge scores trigger needs-review.",
+      "tags": [
+        "test",
+        "extraction",
+        "evaluation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_judge_skipped_when_clean",
+      "type": "function",
+      "name": "test_judge_skipped_when_clean",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        157,
+        167
+      ],
+      "summary": "Verifies the judge stage is skipped for clean high-confidence extractions.",
+      "tags": [
+        "test",
+        "extraction",
+        "optimization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_judge_runs_when_confidence_below_skip_threshold",
+      "type": "function",
+      "name": "test_judge_runs_when_confidence_below_skip_threshold",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        171,
+        183
+      ],
+      "summary": "Verifies the judge runs when confidence falls below the skip threshold.",
+      "tags": [
+        "test",
+        "extraction",
+        "evaluation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_router_failure_returns_failed_stage",
+      "type": "function",
+      "name": "test_router_failure_returns_failed_stage",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        187,
+        199
+      ],
+      "summary": "Verifies router failures surface as a failed pipeline stage.",
+      "tags": [
+        "test",
+        "extraction",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_evaluate_precision_recall",
+      "type": "function",
+      "name": "test_evaluate_precision_recall",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        202,
+        212
+      ],
+      "summary": "Verifies evaluation computes precision and recall over matched fields.",
+      "tags": [
+        "test",
+        "evaluation",
+        "metrics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_request_meta_shape",
+      "type": "function",
+      "name": "test_request_meta_shape",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        215,
+        217
+      ],
+      "summary": "Verifies request metadata carries the expected shape.",
+      "tags": [
+        "test",
+        "extraction",
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_issue7_phantom_array_rows_flagged",
+      "type": "function",
+      "name": "test_issue7_phantom_array_rows_flagged",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        221,
+        240
+      ],
+      "summary": "Verifies phantom array rows without evidence are flagged.",
+      "tags": [
+        "test",
+        "extraction",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_issue7_real_array_rows_pass",
+      "type": "function",
+      "name": "test_issue7_real_array_rows_pass",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        244,
+        260
+      ],
+      "summary": "Verifies evidenced array rows pass validation.",
+      "tags": [
+        "test",
+        "extraction",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_issue8_judge_not_skipped_for_nonverbatim_numeric_span",
+      "type": "function",
+      "name": "test_issue8_judge_not_skipped_for_nonverbatim_numeric_span",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        264,
+        290
+      ],
+      "summary": "Verifies non-verbatim numeric spans force the judge to run.",
+      "tags": [
+        "test",
+        "extraction",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/tests/test_pipeline.py:test_issue8_judge_prompt_includes_source_spans",
+      "type": "function",
+      "name": "test_issue8_judge_prompt_includes_source_spans",
+      "filePath": "api/tests/test_pipeline.py",
+      "lineRange": [
+        294,
+        300
+      ],
+      "summary": "Verifies the judge prompt includes numeric source spans for grounding.",
+      "tags": [
+        "test",
+        "extraction",
+        "evaluation"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_normalize_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_normalize_ws",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_try_parse_date",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_try_parse_json_container",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_try_parse_number",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:build_alternative_name_lookup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:values_match",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestAuditLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestCheckEvidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestContentGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestInputGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestOutputGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestPIIDetector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestRateLimiter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestTimeoutGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestValidatorWithImageExtraction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "class:api/tests/test_langfuse_tracing.py:FakeClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "class:api/tests/test_langfuse_tracing.py:FakeHandle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:_settings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_agent_usage_ignores_mocks_and_missing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_agent_usage_reads_last_usage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_disabled_tracer_is_noop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_mask_none_detector_returns_none",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_mask_redacts_pii_and_truncates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_nested_generations_carry_model_and_usage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_service_emits_nested_trace_with_scores",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_extraction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_judge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_make_service",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_routing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_settings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_evaluate_precision_recall",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_full_pipeline_happy_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_issue7_phantom_array_rows_flagged",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_issue7_real_array_rows_pass",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_issue8_judge_not_skipped_for_nonverbatim_numeric_span",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_issue8_judge_prompt_includes_source_spans",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_judge_runs_when_confidence_below_skip_threshold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_judge_skipped_when_clean",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_low_judge_score_flags_needs_review",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_missing_evidence_flags_needs_review",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_new_field_is_registered_in_catalog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_request_meta_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_router_failure_returns_failed_stage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_normalize_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_normalize_ws",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_try_parse_date",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_try_parse_json_container",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:_try_parse_number",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:build_alternative_name_lookup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/field_matching.py",
+      "target": "function:api/app/services/field_matching.py:values_match",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestAuditLogger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestCheckEvidence",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestContentGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestInputGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestOutputGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestPIIDetector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestRateLimiter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestTimeoutGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "class:api/tests/test_guards.py:TestValidatorWithImageExtraction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "class:api/tests/test_langfuse_tracing.py:FakeClient",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "class:api/tests/test_langfuse_tracing.py:FakeHandle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:_settings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_agent_usage_ignores_mocks_and_missing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_agent_usage_reads_last_usage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_disabled_tracer_is_noop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_mask_none_detector_returns_none",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_mask_redacts_pii_and_truncates",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_nested_generations_carry_model_and_usage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "function:api/tests/test_langfuse_tracing.py:test_service_emits_nested_trace_with_scores",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_extraction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_judge",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_make_service",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_routing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:_settings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_evaluate_precision_recall",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_full_pipeline_happy_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_issue7_phantom_array_rows_flagged",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_issue7_real_array_rows_pass",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_issue8_judge_not_skipped_for_nonverbatim_numeric_span",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_issue8_judge_prompt_includes_source_spans",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_judge_runs_when_confidence_below_skip_threshold",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_judge_skipped_when_clean",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_low_judge_score_flags_needs_review",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_missing_evidence_flags_needs_review",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_new_field_is_registered_in_catalog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_request_meta_shape",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "function:api/tests/test_pipeline.py:test_router_failure_returns_failed_stage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "file:api/app/guards/audit_logger.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "file:api/app/guards/content_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "file:api/app/guards/output_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "file:api/app/guards/pii_detector.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "file:api/app/guards/rate_limiter.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_guards.py",
+      "target": "file:api/app/guards/timeout_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "file:api/app/guards/pii_detector.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "file:api/app/observability/langfuse.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_langfuse_tracing.py",
+      "target": "file:api/app/services/extraction_service.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "file:api/app/core/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "file:api/app/schemas/documents.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/tests/test_pipeline.py",
+      "target": "file:api/app/services/extraction_service.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

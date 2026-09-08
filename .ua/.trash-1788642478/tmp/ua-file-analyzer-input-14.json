@@ -1,0 +1,147 @@
+{
+ "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+ "batchFiles": [
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/delivery_note_01.json",
+   "language": "json",
+   "sizeLines": 20,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/delivery_note_02.json",
+   "language": "json",
+   "sizeLines": 20,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/delivery_note_03.json",
+   "language": "json",
+   "sizeLines": 28,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/delivery_note_04.json",
+   "language": "json",
+   "sizeLines": 24,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/delivery_note_05.json",
+   "language": "json",
+   "sizeLines": 20,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/delivery_note_06.json",
+   "language": "json",
+   "sizeLines": 20,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/invoice_01.json",
+   "language": "json",
+   "sizeLines": 25,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/invoice_02.json",
+   "language": "json",
+   "sizeLines": 25,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/invoice_03.json",
+   "language": "json",
+   "sizeLines": 25,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/invoice_04.json",
+   "language": "json",
+   "sizeLines": 25,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/invoice_05.json",
+   "language": "json",
+   "sizeLines": 41,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/invoice_06.json",
+   "language": "json",
+   "sizeLines": 33,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/invoice_07.json",
+   "language": "json",
+   "sizeLines": 33,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/po_01.json",
+   "language": "json",
+   "sizeLines": 37,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/po_02.json",
+   "language": "json",
+   "sizeLines": 25,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/po_03.json",
+   "language": "json",
+   "sizeLines": 31,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/po_04.json",
+   "language": "json",
+   "sizeLines": 25,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/po_05.json",
+   "language": "json",
+   "sizeLines": 37,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/po_06.json",
+   "language": "json",
+   "sizeLines": 31,
+   "fileCategory": "config"
+  },
+  {
+   "path": "api/app/data/knowledge_base/ground_truth/po_07.json",
+   "language": "json",
+   "sizeLines": 31,
+   "fileCategory": "config"
+  }
+ ],
+ "batchImportData": {
+  "api/app/data/knowledge_base/ground_truth/delivery_note_01.json": [],
+  "api/app/data/knowledge_base/ground_truth/delivery_note_02.json": [],
+  "api/app/data/knowledge_base/ground_truth/delivery_note_03.json": [],
+  "api/app/data/knowledge_base/ground_truth/delivery_note_04.json": [],
+  "api/app/data/knowledge_base/ground_truth/delivery_note_05.json": [],
+  "api/app/data/knowledge_base/ground_truth/delivery_note_06.json": [],
+  "api/app/data/knowledge_base/ground_truth/invoice_01.json": [],
+  "api/app/data/knowledge_base/ground_truth/invoice_02.json": [],
+  "api/app/data/knowledge_base/ground_truth/invoice_03.json": [],
+  "api/app/data/knowledge_base/ground_truth/invoice_04.json": [],
+  "api/app/data/knowledge_base/ground_truth/invoice_05.json": [],
+  "api/app/data/knowledge_base/ground_truth/invoice_06.json": [],
+  "api/app/data/knowledge_base/ground_truth/invoice_07.json": [],
+  "api/app/data/knowledge_base/ground_truth/po_01.json": [],
+  "api/app/data/knowledge_base/ground_truth/po_02.json": [],
+  "api/app/data/knowledge_base/ground_truth/po_03.json": [],
+  "api/app/data/knowledge_base/ground_truth/po_04.json": [],
+  "api/app/data/knowledge_base/ground_truth/po_05.json": [],
+  "api/app/data/knowledge_base/ground_truth/po_06.json": [],
+  "api/app/data/knowledge_base/ground_truth/po_07.json": []
+ }
+}

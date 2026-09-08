@@ -1,0 +1,11 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": ".github/workflows/ci.yml", "language": "yaml", "sizeLines": 79, "fileCategory": "infra"},
+    {"path": ".github/workflows/sonarcloud.yml", "language": "yaml", "sizeLines": 26, "fileCategory": "infra"}
+  ],
+  "batchImportData": {
+    ".github/workflows/ci.yml": [],
+    ".github/workflows/sonarcloud.yml": []
+  }
+}

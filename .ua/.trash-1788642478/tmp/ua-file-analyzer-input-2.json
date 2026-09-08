@@ -1,0 +1,173 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {
+      "path": "api/app/api/routes.py",
+      "language": "python",
+      "sizeLines": 327,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/guards/__init__.py",
+      "language": "python",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/guards/audit_logger.py",
+      "language": "python",
+      "sizeLines": 309,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/guards/content_guard.py",
+      "language": "python",
+      "sizeLines": 268,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/guards/input_guard.py",
+      "language": "python",
+      "sizeLines": 248,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/guards/output_guard.py",
+      "language": "python",
+      "sizeLines": 281,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/guards/pii_detector.py",
+      "language": "python",
+      "sizeLines": 166,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/guards/rate_limiter.py",
+      "language": "python",
+      "sizeLines": 155,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/guards/timeout_guard.py",
+      "language": "python",
+      "sizeLines": 187,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/main.py",
+      "language": "python",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/observability/langfuse.py",
+      "language": "python",
+      "sizeLines": 305,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/services/extraction_service.py",
+      "language": "python",
+      "sizeLines": 684,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/app/services/field_matching.py",
+      "language": "python",
+      "sizeLines": 196,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/tests/test_guards.py",
+      "language": "python",
+      "sizeLines": 626,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/tests/test_langfuse_tracing.py",
+      "language": "python",
+      "sizeLines": 199,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/tests/test_pipeline.py",
+      "language": "python",
+      "sizeLines": 300,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "api/app/api/routes.py": [
+      "api/app/core/config.py",
+      "api/app/guards/audit_logger.py",
+      "api/app/guards/input_guard.py",
+      "api/app/guards/output_guard.py",
+      "api/app/guards/rate_limiter.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/extraction_service.py"
+    ],
+    "api/app/guards/__init__.py": [
+      "api/app/guards/audit_logger.py",
+      "api/app/guards/content_guard.py",
+      "api/app/guards/input_guard.py",
+      "api/app/guards/output_guard.py",
+      "api/app/guards/pii_detector.py",
+      "api/app/guards/rate_limiter.py",
+      "api/app/guards/timeout_guard.py"
+    ],
+    "api/app/guards/audit_logger.py": [],
+    "api/app/guards/content_guard.py": [],
+    "api/app/guards/input_guard.py": [],
+    "api/app/guards/output_guard.py": [],
+    "api/app/guards/pii_detector.py": [],
+    "api/app/guards/rate_limiter.py": [],
+    "api/app/guards/timeout_guard.py": [],
+    "api/app/main.py": [
+      "api/app/api/routes.py",
+      "api/app/core/config.py"
+    ],
+    "api/app/observability/langfuse.py": [
+      "api/app/core/config.py"
+    ],
+    "api/app/services/extraction_service.py": [
+      "api/app/agents/extractors.py",
+      "api/app/agents/judge.py",
+      "api/app/agents/router.py",
+      "api/app/agents/validator.py",
+      "api/app/core/config.py",
+      "api/app/core/security.py",
+      "api/app/guards/audit_logger.py",
+      "api/app/guards/content_guard.py",
+      "api/app/guards/pii_detector.py",
+      "api/app/guards/timeout_guard.py",
+      "api/app/observability/langfuse.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/field_catalog.py",
+      "api/app/services/field_matching.py",
+      "api/app/services/job_store.py",
+      "api/app/services/knowledge_base.py",
+      "api/app/services/rapidocr_client.py"
+    ],
+    "api/app/services/field_matching.py": [],
+    "api/tests/test_guards.py": [
+      "api/app/guards/audit_logger.py",
+      "api/app/guards/content_guard.py",
+      "api/app/guards/output_guard.py",
+      "api/app/guards/pii_detector.py",
+      "api/app/guards/rate_limiter.py",
+      "api/app/guards/timeout_guard.py"
+    ],
+    "api/tests/test_langfuse_tracing.py": [
+      "api/app/guards/pii_detector.py",
+      "api/app/observability/langfuse.py",
+      "api/app/services/extraction_service.py"
+    ],
+    "api/tests/test_pipeline.py": [
+      "api/app/core/config.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/extraction_service.py"
+    ]
+  }
+}

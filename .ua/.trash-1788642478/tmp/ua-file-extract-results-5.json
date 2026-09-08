@@ -1,0 +1,1295 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 5,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 5,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "api/app/database/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 4,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "api/app/database/job_repository.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 269,
+      "nonEmptyLines": 233,
+      "classes": [
+        {
+          "name": "JobRepository",
+          "startLine": 16,
+          "endLine": 269,
+          "methods": [
+            "__init__",
+            "create_job",
+            "get_job",
+            "update_job_status",
+            "fail_stale_queued_jobs",
+            "complete_job",
+            "list_jobs",
+            "delete_job",
+            "get_stats"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "JobRepository",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "create_job",
+          "callee": "self.db.connect",
+          "lineNumber": 30
+        },
+        {
+          "caller": "create_job",
+          "callee": "conn.execute",
+          "lineNumber": 31
+        },
+        {
+          "caller": "create_job",
+          "callee": "str",
+          "lineNumber": 36
+        },
+        {
+          "caller": "create_job",
+          "callee": "self.get_job",
+          "lineNumber": 38
+        },
+        {
+          "caller": "get_job",
+          "callee": "self.db.connect",
+          "lineNumber": 42
+        },
+        {
+          "caller": "get_job",
+          "callee": "conn.execute(\n                \"SELECT * FROM extraction_jobs WHERE id = ?\",\n                (str(job_id),),\n            ).fetchone",
+          "lineNumber": 43
+        },
+        {
+          "caller": "get_job",
+          "callee": "conn.execute",
+          "lineNumber": 43
+        },
+        {
+          "caller": "get_job",
+          "callee": "str",
+          "lineNumber": 45
+        },
+        {
+          "caller": "get_job",
+          "callee": "dict",
+          "lineNumber": 51
+        },
+        {
+          "caller": "get_job",
+          "callee": "conn.execute(\n                \"SELECT * FROM extracted_fields WHERE job_id = ?\",\n                (str(job_id),),\n            ).fetchall",
+          "lineNumber": 54
+        },
+        {
+          "caller": "get_job",
+          "callee": "conn.execute",
+          "lineNumber": 54
+        },
+        {
+          "caller": "get_job",
+          "callee": "str",
+          "lineNumber": 56
+        },
+        {
+          "caller": "get_job",
+          "callee": "dict",
+          "lineNumber": 58
+        },
+        {
+          "caller": "get_job",
+          "callee": "conn.execute(\n                \"SELECT * FROM judge_results WHERE job_id = ?\",\n                (str(job_id),),\n            ).fetchone",
+          "lineNumber": 61
+        },
+        {
+          "caller": "get_job",
+          "callee": "conn.execute",
+          "lineNumber": 61
+        },
+        {
+          "caller": "get_job",
+          "callee": "str",
+          "lineNumber": 63
+        },
+        {
+          "caller": "get_job",
+          "callee": "dict",
+          "lineNumber": 65
+        },
+        {
+          "caller": "update_job_status",
+          "callee": "self.db.connect",
+          "lineNumber": 76
+        },
+        {
+          "caller": "update_job_status",
+          "callee": "conn.execute",
+          "lineNumber": 77
+        },
+        {
+          "caller": "update_job_status",
+          "callee": "str",
+          "lineNumber": 83
+        },
+        {
+          "caller": "fail_stale_queued_jobs",
+          "callee": "self.db.connect",
+          "lineNumber": 93
+        },
+        {
+          "caller": "fail_stale_queued_jobs",
+          "callee": "conn.execute",
+          "lineNumber": 94
+        },
+        {
+          "caller": "complete_job",
+          "callee": "self.db.connect",
+          "lineNumber": 117
+        },
+        {
+          "caller": "complete_job",
+          "callee": "conn.execute",
+          "lineNumber": 119
+        },
+        {
+          "caller": "complete_job",
+          "callee": "int",
+          "lineNumber": 137
+        },
+        {
+          "caller": "complete_job",
+          "callee": "json.dumps",
+          "lineNumber": 138
+        },
+        {
+          "caller": "complete_job",
+          "callee": "str",
+          "lineNumber": 139
+        },
+        {
+          "caller": "complete_job",
+          "callee": "field.get",
+          "lineNumber": 145
+        },
+        {
+          "caller": "complete_job",
+          "callee": "json.dumps",
+          "lineNumber": 146
+        },
+        {
+          "caller": "complete_job",
+          "callee": "isinstance",
+          "lineNumber": 146
+        },
+        {
+          "caller": "complete_job",
+          "callee": "str",
+          "lineNumber": 146
+        },
+        {
+          "caller": "complete_job",
+          "callee": "conn.execute",
+          "lineNumber": 147
+        },
+        {
+          "caller": "complete_job",
+          "callee": "str",
+          "lineNumber": 154
+        },
+        {
+          "caller": "complete_job",
+          "callee": "field.get",
+          "lineNumber": 155
+        },
+        {
+          "caller": "complete_job",
+          "callee": "type",
+          "lineNumber": 157
+        },
+        {
+          "caller": "complete_job",
+          "callee": "field.get",
+          "lineNumber": 158
+        },
+        {
+          "caller": "complete_job",
+          "callee": "field.get",
+          "lineNumber": 159
+        },
+        {
+          "caller": "complete_job",
+          "callee": "int",
+          "lineNumber": 160
+        },
+        {
+          "caller": "complete_job",
+          "callee": "field.get",
+          "lineNumber": 160
+        },
+        {
+          "caller": "complete_job",
+          "callee": "conn.execute",
+          "lineNumber": 166
+        },
+        {
+          "caller": "complete_job",
+          "callee": "str",
+          "lineNumber": 172
+        },
+        {
+          "caller": "complete_job",
+          "callee": "judge_result.get",
+          "lineNumber": 173
+        },
+        {
+          "caller": "complete_job",
+          "callee": "json.dumps",
+          "lineNumber": 174
+        },
+        {
+          "caller": "complete_job",
+          "callee": "judge_result.get",
+          "lineNumber": 174
+        },
+        {
+          "caller": "complete_job",
+          "callee": "judge_result.get",
+          "lineNumber": 175
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "self.db.connect",
+          "lineNumber": 191
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "where_clauses.append",
+          "lineNumber": 197
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "params.append",
+          "lineNumber": 198
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "where_clauses.append",
+          "lineNumber": 200
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "params.append",
+          "lineNumber": 201
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "' AND '.join",
+          "lineNumber": 203
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "conn.execute(\n                f\"SELECT COUNT(*) as total FROM extraction_jobs {where_sql}\",\n                params,\n            ).fetchone",
+          "lineNumber": 206
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "conn.execute",
+          "lineNumber": 206
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "conn.execute(\n                f\"\"\"\n                SELECT * FROM extraction_jobs\n                {where_sql}\n                ORDER BY created_at DESC\n                LIMIT ? OFFSET ?\n                \"\"\",\n                params + [limit, offset],\n            ).fetchall",
+          "lineNumber": 213
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "conn.execute",
+          "lineNumber": 213
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "dict",
+          "lineNumber": 223
+        },
+        {
+          "caller": "delete_job",
+          "callee": "self.db.connect",
+          "lineNumber": 229
+        },
+        {
+          "caller": "delete_job",
+          "callee": "conn.execute",
+          "lineNumber": 230
+        },
+        {
+          "caller": "delete_job",
+          "callee": "str",
+          "lineNumber": 232
+        },
+        {
+          "caller": "get_stats",
+          "callee": "self.db.connect",
+          "lineNumber": 238
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute(\"SELECT COUNT(*) as total FROM extraction_jobs\").fetchone",
+          "lineNumber": 242
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute",
+          "lineNumber": 242
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute(\n                \"SELECT status, COUNT(*) as count FROM extraction_jobs GROUP BY status\"\n            ).fetchall",
+          "lineNumber": 246
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute",
+          "lineNumber": 246
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute(\n                \"SELECT doc_type, COUNT(*) as count FROM extraction_jobs WHERE doc_type IS NOT NULL GROUP BY doc_type\"\n            ).fetchall",
+          "lineNumber": 252
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute",
+          "lineNumber": 252
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute(\n                \"SELECT AVG(completeness_score) as avg_score FROM extraction_jobs WHERE status = 'completed'\"\n            ).fetchone",
+          "lineNumber": 258
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute",
+          "lineNumber": 258
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute(\n                \"SELECT COUNT(*) as count FROM extraction_jobs WHERE needs_review = 1\"\n            ).fetchone",
+          "lineNumber": 264
+        },
+        {
+          "caller": "get_stats",
+          "callee": "conn.execute",
+          "lineNumber": 264
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "api/app/database/models.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 98,
+      "nonEmptyLines": 84,
+      "classes": [
+        {
+          "name": "Database",
+          "startLine": 17,
+          "endLine": 45,
+          "methods": [
+            "__init__",
+            "_init_db",
+            "connect"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Database",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "Path",
+          "lineNumber": 21
+        },
+        {
+          "caller": "__init__",
+          "callee": "self.db_path.parent.mkdir",
+          "lineNumber": 22
+        },
+        {
+          "caller": "__init__",
+          "callee": "self._init_db",
+          "lineNumber": 23
+        },
+        {
+          "caller": "_init_db",
+          "callee": "self.connect",
+          "lineNumber": 27
+        },
+        {
+          "caller": "_init_db",
+          "callee": "conn.executescript",
+          "lineNumber": 28
+        },
+        {
+          "caller": "_init_db",
+          "callee": "logger.info",
+          "lineNumber": 29
+        },
+        {
+          "caller": "connect",
+          "callee": "sqlite3.connect",
+          "lineNumber": 34
+        },
+        {
+          "caller": "connect",
+          "callee": "str",
+          "lineNumber": 34
+        },
+        {
+          "caller": "connect",
+          "callee": "conn.execute",
+          "lineNumber": 36
+        },
+        {
+          "caller": "connect",
+          "callee": "conn.execute",
+          "lineNumber": 37
+        },
+        {
+          "caller": "connect",
+          "callee": "conn.commit",
+          "lineNumber": 40
+        },
+        {
+          "caller": "connect",
+          "callee": "conn.rollback",
+          "lineNumber": 42
+        },
+        {
+          "caller": "connect",
+          "callee": "conn.close",
+          "lineNumber": 45
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "api/app/services/job_store.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 162,
+      "nonEmptyLines": 136,
+      "classes": [
+        {
+          "name": "JobRecord",
+          "startLine": 11,
+          "endLine": 14,
+          "methods": [],
+          "properties": [
+            "job_id",
+            "status",
+            "result"
+          ]
+        },
+        {
+          "name": "InMemoryJobStore",
+          "startLine": 17,
+          "endLine": 51,
+          "methods": [
+            "__init__",
+            "create",
+            "save_result",
+            "get",
+            "fail_job",
+            "get_error",
+            "fail_stale_queued"
+          ],
+          "properties": []
+        },
+        {
+          "name": "SQLiteJobStore",
+          "startLine": 54,
+          "endLine": 162,
+          "methods": [
+            "__init__",
+            "create",
+            "save_result",
+            "get",
+            "list_jobs",
+            "get_stats",
+            "fail_job",
+            "get_error",
+            "fail_stale_queued"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "JobRecord",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "InMemoryJobStore",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "SQLiteJobStore",
+          "line": 54,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "create",
+          "callee": "JobRecord",
+          "lineNumber": 22
+        },
+        {
+          "caller": "create",
+          "callee": "uuid4",
+          "lineNumber": 22
+        },
+        {
+          "caller": "get",
+          "callee": "self._jobs.get",
+          "lineNumber": 33
+        },
+        {
+          "caller": "get_error",
+          "callee": "self._jobs.get",
+          "lineNumber": 43
+        },
+        {
+          "caller": "get_error",
+          "callee": "job.result.get",
+          "lineNumber": 45
+        },
+        {
+          "caller": "get_error",
+          "callee": "str",
+          "lineNumber": 46
+        },
+        {
+          "caller": "__init__",
+          "callee": "Database",
+          "lineNumber": 58
+        },
+        {
+          "caller": "__init__",
+          "callee": "JobRepository",
+          "lineNumber": 59
+        },
+        {
+          "caller": "create",
+          "callee": "uuid4",
+          "lineNumber": 63
+        },
+        {
+          "caller": "create",
+          "callee": "self.repo.create_job",
+          "lineNumber": 64
+        },
+        {
+          "caller": "create",
+          "callee": "JobRecord",
+          "lineNumber": 65
+        },
+        {
+          "caller": "save_result",
+          "callee": "result.get",
+          "lineNumber": 70
+        },
+        {
+          "caller": "save_result",
+          "callee": "self.repo.complete_job",
+          "lineNumber": 73
+        },
+        {
+          "caller": "save_result",
+          "callee": "doc.get",
+          "lineNumber": 75
+        },
+        {
+          "caller": "save_result",
+          "callee": "doc.get",
+          "lineNumber": 76
+        },
+        {
+          "caller": "save_result",
+          "callee": "doc.get",
+          "lineNumber": 77
+        },
+        {
+          "caller": "save_result",
+          "callee": "doc.get",
+          "lineNumber": 78
+        },
+        {
+          "caller": "save_result",
+          "callee": "doc.get",
+          "lineNumber": 79
+        },
+        {
+          "caller": "save_result",
+          "callee": "doc.get",
+          "lineNumber": 80
+        },
+        {
+          "caller": "save_result",
+          "callee": "doc.get",
+          "lineNumber": 81
+        },
+        {
+          "caller": "save_result",
+          "callee": "doc.get",
+          "lineNumber": 82
+        },
+        {
+          "caller": "save_result",
+          "callee": "result.get",
+          "lineNumber": 86
+        },
+        {
+          "caller": "save_result",
+          "callee": "self.repo.update_job_status",
+          "lineNumber": 87
+        },
+        {
+          "caller": "save_result",
+          "callee": "JobRecord",
+          "lineNumber": 89
+        },
+        {
+          "caller": "get",
+          "callee": "self.repo.get_job",
+          "lineNumber": 93
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 99
+        },
+        {
+          "caller": "get",
+          "callee": "isinstance",
+          "lineNumber": 100
+        },
+        {
+          "caller": "get",
+          "callee": "json.loads",
+          "lineNumber": 102
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 105
+        },
+        {
+          "caller": "get",
+          "callee": "isinstance",
+          "lineNumber": 106
+        },
+        {
+          "caller": "get",
+          "callee": "isinstance",
+          "lineNumber": 106
+        },
+        {
+          "caller": "get",
+          "callee": "judge.get",
+          "lineNumber": 106
+        },
+        {
+          "caller": "get",
+          "callee": "json.loads",
+          "lineNumber": 108
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 115
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 116
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 117
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 121
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 122
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 123
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 124
+        },
+        {
+          "caller": "get",
+          "callee": "bool",
+          "lineNumber": 125
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 125
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 127
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 129
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 130
+        },
+        {
+          "caller": "get",
+          "callee": "JobRecord",
+          "lineNumber": 134
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 136
+        },
+        {
+          "caller": "get",
+          "callee": "job.get",
+          "lineNumber": 137
+        },
+        {
+          "caller": "list_jobs",
+          "callee": "self.repo.list_jobs",
+          "lineNumber": 142
+        },
+        {
+          "caller": "get_stats",
+          "callee": "self.repo.get_stats",
+          "lineNumber": 146
+        },
+        {
+          "caller": "fail_job",
+          "callee": "self.repo.update_job_status",
+          "lineNumber": 150
+        },
+        {
+          "caller": "get_error",
+          "callee": "self.repo.get_job",
+          "lineNumber": 154
+        },
+        {
+          "caller": "get_error",
+          "callee": "job.get",
+          "lineNumber": 156
+        },
+        {
+          "caller": "get_error",
+          "callee": "str",
+          "lineNumber": 157
+        },
+        {
+          "caller": "fail_stale_queued",
+          "callee": "self.repo.fail_stale_queued_jobs",
+          "lineNumber": 162
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "api/tests/test_async_jobs.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 124,
+      "nonEmptyLines": 101,
+      "functions": [
+        {
+          "name": "_settings",
+          "startLine": 24,
+          "endLine": 27,
+          "params": []
+        },
+        {
+          "name": "_service",
+          "startLine": 30,
+          "endLine": 47,
+          "params": []
+        },
+        {
+          "name": "test_extract_group_reuses_caller_job_id",
+          "startLine": 51,
+          "endLine": 59,
+          "params": []
+        },
+        {
+          "name": "test_cancelled_extraction_marks_job_failed",
+          "startLine": 63,
+          "endLine": 73,
+          "params": []
+        },
+        {
+          "name": "test_run_job_swallows_unexpected_errors",
+          "startLine": 77,
+          "endLine": 80,
+          "params": []
+        },
+        {
+          "name": "test_get_batch_status_surfaces_failed_error",
+          "startLine": 83,
+          "endLine": 90,
+          "params": []
+        },
+        {
+          "name": "test_sqlite_fail_stale_queued",
+          "startLine": 93,
+          "endLine": 103,
+          "params": [
+            "tmp_path"
+          ]
+        },
+        {
+          "name": "test_service_init_cleans_stale_queued",
+          "startLine": 106,
+          "endLine": 124,
+          "params": [
+            "tmp_path"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_settings",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "_service",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "test_extract_group_reuses_caller_job_id",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "test_cancelled_extraction_marks_job_failed",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "test_run_job_swallows_unexpected_errors",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "test_get_batch_status_surfaces_failed_error",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "test_sqlite_fail_stale_queued",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "test_service_init_cleans_stale_queued",
+          "line": 106,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_settings",
+          "callee": "Settings",
+          "lineNumber": 25
+        },
+        {
+          "caller": "_service",
+          "callee": "DocumentExtractionService",
+          "lineNumber": 31
+        },
+        {
+          "caller": "_service",
+          "callee": "_settings",
+          "lineNumber": 31
+        },
+        {
+          "caller": "_service",
+          "callee": "isinstance",
+          "lineNumber": 32
+        },
+        {
+          "caller": "_service",
+          "callee": "MagicMock",
+          "lineNumber": 33
+        },
+        {
+          "caller": "_service",
+          "callee": "AsyncMock",
+          "lineNumber": 34
+        },
+        {
+          "caller": "_service",
+          "callee": "MagicMock",
+          "lineNumber": 35
+        },
+        {
+          "caller": "_service",
+          "callee": "AsyncMock",
+          "lineNumber": 36
+        },
+        {
+          "caller": "_service",
+          "callee": "RoutingDecision",
+          "lineNumber": 37
+        },
+        {
+          "caller": "_service",
+          "callee": "service.extractors.values",
+          "lineNumber": 39
+        },
+        {
+          "caller": "_service",
+          "callee": "AsyncMock",
+          "lineNumber": 40
+        },
+        {
+          "caller": "_service",
+          "callee": "ExtractedField",
+          "lineNumber": 41
+        },
+        {
+          "caller": "_service",
+          "callee": "MagicMock",
+          "lineNumber": 45
+        },
+        {
+          "caller": "_service",
+          "callee": "AsyncMock",
+          "lineNumber": 46
+        },
+        {
+          "caller": "_service",
+          "callee": "JudgeResult",
+          "lineNumber": 46
+        },
+        {
+          "caller": "test_extract_group_reuses_caller_job_id",
+          "callee": "_service",
+          "lineNumber": 52
+        },
+        {
+          "caller": "test_extract_group_reuses_caller_job_id",
+          "callee": "service.job_store.create",
+          "lineNumber": 53
+        },
+        {
+          "caller": "test_extract_group_reuses_caller_job_id",
+          "callee": "service.extract_group",
+          "lineNumber": 54
+        },
+        {
+          "caller": "test_extract_group_reuses_caller_job_id",
+          "callee": "UploadedFilePart",
+          "lineNumber": 55
+        },
+        {
+          "caller": "test_extract_group_reuses_caller_job_id",
+          "callee": "str",
+          "lineNumber": 57
+        },
+        {
+          "caller": "test_extract_group_reuses_caller_job_id",
+          "callee": "service.job_store.get",
+          "lineNumber": 58
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "_service",
+          "lineNumber": 64
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "AsyncMock",
+          "lineNumber": 65
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "asyncio.CancelledError",
+          "lineNumber": 65
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "service.job_store.create",
+          "lineNumber": 66
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "pytest.raises",
+          "lineNumber": 67
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "service.extract_group",
+          "lineNumber": 68
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "UploadedFilePart",
+          "lineNumber": 69
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "service.job_store.get",
+          "lineNumber": 71
+        },
+        {
+          "caller": "test_cancelled_extraction_marks_job_failed",
+          "callee": "service.job_store.get_error",
+          "lineNumber": 73
+        },
+        {
+          "caller": "test_run_job_swallows_unexpected_errors",
+          "callee": "_service",
+          "lineNumber": 78
+        },
+        {
+          "caller": "test_run_job_swallows_unexpected_errors",
+          "callee": "AsyncMock",
+          "lineNumber": 79
+        },
+        {
+          "caller": "test_run_job_swallows_unexpected_errors",
+          "callee": "RuntimeError",
+          "lineNumber": 79
+        },
+        {
+          "caller": "test_run_job_swallows_unexpected_errors",
+          "callee": "service.run_job",
+          "lineNumber": 80
+        },
+        {
+          "caller": "test_run_job_swallows_unexpected_errors",
+          "callee": "uuid4",
+          "lineNumber": 80
+        },
+        {
+          "caller": "test_run_job_swallows_unexpected_errors",
+          "callee": "UploadedFilePart",
+          "lineNumber": 80
+        },
+        {
+          "caller": "test_get_batch_status_surfaces_failed_error",
+          "callee": "_service",
+          "lineNumber": 84
+        },
+        {
+          "caller": "test_get_batch_status_surfaces_failed_error",
+          "callee": "service.job_store.create",
+          "lineNumber": 85
+        },
+        {
+          "caller": "test_get_batch_status_surfaces_failed_error",
+          "callee": "service.job_store.fail_job",
+          "lineNumber": 86
+        },
+        {
+          "caller": "test_get_batch_status_surfaces_failed_error",
+          "callee": "service.get_batch_status",
+          "lineNumber": 87
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "SQLiteJobStore",
+          "lineNumber": 94
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "str",
+          "lineNumber": 94
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "store.create",
+          "lineNumber": 95
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "store.create",
+          "lineNumber": 96
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "store.fail_stale_queued",
+          "lineNumber": 97
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "store.get",
+          "lineNumber": 98
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "store.get_error",
+          "lineNumber": 99
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "store.create",
+          "lineNumber": 101
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "store.save_result",
+          "lineNumber": 102
+        },
+        {
+          "caller": "test_sqlite_fail_stale_queued",
+          "callee": "store.fail_stale_queued",
+          "lineNumber": 103
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "str",
+          "lineNumber": 107
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "SQLiteJobStore",
+          "lineNumber": 108
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "store.create",
+          "lineNumber": 109
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "Settings",
+          "lineNumber": 111
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "(kb / \"field_catalog\").mkdir",
+          "lineNumber": 115
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "(kb / \"field_catalog\" / \"invoice_fields.json\").write_text",
+          "lineNumber": 116
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "json.dumps",
+          "lineNumber": 117
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "str",
+          "lineNumber": 119
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "DocumentExtractionService",
+          "lineNumber": 121
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "SQLiteJobStore",
+          "lineNumber": 122
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "check.list_jobs",
+          "lineNumber": 123
+        },
+        {
+          "caller": "test_service_init_cleans_stale_queued",
+          "callee": "any",
+          "lineNumber": 124
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "api/app/agents/extractors.py", "language": "python", "sizeLines": 187, "fileCategory": "code"},
+    {"path": "api/app/agents/validator.py", "language": "python", "sizeLines": 160, "fileCategory": "code"},
+    {"path": "api/app/core/security.py", "language": "python", "sizeLines": 112, "fileCategory": "code"},
+    {"path": "api/app/schemas/documents.py", "language": "python", "sizeLines": 174, "fileCategory": "code"},
+    {"path": "api/app/services/date_formats.py", "language": "python", "sizeLines": 17, "fileCategory": "code"},
+    {"path": "api/app/services/field_catalog.py", "language": "python", "sizeLines": 325, "fileCategory": "code"},
+    {"path": "api/app/services/knowledge_base.py", "language": "python", "sizeLines": 98, "fileCategory": "code"},
+    {"path": "api/app/services/rapidocr_client.py", "language": "python", "sizeLines": 254, "fileCategory": "code"},
+    {"path": "api/app/temporal/activities.py", "language": "python", "sizeLines": 108, "fileCategory": "code"},
+    {"path": "api/tests/test_all.py", "language": "python", "sizeLines": 267, "fileCategory": "code"},
+    {"path": "api/tests/test_catalog_registration.py", "language": "python", "sizeLines": 129, "fileCategory": "code"},
+    {"path": "api/tests/test_extraction_filters.py", "language": "python", "sizeLines": 43, "fileCategory": "code"},
+    {"path": "api/tests/test_field_catalog.py", "language": "python", "sizeLines": 138, "fileCategory": "code"},
+    {"path": "api/tests/test_schemas.py", "language": "python", "sizeLines": 64, "fileCategory": "code"},
+    {"path": "api/tests/test_security.py", "language": "python", "sizeLines": 90, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "api/app/agents/extractors.py": ["api/app/core/config.py", "api/app/core/security.py", "api/app/schemas/documents.py", "api/app/schemas/llm_schemas.py", "api/app/services/field_catalog.py", "api/app/services/sut_genai_client.py"],
+    "api/app/agents/validator.py": ["api/app/core/security.py", "api/app/schemas/documents.py", "api/app/services/date_formats.py", "api/app/services/field_catalog.py"],
+    "api/app/core/security.py": [],
+    "api/app/schemas/documents.py": [],
+    "api/app/services/date_formats.py": [],
+    "api/app/services/field_catalog.py": ["api/app/schemas/documents.py"],
+    "api/app/services/knowledge_base.py": ["api/app/schemas/documents.py", "api/app/services/field_catalog.py", "api/app/services/rag_retriever.py"],
+    "api/app/services/rapidocr_client.py": [],
+    "api/app/temporal/activities.py": ["api/app/core/config.py", "api/app/core/security.py", "api/app/schemas/documents.py", "api/app/services/field_catalog.py", "api/app/services/knowledge_base.py", "api/app/services/rapidocr_client.py"],
+    "api/tests/test_all.py": ["api/app/services/rapidocr_client.py"],
+    "api/tests/test_catalog_registration.py": ["api/app/schemas/documents.py", "api/app/services/field_catalog.py"],
+    "api/tests/test_extraction_filters.py": ["api/app/services/field_catalog.py"],
+    "api/tests/test_field_catalog.py": ["api/app/services/field_catalog.py"],
+    "api/tests/test_schemas.py": ["api/app/schemas/documents.py"],
+    "api/tests/test_security.py": ["api/app/core/security.py"]
+  }
+}

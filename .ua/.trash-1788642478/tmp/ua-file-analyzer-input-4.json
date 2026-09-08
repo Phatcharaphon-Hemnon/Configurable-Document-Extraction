@@ -1,0 +1,29 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "api/app/agents/judge.py", "language": "python", "sizeLines": 97, "fileCategory": "code"},
+    {"path": "api/app/agents/router.py", "language": "python", "sizeLines": 90, "fileCategory": "code"},
+    {"path": "api/app/core/config.py", "language": "python", "sizeLines": 141, "fileCategory": "code"},
+    {"path": "api/app/schemas/llm_schemas.py", "language": "python", "sizeLines": 49, "fileCategory": "code"},
+    {"path": "api/app/services/sut_genai_client.py", "language": "python", "sizeLines": 837, "fileCategory": "code"},
+    {"path": "api/scripts/time_gateway_modes.py", "language": "python", "sizeLines": 108, "fileCategory": "code"},
+    {"path": "api/tests/test_rate_limit_retry.py", "language": "python", "sizeLines": 118, "fileCategory": "code"},
+    {"path": "api/tests/test_sut_genai_client_retry.py", "language": "python", "sizeLines": 137, "fileCategory": "code"},
+    {"path": "api/tests/test_sut_genai_fallback_tiers.py", "language": "python", "sizeLines": 314, "fileCategory": "code"},
+    {"path": "api/tests/test_sut_genai_schema.py", "language": "python", "sizeLines": 60, "fileCategory": "code"},
+    {"path": "api/tests/test_sut_genai_timeout.py", "language": "python", "sizeLines": 126, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "api/app/agents/judge.py": ["api/app/core/config.py", "api/app/core/security.py", "api/app/schemas/documents.py", "api/app/schemas/llm_schemas.py", "api/app/services/sut_genai_client.py"],
+    "api/app/agents/router.py": ["api/app/core/config.py", "api/app/core/security.py", "api/app/schemas/documents.py", "api/app/schemas/llm_schemas.py", "api/app/services/sut_genai_client.py"],
+    "api/app/core/config.py": [],
+    "api/app/schemas/llm_schemas.py": [],
+    "api/app/services/sut_genai_client.py": ["api/app/core/config.py"],
+    "api/scripts/time_gateway_modes.py": ["api/app/core/config.py", "api/app/schemas/llm_schemas.py", "api/app/services/sut_genai_client.py"],
+    "api/tests/test_rate_limit_retry.py": ["api/app/services/sut_genai_client.py"],
+    "api/tests/test_sut_genai_client_retry.py": ["api/app/core/config.py", "api/app/services/sut_genai_client.py"],
+    "api/tests/test_sut_genai_fallback_tiers.py": ["api/app/core/config.py", "api/app/services/sut_genai_client.py"],
+    "api/tests/test_sut_genai_schema.py": ["api/app/services/sut_genai_client.py"],
+    "api/tests/test_sut_genai_timeout.py": ["api/app/core/config.py", "api/app/services/sut_genai_client.py"]
+  }
+}

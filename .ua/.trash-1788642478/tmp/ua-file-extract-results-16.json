@@ -1,0 +1,774 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 13,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 13,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 13
+    }
+  },
+  "results": [
+    {
+      "path": "docs/ai_guardrails.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 1112,
+      "nonEmptyLines": 837,
+      "sections": [
+        {
+          "heading": "AI Guardrails Implementation Plan",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Table of Contents",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Current Security Architecture",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Existing Security Measures",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "Current Injection Patterns",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "Pipeline Security Flow",
+          "level": 3,
+          "line": 54
+        },
+        {
+          "heading": "Guardrail Layers",
+          "level": 2,
+          "line": 62
+        },
+        {
+          "heading": "Layer 1: Input Guards (Pre-Processing)",
+          "level": 3,
+          "line": 64
+        },
+        {
+          "heading": "Layer 2: Processing Guards (In-Flight)",
+          "level": 3,
+          "line": 76
+        },
+        {
+          "heading": "Layer 3: Output Guards (Post-Processing)",
+          "level": 3,
+          "line": 88
+        },
+        {
+          "heading": "Implementation Plan",
+          "level": 2,
+          "line": 102
+        },
+        {
+          "heading": "Phase 1: Input Guards (Week 1-2)",
+          "level": 3,
+          "line": 104
+        },
+        {
+          "heading": "1.1 File Upload Validation",
+          "level": 4,
+          "line": 106
+        },
+        {
+          "heading": "1.2 Rate Limiting",
+          "level": 4,
+          "line": 221
+        },
+        {
+          "heading": "1.3 Content Size Guards",
+          "level": 4,
+          "line": 302
+        },
+        {
+          "heading": "Phase 2: Processing Guards (Week 2-3)",
+          "level": 3,
+          "line": 381
+        },
+        {
+          "heading": "2.1 Stage Timeouts",
+          "level": 4,
+          "line": 383
+        },
+        {
+          "heading": "2.2 Audit Logging",
+          "level": 4,
+          "line": 443
+        },
+        {
+          "heading": "2.3 PII Detection",
+          "level": 4,
+          "line": 571
+        },
+        {
+          "heading": "Phase 3: Output Guards (Week 3-4)",
+          "level": 3,
+          "line": 682
+        },
+        {
+          "heading": "3.1 Response Schema Validation",
+          "level": 4,
+          "line": 684
+        },
+        {
+          "heading": "Implementation Plan",
+          "level": 2,
+          "line": 820
+        },
+        {
+          "heading": "Week 1: Input Guards",
+          "level": 3,
+          "line": 822
+        },
+        {
+          "heading": "Week 2: Processing Guards",
+          "level": 3,
+          "line": 831
+        },
+        {
+          "heading": "Week 3: Output Guards",
+          "level": 3,
+          "line": 840
+        },
+        {
+          "heading": "Week 4: Testing & Documentation",
+          "level": 3,
+          "line": 849
+        },
+        {
+          "heading": "Code Examples",
+          "level": 2,
+          "line": 860
+        },
+        {
+          "heading": "Integration in Routes",
+          "level": 3,
+          "line": 862
+        },
+        {
+          "heading": "Integration in Extraction Service",
+          "level": 3,
+          "line": 905
+        },
+        {
+          "heading": "Testing Strategy",
+          "level": 2,
+          "line": 944
+        },
+        {
+          "heading": "Unit Tests",
+          "level": 3,
+          "line": 946
+        },
+        {
+          "heading": "Integration Tests",
+          "level": 3,
+          "line": 989
+        },
+        {
+          "heading": "Configuration",
+          "level": 2,
+          "line": 1024
+        },
+        {
+          "heading": "Environment Variables",
+          "level": 3,
+          "line": 1026
+        },
+        {
+          "heading": "Settings Class Updates",
+          "level": 3,
+          "line": 1065
+        },
+        {
+          "heading": "Summary",
+          "level": 2,
+          "line": 1097
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 37
+      }
+    },
+    {
+      "path": "docs/architecture.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 43,
+      "nonEmptyLines": 36,
+      "sections": [
+        {
+          "heading": "Architecture",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Pipeline stages",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Security model",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Token minimization",
+          "level": 2,
+          "line": 38
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/async_jobs.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 62,
+      "nonEmptyLines": 52,
+      "sections": [
+        {
+          "heading": "Async Extraction Jobs",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Flow",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Backend (`api/app/api/routes.py`, `extraction_service.py`)",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "Frontend (`web/src/`)",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "Verifying",
+          "level": 2,
+          "line": 50
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/backend.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 44,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "Backend",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Modules",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "API",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "Knowledge base layout",
+          "level": 2,
+          "line": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/catalog_review.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 49,
+      "nonEmptyLines": 39,
+      "sections": [
+        {
+          "heading": "Catalog Review — Curating AI-Discovered Fields",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Review helper",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Curating",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "Auto-add gate (for reference)",
+          "level": 2,
+          "line": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/frontend.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 50,
+      "nonEmptyLines": 41,
+      "sections": [
+        {
+          "heading": "Frontend",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Theming",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Structure",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Behaviour",
+          "level": 2,
+          "line": 34
+        },
+        {
+          "heading": "Env",
+          "level": 2,
+          "line": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/hallucination_audit_2026-09-06.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 79,
+      "nonEmptyLines": 67,
+      "sections": [
+        {
+          "heading": "Hallucination Audit — Extraction Pipeline (2026-09-06)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Issue 1: source_span is prompt-level advice only, never schema-enforced",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Issue 2: plain-prompt fallback tier drops the document and the rules",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "Issue 3: \"Invent a name\" rule encourages fabricated new fields",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "Issue 4: token-overlap check passes scattered / generic / short spans",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "Issue 5: empty document text disables evidence checking entirely",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "Issue 6: is_image_extraction=True unconditional-trust bypass is live API",
+          "level": 2,
+          "line": 46
+        },
+        {
+          "heading": "Issue 7: validator checks the serialized blob, not array rows",
+          "level": 2,
+          "line": 53
+        },
+        {
+          "heading": "Issue 8: judge_skip_when_clean can launder a confidently-wrong result",
+          "level": 2,
+          "line": 60
+        },
+        {
+          "heading": "Issue 9: hallucinated names are permanently written to the catalog",
+          "level": 2,
+          "line": 67
+        },
+        {
+          "heading": "Issue 10: validation flags but never blocks — bad values ship with a flag",
+          "level": 2,
+          "line": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "docs/hallucination_fixes_2026-09-06.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 265,
+      "nonEmptyLines": 214,
+      "sections": [
+        {
+          "heading": "Hallucination Fixes — 2026-09-06",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Summary",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "2. Findings",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Issue 1: source_span was prompt advice, never schema-enforced (medium)",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "Issue 2: plain-prompt fallback repaired JSON with no document in context (high)",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "Issue 3: \"invent a name\" rule could mint fabricated fields (medium)",
+          "level": 3,
+          "line": 62
+        },
+        {
+          "heading": "Issue 4: token-overlap check passed scattered / generic / short spans (high)",
+          "level": 3,
+          "line": 80
+        },
+        {
+          "heading": "Issue 5: empty document text disabled evidence checking entirely (high)",
+          "level": 3,
+          "line": 95
+        },
+        {
+          "heading": "Issue 6: is_image_extraction unconditional-trust bypass (low)",
+          "level": 3,
+          "line": 110
+        },
+        {
+          "heading": "Issue 7: validator checked the serialized blob, not array rows (high)",
+          "level": 3,
+          "line": 127
+        },
+        {
+          "heading": "Issue 8: judge_skip_when_clean could launder a confidently-wrong result (high)",
+          "level": 3,
+          "line": 144
+        },
+        {
+          "heading": "Issue 9: hallucinated names permanently written to the catalog (high)",
+          "level": 3,
+          "line": 164
+        },
+        {
+          "heading": "Issue 10: validation flags but never blocks (medium) — DEFERRED",
+          "level": 3,
+          "line": 184
+        },
+        {
+          "heading": "3. Changes made",
+          "level": 2,
+          "line": 198
+        },
+        {
+          "heading": "4. What this does NOT fix",
+          "level": 2,
+          "line": 231
+        },
+        {
+          "heading": "5. Verification",
+          "level": 2,
+          "line": 252
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    },
+    {
+      "path": "docs/hallucination_fixes_manifest_2026-09-06.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 82,
+      "nonEmptyLines": 82,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    },
+    {
+      "path": "docs/langfuse_tracing.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 83,
+      "nonEmptyLines": 69,
+      "sections": [
+        {
+          "heading": "Langfuse Tracing",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "What is traced",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Design decisions",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Configuration (`api/.env`)",
+          "level": 2,
+          "line": 55
+        },
+        {
+          "heading": "Audit (2026-09-04, live trace)",
+          "level": 2,
+          "line": 63
+        },
+        {
+          "heading": "Tests",
+          "level": 2,
+          "line": 78
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "docs/local_ocr.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 79,
+      "nonEmptyLines": 64,
+      "sections": [
+        {
+          "heading": "Local OCR Pipeline (RapidOCR)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "How it works (`api/app/services/rapidocr_client.py`)",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "Limitations",
+          "level": 3,
+          "line": 36
+        },
+        {
+          "heading": "Configuration (`api/.env`)",
+          "level": 2,
+          "line": 47
+        },
+        {
+          "heading": "Files involved",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "Testing",
+          "level": 2,
+          "line": 65
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/rag_kb.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 46,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "RAG / Knowledge-Base Retrieval (v0.2.0)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Sources (RAG inventory)",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "How retrieval works",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Why TF-IDF and not embeddings",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Verification",
+          "level": 2,
+          "line": 39
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/timeout_recovery.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 74,
+      "nonEmptyLines": 60,
+      "sections": [
+        {
+          "heading": "LLM Timeout Recovery & Latency Tuning",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Root cause (measured, not guessed)",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "How recovery works now",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "Measured effect",
+          "level": 2,
+          "line": 44
+        },
+        {
+          "heading": "Knobs (`api/.env`)",
+          "level": 2,
+          "line": 52
+        },
+        {
+          "heading": "Re-running the probe",
+          "level": 2,
+          "line": 65
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    }
+  ]
+}

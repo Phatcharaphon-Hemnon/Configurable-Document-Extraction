@@ -76,10 +76,9 @@ Copy `api/.env.example` → `api/.env`:
 
 | Variable | Purpose |
 |---|---|
-| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider (`openai` \| `ollama-cloud` \| `ollama-local`), the only secret, and the single text model for Router + Extractor + Judge (this branch: `ollama-cloud` + `gpt-oss:20b`). See `docs/ai_provider.md`. |
-| `PADDLEOCR_LANG` | OCR language (`en` default, `th` for Thai documents). |
-| `PADDLEOCR_USE_GPU` | `true` (default) = GPU with CPU fallback; `false` = force CPU. |
-| `PADDLEOCR_DPI` | PDF render resolution (default `300`). |
+| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider, the only secret, and the single text model for Router + Extractor + Judge. `LLM_PROVIDER`: `openai` \| `xai` \| `gemini` \| `openrouter` \| `deepseek` \| `kimi` \| `ollama-cloud` \| `ollama-local` \| `mistral` \| `openclaw` \| `opencode` (no native Claude entry — reach it via `openrouter`/`opencode`). `LLM_MODEL` accepts **any** model ID of the active provider (defaults per provider; required for `deepseek`). See `docs/ai_provider.md`. |
+| `OCR_DPI` | PDF render resolution for local RapidOCR (default `300`). |
+| `SUPPORTED_LANGUAGES` | OCR languages (default `en,th`). |
 | `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Optional per-stage overrides (default: `LLM_MODEL`). |
 | `FEW_SHOT_EXAMPLES_PER_DOC_TYPE` | Few-shot injection count (default 0 = cheapest). |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_HOST` | Optional tracing. |
@@ -87,6 +86,32 @@ Copy `api/.env.example` → `api/.env`:
 
 Frontend: `web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api`
 (the `/api` prefix is required).
+
+### Provider base URLs (automatic per `LLM_PROVIDER`)
+
+| `LLM_PROVIDER` | Base URL | Key env var |
+|---|---|---|
+| `openai` | `https://api.openai.com/v1` | `OPENAI_API_KEY` |
+| `xai` | `https://api.x.ai/v1` | `XAI_API_KEY` |
+| `gemini` | `https://generativelanguage.googleapis.com/v1beta/openai/` | `GEMINI_API_KEY` |
+| `openrouter` | `https://openrouter.ai/api/v1` | `OPENROUTER_API_KEY` |
+| `deepseek` | `https://api.deepseek.com` | `DEEPSEEK_API_KEY` |
+| `kimi` | `https://api.moonshot.ai/v1` | `MOONSHOT_API_KEY` |
+| `ollama-cloud` | `https://ollama.com/v1` | `OLLAMA_API_KEY` |
+| `ollama-local` | `http://localhost:11434/v1` | — (no key) |
+| `mistral` | `https://api.mistral.ai/v1` | `MISTRAL_API_KEY` |
+| `openclaw` | `http://127.0.0.1:18789/v1` | `OPENCLAW_API_KEY` (gateway token) |
+| `opencode` | `https://opencode.ai/zen/v1` | `OPENCODE_API_KEY` (`public` = free tier) |
+
+`LLM_API_KEY` falls back to the provider's native key var when set; either
+one works. `LLM_BASE_URL` overrides the table (e.g. Kimi China region
+`https://api.moonshot.cn/v1`). Example — any Zen model ID works as-is:
+
+```bash
+LLM_PROVIDER=opencode
+LLM_API_KEY=<your key>
+LLM_MODEL=nemotron-3.5-lightning-free   # or gpt-5.4-mini, kimi-k2.6, …
+```
 
 ## API contract
 
@@ -110,7 +135,7 @@ Core result shape (one per document/page):
 
 ```bash
 source .venv/bin/activate
-ruff check backend/ && python -m pytest api/tests/ -q   # lint + tests
+ruff check api/ && python -m pytest api/tests/ -q   # lint + tests
 cd web && npm run build                                # typecheck + build
 ```
 

@@ -1,0 +1,226 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 3,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "api/app/temporal/client.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 14,
+      "nonEmptyLines": 8,
+      "functions": [
+        {
+          "name": "get_temporal_client",
+          "startLine": 12,
+          "endLine": 14,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "get_temporal_client",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get_temporal_client",
+          "callee": "Client.connect",
+          "lineNumber": 14
+        },
+        {
+          "caller": "get_temporal_client",
+          "callee": "get_settings",
+          "lineNumber": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "api/app/temporal/worker.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 47,
+      "nonEmptyLines": 35,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 27,
+          "endLine": 43,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "main",
+          "line": 27,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "get_temporal_client",
+          "lineNumber": 28
+        },
+        {
+          "caller": "main",
+          "callee": "Worker",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 42
+        },
+        {
+          "caller": "main",
+          "callee": "worker.run",
+          "lineNumber": 43
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "api/app/temporal/workflows.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 78,
+      "nonEmptyLines": 66,
+      "functions": [
+        {
+          "name": "_timeout",
+          "startLine": 27,
+          "endLine": 28,
+          "params": [
+            "seconds"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ExtractDocumentWorkflow",
+          "startLine": 32,
+          "endLine": 78,
+          "methods": [
+            "run"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "_timeout",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "ExtractDocumentWorkflow",
+          "line": 31,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_timeout",
+          "callee": "timedelta",
+          "lineNumber": 28
+        },
+        {
+          "caller": "run",
+          "callee": "workflow.execute_activity",
+          "lineNumber": 40
+        },
+        {
+          "caller": "run",
+          "callee": "_timeout",
+          "lineNumber": 43
+        },
+        {
+          "caller": "run",
+          "callee": "workflow.execute_activity",
+          "lineNumber": 49
+        },
+        {
+          "caller": "run",
+          "callee": "_timeout",
+          "lineNumber": 52
+        },
+        {
+          "caller": "run",
+          "callee": "workflow.execute_activity",
+          "lineNumber": 55
+        },
+        {
+          "caller": "run",
+          "callee": "_timeout",
+          "lineNumber": 58
+        },
+        {
+          "caller": "run",
+          "callee": "workflow.execute_activity",
+          "lineNumber": 61
+        },
+        {
+          "caller": "run",
+          "callee": "_timeout",
+          "lineNumber": 64
+        },
+        {
+          "caller": "run",
+          "callee": "workflow.execute_activity",
+          "lineNumber": 67
+        },
+        {
+          "caller": "run",
+          "callee": "_timeout",
+          "lineNumber": 70
+        },
+        {
+          "caller": "run",
+          "callee": "results.append",
+          "lineNumber": 73
+        },
+        {
+          "caller": "run",
+          "callee": "FileUploadMeta(filename=filename, content_type=content_type).model_dump",
+          "lineNumber": 76
+        },
+        {
+          "caller": "run",
+          "callee": "FileUploadMeta",
+          "lineNumber": 76
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    }
+  ]
+}

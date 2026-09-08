@@ -1,0 +1,105 @@
+[
+ {
+  "description": "The README is the best first stop: it explains that this project extracts structured data from invoices, purchase orders, and delivery notes with a RapidOCR plus Router, Extractor, Validator, and Judge pipeline. It also maps the backend, frontend, and knowledge-base layout and shows the one-command startup, giving you a roadmap for every step that follows.",
+  "nodeIds": [
+   "document:README.md"
+  ],
+  "order": 1,
+  "title": "Project Overview"
+ },
+ {
+  "description": "Every run starts in one of two places: the FastAPI factory wires the API router and health check on port 8000, while the React bootstrap mounts the root App component for the port 5173 workbench. Together they show the system's split personality \u2014 a Python extraction backend behind a TypeScript review UI \u2014 and both are top entry-point candidates in the structural analysis.",
+  "nodeIds": [
+   "file:api/app/main.py",
+   "file:web/src/main.tsx"
+  ],
+  "order": 2,
+  "title": "Application Entry Points"
+ },
+ {
+  "description": "One hop down from the backend entry (BFS depth 1) sit the HTTP surface and the settings hub: the router exposes extraction, batch-job, evaluation, and stats endpoints under /api, and the central Settings object feeds configuration to nearly every service \u2014 it is the most-depended-upon node in the graph. Learn these two and you know how requests enter and how behavior is tuned.",
+  "nodeIds": [
+   "file:api/app/api/routes.py",
+   "file:api/app/core/config.py"
+  ],
+  "order": 3,
+  "title": "API Routes and Configuration"
+ },
+ {
+  "description": "Building on the endpoints from Step 3, these Pydantic contracts define the language the whole pipeline speaks: extraction results with per-field evidence spans and confidence, routing and judge verdicts, and the request/response models. The second file constrains raw LLM output into the same shapes, which is why the schemas rank second by fan-in \u2014 everything imports them.",
+  "languageLesson": "Pydantic models validate data at runtime, not just at type-check time: field types, literals like the three document types, and required evidence fields are enforced whenever pipeline stages exchange results, turning contract violations into explicit errors instead of silent corruption.",
+  "nodeIds": [
+   "file:api/app/schemas/documents.py",
+   "file:api/app/schemas/llm_schemas.py"
+  ],
+  "order": 4,
+  "title": "Contracts and Evidence Model"
+ },
+ {
+  "description": "The extraction service is the pipeline's conductor with the highest fan-out in the backend: it chains RapidOCR, routing, extraction, validation, and judging for both single documents and async batch jobs. The durable Temporal workflow and its activities wrap the same five stages so long multi-page PDF runs survive restarts, with the in-process path used by default.",
+  "nodeIds": [
+   "file:api/app/services/extraction_service.py",
+   "file:api/app/temporal/workflows.py",
+   "file:api/app/temporal/activities.py"
+  ],
+  "order": 5,
+  "title": "Pipeline Orchestration"
+ },
+ {
+  "description": "Inside the orchestration from Step 5 live the four agents: the Router classifies each page as invoice, purchase order, or delivery note and detects its language, the per-type Extractors build compact catalog-grounded prompts, the Validator checks catalog membership and quoted evidence, and the Judge issues the final pass score. Follow them in this order and you trace exactly how raw OCR text becomes a trusted extraction result.",
+  "nodeIds": [
+   "file:api/app/agents/router.py",
+   "file:api/app/agents/extractors.py",
+   "file:api/app/agents/validator.py",
+   "file:api/app/agents/judge.py"
+  ],
+  "order": 6,
+  "title": "Router to Judge Agents"
+ },
+ {
+  "description": "The agents from Step 6 all stand on two foundations: the local RapidOCR client renders PDFs at 300 DPI and OCRs images on-host with cached engines, so no vision model is needed, and the gateway client sends text prompts with structured-output fallbacks, retries, and usage tracking. The optional Langfuse wrapper traces each generation with PII-masked inputs, giving full observability when keys are configured.",
+  "nodeIds": [
+   "file:api/app/services/rapidocr_client.py",
+   "file:api/app/services/sut_genai_client.py",
+   "file:api/app/observability/langfuse.py"
+  ],
+  "order": 7,
+  "title": "OCR and Model Foundation"
+ },
+ {
+  "description": "Trust is enforced before and after the LLM calls: the sanitizer strips prompt-injection attempts from document text and every field must carry a contiguous quoted source span, while the field catalog demands exact name matches and only registers AI-discovered fields that pass confidence and evidence gates. The invoice catalog file shows the discipline in practice, and the content guard validates sizes and shapes of text, prompts, and spans throughout.",
+  "nodeIds": [
+   "file:api/app/core/security.py",
+   "file:api/app/services/field_catalog.py",
+   "config:api/app/data/knowledge_base/field_catalog/invoice_fields.json",
+   "file:api/app/guards/content_guard.py"
+  ],
+  "order": 8,
+  "title": "Trust Guards and Catalog"
+ },
+ {
+  "description": "Supporting the extractors, the knowledge-base repository serves few-shot examples ranked by lexical similarity and the TF-IDF retriever picks per-query top-N examples instead of a fixed prefix. Finished work lands in the job store's SQLite persistence, and the frontend shell \u2014 the App composition plus the API client \u2014 lets reviewers upload documents, poll jobs, and inspect results across extraction, evaluation, and history tabs.",
+  "nodeIds": [
+   "file:api/app/services/knowledge_base.py",
+   "file:api/app/services/rag_retriever.py",
+   "file:api/app/services/job_store.py",
+   "file:web/src/App.tsx",
+   "file:web/src/api/client.ts"
+  ],
+  "order": 9,
+  "title": "Knowledge Jobs and UI"
+ },
+ {
+  "description": "The tour closes with how quality is proven and shipped: the evaluation harness scores live or mock extractions against ground-truth fixtures like the invoice example here, and the end-to-end pipeline tests pin the happy path, catalog registration, and judge gating. The architecture document ties the layers together, and the CI workflow runs lint, pytest, mock eval, and the frontend build on every push.",
+  "languageLesson": "GitHub Actions workflows use on triggers, jobs for parallel checks, and steps for sequential commands inside each job \u2014 here one workflow fans out across backend verification, evaluation reporting, and the web type-check plus build, so a green run means the full stack agrees.",
+  "nodeIds": [
+   "file:api/scripts/run_eval.py",
+   "file:api/tests/test_pipeline.py",
+   "config:api/app/data/knowledge_base/ground_truth/invoice_01.json",
+   "document:docs/architecture.md",
+   "pipeline:.github/workflows/ci.yml"
+  ],
+  "order": 10,
+  "title": "Evaluation and Delivery"
+ }
+]

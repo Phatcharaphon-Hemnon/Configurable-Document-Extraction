@@ -1,0 +1,1381 @@
+{
+ "nodes": [
+  {
+   "id": "file:api/app/agents/extractors.py",
+   "type": "file",
+   "name": "extractors.py",
+   "summary": "Per-document-type LLM extraction agents (invoice, purchase order, delivery note) that build compact catalog-grounded prompts, coerce values, and filter placeholders.",
+   "tags": [
+    "extraction",
+    "llm-agent",
+    "document-processing",
+    "prompt-building"
+   ],
+   "complexity": "moderate",
+   "filePath": "api/app/agents/extractors.py"
+  },
+  {
+   "id": "function:api/app/agents/extractors.py:_build_prompt",
+   "type": "function",
+   "name": "_build_prompt",
+   "summary": "Assembles the compact extraction prompt from doc label, catalog snippet, document text, and few-shot examples.",
+   "tags": "utility,prompt-building,llm",
+   "complexity": "simple",
+   "lineRange": [
+    54,
+    69
+   ]
+  },
+  {
+   "id": "function:api/app/agents/extractors.py:_coerce_value",
+   "type": "function",
+   "name": "_coerce_value",
+   "summary": "Normalizes raw LLM values into string, numeric, or JSON-encoded form for ExtractedField construction.",
+   "tags": "utility,value-coercion,serialization",
+   "complexity": "simple",
+   "lineRange": [
+    72,
+    83
+   ]
+  },
+  {
+   "id": "function:api/app/agents/extractors.py:build_extractors",
+   "type": "function",
+   "name": "build_extractors",
+   "summary": "Factory that instantiates the invoice, purchase-order, and delivery-note extractors from shared settings and catalog.",
+   "tags": "factory,extraction,configuration",
+   "complexity": "simple",
+   "lineRange": [
+    180,
+    187
+   ]
+  },
+  {
+   "id": "class:api/app/agents/extractors.py:BaseExtractor",
+   "type": "class",
+   "name": "BaseExtractor",
+   "summary": "Shared extractor base that sanitizes text, calls the text LLM client, and maps schema entries to evidenced ExtractedField objects.",
+   "tags": "extraction,llm-agent,base-class",
+   "complexity": "moderate",
+   "lineRange": [
+    86,
+    162
+   ]
+  },
+  {
+   "id": "class:api/app/agents/extractors.py:InvoiceExtractor",
+   "type": "class",
+   "name": "InvoiceExtractor",
+   "summary": "Extractor specialization bound to the invoice document type and its catalog fields.",
+   "tags": "extraction,invoice,document-processing",
+   "complexity": "simple",
+   "lineRange": [
+    165,
+    167
+   ]
+  },
+  {
+   "id": "class:api/app/agents/extractors.py:PurchaseOrderExtractor",
+   "type": "class",
+   "name": "PurchaseOrderExtractor",
+   "summary": "Extractor specialization bound to the purchase-order document type and its catalog fields.",
+   "tags": "extraction,purchase-order,document-processing",
+   "complexity": "simple",
+   "lineRange": [
+    170,
+    172
+   ]
+  },
+  {
+   "id": "class:api/app/agents/extractors.py:DeliveryNoteExtractor",
+   "type": "class",
+   "name": "DeliveryNoteExtractor",
+   "summary": "Extractor specialization bound to the delivery-note document type and its catalog fields.",
+   "tags": "extraction,delivery-note,document-processing",
+   "complexity": "simple",
+   "lineRange": [
+    175,
+    177
+   ]
+  },
+  {
+   "id": "file:api/app/agents/validator.py",
+   "type": "file",
+   "name": "validator.py",
+   "summary": "Validation agent that checks extracted fields against the catalog, verifies source evidence, flags phantom array rows, and type-checks dates.",
+   "tags": "validation,evidence-check,data-quality",
+   "complexity": "moderate",
+   "filePath": "api/app/agents/validator.py"
+  },
+  {
+   "id": "function:api/app/agents/validator.py:_check_array_rows",
+   "type": "function",
+   "name": "_check_array_rows",
+   "summary": "Detects hallucinated line-item rows by verifying each JSON array row's tokens appear in the document text.",
+   "tags": "validation,hallucination-detection,array-fields",
+   "complexity": "moderate",
+   "lineRange": [
+    21,
+    71
+   ]
+  },
+  {
+   "id": "function:api/app/agents/validator.py:_try_parse_date",
+   "type": "function",
+   "name": "_try_parse_date",
+   "summary": "Attempts to parse a value against known date formats, returning a date or None.",
+   "tags": "utility,date-parsing,validation",
+   "complexity": "simple",
+   "lineRange": [
+    74,
+    83
+   ]
+  },
+  {
+   "id": "class:api/app/agents/validator.py:ValidatorAgent",
+   "type": "class",
+   "name": "ValidatorAgent",
+   "summary": "Applies catalog, evidence, array-row, and type checks to produce validation errors and a completeness score.",
+   "tags": "validation,evidence-check,data-quality",
+   "complexity": "moderate",
+   "lineRange": [
+    86,
+    160
+   ]
+  },
+  {
+   "id": "file:api/app/core/security.py",
+   "type": "file",
+   "name": "security.py",
+   "summary": "Prompt-injection guard that sanitizes document text and verifies each extracted field carries contiguous quoted evidence.",
+   "tags": "security,prompt-injection,evidence-check",
+   "complexity": "moderate",
+   "filePath": "api/app/core/security.py"
+  },
+  {
+   "id": "function:api/app/core/security.py:sanitize_document_text",
+   "type": "function",
+   "name": "sanitize_document_text",
+   "summary": "Strips role tags and known injection phrases from document text and caps its length.",
+   "tags": "security,prompt-injection,sanitization",
+   "complexity": "simple",
+   "lineRange": [
+    32,
+    49
+   ]
+  },
+  {
+   "id": "function:api/app/core/security.py:is_suspicious",
+   "type": "function",
+   "name": "is_suspicious",
+   "summary": "Reports whether text matches any known prompt-injection pattern.",
+   "tags": "security,prompt-injection,detection",
+   "complexity": "simple",
+   "lineRange": [
+    52,
+    56
+   ]
+  },
+  {
+   "id": "function:api/app/core/security.py:check_evidence",
+   "type": "function",
+   "name": "check_evidence",
+   "summary": "Verifies a field's source span is present and sufficiently contiguous in the document, defeating scattered-word and image-bypass tricks.",
+   "tags": "security,evidence-check,hallucination-detection",
+   "complexity": "moderate",
+   "lineRange": [
+    59,
+    112
+   ]
+  },
+  {
+   "id": "file:api/app/schemas/documents.py",
+   "type": "file",
+   "name": "documents.py",
+   "summary": "Pydantic contracts for the whole pipeline: field catalog entries, extraction results with evidence, routing, judge, and API request/response models.",
+   "tags": "data-model,type-definition,api-schema",
+   "complexity": "moderate",
+   "filePath": "api/app/schemas/documents.py"
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:DocumentLanguage",
+   "type": "class",
+   "name": "DocumentLanguage",
+   "summary": "Language tag detected by the router such as en, th, or other.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    20,
+    21
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:FieldDefinition",
+   "type": "class",
+   "name": "FieldDefinition",
+   "summary": "One catalog field definition with name, description, type, required flag, and origin.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    28,
+    35
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:CatalogReconcileReport",
+   "type": "class",
+   "name": "CatalogReconcileReport",
+   "summary": "Outcome of reconciling AI-discovered names against the catalog, listing matched and new fields.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    38,
+    43
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:ExtractedField",
+   "type": "class",
+   "name": "ExtractedField",
+   "summary": "Single extracted value with confidence, quoted source span, and new-field marker; the core hallucination-control unit.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    50,
+    63
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:ValidationResult",
+   "type": "class",
+   "name": "ValidationResult",
+   "summary": "Validator output carrying validity flag, completeness score, and issue list.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    66,
+    69
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:JudgeIssue",
+   "type": "class",
+   "name": "JudgeIssue",
+   "summary": "Single quality issue raised by the judge agent with field, message, and severity.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    72,
+    75
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:JudgeResult",
+   "type": "class",
+   "name": "JudgeResult",
+   "summary": "Judge agent verdict with overall score, issues, and notes.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    78,
+    81
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:RoutingDecision",
+   "type": "class",
+   "name": "RoutingDecision",
+   "summary": "Router output assigning a document type, language, confidence, and reason.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    84,
+    88
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:ExtractionResult",
+   "type": "class",
+   "name": "ExtractionResult",
+   "summary": "Full per-document extraction result with fields, validation errors, review flag, judge verdict, and provenance.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    91,
+    112
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:FileUploadMeta",
+   "type": "class",
+   "name": "FileUploadMeta",
+   "summary": "Uploaded file metadata with filename, content type, and size.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    115,
+    118
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:FileExtractionResponse",
+   "type": "class",
+   "name": "FileExtractionResponse",
+   "summary": "API response wrapping the documents extracted from one uploaded file plus job id.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    121,
+    125
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:TemplateSchema",
+   "type": "class",
+   "name": "TemplateSchema",
+   "summary": "Document-type template describing its catalog fields for listing endpoints.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    132,
+    135
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:EvaluateRequest",
+   "type": "class",
+   "name": "EvaluateRequest",
+   "summary": "Evaluation request pairing a prediction with ground truth and optional source text.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    142,
+    146
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:EvaluateResponse",
+   "type": "class",
+   "name": "EvaluateResponse",
+   "summary": "Evaluation scores with precision, recall, F1, summary, and mismatch details.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    149,
+    155
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:BatchCreateResponse",
+   "type": "class",
+   "name": "BatchCreateResponse",
+   "summary": "Async batch creation response carrying the job id and status.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    162,
+    164
+   ]
+  },
+  {
+   "id": "class:api/app/schemas/documents.py:BatchStatusResponse",
+   "type": "class",
+   "name": "BatchStatusResponse",
+   "summary": "Async job status response with result payload or error message.",
+   "tags": [
+    "data-model",
+    "pydantic",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    167,
+    171
+   ]
+  },
+  {
+   "id": "file:api/app/services/date_formats.py",
+   "type": "file",
+   "name": "date_formats.py",
+   "summary": "Shared list of accepted date string formats used for date parsing across the extraction pipeline.",
+   "tags": "utility,date-parsing,configuration",
+   "complexity": "simple",
+   "filePath": "api/app/services/date_formats.py"
+  },
+  {
+   "id": "file:api/app/services/field_catalog.py",
+   "type": "file",
+   "name": "field_catalog.py",
+   "summary": "JSON-backed field catalog enforcing exact-name matching, plus gates and registration for AI-discovered fields with confidence and evidence thresholds.",
+   "tags": "catalog,data-model,hallucination-control",
+   "complexity": "complex",
+   "filePath": "api/app/services/field_catalog.py"
+  },
+  {
+   "id": "function:api/app/services/field_catalog.py:min_new_field_confidence",
+   "type": "function",
+   "name": "min_new_field_confidence",
+   "summary": "Reads the minimum confidence threshold for registering new fields from the environment with a safe fallback.",
+   "tags": "configuration,threshold,catalog",
+   "complexity": "simple",
+   "lineRange": [
+    53,
+    60
+   ]
+  },
+  {
+   "id": "function:api/app/services/field_catalog.py:normalize_field_name",
+   "type": "function",
+   "name": "normalize_field_name",
+   "summary": "Normalizes field names by case, spacing, and underscores only; aliases are never applied.",
+   "tags": "utility,normalization,catalog",
+   "complexity": "simple",
+   "lineRange": [
+    65,
+    73
+   ]
+  },
+  {
+   "id": "function:api/app/services/field_catalog.py:is_placeholder_value",
+   "type": "function",
+   "name": "is_placeholder_value",
+   "summary": "Detects placeholder values like N/A or TBD that must never be registered as new fields.",
+   "tags": "validation,placeholder-detection,data-quality",
+   "complexity": "simple",
+   "lineRange": [
+    76,
+    83
+   ]
+  },
+  {
+   "id": "function:api/app/services/field_catalog.py:is_sane_field_name",
+   "type": "function",
+   "name": "is_sane_field_name",
+   "summary": "Checks a candidate field name against the strict naming pattern for catalog registration.",
+   "tags": "validation,naming,catalog",
+   "complexity": "simple",
+   "lineRange": [
+    86,
+    88
+   ]
+  },
+  {
+   "id": "function:api/app/services/field_catalog.py:is_registerable_new_field",
+   "type": "function",
+   "name": "is_registerable_new_field",
+   "summary": "Decides whether a discovered field has a real value, sane name, and enough confidence to register.",
+   "tags": "validation,catalog,hallucination-control",
+   "complexity": "simple",
+   "lineRange": [
+    91,
+    98
+   ]
+  },
+  {
+   "id": "function:api/app/services/field_catalog.py:skip_reason",
+   "type": "function",
+   "name": "skip_reason",
+   "summary": "Explains why a discovered field was skipped, covering placeholders, names, confidence, and missing evidence.",
+   "tags": "validation,evidence-check,catalog",
+   "complexity": "moderate",
+   "lineRange": [
+    107,
+    132
+   ]
+  },
+  {
+   "id": "function:api/app/services/field_catalog.py:register_discovered_fields",
+   "type": "function",
+   "name": "register_discovered_fields",
+   "summary": "Registers evidenced AI-discovered fields into the catalog idempotently and reports added versus skipped entries.",
+   "tags": "catalog,registration,idempotent",
+   "complexity": "moderate",
+   "lineRange": [
+    144,
+    180
+   ]
+  },
+  {
+   "id": "class:api/app/services/field_catalog.py:RegistrationOutcome",
+   "type": "class",
+   "name": "RegistrationOutcome",
+   "summary": "Result of a discovery registration run listing updated fields, added names, and skipped entries with reasons.",
+   "tags": "data-model,catalog,registration",
+   "complexity": "simple",
+   "lineRange": [
+    136,
+    141
+   ]
+  },
+  {
+   "id": "class:api/app/services/field_catalog.py:FieldCatalog",
+   "type": "class",
+   "name": "FieldCatalog",
+   "summary": "Cached file-backed catalog with exact lookup, field appending, and compact prompt rendering for extractors.",
+   "tags": "catalog,caching,prompt-building",
+   "complexity": "complex",
+   "lineRange": [
+    183,
+    325
+   ]
+  },
+  {
+   "id": "file:api/app/services/knowledge_base.py",
+   "type": "file",
+   "name": "knowledge_base.py",
+   "summary": "Knowledge-base repository serving few-shot examples ranked by lexical similarity, ground truth, and catalog-derived templates.",
+   "tags": "knowledge-base,few-shot,retrieval",
+   "complexity": "moderate",
+   "filePath": "api/app/services/knowledge_base.py"
+  },
+  {
+   "id": "function:api/app/services/knowledge_base.py:_cap_by_size",
+   "type": "function",
+   "name": "_cap_by_size",
+   "summary": "Trims example lists to fit a byte budget so prompts stay small.",
+   "tags": "utility,prompt-building,token-efficiency",
+   "complexity": "simple",
+   "lineRange": [
+    24,
+    35
+   ]
+  },
+  {
+   "id": "class:api/app/services/knowledge_base.py:KnowledgeBaseRepository",
+   "type": "class",
+   "name": "KnowledgeBaseRepository",
+   "summary": "Loads few-shot examples and ground truth from disk and builds template listings from the field catalog.",
+   "tags": "knowledge-base,repository,few-shot",
+   "complexity": "moderate",
+   "lineRange": [
+    38,
+    98
+   ]
+  },
+  {
+   "id": "file:api/app/services/rapidocr_client.py",
+   "type": "file",
+   "name": "rapidocr_client.py",
+   "summary": "Local RapidOCR client that OCRs images and multi-page PDFs at 300 DPI with thread-safe lazy engine loading and result caching.",
+   "tags": "ocr,document-processing,caching",
+   "complexity": "complex",
+   "filePath": "api/app/services/rapidocr_client.py"
+  },
+  {
+   "id": "class:api/app/services/rapidocr_client.py:RapidOCRClient",
+   "type": "class",
+   "name": "RapidOCRClient",
+   "summary": "Thread-safe on-host OCR engine wrapper exposing sync and async parse entry points with reading-order line recovery.",
+   "tags": "ocr,document-processing,async",
+   "complexity": "complex",
+   "lineRange": [
+    58,
+    254
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "function:api/app/agents/extractors.py:_build_prompt",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "function:api/app/agents/extractors.py:_build_prompt",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "function:api/app/agents/extractors.py:_coerce_value",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "function:api/app/agents/extractors.py:_coerce_value",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "function:api/app/agents/extractors.py:build_extractors",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "function:api/app/agents/extractors.py:build_extractors",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "class:api/app/agents/extractors.py:BaseExtractor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "class:api/app/agents/extractors.py:BaseExtractor",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "class:api/app/agents/extractors.py:InvoiceExtractor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "class:api/app/agents/extractors.py:InvoiceExtractor",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "class:api/app/agents/extractors.py:PurchaseOrderExtractor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "class:api/app/agents/extractors.py:PurchaseOrderExtractor",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "class:api/app/agents/extractors.py:DeliveryNoteExtractor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "class:api/app/agents/extractors.py:DeliveryNoteExtractor",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "function:api/app/agents/validator.py:_check_array_rows",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "function:api/app/agents/validator.py:_check_array_rows",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "function:api/app/agents/validator.py:_try_parse_date",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "function:api/app/agents/validator.py:_try_parse_date",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "class:api/app/agents/validator.py:ValidatorAgent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "class:api/app/agents/validator.py:ValidatorAgent",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/core/security.py",
+   "target": "function:api/app/core/security.py:sanitize_document_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/core/security.py",
+   "target": "function:api/app/core/security.py:sanitize_document_text",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/core/security.py",
+   "target": "function:api/app/core/security.py:is_suspicious",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/core/security.py",
+   "target": "function:api/app/core/security.py:is_suspicious",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/core/security.py",
+   "target": "function:api/app/core/security.py:check_evidence",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/core/security.py",
+   "target": "function:api/app/core/security.py:check_evidence",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:DocumentLanguage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:DocumentLanguage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:FieldDefinition",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:FieldDefinition",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:CatalogReconcileReport",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:CatalogReconcileReport",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:ExtractedField",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:ExtractedField",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:ValidationResult",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:ValidationResult",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:JudgeIssue",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:JudgeIssue",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:JudgeResult",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:JudgeResult",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:RoutingDecision",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:RoutingDecision",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:ExtractionResult",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:ExtractionResult",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:FileUploadMeta",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:FileUploadMeta",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:FileExtractionResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:FileExtractionResponse",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:TemplateSchema",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:TemplateSchema",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:EvaluateRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:EvaluateRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:EvaluateResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:EvaluateResponse",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:BatchCreateResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:BatchCreateResponse",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:BatchStatusResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "class:api/app/schemas/documents.py:BatchStatusResponse",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:min_new_field_confidence",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:min_new_field_confidence",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:normalize_field_name",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:normalize_field_name",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:is_placeholder_value",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:is_placeholder_value",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:is_sane_field_name",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:is_sane_field_name",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:is_registerable_new_field",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:is_registerable_new_field",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:skip_reason",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:skip_reason",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:register_discovered_fields",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "function:api/app/services/field_catalog.py:register_discovered_fields",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "class:api/app/services/field_catalog.py:RegistrationOutcome",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "class:api/app/services/field_catalog.py:RegistrationOutcome",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "class:api/app/services/field_catalog.py:FieldCatalog",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "class:api/app/services/field_catalog.py:FieldCatalog",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/knowledge_base.py",
+   "target": "function:api/app/services/knowledge_base.py:_cap_by_size",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/knowledge_base.py",
+   "target": "function:api/app/services/knowledge_base.py:_cap_by_size",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/knowledge_base.py",
+   "target": "class:api/app/services/knowledge_base.py:KnowledgeBaseRepository",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/knowledge_base.py",
+   "target": "class:api/app/services/knowledge_base.py:KnowledgeBaseRepository",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/rapidocr_client.py",
+   "target": "class:api/app/services/rapidocr_client.py:RapidOCRClient",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/app/services/rapidocr_client.py",
+   "target": "class:api/app/services/rapidocr_client.py:RapidOCRClient",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "file:api/app/core/config.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "file:api/app/core/security.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "file:api/app/schemas/documents.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "file:api/app/schemas/llm_schemas.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "file:api/app/services/field_catalog.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/extractors.py",
+   "target": "file:api/app/services/sut_genai_client.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "file:api/app/core/security.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "file:api/app/schemas/documents.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "file:api/app/services/date_formats.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "file:api/app/services/field_catalog.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "file:api/app/schemas/documents.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/services/knowledge_base.py",
+   "target": "file:api/app/schemas/documents.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/services/knowledge_base.py",
+   "target": "file:api/app/services/field_catalog.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/app/services/knowledge_base.py",
+   "target": "file:api/app/services/rag_retriever.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:api/app/services/field_catalog.py:skip_reason",
+   "target": "function:api/app/core/security.py:check_evidence",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:api/app/services/field_catalog.py:register_discovered_fields",
+   "target": "function:api/app/services/field_catalog.py:skip_reason",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/app/services/rapidocr_client.py",
+   "target": "file:api/tests/test_all.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "file:api/tests/test_catalog_registration.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "file:api/tests/test_field_catalog.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:api/app/services/field_catalog.py",
+   "target": "file:api/tests/test_extraction_filters.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "file:api/tests/test_schemas.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:api/app/schemas/documents.py",
+   "target": "file:api/tests/test_field_catalog.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:api/app/core/security.py",
+   "target": "file:api/tests/test_security.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:api/app/agents/validator.py",
+   "target": "file:api/tests/test_security.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  }
+ ]
+}

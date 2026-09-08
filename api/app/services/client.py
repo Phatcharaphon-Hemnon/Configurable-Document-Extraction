@@ -107,10 +107,19 @@ def _strip_think_blocks(text: str) -> str:
 # Provider billing / quota errors fail fast: retrying or degrading tiers
 # only burns calls — the account needs billing action. Per-minute
 # throttling (rate_limit_exceeded, 429 rate limit) must keep backing off.
+# Keys mirror app.core.config.LLM_PROVIDERS ("": no billing page, e.g. local).
 _BILLING_URLS = {
     "openai": "https://platform.openai.com/account/billing",
+    "xai": "https://console.x.ai",
+    "gemini": "https://aistudio.google.com",
+    "openrouter": "https://openrouter.ai/settings/credits",
+    "deepseek": "https://platform.deepseek.com/usage",
+    "kimi": "https://platform.moonshot.ai/console",
     "ollama-cloud": "https://ollama.com/settings",
     "ollama-local": "",
+    "mistral": "https://console.mistral.ai",
+    "openclaw": "",
+    "opencode": "https://opencode.ai/zen",
 }
 _PAYMENT_MARKERS = (
     "insufficient_quota",

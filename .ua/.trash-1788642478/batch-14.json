@@ -1,0 +1,285 @@
+{
+ "nodes": [
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/delivery_note_01.json",
+   "type": "config",
+   "name": "delivery_note_01.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/delivery_note_01.json",
+   "summary": "Ground-truth expected extraction for delivery-note fixture 01, covering delivery_note_number, delivery_date, sender/recipient parties, items, total_weight and notes; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "delivery-note"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/delivery_note_02.json",
+   "type": "config",
+   "name": "delivery_note_02.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/delivery_note_02.json",
+   "summary": "Ground-truth expected extraction for delivery-note fixture 02, covering delivery_note_number, delivery_date, sender/recipient parties, items, total_weight and notes; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "delivery-note"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/delivery_note_03.json",
+   "type": "config",
+   "name": "delivery_note_03.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/delivery_note_03.json",
+   "summary": "Ground-truth expected extraction for delivery-note fixture 03, covering delivery_note_number, delivery_date, sender/recipient parties, items, total_weight and notes; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "delivery-note"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/delivery_note_04.json",
+   "type": "config",
+   "name": "delivery_note_04.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/delivery_note_04.json",
+   "summary": "Ground-truth expected extraction for delivery-note fixture 04, covering delivery_note_number, delivery_date, sender/recipient parties, items, total_weight and notes; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "delivery-note"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/delivery_note_05.json",
+   "type": "config",
+   "name": "delivery_note_05.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/delivery_note_05.json",
+   "summary": "Ground-truth expected extraction for delivery-note fixture 05, covering delivery_note_number, delivery_date, sender/recipient parties, items, total_weight and notes; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "delivery-note"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/delivery_note_06.json",
+   "type": "config",
+   "name": "delivery_note_06.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/delivery_note_06.json",
+   "summary": "Ground-truth expected extraction for delivery-note fixture 06, covering delivery_note_number, delivery_date, sender/recipient parties, items, total_weight and notes; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "delivery-note"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/invoice_01.json",
+   "type": "config",
+   "name": "invoice_01.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/invoice_01.json",
+   "summary": "Ground-truth expected extraction for invoice fixture 01, covering invoice_number, statement and customer fields, vendor contact, billing totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "invoice"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/invoice_02.json",
+   "type": "config",
+   "name": "invoice_02.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/invoice_02.json",
+   "summary": "Ground-truth expected extraction for invoice fixture 02, covering invoice_number, statement and customer fields, vendor contact, billing totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "invoice"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/invoice_03.json",
+   "type": "config",
+   "name": "invoice_03.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/invoice_03.json",
+   "summary": "Ground-truth expected extraction for invoice fixture 03, covering invoice_number, statement and customer fields, vendor contact, billing totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "invoice"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/invoice_04.json",
+   "type": "config",
+   "name": "invoice_04.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/invoice_04.json",
+   "summary": "Ground-truth expected extraction for invoice fixture 04, covering invoice_number, statement and customer fields, vendor contact, billing totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "invoice"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/invoice_05.json",
+   "type": "config",
+   "name": "invoice_05.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/invoice_05.json",
+   "summary": "Ground-truth expected extraction for invoice fixture 05, covering invoice_number, statement and customer fields, vendor contact, billing totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "invoice"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/invoice_06.json",
+   "type": "config",
+   "name": "invoice_06.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/invoice_06.json",
+   "summary": "Ground-truth expected extraction for invoice fixture 06, covering invoice_number, statement and customer fields, vendor contact, billing totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "invoice"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/invoice_07.json",
+   "type": "config",
+   "name": "invoice_07.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/invoice_07.json",
+   "summary": "Ground-truth expected extraction for invoice fixture 07, covering invoice_number, statement and customer fields, vendor contact, billing totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "invoice"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/po_01.json",
+   "type": "config",
+   "name": "po_01.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/po_01.json",
+   "summary": "Ground-truth expected extraction for purchase-order fixture 01, covering po_number, order_date, supplier/buyer parties, totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "purchase-order"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/po_02.json",
+   "type": "config",
+   "name": "po_02.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/po_02.json",
+   "summary": "Ground-truth expected extraction for purchase-order fixture 02, covering po_number, order_date, supplier/buyer parties, totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "purchase-order"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/po_03.json",
+   "type": "config",
+   "name": "po_03.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/po_03.json",
+   "summary": "Ground-truth expected extraction for purchase-order fixture 03, covering po_number, order_date, supplier/buyer parties, totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "purchase-order"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/po_04.json",
+   "type": "config",
+   "name": "po_04.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/po_04.json",
+   "summary": "Ground-truth expected extraction for purchase-order fixture 04, covering po_number, order_date, supplier/buyer parties, totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "purchase-order"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/po_05.json",
+   "type": "config",
+   "name": "po_05.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/po_05.json",
+   "summary": "Ground-truth expected extraction for purchase-order fixture 05, covering po_number, order_date, supplier/buyer parties, totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "purchase-order"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/po_06.json",
+   "type": "config",
+   "name": "po_06.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/po_06.json",
+   "summary": "Ground-truth expected extraction for purchase-order fixture 06, covering po_number, order_date, supplier/buyer parties, totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "purchase-order"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/ground_truth/po_07.json",
+   "type": "config",
+   "name": "po_07.json",
+   "filePath": "api/app/data/knowledge_base/ground_truth/po_07.json",
+   "summary": "Ground-truth expected extraction for purchase-order fixture 07, covering po_number, order_date, supplier/buyer parties, totals and line_items; used to score pipeline extraction accuracy.",
+   "tags": [
+    "ground-truth",
+    "evaluation",
+    "test-fixture",
+    "purchase-order"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": []
+}

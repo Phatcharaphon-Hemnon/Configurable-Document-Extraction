@@ -1,0 +1,187 @@
+{
+ "nodes": [
+  {
+   "id": "document:docs/ai_guardrails.md",
+   "type": "document",
+   "name": "ai_guardrails.md",
+   "filePath": "docs/ai_guardrails.md",
+   "summary": "Implementation plan for AI guardrail layers (input, processing, and output guards) protecting the extraction pipeline against prompt injection, data leakage, and hallucination.",
+   "tags": [
+    "documentation",
+    "security",
+    "guardrails",
+    "implementation-plan"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "document:docs/architecture.md",
+   "type": "document",
+   "name": "architecture.md",
+   "filePath": "docs/architecture.md",
+   "summary": "System architecture overview describing the RapidOCR to Router to Extractor to Validator to Judge pipeline stages, security model, and token-minimization strategy.",
+   "tags": [
+    "documentation",
+    "architecture",
+    "pipeline",
+    "overview"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:docs/async_jobs.md",
+   "type": "document",
+   "name": "async_jobs.md",
+   "filePath": "docs/async_jobs.md",
+   "summary": "Describes the async extraction job flow where uploads return a job_id immediately and clients poll for results, covering backend single-flight handling and frontend polling.",
+   "tags": [
+    "documentation",
+    "async-jobs",
+    "api-design",
+    "background-tasks"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:docs/backend.md",
+   "type": "document",
+   "name": "backend.md",
+   "filePath": "docs/backend.md",
+   "summary": "Backend module reference mapping each FastAPI app component to its role, plus the REST API surface and knowledge-base directory layout.",
+   "tags": [
+    "documentation",
+    "backend",
+    "api-reference",
+    "module-guide"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:docs/catalog_review.md",
+   "type": "document",
+   "name": "catalog_review.md",
+   "filePath": "docs/catalog_review.md",
+   "summary": "Guide for curating AI-discovered catalog fields using the review helper script, covering suspicious-name flags and the auto-add registration gate.",
+   "tags": [
+    "documentation",
+    "field-catalog",
+    "curation",
+    "review-workflow"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:docs/frontend.md",
+   "type": "document",
+   "name": "frontend.md",
+   "filePath": "docs/frontend.md",
+   "summary": "Frontend overview for the React and TypeScript client covering theming constraints, source structure, upload and multi-page behavior, and required environment configuration.",
+   "tags": [
+    "documentation",
+    "frontend",
+    "react",
+    "configuration"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:docs/hallucination_audit_2026-09-06.md",
+   "type": "document",
+   "name": "hallucination_audit_2026-09-06.md",
+   "filePath": "docs/hallucination_audit_2026-09-06.md",
+   "summary": "Read-only security audit enumerating ten ways ungrounded or fabricated field values could reach the final extraction result, with locations and severity per issue.",
+   "tags": [
+    "documentation",
+    "security-audit",
+    "hallucination",
+    "evidence-verification"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:docs/hallucination_fixes_2026-09-06.md",
+   "type": "document",
+   "name": "hallucination_fixes_2026-09-06.md",
+   "filePath": "docs/hallucination_fixes_2026-09-06.md",
+   "summary": "Follow-up record of the hallucination audit fixes moving evidence checks from prompt-level advice to schema and code enforcement, with nine issues fixed and one deferred.",
+   "tags": [
+    "documentation",
+    "hallucination",
+    "bug-fixes",
+    "evidence-verification"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "config:docs/hallucination_fixes_manifest_2026-09-06.json",
+   "type": "config",
+   "name": "hallucination_fixes_manifest_2026-09-06.json",
+   "filePath": "docs/hallucination_fixes_manifest_2026-09-06.json",
+   "summary": "Machine-readable manifest of the ten hallucination audit issues mapping each to its changed file, change summary, test, and fixed or deferred status.",
+   "tags": [
+    "configuration",
+    "hallucination",
+    "fix-manifest",
+    "machine-readable"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:docs/langfuse_tracing.md",
+   "type": "document",
+   "name": "langfuse_tracing.md",
+   "filePath": "docs/langfuse_tracing.md",
+   "summary": "Langfuse observability guide describing the per-page trace tree, manual-observation design decisions with PII masking, configuration, and live-trace audit results.",
+   "tags": [
+    "documentation",
+    "observability",
+    "langfuse",
+    "tracing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:docs/local_ocr.md",
+   "type": "document",
+   "name": "local_ocr.md",
+   "filePath": "docs/local_ocr.md",
+   "summary": "Local OCR pipeline guide explaining on-host RapidOCR processing for images and PDFs, configuration knobs, involved files, and quality testing procedure.",
+   "tags": [
+    "documentation",
+    "ocr",
+    "rapidocr",
+    "configuration"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:docs/rag_kb.md",
+   "type": "document",
+   "name": "rag_kb.md",
+   "filePath": "docs/rag_kb.md",
+   "summary": "Retrieval guide for the offline TF-IDF knowledge-base ranker covering indexed sources, how few-shot ranking works, the rationale against embeddings, and verification steps.",
+   "tags": [
+    "documentation",
+    "rag",
+    "knowledge-base",
+    "retrieval"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:docs/timeout_recovery.md",
+   "type": "document",
+   "name": "timeout_recovery.md",
+   "filePath": "docs/timeout_recovery.md",
+   "summary": "LLM timeout recovery guide documenting measured gateway stall behavior, same-tier retry and stage-timeout enforcement, measured latency effects, and tuning knobs.",
+   "tags": [
+    "documentation",
+    "timeout",
+    "retry-logic",
+    "latency-tuning"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": []
+}

@@ -1,0 +1,90 @@
+{
+ "nodes": [
+  {
+   "id": "file:scripts/run_all.sh",
+   "type": "file",
+   "name": "run_all.sh",
+   "filePath": "scripts/run_all.sh",
+   "summary": "One-command setup and run script that verifies prerequisites, installs API and web dependencies, scaffolds env files, and starts the FastAPI backend and Vite dev server.",
+   "tags": [
+    "setup",
+    "build-system",
+    "deployment",
+    "automation"
+   ],
+   "complexity": "moderate",
+   "languageNotes": "Bash script using set -euo pipefail with helper functions and trap-based cleanup for both servers."
+  },
+  {
+   "id": "document:skills/document-extraction/SKILL.md",
+   "type": "document",
+   "name": "SKILL.md",
+   "filePath": "skills/document-extraction/SKILL.md",
+   "summary": "Project skill reference describing the RapidOCR to Router to Extractor to Validator to Judge pipeline, field-catalog invariants, module locations, and verification checklist.",
+   "tags": [
+    "documentation",
+    "pipeline",
+    "extraction",
+    "reference"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/SKILL.md",
+   "type": "document",
+   "name": "SKILL.md",
+   "filePath": "skills/langfuse/SKILL.md",
+   "summary": "Langfuse skill guide covering tracing, datasets, prompt management, and evaluation workflows via the langfuse-cli and documentation lookup methods.",
+   "tags": [
+    "documentation",
+    "observability",
+    "monitoring",
+    "reference"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:web/src/styles.css",
+   "type": "file",
+   "name": "styles.css",
+   "filePath": "web/src/styles.css",
+   "summary": "Global DocExtract theme stylesheet built only from the project palette, defining light and dark CSS variables, typography, spacing, and component styles.",
+   "tags": [
+    "styling",
+    "theming",
+    "ui",
+    "design-system"
+   ],
+   "complexity": "complex",
+   "languageNotes": "CSS custom-property theme with color-mix derivations and a dark variant scoped under data-theme."
+  },
+  {
+   "id": "file:web/src/vite-env.d.ts",
+   "type": "file",
+   "name": "vite-env.d.ts",
+   "filePath": "web/src/vite-env.d.ts",
+   "summary": "Vite client type reference enabling TypeScript support for Vite-provided globals and asset imports in the web app.",
+   "tags": [
+    "type-definition",
+    "configuration",
+    "build-system"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:web/vite.config.ts",
+   "type": "file",
+   "name": "vite.config.ts",
+   "filePath": "web/vite.config.ts",
+   "summary": "Vite development configuration enabling the React plugin and proxying relative /api calls to the local FastAPI backend.",
+   "tags": [
+    "configuration",
+    "build-system",
+    "frontend",
+    "development"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": []
+}

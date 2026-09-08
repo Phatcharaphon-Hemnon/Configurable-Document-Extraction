@@ -1,0 +1,935 @@
+{
+ "nodes": [
+  {
+   "id": "config:api/.env.example",
+   "type": "config",
+   "name": ".env.example",
+   "filePath": "api/.env.example",
+   "summary": "Example environment configuration documenting every runtime setting: app server, OpenCode Zen LLM models, token tuning, RapidOCR, Langfuse, and Temporal.",
+   "tags": [
+    "configuration",
+    "environment",
+    "llm",
+    "observability",
+    "setup"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:api/app/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/app/__init__.py",
+   "summary": "Empty package marker making the app directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/app/agents/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/app/agents/__init__.py",
+   "summary": "Empty package marker making the agents directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/app/api/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/app/api/__init__.py",
+   "summary": "Empty package marker making the api routes directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/app/core/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/app/core/__init__.py",
+   "summary": "Empty package marker making the core directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:api/app/data/knowledge_base/README.md",
+   "type": "document",
+   "name": "README.md",
+   "filePath": "api/app/data/knowledge_base/README.md",
+   "summary": "Short guide describing the knowledge-base layout for documents, ground truth, field catalog, and few-shot examples.",
+   "tags": [
+    "documentation",
+    "knowledge-base",
+    "guide"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:api/app/data/knowledge_base/rag_index.json",
+   "type": "config",
+   "name": "rag_index.json",
+   "filePath": "api/app/data/knowledge_base/rag_index.json",
+   "summary": "Prebuilt TF-IDF retrieval index over knowledge-base examples keyed by document type with token document frequencies.",
+   "tags": [
+    "configuration",
+    "retrieval",
+    "few-shot",
+    "rag"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:api/app/observability/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/app/observability/__init__.py",
+   "summary": "Empty package marker making the observability directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/app/schemas/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/app/schemas/__init__.py",
+   "summary": "Empty package marker making the schemas directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/app/services/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/app/services/__init__.py",
+   "summary": "Empty package marker making the services directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/app/temporal/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/app/temporal/__init__.py",
+   "summary": "Minimal package marker making the temporal directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/data/extraction.db",
+   "type": "file",
+   "name": "extraction.db",
+   "filePath": "api/data/extraction.db",
+   "summary": "SQLite runtime database storing extraction jobs and results; a binary artifact, not source code.",
+   "tags": [
+    "database",
+    "sqlite",
+    "runtime-state"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:api/logs/security_audit.jsonl",
+   "type": "file",
+   "name": "security_audit.jsonl",
+   "filePath": "api/logs/security_audit.jsonl",
+   "summary": "Append-only JSONL audit log of pipeline security events such as injection attempts.",
+   "tags": [
+    "audit-log",
+    "security",
+    "observability"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:api/requirements.txt",
+   "type": "document",
+   "name": "requirements.txt",
+   "filePath": "api/requirements.txt",
+   "summary": "Pinned Python dependencies for the API: FastAPI, LLM and Temporal clients, Langfuse, and the local RapidOCR and PyMuPDF stack.",
+   "tags": [
+    "dependencies",
+    "python",
+    "build-system"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/scripts/review_discovered_fields.py",
+   "type": "file",
+   "name": "review_discovered_fields.py",
+   "filePath": "api/scripts/review_discovered_fields.py",
+   "summary": "Read-only curation CLI that lists AI-discovered catalog fields per document type and flags suspicious names for manual cleanup.",
+   "tags": [
+    "cli",
+    "catalog-curation",
+    "maintenance",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:api/scripts/run_eval.py",
+   "type": "file",
+   "name": "run_eval.py",
+   "filePath": "api/scripts/run_eval.py",
+   "summary": "Pipeline evaluation harness scoring live or mock extractions against gold data and writing a markdown metrics report.",
+   "tags": [
+    "eval",
+    "metrics",
+    "pipeline",
+    "automation"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:api/tests/__init__.py",
+   "type": "file",
+   "name": "__init__.py",
+   "filePath": "api/tests/__init__.py",
+   "summary": "Empty package marker making the tests directory an importable Python package.",
+   "tags": [
+    "package-marker",
+    "python",
+    "boilerplate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/tests/test_review_discovered_fields.py",
+   "type": "file",
+   "name": "test_review_discovered_fields.py",
+   "filePath": "api/tests/test_review_discovered_fields.py",
+   "summary": "Unit tests for the discovered-fields curation helper covering filtering, flagging, and broken-file handling.",
+   "tags": [
+    "test",
+    "catalog-curation",
+    "unit-test"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:api/tests/test_run_eval.py",
+   "type": "file",
+   "name": "test_run_eval.py",
+   "filePath": "api/tests/test_run_eval.py",
+   "summary": "Mock-mode unit tests for eval helpers covering subset coverage, document-type mapping, and report shape.",
+   "tags": [
+    "test",
+    "eval",
+    "unit-test"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "config:app/data/knowledge_base/field_catalog/invoice_fields.json",
+   "type": "config",
+   "name": "invoice_fields.json",
+   "filePath": "app/data/knowledge_base/field_catalog/invoice_fields.json",
+   "summary": "Invoice field catalog defining known field names, types, and validation rules, including AI-discovered entries.",
+   "tags": [
+    "configuration",
+    "field-catalog",
+    "invoice",
+    "schema-definition"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:data/extraction.db",
+   "type": "file",
+   "name": "extraction.db",
+   "filePath": "data/extraction.db",
+   "summary": "Root-level copy of the SQLite extraction job database; a runtime artifact, not source code.",
+   "tags": [
+    "database",
+    "sqlite",
+    "runtime-state"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:docs/adr/0001-schema-mode.md",
+   "type": "document",
+   "name": "0001-schema-mode.md",
+   "filePath": "docs/adr/0001-schema-mode.md",
+   "summary": "Superseded architecture decision describing the former strict and open schema modes selected via SCHEMA_MODE.",
+   "tags": [
+    "documentation",
+    "architecture",
+    "adr"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:docs/adr/0002-fixed-three-doc-types.md",
+   "type": "document",
+   "name": "0002-fixed-three-doc-types.md",
+   "filePath": "docs/adr/0002-fixed-three-doc-types.md",
+   "summary": "Accepted architecture decision fixing three document types with exact catalog matching and auto-registration of discovered fields.",
+   "tags": [
+    "documentation",
+    "architecture",
+    "adr"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:img_test/README.md",
+   "type": "document",
+   "name": "README.md",
+   "filePath": "img_test/README.md",
+   "summary": "Guide for OCR quality sampling with suggested test images per case and instructions for running the quality suite.",
+   "tags": [
+    "documentation",
+    "ocr",
+    "testing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:logs/security_audit.jsonl",
+   "type": "file",
+   "name": "security_audit.jsonl",
+   "filePath": "logs/security_audit.jsonl",
+   "summary": "Root-level copy of the JSONL security audit log recording pipeline security events.",
+   "tags": [
+    "audit-log",
+    "security",
+    "observability"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:api/scripts/review_discovered_fields.py:_flag",
+   "type": "function",
+   "name": "_flag",
+   "filePath": "api/scripts/review_discovered_fields.py",
+   "lineRange": [
+    45,
+    56
+   ],
+   "summary": "Flags a suspicious discovered field name as overlong, digit-heavy, generic, or a near-duplicate of a known name.",
+   "tags": [
+    "validation",
+    "catalog-curation",
+    "heuristic",
+    "quality-check"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/review_discovered_fields.py:collect",
+   "type": "function",
+   "name": "collect",
+   "filePath": "api/scripts/review_discovered_fields.py",
+   "lineRange": [
+    59,
+    87
+   ],
+   "summary": "Scans the three catalog files and returns AI-discovered fields with suspicion flags per document type.",
+   "tags": [
+    "catalog-curation",
+    "reporting",
+    "file-io",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/review_discovered_fields.py:main",
+   "type": "function",
+   "name": "main",
+   "filePath": "api/scripts/review_discovered_fields.py",
+   "lineRange": [
+    90,
+    111
+   ],
+   "summary": "CLI entry point printing the discovered-fields report as text or JSON with suspicious-entry counts.",
+   "tags": [
+    "entry-point",
+    "cli",
+    "reporting"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:expected_doc_type",
+   "type": "function",
+   "name": "expected_doc_type",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    56,
+    60
+   ],
+   "summary": "Maps a gold-file stem prefix to its expected document type, defaulting to invoice.",
+   "tags": [
+    "utility",
+    "eval",
+    "mapping"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:load_gold",
+   "type": "function",
+   "name": "load_gold",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    63,
+    66
+   ],
+   "summary": "Loads a gold PDF and its ground-truth JSON from the knowledge-base directories.",
+   "tags": [
+    "utility",
+    "eval",
+    "file-io"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:mock_predict",
+   "type": "function",
+   "name": "mock_predict",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    69,
+    75
+   ],
+   "summary": "Builds a deterministic probe prediction by dropping the last gold key and adding one bogus field.",
+   "tags": [
+    "test-utility",
+    "eval",
+    "mock"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:summarize",
+   "type": "function",
+   "name": "summarize",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    78,
+    90
+   ],
+   "summary": "Aggregates per-document scores into macro precision, recall, F1, router accuracy, and review rate.",
+   "tags": [
+    "eval",
+    "metrics",
+    "aggregation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:build_report",
+   "type": "function",
+   "name": "build_report",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    93,
+    170
+   ],
+   "summary": "Renders the markdown eval report with config, summary statistics, and per-document result rows.",
+   "tags": [
+    "eval",
+    "reporting",
+    "markdown"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:_eval_one_real",
+   "type": "function",
+   "name": "_eval_one_real",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    173,
+    211
+   ],
+   "summary": "Runs the live extraction pipeline on one gold document and scores the prediction against ground truth.",
+   "tags": [
+    "eval",
+    "pipeline",
+    "async"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:_eval_one_mock",
+   "type": "function",
+   "name": "_eval_one_mock",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    214,
+    240
+   ],
+   "summary": "Scores a deterministic mock prediction for one gold document for offline CI smoke tests.",
+   "tags": [
+    "eval",
+    "mock",
+    "testing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:run_real",
+   "type": "function",
+   "name": "run_real",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    243,
+    274
+   ],
+   "summary": "Runs the live eval over a gold subset with a concurrency limit and restores catalog files afterward.",
+   "tags": [
+    "eval",
+    "orchestration",
+    "async"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/scripts/run_eval.py:main",
+   "type": "function",
+   "name": "main",
+   "filePath": "api/scripts/run_eval.py",
+   "lineRange": [
+    277,
+    320
+   ],
+   "summary": "CLI entry point parsing eval options, running mock or live mode, and writing the markdown report.",
+   "tags": [
+    "entry-point",
+    "cli",
+    "eval"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/tests/test_review_discovered_fields.py:test_collect_lists_only_ai_discovered",
+   "type": "function",
+   "name": "test_collect_lists_only_ai_discovered",
+   "filePath": "api/tests/test_review_discovered_fields.py",
+   "lineRange": [
+    22,
+    33
+   ],
+   "summary": "Verifies collect returns only ai_discovered entries and empty lists for missing catalogs.",
+   "tags": [
+    "test",
+    "catalog-curation",
+    "filtering"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/tests/test_review_discovered_fields.py:test_collect_flags_suspicious_names",
+   "type": "function",
+   "name": "test_collect_flags_suspicious_names",
+   "filePath": "api/tests/test_review_discovered_fields.py",
+   "lineRange": [
+    36,
+    51
+   ],
+   "summary": "Verifies suspicious names get NEAR-DUP, LONG, and GENERIC flags while clean names stay unflagged.",
+   "tags": [
+    "test",
+    "catalog-curation",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/tests/test_review_discovered_fields.py:test_collect_handles_missing_and_broken_files",
+   "type": "function",
+   "name": "test_collect_handles_missing_and_broken_files",
+   "filePath": "api/tests/test_review_discovered_fields.py",
+   "lineRange": [
+    54,
+    60
+   ],
+   "summary": "Verifies collect tolerates missing catalog files and invalid JSON without raising.",
+   "tags": [
+    "test",
+    "catalog-curation",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/tests/test_run_eval.py:test_default_subset_covers_all_doc_types",
+   "type": "function",
+   "name": "test_default_subset_covers_all_doc_types",
+   "filePath": "api/tests/test_run_eval.py",
+   "lineRange": [
+    21,
+    26
+   ],
+   "summary": "Verifies the default eval subset has eight unique stems covering all three document types.",
+   "tags": [
+    "test",
+    "eval",
+    "configuration"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/tests/test_run_eval.py:test_expected_doc_type_prefixes",
+   "type": "function",
+   "name": "test_expected_doc_type_prefixes",
+   "filePath": "api/tests/test_run_eval.py",
+   "lineRange": [
+    29,
+    32
+   ],
+   "summary": "Verifies stem prefixes map to invoice, purchase_order, and delivery_note types.",
+   "tags": [
+    "test",
+    "eval",
+    "mapping"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/tests/test_run_eval.py:test_mock_predict_drops_one_adds_one",
+   "type": "function",
+   "name": "test_mock_predict_drops_one_adds_one",
+   "filePath": "api/tests/test_run_eval.py",
+   "lineRange": [
+    35,
+    40
+   ],
+   "summary": "Verifies mock prediction drops exactly one gold key and adds the probe field.",
+   "tags": [
+    "test",
+    "eval",
+    "mock"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:api/tests/test_run_eval.py:test_summarize_and_report_shape",
+   "type": "function",
+   "name": "test_summarize_and_report_shape",
+   "filePath": "api/tests/test_run_eval.py",
+   "lineRange": [
+    43,
+    61
+   ],
+   "summary": "Verifies summary counts and the markdown report shape including failure rows.",
+   "tags": [
+    "test",
+    "eval",
+    "reporting"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:api/tests/test_run_eval.py",
+   "target": "file:api/scripts/run_eval.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:api/scripts/review_discovered_fields.py",
+   "target": "function:api/scripts/review_discovered_fields.py:_flag",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/review_discovered_fields.py",
+   "target": "function:api/scripts/review_discovered_fields.py:collect",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/review_discovered_fields.py",
+   "target": "function:api/scripts/review_discovered_fields.py:main",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:expected_doc_type",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:load_gold",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:mock_predict",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:summarize",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:build_report",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:_eval_one_real",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:_eval_one_mock",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:run_real",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "function:api/scripts/run_eval.py:main",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/tests/test_review_discovered_fields.py",
+   "target": "function:api/tests/test_review_discovered_fields.py:test_collect_lists_only_ai_discovered",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/tests/test_review_discovered_fields.py",
+   "target": "function:api/tests/test_review_discovered_fields.py:test_collect_flags_suspicious_names",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/tests/test_review_discovered_fields.py",
+   "target": "function:api/tests/test_review_discovered_fields.py:test_collect_handles_missing_and_broken_files",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/tests/test_run_eval.py",
+   "target": "function:api/tests/test_run_eval.py:test_default_subset_covers_all_doc_types",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/tests/test_run_eval.py",
+   "target": "function:api/tests/test_run_eval.py:test_expected_doc_type_prefixes",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/tests/test_run_eval.py",
+   "target": "function:api/tests/test_run_eval.py:test_mock_predict_drops_one_adds_one",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:api/tests/test_run_eval.py",
+   "target": "function:api/tests/test_run_eval.py:test_summarize_and_report_shape",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:api/tests/test_review_discovered_fields.py:test_collect_lists_only_ai_discovered",
+   "target": "function:api/scripts/review_discovered_fields.py:collect",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:api/tests/test_review_discovered_fields.py:test_collect_flags_suspicious_names",
+   "target": "function:api/scripts/review_discovered_fields.py:collect",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:api/tests/test_review_discovered_fields.py:test_collect_handles_missing_and_broken_files",
+   "target": "function:api/scripts/review_discovered_fields.py:collect",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:api/tests/test_run_eval.py:test_expected_doc_type_prefixes",
+   "target": "function:api/scripts/run_eval.py:expected_doc_type",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:api/tests/test_run_eval.py:test_mock_predict_drops_one_adds_one",
+   "target": "function:api/scripts/run_eval.py:mock_predict",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:api/tests/test_run_eval.py:test_summarize_and_report_shape",
+   "target": "function:api/scripts/run_eval.py:summarize",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:api/tests/test_run_eval.py:test_summarize_and_report_shape",
+   "target": "function:api/scripts/run_eval.py:build_report",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:api/scripts/review_discovered_fields.py",
+   "target": "file:api/tests/test_review_discovered_fields.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:api/scripts/run_eval.py",
+   "target": "file:api/tests/test_run_eval.py",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "config:api/.env.example",
+   "target": "file:api/scripts/run_eval.py",
+   "type": "configures",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "document:docs/adr/0002-fixed-three-doc-types.md",
+   "target": "file:api/scripts/review_discovered_fields.py",
+   "type": "documents",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "document:docs/adr/0002-fixed-three-doc-types.md",
+   "target": "config:app/data/knowledge_base/field_catalog/invoice_fields.json",
+   "type": "documents",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "document:docs/adr/0001-schema-mode.md",
+   "target": "document:docs/adr/0002-fixed-three-doc-types.md",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "document:api/app/data/knowledge_base/README.md",
+   "target": "config:api/app/data/knowledge_base/rag_index.json",
+   "type": "documents",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "document:img_test/README.md",
+   "target": "file:api/tests/test_all.py",
+   "type": "documents",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "config:app/data/knowledge_base/field_catalog/invoice_fields.json",
+   "target": "file:api/app/agents/extractors.py",
+   "type": "configures",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "config:api/app/data/knowledge_base/rag_index.json",
+   "target": "file:api/scripts/run_eval.py",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:logs/security_audit.jsonl",
+   "target": "file:api/logs/security_audit.jsonl",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:data/extraction.db",
+   "target": "file:api/data/extraction.db",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  }
+ ]
+}

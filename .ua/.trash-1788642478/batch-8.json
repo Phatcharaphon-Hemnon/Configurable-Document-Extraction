@@ -1,0 +1,24 @@
+{
+  "nodes": [
+    {
+      "id": "pipeline:.github/workflows/ci.yml",
+      "type": "pipeline",
+      "name": "ci.yml",
+      "filePath": ".github/workflows/ci.yml",
+      "summary": "Main CI workflow running backend lint, backend pytest suite, mock KB eval report, and frontend type-check plus build on push to main and pull requests.",
+      "tags": ["ci-cd", "linting", "testing", "build-system"],
+      "complexity": "moderate",
+      "languageNotes": "GitHub Actions workflow with four sequential jobs using ruff, pytest, KB ingest plus mock eval, and npm build."
+    },
+    {
+      "id": "pipeline:.github/workflows/sonarcloud.yml",
+      "type": "pipeline",
+      "name": "sonarcloud.yml",
+      "filePath": ".github/workflows/sonarcloud.yml",
+      "summary": "SonarCloud static analysis workflow running a full-history checkout followed by the SonarSource scan on push to main and pull requests.",
+      "tags": ["ci-cd", "static-analysis", "code-quality"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

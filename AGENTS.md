@@ -68,7 +68,12 @@ multi-agent AI pipeline.
 ## Environment (api/.env)
 
 AI provider: 3 vars (`LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL`).
-This branch: Ollama Cloud (`https://ollama.com/v1`), model `gpt-oss:20b`
+Providers (registry `LLM_PROVIDERS` in `api/app/core/config.py`): `openai`,
+`xai`, `gemini`, `openrouter`, `deepseek` (no default model — `LLM_MODEL`
+required), `kimi`, `ollama-cloud`, `ollama-local`, `mistral`, `openclaw`
+(local gateway), `opencode` (Zen gateway). No native Claude entry (Messages
+API is not OpenAI-compatible) — reach it via `openrouter`/`opencode`.
+Default: Ollama Cloud (`https://ollama.com/v1`), model `gpt-oss:20b`
 (text-only, used for Router + Extractor + Judge). See `docs/ai_provider.md`.
 Parsing: local RapidOCR (`OCR_DPI`; see `docs/local_ocr.md`).
 Monitoring: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST`

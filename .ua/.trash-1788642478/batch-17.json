@@ -1,0 +1,215 @@
+{
+ "nodes": [
+  {
+   "id": "document:skills/langfuse/references/ci-cd.md",
+   "type": "document",
+   "name": "ci-cd.md",
+   "filePath": "skills/langfuse/references/ci-cd.md",
+   "summary": "Langfuse skill reference describing how to set up agent regression checks and gating in GitHub Actions CI/CD using the experiment action, with checklists and common issues.",
+   "tags": [
+    "documentation",
+    "ci-cd",
+    "evaluation",
+    "langfuse",
+    "reference"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/references/cli.md",
+   "type": "document",
+   "name": "cli.md",
+   "filePath": "skills/langfuse/references/cli.md",
+   "summary": "Langfuse CLI usage reference covering installation, resource discovery, credentials, and common usage tips for langfuse-cli.",
+   "tags": [
+    "documentation",
+    "cli",
+    "langfuse",
+    "reference",
+    "tooling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/references/create-dataset.md",
+   "type": "document",
+   "name": "create-dataset.md",
+   "filePath": "skills/langfuse/references/create-dataset.md",
+   "summary": "Collaborative Langfuse dataset creation workflow for designing, seeding, reshaping, and uploading minimal but complete evaluation datasets.",
+   "tags": [
+    "documentation",
+    "evaluation",
+    "dataset",
+    "langfuse",
+    "reference"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/references/error-analysis.md",
+   "type": "document",
+   "name": "error-analysis.md",
+   "filePath": "skills/langfuse/references/error-analysis.md",
+   "summary": "Deep-dive error analysis guide for debugging LLM pipelines with Langfuse traces, covering failure taxonomy, annotation queues, prompt fixes, and evaluator setup.",
+   "tags": [
+    "documentation",
+    "error-analysis",
+    "debugging",
+    "langfuse",
+    "observability"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:skills/langfuse/references/instrumentation.md",
+   "type": "document",
+   "name": "instrumentation.md",
+   "filePath": "skills/langfuse/references/instrumentation.md",
+   "summary": "Langfuse observability instrumentation guide for adding tracing to LLM calls and auditing existing instrumentation, including multi-agent trace review workflow.",
+   "tags": [
+    "documentation",
+    "observability",
+    "tracing",
+    "langfuse",
+    "instrumentation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:skills/langfuse/references/judge-calibration.md",
+   "type": "document",
+   "name": "judge-calibration.md",
+   "filePath": "skills/langfuse/references/judge-calibration.md",
+   "summary": "Comprehensive LLM-as-a-Judge calibration guide covering simple and advanced modes, Langfuse experiment workflow, label validation, confusion-matrix metrics, quality gates, and failure modes.",
+   "tags": [
+    "documentation",
+    "evaluation",
+    "llm-judge",
+    "calibration",
+    "langfuse"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "document:skills/langfuse/references/prompt-engineering.md",
+   "type": "document",
+   "name": "prompt-engineering.md",
+   "filePath": "skills/langfuse/references/prompt-engineering.md",
+   "summary": "Prompt engineering reference with universal principles for writing prompts plus guidance for adjusting existing prompts and model-specific tuning.",
+   "tags": [
+    "documentation",
+    "prompt-engineering",
+    "llm",
+    "langfuse",
+    "reference"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/references/prompt-migration.md",
+   "type": "document",
+   "name": "prompt-migration.md",
+   "filePath": "skills/langfuse/references/prompt-migration.md",
+   "summary": "Workflow for migrating hardcoded prompts into Langfuse for version control, covering inventory, templating conversion, refactoring plan, and verification.",
+   "tags": [
+    "documentation",
+    "prompt-management",
+    "migration",
+    "langfuse",
+    "reference"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:skills/langfuse/references/sdk-upgrade.md",
+   "type": "document",
+   "name": "sdk-upgrade.md",
+   "filePath": "skills/langfuse/references/sdk-upgrade.md",
+   "summary": "Langfuse SDK upgrade guide for Python and JS/TS migrations that preserves trace attributes across observations, with sources of truth and completion report.",
+   "tags": [
+    "documentation",
+    "sdk",
+    "upgrade",
+    "migration",
+    "langfuse"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/references/setting-up-evals.md",
+   "type": "document",
+   "name": "setting-up-evals.md",
+   "filePath": "skills/langfuse/references/setting-up-evals.md",
+   "summary": "Evaluation setup guide for finding measurement gaps across signal capture and monitoring, defining metric sets, and building evaluators.",
+   "tags": [
+    "documentation",
+    "evaluation",
+    "metrics",
+    "langfuse",
+    "monitoring"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/references/skill-feedback.md",
+   "type": "document",
+   "name": "skill-feedback.md",
+   "filePath": "skills/langfuse/references/skill-feedback.md",
+   "summary": "Short reference describing how to submit feedback about the Langfuse skill to its maintainers with submission options.",
+   "tags": [
+    "documentation",
+    "feedback",
+    "langfuse",
+    "reference",
+    "meta"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/references/trace-evaluator-upgrade.md",
+   "type": "document",
+   "name": "trace-evaluator-upgrade.md",
+   "filePath": "skills/langfuse/references/trace-evaluator-upgrade.md",
+   "summary": "Coding handoff for upgrading legacy trace-level or dataset-item LLM-as-a-Judge evaluators to observation-level or experiment evaluators during the v4 transition.",
+   "tags": [
+    "documentation",
+    "evaluation",
+    "migration",
+    "langfuse",
+    "upgrade"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "document:skills/langfuse/references/user-feedback.md",
+   "type": "document",
+   "name": "user-feedback.md",
+   "filePath": "skills/langfuse/references/user-feedback.md",
+   "summary": "Guide for wiring end-user feedback such as ratings and comments from application frontends into Langfuse scores, with score naming and verification steps.",
+   "tags": [
+    "documentation",
+    "user-feedback",
+    "scores",
+    "langfuse",
+    "monitoring"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "document:skills/langfuse/references/v4-project-migration.md",
+   "type": "document",
+   "name": "v4-project-migration.md",
+   "filePath": "skills/langfuse/references/v4-project-migration.md",
+   "summary": "Langfuse v4 project migration guide covering ingestion and API upgrades, evaluator migration, enriched observation schema exports, and validation reporting.",
+   "tags": [
+    "documentation",
+    "migration",
+    "upgrade",
+    "langfuse",
+    "reference"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": []
+}

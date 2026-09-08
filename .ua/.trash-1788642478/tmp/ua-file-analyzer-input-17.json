@@ -1,0 +1,105 @@
+{
+ "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+ "batchFiles": [
+  {
+   "path": "skills/langfuse/references/ci-cd.md",
+   "language": "markdown",
+   "sizeLines": 41,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/cli.md",
+   "language": "markdown",
+   "sizeLines": 60,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/create-dataset.md",
+   "language": "markdown",
+   "sizeLines": 35,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/error-analysis.md",
+   "language": "markdown",
+   "sizeLines": 87,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/instrumentation.md",
+   "language": "markdown",
+   "sizeLines": 122,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/judge-calibration.md",
+   "language": "markdown",
+   "sizeLines": 293,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/prompt-engineering.md",
+   "language": "markdown",
+   "sizeLines": 35,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/prompt-migration.md",
+   "language": "markdown",
+   "sizeLines": 79,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/sdk-upgrade.md",
+   "language": "markdown",
+   "sizeLines": 34,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/setting-up-evals.md",
+   "language": "markdown",
+   "sizeLines": 65,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/skill-feedback.md",
+   "language": "markdown",
+   "sizeLines": 35,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/trace-evaluator-upgrade.md",
+   "language": "markdown",
+   "sizeLines": 76,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/user-feedback.md",
+   "language": "markdown",
+   "sizeLines": 66,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "skills/langfuse/references/v4-project-migration.md",
+   "language": "markdown",
+   "sizeLines": 75,
+   "fileCategory": "docs"
+  }
+ ],
+ "batchImportData": {
+  "skills/langfuse/references/ci-cd.md": [],
+  "skills/langfuse/references/cli.md": [],
+  "skills/langfuse/references/create-dataset.md": [],
+  "skills/langfuse/references/error-analysis.md": [],
+  "skills/langfuse/references/instrumentation.md": [],
+  "skills/langfuse/references/judge-calibration.md": [],
+  "skills/langfuse/references/prompt-engineering.md": [],
+  "skills/langfuse/references/prompt-migration.md": [],
+  "skills/langfuse/references/sdk-upgrade.md": [],
+  "skills/langfuse/references/setting-up-evals.md": [],
+  "skills/langfuse/references/skill-feedback.md": [],
+  "skills/langfuse/references/trace-evaluator-upgrade.md": [],
+  "skills/langfuse/references/user-feedback.md": [],
+  "skills/langfuse/references/v4-project-migration.md": []
+ }
+}

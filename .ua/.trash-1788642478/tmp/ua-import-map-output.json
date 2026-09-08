@@ -1,0 +1,394 @@
+{
+  "scriptCompleted": true,
+  "stats": {
+    "filesScanned": 189,
+    "filesWithImports": 49,
+    "totalEdges": 145
+  },
+  "failures": [],
+  "importMap": {
+    ".github/workflows/ci.yml": [],
+    ".github/workflows/sonarcloud.yml": [],
+    "AGENTS.md": [],
+    "CHANGELOG.md": [],
+    "README.md": [],
+    "api/.env.example": [],
+    "api/app/__init__.py": [],
+    "api/app/agents/__init__.py": [],
+    "api/app/agents/extractors.py": [
+      "api/app/core/config.py",
+      "api/app/core/security.py",
+      "api/app/schemas/documents.py",
+      "api/app/schemas/llm_schemas.py",
+      "api/app/services/field_catalog.py",
+      "api/app/services/sut_genai_client.py"
+    ],
+    "api/app/agents/judge.py": [
+      "api/app/core/config.py",
+      "api/app/core/security.py",
+      "api/app/schemas/documents.py",
+      "api/app/schemas/llm_schemas.py",
+      "api/app/services/sut_genai_client.py"
+    ],
+    "api/app/agents/router.py": [
+      "api/app/core/config.py",
+      "api/app/core/security.py",
+      "api/app/schemas/documents.py",
+      "api/app/schemas/llm_schemas.py",
+      "api/app/services/sut_genai_client.py"
+    ],
+    "api/app/agents/validator.py": [
+      "api/app/core/security.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/date_formats.py",
+      "api/app/services/field_catalog.py"
+    ],
+    "api/app/api/__init__.py": [],
+    "api/app/api/routes.py": [
+      "api/app/core/config.py",
+      "api/app/guards/audit_logger.py",
+      "api/app/guards/input_guard.py",
+      "api/app/guards/output_guard.py",
+      "api/app/guards/rate_limiter.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/extraction_service.py"
+    ],
+    "api/app/core/__init__.py": [],
+    "api/app/core/config.py": [],
+    "api/app/core/security.py": [],
+    "api/app/data/knowledge_base/README.md": [],
+    "api/app/data/knowledge_base/few_shot/delivery_note/example_01.json": [],
+    "api/app/data/knowledge_base/few_shot/delivery_note/example_02.json": [],
+    "api/app/data/knowledge_base/few_shot/delivery_note/example_03.json": [],
+    "api/app/data/knowledge_base/few_shot/delivery_note/example_04.json": [],
+    "api/app/data/knowledge_base/few_shot/delivery_note/example_05.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_01.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_02.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_03.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_04.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_05.json": [],
+    "api/app/data/knowledge_base/few_shot/po/example_01.json": [],
+    "api/app/data/knowledge_base/few_shot/po/example_02.json": [],
+    "api/app/data/knowledge_base/few_shot/po/example_03.json": [],
+    "api/app/data/knowledge_base/few_shot/po/example_04.json": [],
+    "api/app/data/knowledge_base/few_shot/po/example_05.json": [],
+    "api/app/data/knowledge_base/field_catalog/delivery_note_fields.json": [],
+    "api/app/data/knowledge_base/field_catalog/invoice_fields.json": [],
+    "api/app/data/knowledge_base/field_catalog/po_fields.json": [],
+    "api/app/data/knowledge_base/ground_truth/delivery_note_01.json": [],
+    "api/app/data/knowledge_base/ground_truth/delivery_note_02.json": [],
+    "api/app/data/knowledge_base/ground_truth/delivery_note_03.json": [],
+    "api/app/data/knowledge_base/ground_truth/delivery_note_04.json": [],
+    "api/app/data/knowledge_base/ground_truth/delivery_note_05.json": [],
+    "api/app/data/knowledge_base/ground_truth/delivery_note_06.json": [],
+    "api/app/data/knowledge_base/ground_truth/invoice_01.json": [],
+    "api/app/data/knowledge_base/ground_truth/invoice_02.json": [],
+    "api/app/data/knowledge_base/ground_truth/invoice_03.json": [],
+    "api/app/data/knowledge_base/ground_truth/invoice_04.json": [],
+    "api/app/data/knowledge_base/ground_truth/invoice_05.json": [],
+    "api/app/data/knowledge_base/ground_truth/invoice_06.json": [],
+    "api/app/data/knowledge_base/ground_truth/invoice_07.json": [],
+    "api/app/data/knowledge_base/ground_truth/po_01.json": [],
+    "api/app/data/knowledge_base/ground_truth/po_02.json": [],
+    "api/app/data/knowledge_base/ground_truth/po_03.json": [],
+    "api/app/data/knowledge_base/ground_truth/po_04.json": [],
+    "api/app/data/knowledge_base/ground_truth/po_05.json": [],
+    "api/app/data/knowledge_base/ground_truth/po_06.json": [],
+    "api/app/data/knowledge_base/ground_truth/po_07.json": [],
+    "api/app/data/knowledge_base/rag_index.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164525.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164969.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164991.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164992.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164996.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164997.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164998.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164999.json": [],
+    "api/app/data/knowledge_base/raw_data/X51009453801.json": [],
+    "api/app/data/knowledge_base/raw_data/X51009453804.json": [],
+    "api/app/database/__init__.py": [
+      "api/app/database/job_repository.py",
+      "api/app/database/models.py"
+    ],
+    "api/app/database/job_repository.py": [
+      "api/app/database/models.py"
+    ],
+    "api/app/database/models.py": [],
+    "api/app/guards/__init__.py": [
+      "api/app/guards/audit_logger.py",
+      "api/app/guards/content_guard.py",
+      "api/app/guards/input_guard.py",
+      "api/app/guards/output_guard.py",
+      "api/app/guards/pii_detector.py",
+      "api/app/guards/rate_limiter.py",
+      "api/app/guards/timeout_guard.py"
+    ],
+    "api/app/guards/audit_logger.py": [],
+    "api/app/guards/content_guard.py": [],
+    "api/app/guards/input_guard.py": [],
+    "api/app/guards/output_guard.py": [],
+    "api/app/guards/pii_detector.py": [],
+    "api/app/guards/rate_limiter.py": [],
+    "api/app/guards/timeout_guard.py": [],
+    "api/app/main.py": [
+      "api/app/api/routes.py",
+      "api/app/core/config.py"
+    ],
+    "api/app/observability/__init__.py": [],
+    "api/app/observability/langfuse.py": [
+      "api/app/core/config.py"
+    ],
+    "api/app/schemas/__init__.py": [],
+    "api/app/schemas/documents.py": [],
+    "api/app/schemas/llm_schemas.py": [],
+    "api/app/services/__init__.py": [],
+    "api/app/services/date_formats.py": [],
+    "api/app/services/extraction_service.py": [
+      "api/app/agents/extractors.py",
+      "api/app/agents/judge.py",
+      "api/app/agents/router.py",
+      "api/app/agents/validator.py",
+      "api/app/core/config.py",
+      "api/app/core/security.py",
+      "api/app/guards/audit_logger.py",
+      "api/app/guards/content_guard.py",
+      "api/app/guards/pii_detector.py",
+      "api/app/guards/timeout_guard.py",
+      "api/app/observability/langfuse.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/field_catalog.py",
+      "api/app/services/field_matching.py",
+      "api/app/services/job_store.py",
+      "api/app/services/knowledge_base.py",
+      "api/app/services/rapidocr_client.py"
+    ],
+    "api/app/services/field_catalog.py": [
+      "api/app/schemas/documents.py"
+    ],
+    "api/app/services/field_matching.py": [],
+    "api/app/services/job_store.py": [
+      "api/app/database/job_repository.py",
+      "api/app/database/models.py"
+    ],
+    "api/app/services/knowledge_base.py": [
+      "api/app/schemas/documents.py",
+      "api/app/services/field_catalog.py",
+      "api/app/services/rag_retriever.py"
+    ],
+    "api/app/services/rag_retriever.py": [],
+    "api/app/services/rapidocr_client.py": [],
+    "api/app/services/sut_genai_client.py": [
+      "api/app/core/config.py"
+    ],
+    "api/app/temporal/__init__.py": [],
+    "api/app/temporal/activities.py": [
+      "api/app/core/config.py",
+      "api/app/core/security.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/field_catalog.py",
+      "api/app/services/knowledge_base.py",
+      "api/app/services/rapidocr_client.py"
+    ],
+    "api/app/temporal/client.py": [
+      "api/app/core/config.py"
+    ],
+    "api/app/temporal/worker.py": [
+      "api/app/temporal/activities.py",
+      "api/app/temporal/client.py",
+      "api/app/temporal/workflows.py"
+    ],
+    "api/app/temporal/workflows.py": [],
+    "api/data/extraction.db": [],
+    "api/logs/security_audit.jsonl": [],
+    "api/requirements.txt": [],
+    "api/scripts/ingest_kb.py": [
+      "api/app/services/rag_retriever.py"
+    ],
+    "api/scripts/review_discovered_fields.py": [],
+    "api/scripts/run_eval.py": [],
+    "api/scripts/time_gateway_modes.py": [
+      "api/app/core/config.py",
+      "api/app/schemas/llm_schemas.py",
+      "api/app/services/sut_genai_client.py"
+    ],
+    "api/tests/__init__.py": [],
+    "api/tests/test_all.py": [
+      "api/app/services/rapidocr_client.py"
+    ],
+    "api/tests/test_async_jobs.py": [
+      "api/app/core/config.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/extraction_service.py",
+      "api/app/services/job_store.py"
+    ],
+    "api/tests/test_catalog_registration.py": [
+      "api/app/schemas/documents.py",
+      "api/app/services/field_catalog.py"
+    ],
+    "api/tests/test_extraction_filters.py": [
+      "api/app/services/field_catalog.py"
+    ],
+    "api/tests/test_field_catalog.py": [
+      "api/app/services/field_catalog.py"
+    ],
+    "api/tests/test_guards.py": [
+      "api/app/guards/audit_logger.py",
+      "api/app/guards/content_guard.py",
+      "api/app/guards/output_guard.py",
+      "api/app/guards/pii_detector.py",
+      "api/app/guards/rate_limiter.py",
+      "api/app/guards/timeout_guard.py"
+    ],
+    "api/tests/test_langfuse_tracing.py": [
+      "api/app/guards/pii_detector.py",
+      "api/app/observability/langfuse.py",
+      "api/app/services/extraction_service.py"
+    ],
+    "api/tests/test_pipeline.py": [
+      "api/app/core/config.py",
+      "api/app/schemas/documents.py",
+      "api/app/services/extraction_service.py"
+    ],
+    "api/tests/test_rag_retriever.py": [
+      "api/app/services/rag_retriever.py",
+      "api/scripts/ingest_kb.py"
+    ],
+    "api/tests/test_rate_limit_retry.py": [
+      "api/app/services/sut_genai_client.py"
+    ],
+    "api/tests/test_review_discovered_fields.py": [],
+    "api/tests/test_run_eval.py": [
+      "api/scripts/run_eval.py"
+    ],
+    "api/tests/test_schemas.py": [
+      "api/app/schemas/documents.py"
+    ],
+    "api/tests/test_security.py": [
+      "api/app/core/security.py"
+    ],
+    "api/tests/test_sut_genai_client_retry.py": [
+      "api/app/core/config.py",
+      "api/app/services/sut_genai_client.py"
+    ],
+    "api/tests/test_sut_genai_fallback_tiers.py": [
+      "api/app/core/config.py",
+      "api/app/services/sut_genai_client.py"
+    ],
+    "api/tests/test_sut_genai_schema.py": [
+      "api/app/services/sut_genai_client.py"
+    ],
+    "api/tests/test_sut_genai_timeout.py": [
+      "api/app/core/config.py",
+      "api/app/services/sut_genai_client.py"
+    ],
+    "app/data/knowledge_base/field_catalog/invoice_fields.json": [],
+    "data/extraction.db": [],
+    "docs/adr/0001-schema-mode.md": [],
+    "docs/adr/0002-fixed-three-doc-types.md": [],
+    "docs/ai_guardrails.md": [],
+    "docs/architecture.md": [],
+    "docs/async_jobs.md": [],
+    "docs/backend.md": [],
+    "docs/catalog_review.md": [],
+    "docs/frontend.md": [],
+    "docs/hallucination_audit_2026-09-06.md": [],
+    "docs/hallucination_fixes_2026-09-06.md": [],
+    "docs/hallucination_fixes_manifest_2026-09-06.json": [],
+    "docs/langfuse_tracing.md": [],
+    "docs/local_ocr.md": [],
+    "docs/rag_kb.md": [],
+    "docs/timeout_recovery.md": [],
+    "eval_report.md": [],
+    "img_test/README.md": [],
+    "logs/security_audit.jsonl": [],
+    "ruff.toml": [],
+    "scripts/run_all.sh": [],
+    "skills/document-extraction/SKILL.md": [],
+    "skills/langfuse/SKILL.md": [],
+    "skills/langfuse/references/ci-cd.md": [],
+    "skills/langfuse/references/cli.md": [],
+    "skills/langfuse/references/create-dataset.md": [],
+    "skills/langfuse/references/error-analysis.md": [],
+    "skills/langfuse/references/instrumentation.md": [],
+    "skills/langfuse/references/judge-calibration.md": [],
+    "skills/langfuse/references/prompt-engineering.md": [],
+    "skills/langfuse/references/prompt-migration.md": [],
+    "skills/langfuse/references/sdk-upgrade.md": [],
+    "skills/langfuse/references/setting-up-evals.md": [],
+    "skills/langfuse/references/skill-feedback.md": [],
+    "skills/langfuse/references/trace-evaluator-upgrade.md": [],
+    "skills/langfuse/references/user-feedback.md": [],
+    "skills/langfuse/references/v4-project-migration.md": [],
+    "sonar-project.properties": [],
+    "web/.env.example": [],
+    "web/index.html": [],
+    "web/package.json": [],
+    "web/src/App.tsx": [
+      "web/src/components/EvaluationTab.tsx",
+      "web/src/components/ExtractionTab.tsx",
+      "web/src/components/HistoryTab.tsx",
+      "web/src/components/Sidebar.tsx",
+      "web/src/components/ToastStack.tsx",
+      "web/src/components/icons.tsx",
+      "web/src/hooks/useDocumentQueue.ts",
+      "web/src/hooks/useRecommendedModel.ts",
+      "web/src/hooks/useTheme.ts",
+      "web/src/types/extraction.ts"
+    ],
+    "web/src/api/client.ts": [
+      "web/src/types/extraction.ts"
+    ],
+    "web/src/components/EvaluationTab.tsx": [
+      "web/src/components/icons.tsx",
+      "web/src/hooks/useEvaluation.ts",
+      "web/src/types/extraction.ts",
+      "web/src/utils/pipeline.ts"
+    ],
+    "web/src/components/ExtractionTab.tsx": [
+      "web/src/components/PipelineStepper.tsx",
+      "web/src/components/icons.tsx",
+      "web/src/types/extraction.ts",
+      "web/src/utils/pipeline.ts"
+    ],
+    "web/src/components/HistoryTab.tsx": [],
+    "web/src/components/PipelineStepper.tsx": [
+      "web/src/utils/pipeline.ts"
+    ],
+    "web/src/components/Sidebar.tsx": [
+      "web/src/components/icons.tsx",
+      "web/src/types/extraction.ts"
+    ],
+    "web/src/components/ToastStack.tsx": [
+      "web/src/components/icons.tsx",
+      "web/src/lib/toast.ts"
+    ],
+    "web/src/components/icons.tsx": [],
+    "web/src/hooks/useDocumentQueue.ts": [
+      "web/src/api/client.ts",
+      "web/src/lib/toast.ts",
+      "web/src/types/extraction.ts"
+    ],
+    "web/src/hooks/useEvaluation.ts": [
+      "web/src/api/client.ts",
+      "web/src/types/extraction.ts"
+    ],
+    "web/src/hooks/useRecommendedModel.ts": [
+      "web/src/api/client.ts"
+    ],
+    "web/src/hooks/useTheme.ts": [],
+    "web/src/lib/toast.ts": [],
+    "web/src/main.tsx": [
+      "web/src/App.tsx",
+      "web/src/styles.css"
+    ],
+    "web/src/styles.css": [],
+    "web/src/types/extraction.ts": [],
+    "web/src/utils/pipeline.ts": [
+      "web/src/types/extraction.ts"
+    ],
+    "web/src/vite-env.d.ts": [],
+    "web/tsconfig.json": [],
+    "web/tsconfig.node.json": [],
+    "web/vite.config.ts": []
+  }
+}

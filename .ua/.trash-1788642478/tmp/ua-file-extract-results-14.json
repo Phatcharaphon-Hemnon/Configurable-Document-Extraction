@@ -1,0 +1,1548 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 20,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 20,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 20
+    }
+  },
+  "results": [
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/delivery_note_01.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 21,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "delivery_note_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "delivered_by",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "recipient_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "recipient_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "sender_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "sender_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "items",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "total_weight",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/delivery_note_02.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 21,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "delivery_note_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "delivered_by",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "recipient_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "recipient_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "sender_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "sender_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "items",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "total_weight",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/delivery_note_03.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 29,
+      "nonEmptyLines": 29,
+      "sections": [
+        {
+          "heading": "delivery_note_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "delivered_by",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "recipient_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "recipient_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "sender_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "sender_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "items",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "total_weight",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/delivery_note_04.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 25,
+      "nonEmptyLines": 25,
+      "sections": [
+        {
+          "heading": "delivery_note_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "delivered_by",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "recipient_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "recipient_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "sender_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "sender_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "items",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "total_weight",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 24
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/delivery_note_05.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 21,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "delivery_note_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "delivered_by",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "recipient_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "recipient_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "sender_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "sender_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "items",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "total_weight",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/delivery_note_06.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 21,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "delivery_note_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "delivered_by",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "recipient_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "recipient_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "sender_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "sender_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "items",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "total_weight",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/invoice_01.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "invoice_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "statement_number",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "customer_id",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "bill_to_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "bill_to_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vendor_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "vendor_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "vendor_phone",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "vendor_email",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "statement_date",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "payment_due_date",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "balance_due",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "current_balance",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/invoice_02.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "invoice_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "statement_number",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "customer_id",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "bill_to_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "bill_to_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vendor_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "vendor_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "vendor_phone",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "vendor_email",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "statement_date",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "payment_due_date",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "balance_due",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "current_balance",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/invoice_03.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "invoice_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "statement_number",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "customer_id",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "bill_to_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "bill_to_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vendor_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "vendor_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "vendor_phone",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "vendor_email",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "statement_date",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "payment_due_date",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "balance_due",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "current_balance",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/invoice_04.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "invoice_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "statement_number",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "customer_id",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "bill_to_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "bill_to_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vendor_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "vendor_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "vendor_phone",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "vendor_email",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "statement_date",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "payment_due_date",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "balance_due",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "current_balance",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/invoice_05.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 42,
+      "nonEmptyLines": 42,
+      "sections": [
+        {
+          "heading": "invoice_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "statement_number",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "customer_id",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "bill_to_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "bill_to_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vendor_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "vendor_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "vendor_phone",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "vendor_email",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "statement_date",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "payment_due_date",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "balance_due",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "current_balance",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/invoice_06.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 34,
+      "nonEmptyLines": 34,
+      "sections": [
+        {
+          "heading": "invoice_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "statement_number",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "customer_id",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "bill_to_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "bill_to_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vendor_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "vendor_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "vendor_phone",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "vendor_email",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "statement_date",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "payment_due_date",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "balance_due",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "current_balance",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/invoice_07.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 34,
+      "nonEmptyLines": 34,
+      "sections": [
+        {
+          "heading": "invoice_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "statement_number",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "customer_id",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "bill_to_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "bill_to_address",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vendor_name",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "vendor_address",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "vendor_phone",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "vendor_email",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "statement_date",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "payment_due_date",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "balance_due",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "current_balance",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/po_01.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 38,
+      "nonEmptyLines": 38,
+      "sections": [
+        {
+          "heading": "po_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "order_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "supplier_name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "supplier_address",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "buyer_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "buyer_address",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "total_amount",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "payment_terms",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/po_02.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "po_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "order_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "supplier_name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "supplier_address",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "buyer_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "buyer_address",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "total_amount",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "payment_terms",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/po_03.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 32,
+      "nonEmptyLines": 32,
+      "sections": [
+        {
+          "heading": "po_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "order_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "supplier_name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "supplier_address",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "buyer_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "buyer_address",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "total_amount",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "payment_terms",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/po_04.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "po_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "order_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "supplier_name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "supplier_address",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "buyer_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "buyer_address",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "total_amount",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "payment_terms",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/po_05.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 38,
+      "nonEmptyLines": 38,
+      "sections": [
+        {
+          "heading": "po_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "order_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "supplier_name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "supplier_address",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "buyer_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "buyer_address",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "total_amount",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "payment_terms",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/po_06.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 32,
+      "nonEmptyLines": 32,
+      "sections": [
+        {
+          "heading": "po_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "order_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "supplier_name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "supplier_address",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "buyer_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "buyer_address",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "total_amount",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "payment_terms",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "api/app/data/knowledge_base/ground_truth/po_07.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 32,
+      "nonEmptyLines": 32,
+      "sections": [
+        {
+          "heading": "po_number",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "order_date",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "supplier_name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "supplier_address",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "buyer_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "buyer_address",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "delivery_date",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "total_amount",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "currency",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "payment_terms",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "line_items",
+          "level": 1,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    }
+  ]
+}

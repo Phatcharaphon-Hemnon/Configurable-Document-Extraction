@@ -1,0 +1,1048 @@
+{
+  "nodes": [
+    {
+      "id": "file:api/app/guards/pii_detector.py",
+      "type": "file",
+      "name": "pii_detector.py",
+      "filePath": "api/app/guards/pii_detector.py",
+      "summary": "Regex-based PII detection and redaction for emails, phones and credit card numbers with field-level checks.",
+      "tags": [
+        "security",
+        "privacy",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:api/app/guards/rate_limiter.py",
+      "type": "file",
+      "name": "rate_limiter.py",
+      "filePath": "api/app/guards/rate_limiter.py",
+      "summary": "In-memory per-client rate limiter with sliding-window request counts and concurrency caps.",
+      "tags": [
+        "service",
+        "security",
+        "rate-limiting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:api/app/guards/timeout_guard.py",
+      "type": "file",
+      "name": "timeout_guard.py",
+      "filePath": "api/app/guards/timeout_guard.py",
+      "summary": "Async per-stage timeout enforcement with timing statistics for OCR, router, extractor, validator and judge stages.",
+      "tags": [
+        "service",
+        "reliability",
+        "timeout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:api/app/main.py",
+      "type": "file",
+      "name": "main.py",
+      "filePath": "api/app/main.py",
+      "summary": "FastAPI application factory wiring the API router and root health check.",
+      "tags": [
+        "entry-point",
+        "api-handler",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:api/app/observability/langfuse.py",
+      "type": "file",
+      "name": "langfuse.py",
+      "filePath": "api/app/observability/langfuse.py",
+      "summary": "Optional Langfuse tracing wrapper with PII-masking generation inputs and a noop fallback when unconfigured.",
+      "tags": [
+        "observability",
+        "tracing",
+        "privacy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:api/app/services/extraction_service.py",
+      "type": "file",
+      "name": "extraction_service.py",
+      "filePath": "api/app/services/extraction_service.py",
+      "summary": "Core orchestration of the RapidOCR, router, extractor, validator and judge pipeline with sync and async batch jobs.",
+      "tags": [
+        "service",
+        "extraction",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:api/app/guards/pii_detector.py:PIIType",
+      "type": "class",
+      "name": "PIIType",
+      "filePath": "api/app/guards/pii_detector.py",
+      "lineRange": [
+        10,
+        18
+      ],
+      "summary": "Enumeration of detectable PII categories such as email, phone and credit card.",
+      "tags": [
+        "data-model",
+        "privacy",
+        "enumeration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/pii_detector.py:PIIMatch",
+      "type": "class",
+      "name": "PIIMatch",
+      "filePath": "api/app/guards/pii_detector.py",
+      "lineRange": [
+        22,
+        29
+      ],
+      "summary": "Record capturing PII type, matched value, offsets and confidence.",
+      "tags": [
+        "data-model",
+        "privacy",
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/pii_detector.py:PIIDetector",
+      "type": "class",
+      "name": "PIIDetector",
+      "filePath": "api/app/guards/pii_detector.py",
+      "lineRange": [
+        62,
+        166
+      ],
+      "summary": "Regex-based PII detector with detect, redact and field-level check helpers.",
+      "tags": [
+        "service",
+        "privacy",
+        "detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/app/guards/rate_limiter.py:RateLimitConfig",
+      "type": "class",
+      "name": "RateLimitConfig",
+      "filePath": "api/app/guards/rate_limiter.py",
+      "lineRange": [
+        15,
+        21
+      ],
+      "summary": "Configuration for request caps, sliding window, concurrency and burst limits.",
+      "tags": [
+        "data-model",
+        "rate-limiting",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/rate_limiter.py:RateLimitState",
+      "type": "class",
+      "name": "RateLimitState",
+      "filePath": "api/app/guards/rate_limiter.py",
+      "lineRange": [
+        25,
+        29
+      ],
+      "summary": "Per-client mutable state tracking request timestamps and concurrency.",
+      "tags": [
+        "data-model",
+        "rate-limiting",
+        "state"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/rate_limiter.py:RateLimiter",
+      "type": "class",
+      "name": "RateLimiter",
+      "filePath": "api/app/guards/rate_limiter.py",
+      "lineRange": [
+        32,
+        155
+      ],
+      "summary": "In-memory sliding-window rate limiter with concurrency tracking and retry-after computation.",
+      "tags": [
+        "service",
+        "rate-limiting",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/app/guards/timeout_guard.py:StageTimeoutConfig",
+      "type": "class",
+      "name": "StageTimeoutConfig",
+      "filePath": "api/app/guards/timeout_guard.py",
+      "lineRange": [
+        17,
+        32
+      ],
+      "summary": "Per-stage timeout configuration for router, extractor, validator, judge, OCR and vision stages.",
+      "tags": [
+        "data-model",
+        "reliability",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/timeout_guard.py:StageTimeoutError",
+      "type": "class",
+      "name": "StageTimeoutError",
+      "filePath": "api/app/guards/timeout_guard.py",
+      "lineRange": [
+        38,
+        44
+      ],
+      "summary": "Exception raised when a pipeline stage exceeds its timeout.",
+      "tags": [
+        "error-handling",
+        "reliability",
+        "timeout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/guards/timeout_guard.py:stage_timeout",
+      "type": "function",
+      "name": "stage_timeout",
+      "filePath": "api/app/guards/timeout_guard.py",
+      "lineRange": [
+        48,
+        68
+      ],
+      "summary": "Decorator enforcing an async timeout on a named pipeline stage.",
+      "tags": [
+        "utility",
+        "reliability",
+        "timeout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/timeout_guard.py:run_with_timeout",
+      "type": "function",
+      "name": "run_with_timeout",
+      "filePath": "api/app/guards/timeout_guard.py",
+      "lineRange": [
+        71,
+        96
+      ],
+      "summary": "Runs a coroutine with a stage timeout and maps expiry to StageTimeoutError.",
+      "tags": [
+        "utility",
+        "reliability",
+        "timeout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/app/guards/timeout_guard.py:TimeoutGuard",
+      "type": "class",
+      "name": "TimeoutGuard",
+      "filePath": "api/app/guards/timeout_guard.py",
+      "lineRange": [
+        99,
+        187
+      ],
+      "summary": "Tracks per-stage timings with averages and timeout-enforcing execution wrapper.",
+      "tags": [
+        "service",
+        "reliability",
+        "timeout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/main.py:root_health_check",
+      "type": "function",
+      "name": "root_health_check",
+      "filePath": "api/app/main.py",
+      "lineRange": [
+        15,
+        17
+      ],
+      "summary": "Root liveness endpoint confirming the API is running.",
+      "tags": [
+        "api-handler",
+        "health",
+        "monitoring"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/observability/langfuse.py:_truncate_text",
+      "type": "function",
+      "name": "_truncate_text",
+      "filePath": "api/app/observability/langfuse.py",
+      "lineRange": [
+        32,
+        35
+      ],
+      "summary": "Truncates traced text values to a character limit.",
+      "tags": [
+        "utility",
+        "observability",
+        "tracing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/observability/langfuse.py:build_mask_function",
+      "type": "function",
+      "name": "build_mask_function",
+      "filePath": "api/app/observability/langfuse.py",
+      "lineRange": [
+        38,
+        72
+      ],
+      "summary": "Builds a PII-redacting mask closure over a PIIDetector for traced inputs.",
+      "tags": [
+        "utility",
+        "observability",
+        "privacy"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/app/observability/langfuse.py:LangfuseTracer",
+      "type": "class",
+      "name": "LangfuseTracer",
+      "filePath": "api/app/observability/langfuse.py",
+      "lineRange": [
+        75,
+        141
+      ],
+      "summary": "Config-gated tracer factory returning noop traces when Langfuse is unconfigured.",
+      "tags": [
+        "service",
+        "observability",
+        "tracing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/app/observability/langfuse.py:_Trace",
+      "type": "class",
+      "name": "_Trace",
+      "filePath": "api/app/observability/langfuse.py",
+      "lineRange": [
+        144,
+        258
+      ],
+      "summary": "Trace handle with span, generation, score and IO helper methods.",
+      "tags": [
+        "service",
+        "observability",
+        "tracing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:api/app/observability/langfuse.py:_Span",
+      "type": "class",
+      "name": "_Span",
+      "filePath": "api/app/observability/langfuse.py",
+      "lineRange": [
+        261,
+        305
+      ],
+      "summary": "Span handle with end and update lifecycle methods.",
+      "tags": [
+        "observability",
+        "tracing",
+        "monitoring"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/services/extraction_service.py:_is_image_file",
+      "type": "function",
+      "name": "_is_image_file",
+      "filePath": "api/app/services/extraction_service.py",
+      "lineRange": [
+        49,
+        51
+      ],
+      "summary": "Checks filename and content type to identify image uploads.",
+      "tags": [
+        "utility",
+        "extraction",
+        "file-upload"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/services/extraction_service.py:_image_media_type",
+      "type": "function",
+      "name": "_image_media_type",
+      "filePath": "api/app/services/extraction_service.py",
+      "lineRange": [
+        54,
+        61
+      ],
+      "summary": "Resolves the media type for an image upload from filename and content type.",
+      "tags": [
+        "utility",
+        "extraction",
+        "file-upload"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/services/extraction_service.py:_is_numeric_value",
+      "type": "function",
+      "name": "_is_numeric_value",
+      "filePath": "api/app/services/extraction_service.py",
+      "lineRange": [
+        64,
+        76
+      ],
+      "summary": "Checks whether an extracted value is numeric for verbatim-span rules.",
+      "tags": [
+        "utility",
+        "extraction",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/services/extraction_service.py:_all_numeric_spans_verbatim",
+      "type": "function",
+      "name": "_all_numeric_spans_verbatim",
+      "filePath": "api/app/services/extraction_service.py",
+      "lineRange": [
+        79,
+        98
+      ],
+      "summary": "Verifies every numeric field span appears verbatim in the page text.",
+      "tags": [
+        "utility",
+        "extraction",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/services/extraction_service.py:_agent_usage",
+      "type": "function",
+      "name": "_agent_usage",
+      "filePath": "api/app/services/extraction_service.py",
+      "lineRange": [
+        101,
+        116
+      ],
+      "summary": "Reads token usage from the last agent call for tracing.",
+      "tags": [
+        "utility",
+        "observability",
+        "tracing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/services/extraction_service.py:UploadedFilePart",
+      "type": "class",
+      "name": "UploadedFilePart",
+      "filePath": "api/app/services/extraction_service.py",
+      "lineRange": [
+        119,
+        125
+      ],
+      "summary": "Container for one uploaded file part with filename, bytes and media type.",
+      "tags": [
+        "data-model",
+        "extraction",
+        "file-upload"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/services/extraction_service.py:DocumentExtractionService",
+      "type": "class",
+      "name": "DocumentExtractionService",
+      "filePath": "api/app/services/extraction_service.py",
+      "lineRange": [
+        128,
+        665
+      ],
+      "summary": "Orchestrates OCR, routing, extraction, validation and judging with sync and async job APIs.",
+      "tags": [
+        "service",
+        "extraction",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:api/app/services/extraction_service.py:coerce_field_dates",
+      "type": "function",
+      "name": "coerce_field_dates",
+      "filePath": "api/app/services/extraction_service.py",
+      "lineRange": [
+        668,
+        683
+      ],
+      "summary": "Coerces date-valued extraction fields into ISO date strings.",
+      "tags": [
+        "utility",
+        "extraction",
+        "normalization"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:api/app/guards/pii_detector.py",
+      "target": "class:api/app/guards/pii_detector.py:PIIDetector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/pii_detector.py",
+      "target": "class:api/app/guards/pii_detector.py:PIIMatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/pii_detector.py",
+      "target": "class:api/app/guards/pii_detector.py:PIIType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/rate_limiter.py",
+      "target": "class:api/app/guards/rate_limiter.py:RateLimitConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/rate_limiter.py",
+      "target": "class:api/app/guards/rate_limiter.py:RateLimitState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/rate_limiter.py",
+      "target": "class:api/app/guards/rate_limiter.py:RateLimiter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "class:api/app/guards/timeout_guard.py:StageTimeoutConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "class:api/app/guards/timeout_guard.py:StageTimeoutError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "class:api/app/guards/timeout_guard.py:TimeoutGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "function:api/app/guards/timeout_guard.py:run_with_timeout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "function:api/app/guards/timeout_guard.py:stage_timeout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/main.py",
+      "target": "function:api/app/main.py:root_health_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "class:api/app/observability/langfuse.py:LangfuseTracer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "class:api/app/observability/langfuse.py:_Span",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "class:api/app/observability/langfuse.py:_Trace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "function:api/app/observability/langfuse.py:_truncate_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "function:api/app/observability/langfuse.py:build_mask_function",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "class:api/app/services/extraction_service.py:DocumentExtractionService",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "class:api/app/services/extraction_service.py:UploadedFilePart",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_agent_usage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_all_numeric_spans_verbatim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_image_media_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_is_image_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_is_numeric_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:coerce_field_dates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/pii_detector.py",
+      "target": "class:api/app/guards/pii_detector.py:PIIDetector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/pii_detector.py",
+      "target": "class:api/app/guards/pii_detector.py:PIIMatch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/pii_detector.py",
+      "target": "class:api/app/guards/pii_detector.py:PIIType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/rate_limiter.py",
+      "target": "class:api/app/guards/rate_limiter.py:RateLimitConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/rate_limiter.py",
+      "target": "class:api/app/guards/rate_limiter.py:RateLimitState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/rate_limiter.py",
+      "target": "class:api/app/guards/rate_limiter.py:RateLimiter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "class:api/app/guards/timeout_guard.py:StageTimeoutConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "class:api/app/guards/timeout_guard.py:StageTimeoutError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "class:api/app/guards/timeout_guard.py:TimeoutGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "function:api/app/guards/timeout_guard.py:run_with_timeout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "function:api/app/guards/timeout_guard.py:stage_timeout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/main.py",
+      "target": "function:api/app/main.py:root_health_check",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "class:api/app/observability/langfuse.py:LangfuseTracer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "class:api/app/observability/langfuse.py:_Span",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "class:api/app/observability/langfuse.py:_Trace",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "function:api/app/observability/langfuse.py:_truncate_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "function:api/app/observability/langfuse.py:build_mask_function",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "class:api/app/services/extraction_service.py:DocumentExtractionService",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "class:api/app/services/extraction_service.py:UploadedFilePart",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_agent_usage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_all_numeric_spans_verbatim",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_image_media_type",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_is_image_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:_is_numeric_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "function:api/app/services/extraction_service.py:coerce_field_dates",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/main.py",
+      "target": "file:api/app/api/routes.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/main.py",
+      "target": "file:api/app/core/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "file:api/app/core/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/agents/extractors.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/agents/judge.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/agents/router.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/agents/validator.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/core/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/core/security.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/guards/audit_logger.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/guards/content_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/guards/pii_detector.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/guards/timeout_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/observability/langfuse.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/schemas/documents.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/services/field_catalog.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/services/field_matching.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/services/job_store.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/services/knowledge_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/app/services/rapidocr_client.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/pii_detector.py",
+      "target": "file:api/tests/test_guards.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:api/app/guards/rate_limiter.py",
+      "target": "file:api/tests/test_guards.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:api/app/guards/timeout_guard.py",
+      "target": "file:api/tests/test_guards.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:api/app/guards/pii_detector.py",
+      "target": "file:api/tests/test_langfuse_tracing.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:api/app/observability/langfuse.py",
+      "target": "file:api/tests/test_langfuse_tracing.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/tests/test_langfuse_tracing.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:api/app/services/extraction_service.py",
+      "target": "file:api/tests/test_pipeline.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

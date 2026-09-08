@@ -1,12 +1,54 @@
 """Application configuration loaded from backend/.env."""
 
 import os
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+@dataclass(frozen=True)
+class ProviderProfile:
+    """Static connection profile for one OpenAI-compatible LLM provider."""
+
+    base_url: str
+    native_key_var: str = ""
+    # "" means LLM_MODEL is required (no silent default for this provider).
+    default_model: str = ""
+    default_temperature: float = 0.0
+    # False = chat completions has no strict json_schema tier (DeepSeek):
+    # the client starts at the json_object tier instead of burning a call.
+    strict_json_schema: bool = True
+
+
+# All providers are OpenAI-compatible (chat.completions + Bearer auth).
+# Native Anthropic/Claude is deliberately absent: its Messages API uses
+# different auth headers and request bodies, so it cannot run on the
+# shared client — use the openrouter/opencode gateway entries instead.
+# See docs/llm_providers.md for the full per-provider setup matrix.
+LLM_PROVIDERS: dict[str, ProviderProfile] = {
+    "openai": ProviderProfile("https://api.openai.com/v1", "OPENAI_API_KEY", "gpt-5.4-mini"),
+    "xai": ProviderProfile("https://api.x.ai/v1", "XAI_API_KEY", "grok-4"),
+    "gemini": ProviderProfile(
+        "https://generativelanguage.googleapis.com/v1beta/openai/", "GEMINI_API_KEY", "gemini-2.5-flash"
+    ),
+    "openrouter": ProviderProfile("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY", "openrouter/auto"),
+    # No default model by design: LLM_MODEL is required for deepseek so a
+    # missing value can never be mistaken for a recommendation.
+    "deepseek": ProviderProfile("https://api.deepseek.com", "DEEPSEEK_API_KEY", strict_json_schema=False),
+    # China region via LLM_BASE_URL=https://api.moonshot.cn/v1
+    "kimi": ProviderProfile("https://api.moonshot.ai/v1", "MOONSHOT_API_KEY", "kimi-k2.6"),
+    "ollama-cloud": ProviderProfile("https://ollama.com/v1", "OLLAMA_API_KEY", "gpt-oss:20b", 1.0),
+    "ollama-local": ProviderProfile("http://localhost:11434/v1", "", "gpt-oss:20b"),
+    "mistral": ProviderProfile("https://api.mistral.ai/v1", "MISTRAL_API_KEY", "mistral-large-latest"),
+    # Local OpenClaw gateway (enable gateway.http.endpoints.chatCompletions first).
+    "openclaw": ProviderProfile("http://127.0.0.1:18789/v1", "OPENCLAW_API_KEY", "openclaw/default"),
+    # OpenCode Zen gateway; literal key "public" serves the free-tier models.
+    "opencode": ProviderProfile("https://opencode.ai/zen/v1", "OPENCODE_API_KEY", "gpt-5.4-mini"),
+}
 
 
 class Settings:
@@ -39,30 +81,31 @@ class Settings:
 
         # --- AI provider: one text model for Router + Extractor + Judge ---
         # Three variables control everything — change provider/model by editing
-        # LLM_PROVIDER / LLM_API_KEY / LLM_MODEL only.
+        # LLM_PROVIDER / LLM_API_KEY / LLM_MODEL only (see docs/ai_provider.md
+        # for the per-provider setup matrix).
         self.llm_provider = (os.getenv("LLM_PROVIDER", "ollama-cloud").strip().lower() or "ollama-cloud")
-        _PROVIDER_BASE_URLS = {
-            "openai": "https://api.openai.com/v1",
-            "ollama-cloud": "https://ollama.com/v1",
-            "ollama-local": "http://localhost:11434/v1",
-        }
-        if self.llm_provider not in _PROVIDER_BASE_URLS:
+        try:
+            _profile = LLM_PROVIDERS[self.llm_provider]
+        except KeyError:
             raise ValueError(
                 f"Unknown LLM_PROVIDER={self.llm_provider!r} — "
-                f"expected one of: {sorted(_PROVIDER_BASE_URLS)}"
-            )
-        _NATIVE_KEY_VARS = {"openai": "OPENAI_API_KEY", "ollama-cloud": "OLLAMA_API_KEY", "ollama-local": ""}
-        _native_key_var = _NATIVE_KEY_VARS[self.llm_provider]
-        _native_key = os.getenv(_native_key_var, "") if _native_key_var else ""
+                f"expected one of: {sorted(LLM_PROVIDERS)}"
+            ) from None
+        _native_key = os.getenv(_profile.native_key_var, "") if _profile.native_key_var else ""
         self.llm_api_key = (os.getenv("LLM_API_KEY", "") or _native_key).strip()
-        self.llm_base_url = os.getenv("LLM_BASE_URL", "").strip() or _PROVIDER_BASE_URLS[self.llm_provider]
-        self.llm_model = os.getenv("LLM_MODEL", "gpt-oss:20b").strip() or "gpt-oss:20b"
+        self.llm_base_url = os.getenv("LLM_BASE_URL", "").strip() or _profile.base_url
+        self.llm_model = os.getenv("LLM_MODEL", "").strip() or _profile.default_model
+        if not self.llm_model:
+            raise ValueError(
+                f"LLM_MODEL is required when LLM_PROVIDER={self.llm_provider!r} "
+                "(this provider ships no default model; see docs/ai_provider.md)."
+            )
         self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "").strip() or self.llm_model
         self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "").strip() or self.llm_model
         self.extraction_model_name = os.getenv("EXTRACTION_MODEL_NAME", "").strip() or self.llm_model
         # gpt-oss reasons in Harmony format and degrades on low temperatures
         # (OpenAI recommends 1.0 for it). Other providers keep 0.0.
-        _temp_default = 1.0 if self.llm_provider == "ollama-cloud" else 0.0
+        _temp_default = _profile.default_temperature
         try:
             self.llm_temperature = float(os.getenv("LLM_TEMPERATURE", "") or _temp_default)
         except ValueError:
@@ -76,7 +119,16 @@ class Settings:
         self.llm_max_concurrent_requests = int(os.getenv("LLM_MAX_CONCURRENT_REQUESTS", "1"))
         if self.llm_max_concurrent_requests < 1:
             raise ValueError("LLM_MAX_CONCURRENT_REQUESTS must be at least 1")
-        self.disable_strict_json_schema = os.getenv("DISABLE_STRICT_JSON_SCHEMA", "false").lower() == "true"
+        # Default comes from the provider profile: deepseek's chat completions
+        # only offer json_object, so strict mode is off there unless the env
+        # var explicitly says otherwise (see api/scripts/time_gateway_modes.py).
+        _strict_raw = os.getenv("DISABLE_STRICT_JSON_SCHEMA", "").strip().lower()
+        if _strict_raw in ("true", "1", "yes"):
+            self.disable_strict_json_schema = True
+        elif _strict_raw in ("false", "0", "no"):
+            self.disable_strict_json_schema = False
+        else:
+            self.disable_strict_json_schema = not _profile.strict_json_schema
 
         # --- Document parsing (local RapidOCR — no API key, no network) ---
         # OCR_DPI controls PDF render resolution (150–600, default 300).

@@ -1,0 +1,17 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "web/.env.example", "language": "config", "sizeLines": 15, "fileCategory": "config"},
+    {"path": "web/index.html", "language": "html", "sizeLines": 12, "fileCategory": "markup"},
+    {"path": "web/package.json", "language": "json", "sizeLines": 23, "fileCategory": "config"},
+    {"path": "web/tsconfig.json", "language": "json", "sizeLines": 21, "fileCategory": "config"},
+    {"path": "web/tsconfig.node.json", "language": "json", "sizeLines": 11, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "web/.env.example": [],
+    "web/index.html": [],
+    "web/package.json": [],
+    "web/tsconfig.json": [],
+    "web/tsconfig.node.json": []
+  }
+}

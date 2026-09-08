@@ -1,0 +1,27 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "api/app/data/knowledge_base/raw_data/X51008164525.json", "language": "json", "sizeLines": 23, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51008164969.json", "language": "json", "sizeLines": 36, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51008164991.json", "language": "json", "sizeLines": 26, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51008164992.json", "language": "json", "sizeLines": 38, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51008164996.json", "language": "json", "sizeLines": 36, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51008164997.json", "language": "json", "sizeLines": 31, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51008164998.json", "language": "json", "sizeLines": 26, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51008164999.json", "language": "json", "sizeLines": 46, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51009453801.json", "language": "json", "sizeLines": 19, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/raw_data/X51009453804.json", "language": "json", "sizeLines": 16, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "api/app/data/knowledge_base/raw_data/X51008164525.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164969.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164991.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164992.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164996.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164997.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164998.json": [],
+    "api/app/data/knowledge_base/raw_data/X51008164999.json": [],
+    "api/app/data/knowledge_base/raw_data/X51009453801.json": [],
+    "api/app/data/knowledge_base/raw_data/X51009453804.json": []
+  }
+}

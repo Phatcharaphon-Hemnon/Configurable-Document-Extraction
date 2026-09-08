@@ -1,0 +1,207 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [
+    "web/src/styles.css"
+  ],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 5,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 2,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "scripts/run_all.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 160,
+      "nonEmptyLines": 139,
+      "functions": [
+        {
+          "name": "step",
+          "startLine": 21,
+          "endLine": 21,
+          "params": []
+        },
+        {
+          "name": "warn",
+          "startLine": 22,
+          "endLine": 22,
+          "params": []
+        },
+        {
+          "name": "fail",
+          "startLine": 23,
+          "endLine": 23,
+          "params": []
+        },
+        {
+          "name": "cleanup",
+          "startLine": 140,
+          "endLine": 144,
+          "params": []
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "skills/document-extraction/SKILL.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 58,
+      "nonEmptyLines": 47,
+      "sections": [
+        {
+          "heading": "Document Extraction Project Skill",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "Pipeline (in order)",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Critical invariants",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "Where things live",
+          "level": 2,
+          "line": 33
+        },
+        {
+          "heading": "Verification checklist (run after changes)",
+          "level": 2,
+          "line": 46
+        },
+        {
+          "heading": "UI palette",
+          "level": 2,
+          "line": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "skills/langfuse/SKILL.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 150,
+      "nonEmptyLines": 105,
+      "sections": [
+        {
+          "heading": "Langfuse",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "Core Principles",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Use case specific references",
+          "level": 2,
+          "line": 33
+        },
+        {
+          "heading": "1. Langfuse API via CLI",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "Credentials",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "Detailed CLI Reference",
+          "level": 3,
+          "line": 80
+        },
+        {
+          "heading": "2. Langfuse Documentation",
+          "level": 2,
+          "line": 84
+        },
+        {
+          "heading": "2a. Documentation Index (llms.txt)",
+          "level": 3,
+          "line": 88
+        },
+        {
+          "heading": "2b. Fetch Individual Pages as Markdown",
+          "level": 3,
+          "line": 100
+        },
+        {
+          "heading": "2c. Search Documentation",
+          "level": 3,
+          "line": 109
+        },
+        {
+          "heading": "Documentation Workflow",
+          "level": 3,
+          "line": 133
+        },
+        {
+          "heading": "Skill Feedback",
+          "level": 2,
+          "line": 139
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "web/src/vite-env.d.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "web/vite.config.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 16,
+      "nonEmptyLines": 15,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

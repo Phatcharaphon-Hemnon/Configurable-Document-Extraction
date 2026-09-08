@@ -1,0 +1,13 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "api/app/services/rag_retriever.py", "language": "python", "sizeLines": 132, "fileCategory": "code"},
+    {"path": "api/scripts/ingest_kb.py", "language": "python", "sizeLines": 122, "fileCategory": "code"},
+    {"path": "api/tests/test_rag_retriever.py", "language": "python", "sizeLines": 86, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "api/app/services/rag_retriever.py": [],
+    "api/scripts/ingest_kb.py": ["api/app/services/rag_retriever.py"],
+    "api/tests/test_rag_retriever.py": ["api/app/services/rag_retriever.py", "api/scripts/ingest_kb.py"]
+  }
+}

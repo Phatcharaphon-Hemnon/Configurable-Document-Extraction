@@ -1,0 +1,19 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "scripts/run_all.sh", "language": "shell", "sizeLines": 160, "fileCategory": "script"},
+    {"path": "skills/document-extraction/SKILL.md", "language": "markdown", "sizeLines": 58, "fileCategory": "docs"},
+    {"path": "skills/langfuse/SKILL.md", "language": "markdown", "sizeLines": 150, "fileCategory": "docs"},
+    {"path": "web/src/styles.css", "language": "css", "sizeLines": 1228, "fileCategory": "markup"},
+    {"path": "web/src/vite-env.d.ts", "language": "typescript", "sizeLines": 0, "fileCategory": "code"},
+    {"path": "web/vite.config.ts", "language": "typescript", "sizeLines": 16, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "scripts/run_all.sh": [],
+    "skills/document-extraction/SKILL.md": [],
+    "skills/langfuse/SKILL.md": [],
+    "web/src/styles.css": [],
+    "web/src/vite-env.d.ts": [],
+    "web/vite.config.ts": []
+  }
+}

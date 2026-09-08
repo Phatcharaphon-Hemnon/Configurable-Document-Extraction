@@ -1,0 +1,199 @@
+{
+  "nodes": [
+    {
+      "id": "file:api/app/temporal/client.py",
+      "type": "file",
+      "name": "client.py",
+      "filePath": "api/app/temporal/client.py",
+      "summary": "Temporal client helper that connects to the Temporal frontend and exposes the shared task queue name from settings.",
+      "tags": ["service", "temporal", "client-helper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/temporal/client.py:get_temporal_client",
+      "type": "function",
+      "name": "get_temporal_client",
+      "filePath": "api/app/temporal/client.py",
+      "lineRange": [12, 14],
+      "summary": "Connects to the Temporal server address from settings and returns an authenticated client handle.",
+      "tags": ["client-helper", "temporal", "connection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:api/app/temporal/worker.py",
+      "type": "file",
+      "name": "worker.py",
+      "filePath": "api/app/temporal/worker.py",
+      "summary": "Standalone Temporal worker entry point that registers the extraction workflow and its five pipeline activities.",
+      "tags": ["entry-point", "worker", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/temporal/worker.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "api/app/temporal/worker.py",
+      "lineRange": [27, 43],
+      "summary": "Builds a Temporal worker on the shared task queue with the extraction workflow and parse/classify/extract/validate/judge activities, then runs it.",
+      "tags": ["entry-point", "worker", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:api/app/temporal/workflows.py",
+      "type": "file",
+      "name": "workflows.py",
+      "filePath": "api/app/temporal/workflows.py",
+      "summary": "Defines the durable Temporal extraction workflow that chains parse, classify, extract, validate, and judge activities per document page.",
+      "tags": ["workflow", "orchestration", "extraction-pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/temporal/workflows.py:_timeout",
+      "type": "function",
+      "name": "_timeout",
+      "filePath": "api/app/temporal/workflows.py",
+      "lineRange": [27, 28],
+      "summary": "Converts a seconds count into a timedelta for activity start-to-close timeouts.",
+      "tags": ["utility", "temporal", "timeout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/temporal/workflows.py:ExtractDocumentWorkflow",
+      "type": "class",
+      "name": "ExtractDocumentWorkflow",
+      "filePath": "api/app/temporal/workflows.py",
+      "lineRange": [32, 78],
+      "summary": "Durable workflow that parses upload bytes into page texts then runs classify, extract, validate, and judge activities per page with retries.",
+      "tags": ["workflow", "orchestration", "extraction-pipeline"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:api/app/temporal/client.py",
+      "target": "file:api/app/core/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/temporal/worker.py",
+      "target": "file:api/app/temporal/activities.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/temporal/worker.py",
+      "target": "file:api/app/temporal/client.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/temporal/worker.py",
+      "target": "file:api/app/temporal/workflows.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/temporal/client.py",
+      "target": "function:api/app/temporal/client.py:get_temporal_client",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/temporal/worker.py",
+      "target": "function:api/app/temporal/worker.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/temporal/workflows.py",
+      "target": "function:api/app/temporal/workflows.py:_timeout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/temporal/workflows.py",
+      "target": "class:api/app/temporal/workflows.py:ExtractDocumentWorkflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/temporal/client.py",
+      "target": "function:api/app/temporal/client.py:get_temporal_client",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/temporal/worker.py",
+      "target": "function:api/app/temporal/worker.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/temporal/workflows.py",
+      "target": "function:api/app/temporal/workflows.py:_timeout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/temporal/workflows.py",
+      "target": "class:api/app/temporal/workflows.py:ExtractDocumentWorkflow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:api/app/temporal/worker.py:main",
+      "target": "function:api/app/temporal/client.py:get_temporal_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:api/app/temporal/workflows.py:ExtractDocumentWorkflow",
+      "target": "function:api/app/temporal/activities.py:parse_activity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:api/app/temporal/workflows.py:ExtractDocumentWorkflow",
+      "target": "function:api/app/temporal/activities.py:classify_activity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:api/app/temporal/workflows.py:ExtractDocumentWorkflow",
+      "target": "function:api/app/temporal/activities.py:extract_activity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:api/app/temporal/workflows.py:ExtractDocumentWorkflow",
+      "target": "function:api/app/temporal/activities.py:validate_activity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:api/app/temporal/workflows.py:ExtractDocumentWorkflow",
+      "target": "function:api/app/temporal/activities.py:judge_activity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [
+    "sonar-project.properties"
+  ],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 5,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 5
+    }
+  },
+  "results": [
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 95,
+      "nonEmptyLines": 81,
+      "sections": [
+        {
+          "heading": "AGENTS.md — Project Memory",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "What this project is",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "Non-negotiable rules",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Layout map",
+          "level": 2,
+          "line": 53
+        },
+        {
+          "heading": "Environment (api/.env)",
+          "level": 2,
+          "line": 68
+        },
+        {
+          "heading": "Commands",
+          "level": 2,
+          "line": 78
+        },
+        {
+          "heading": "Gotchas",
+          "level": 2,
+          "line": 87
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "CHANGELOG.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 207,
+      "nonEmptyLines": 173,
+      "sections": [
+        {
+          "heading": "Changelog",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "2026-09-06 — Hallucination-evidence hardening (9 of 10 audit issues)",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "2026-09-04 — Temporal auto-registration fix (ai_discovered → catalog)",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "2026-09-04 — v0.2.0 \"AI core\" (iteration 2)",
+          "level": 2,
+          "line": 70
+        },
+        {
+          "heading": "2026-09-04 — Langfuse v4 tracing overhaul",
+          "level": 2,
+          "line": 95
+        },
+        {
+          "heading": "2026-09-04 — Async extraction jobs (fix socket hang-ups)",
+          "level": 2,
+          "line": 122
+        },
+        {
+          "heading": "2026-09-04 — LLM timeout recovery",
+          "level": 2,
+          "line": 160
+        },
+        {
+          "heading": "2026-09-04 — Catalog review helper + discovery fix",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "2026-09-04 — LlamaParse fully removed",
+          "level": 2,
+          "line": 181
+        },
+        {
+          "heading": "2026-09-04 — Local OCR on RapidOCR (Python 3.14)",
+          "level": 2,
+          "line": 187
+        },
+        {
+          "heading": "2026-09-04 — Clean reinstall",
+          "level": 2,
+          "line": 195
+        },
+        {
+          "heading": "2026-09-03 — Guardrails, hallucination fix, SQLite + History",
+          "level": 2,
+          "line": 200
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 160,
+      "nonEmptyLines": 133,
+      "sections": [
+        {
+          "heading": "Configurable Document Extraction",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Features",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Quick start",
+          "level": 2,
+          "line": 34
+        },
+        {
+          "heading": "Project layout",
+          "level": 2,
+          "line": 48
+        },
+        {
+          "heading": "Configuration",
+          "level": 2,
+          "line": 73
+        },
+        {
+          "heading": "API contract",
+          "level": 2,
+          "line": 91
+        },
+        {
+          "heading": "Development",
+          "level": 2,
+          "line": 109
+        },
+        {
+          "heading": "Deployment (Vercel + hosted backend)",
+          "level": 2,
+          "line": 117
+        },
+        {
+          "heading": "CI/CD",
+          "level": 2,
+          "line": 144
+        },
+        {
+          "heading": "Documentation",
+          "level": 2,
+          "line": 150
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "eval_report.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 80,
+      "nonEmptyLines": 64,
+      "sections": [
+        {
+          "heading": "Eval report — v0.2.0 AI core",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Config",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Summary",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Per-document results",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Agents exercised",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "RAG sources",
+          "level": 2,
+          "line": 44
+        },
+        {
+          "heading": "Reproduce",
+          "level": 2,
+          "line": 50
+        },
+        {
+          "heading": "Appendix — run conditions (post-hoc note, not generated)",
+          "level": 2,
+          "line": 59
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "ruff.toml",
+      "language": "toml",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 22,
+      "sections": [
+        {
+          "heading": "lint",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "lint.isort",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "lint.per-file-ignores",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "format",
+          "level": 1,
+          "line": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    }
+  ]
+}

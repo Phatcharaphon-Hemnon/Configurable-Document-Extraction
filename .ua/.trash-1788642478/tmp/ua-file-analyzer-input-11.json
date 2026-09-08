@@ -1,0 +1,17 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "api/app/data/knowledge_base/few_shot/invoice/example_01.json", "language": "json", "sizeLines": 30, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/few_shot/invoice/example_02.json", "language": "json", "sizeLines": 18, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/few_shot/invoice/example_03.json", "language": "json", "sizeLines": 18, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/few_shot/invoice/example_04.json", "language": "json", "sizeLines": 23, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/few_shot/invoice/example_05.json", "language": "json", "sizeLines": 16, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "api/app/data/knowledge_base/few_shot/invoice/example_01.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_02.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_03.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_04.json": [],
+    "api/app/data/knowledge_base/few_shot/invoice/example_05.json": []
+  }
+}

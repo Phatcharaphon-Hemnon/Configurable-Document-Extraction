@@ -1,0 +1,1320 @@
+{
+  "nodes": [
+    {
+      "id": "file:api/app/api/routes.py",
+      "type": "file",
+      "name": "routes.py",
+      "filePath": "api/app/api/routes.py",
+      "summary": "FastAPI router exposing document extraction, batch jobs, templates, evaluation and stats endpoints with rate limiting and audit logging.",
+      "tags": [
+        "api-handler",
+        "extraction",
+        "batch",
+        "evaluation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:api/app/guards/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "api/app/guards/__init__.py",
+      "summary": "Guard package barrel re-exporting audit, content, input, output, PII, rate-limit and timeout guards.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:api/app/guards/audit_logger.py",
+      "type": "file",
+      "name": "audit_logger.py",
+      "filePath": "api/app/guards/audit_logger.py",
+      "summary": "Structured security audit logger appending security events to a JSONL log with per-event helper methods.",
+      "tags": [
+        "service",
+        "security",
+        "audit-logging"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:api/app/guards/content_guard.py",
+      "type": "file",
+      "name": "content_guard.py",
+      "filePath": "api/app/guards/content_guard.py",
+      "summary": "Size and shape validation for document text, prompts, field names, values, source spans and extraction errors.",
+      "tags": [
+        "validation",
+        "security",
+        "content-limits"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:api/app/guards/input_guard.py",
+      "type": "file",
+      "name": "input_guard.py",
+      "filePath": "api/app/guards/input_guard.py",
+      "summary": "File upload validation with MIME sniffing, size caps and image dimension checks.",
+      "tags": [
+        "validation",
+        "security",
+        "file-upload"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:api/app/guards/output_guard.py",
+      "type": "file",
+      "name": "output_guard.py",
+      "filePath": "api/app/guards/output_guard.py",
+      "summary": "LLM output cleaning, JSON-schema validation, error sanitization and suspicious-output detection.",
+      "tags": [
+        "validation",
+        "llm-output",
+        "security"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:api/app/api/routes.py:_get_client_id",
+      "type": "function",
+      "name": "_get_client_id",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        44,
+        48
+      ],
+      "summary": "Extracts the client identity from request headers or state for rate limiting and audit attribution.",
+      "tags": [
+        "utility",
+        "auth",
+        "rate-limiting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:_content_fingerprint",
+      "type": "function",
+      "name": "_content_fingerprint",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        65,
+        70
+      ],
+      "summary": "Hashes uploaded file parts to fingerprint identical extraction requests.",
+      "tags": [
+        "utility",
+        "hashing",
+        "deduplication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:home",
+      "type": "function",
+      "name": "home",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        74,
+        84
+      ],
+      "summary": "Returns API root metadata with service name and version.",
+      "tags": [
+        "api-handler",
+        "metadata",
+        "health"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:health",
+      "type": "function",
+      "name": "health",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        88,
+        89
+      ],
+      "summary": "Liveness probe reporting service health status.",
+      "tags": [
+        "api-handler",
+        "health",
+        "monitoring"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:extract_document",
+      "type": "function",
+      "name": "extract_document",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        93,
+        201
+      ],
+      "summary": "Handles multipart document upload, guard validation and sync or async extraction dispatch.",
+      "tags": [
+        "api-handler",
+        "extraction",
+        "file-upload"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:api/app/api/routes.py:list_templates",
+      "type": "function",
+      "name": "list_templates",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        205,
+        206
+      ],
+      "summary": "Lists available field-catalog templates per document type.",
+      "tags": [
+        "api-handler",
+        "templates",
+        "catalog"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:create_batch",
+      "type": "function",
+      "name": "create_batch",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        210,
+        211
+      ],
+      "summary": "Creates an async batch job for a set of uploaded files.",
+      "tags": [
+        "api-handler",
+        "batch",
+        "async-job"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:get_job",
+      "type": "function",
+      "name": "get_job",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        215,
+        226
+      ],
+      "summary": "Fetches batch job status and per-file results by job ID.",
+      "tags": [
+        "api-handler",
+        "batch",
+        "job-status"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:evaluate",
+      "type": "function",
+      "name": "evaluate",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        230,
+        236
+      ],
+      "summary": "Scores extraction output against ground truth with precision and recall metrics.",
+      "tags": [
+        "api-handler",
+        "evaluation",
+        "metrics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:list_jobs",
+      "type": "function",
+      "name": "list_jobs",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        245,
+        269
+      ],
+      "summary": "Paginated job listing with status and document-type filters.",
+      "tags": [
+        "api-handler",
+        "job-status",
+        "pagination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/api/routes.py:get_stats",
+      "type": "function",
+      "name": "get_stats",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        273,
+        281
+      ],
+      "summary": "Returns aggregate extraction statistics and job counts.",
+      "tags": [
+        "api-handler",
+        "statistics",
+        "monitoring"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/api/routes.py:get_job_history",
+      "type": "function",
+      "name": "get_job_history",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        285,
+        304
+      ],
+      "summary": "Returns per-page extraction history records for a job.",
+      "tags": [
+        "api-handler",
+        "job-status",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/api/routes.py:delete_job",
+      "type": "function",
+      "name": "delete_job",
+      "filePath": "api/app/api/routes.py",
+      "lineRange": [
+        308,
+        327
+      ],
+      "summary": "Deletes a batch job and its stored extraction results.",
+      "tags": [
+        "api-handler",
+        "job-status",
+        "deletion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/app/guards/audit_logger.py:SecurityEventType",
+      "type": "class",
+      "name": "SecurityEventType",
+      "filePath": "api/app/guards/audit_logger.py",
+      "lineRange": [
+        16,
+        28
+      ],
+      "summary": "String enumeration of auditable security event categories.",
+      "tags": [
+        "data-model",
+        "security",
+        "enumeration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/audit_logger.py:SecurityEvent",
+      "type": "class",
+      "name": "SecurityEvent",
+      "filePath": "api/app/guards/audit_logger.py",
+      "lineRange": [
+        32,
+        40
+      ],
+      "summary": "Record capturing event ID, type, timestamp, client ID, details and severity.",
+      "tags": [
+        "data-model",
+        "security",
+        "audit-logging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/audit_logger.py:AuditLogger",
+      "type": "class",
+      "name": "AuditLogger",
+      "filePath": "api/app/guards/audit_logger.py",
+      "lineRange": [
+        43,
+        309
+      ],
+      "summary": "Appends security events to a JSONL audit log with per-event helper methods.",
+      "tags": [
+        "service",
+        "security",
+        "audit-logging"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:api/app/guards/content_guard.py:ContentLimits",
+      "type": "class",
+      "name": "ContentLimits",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        10,
+        45
+      ],
+      "summary": "Limit configuration for document, prompt, field-name, value, span and error-list sizes.",
+      "tags": [
+        "data-model",
+        "validation",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/content_guard.py:ContentValidationError",
+      "type": "class",
+      "name": "ContentValidationError",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        54,
+        59
+      ],
+      "summary": "Exception raised on strict content-limit violations.",
+      "tags": [
+        "validation",
+        "error-handling",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/guards/content_guard.py:validate_document_text",
+      "type": "function",
+      "name": "validate_document_text",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        62,
+        92
+      ],
+      "summary": "Validates document text length with optional truncation or strict rejection.",
+      "tags": [
+        "validation",
+        "security",
+        "content-limits"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/content_guard.py:validate_prompt_text",
+      "type": "function",
+      "name": "validate_prompt_text",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        95,
+        125
+      ],
+      "summary": "Validates LLM prompt text length with optional truncation or strict rejection.",
+      "tags": [
+        "validation",
+        "security",
+        "content-limits"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/content_guard.py:validate_field_name",
+      "type": "function",
+      "name": "validate_field_name",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        128,
+        156
+      ],
+      "summary": "Validates extracted field names for snake-case shape and length.",
+      "tags": [
+        "validation",
+        "security",
+        "catalog"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/content_guard.py:validate_field_value",
+      "type": "function",
+      "name": "validate_field_value",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        159,
+        190
+      ],
+      "summary": "Validates extracted field values for length with truncation support.",
+      "tags": [
+        "validation",
+        "security",
+        "extraction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/content_guard.py:validate_source_span",
+      "type": "function",
+      "name": "validate_source_span",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        193,
+        226
+      ],
+      "summary": "Validates evidence source spans for length and presence.",
+      "tags": [
+        "validation",
+        "security",
+        "extraction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/content_guard.py:validate_extraction_fields",
+      "type": "function",
+      "name": "validate_extraction_fields",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        229,
+        247
+      ],
+      "summary": "Validates the count and shape of an extraction field list.",
+      "tags": [
+        "validation",
+        "security",
+        "extraction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/guards/content_guard.py:validate_extraction_errors",
+      "type": "function",
+      "name": "validate_extraction_errors",
+      "filePath": "api/app/guards/content_guard.py",
+      "lineRange": [
+        250,
+        268
+      ],
+      "summary": "Validates the count and shape of a validation error list.",
+      "tags": [
+        "validation",
+        "security",
+        "extraction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:api/app/guards/input_guard.py:InputValidationError",
+      "type": "class",
+      "name": "InputValidationError",
+      "filePath": "api/app/guards/input_guard.py",
+      "lineRange": [
+        50,
+        55
+      ],
+      "summary": "Exception raised when an uploaded file fails validation.",
+      "tags": [
+        "validation",
+        "error-handling",
+        "file-upload"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/guards/input_guard.py:_detect_mime_type",
+      "type": "function",
+      "name": "_detect_mime_type",
+      "filePath": "api/app/guards/input_guard.py",
+      "lineRange": [
+        58,
+        95
+      ],
+      "summary": "Sniffs PDF and image magic bytes with filename fallback to determine MIME type.",
+      "tags": [
+        "utility",
+        "validation",
+        "mime-detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/input_guard.py:_get_image_dimensions",
+      "type": "function",
+      "name": "_get_image_dimensions",
+      "filePath": "api/app/guards/input_guard.py",
+      "lineRange": [
+        98,
+        110
+      ],
+      "summary": "Reads image width and height from raw bytes without full decode.",
+      "tags": [
+        "utility",
+        "validation",
+        "image-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/guards/input_guard.py:validate_file_upload",
+      "type": "function",
+      "name": "validate_file_upload",
+      "filePath": "api/app/guards/input_guard.py",
+      "lineRange": [
+        113,
+        205
+      ],
+      "summary": "Enforces non-empty content, size caps, MIME allowlist and optional dimension checks.",
+      "tags": [
+        "validation",
+        "file-upload",
+        "security"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:api/app/guards/input_guard.py:validate_image_dimensions",
+      "type": "function",
+      "name": "validate_image_dimensions",
+      "filePath": "api/app/guards/input_guard.py",
+      "lineRange": [
+        208,
+        248
+      ],
+      "summary": "Enforces maximum width and height constraints on decoded images.",
+      "tags": [
+        "validation",
+        "image-processing",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:api/app/guards/output_guard.py:OutputValidationError",
+      "type": "class",
+      "name": "OutputValidationError",
+      "filePath": "api/app/guards/output_guard.py",
+      "lineRange": [
+        17,
+        22
+      ],
+      "summary": "Exception raised when LLM output fails schema or safety validation.",
+      "tags": [
+        "validation",
+        "error-handling",
+        "llm-output"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:api/app/guards/output_guard.py:clean_llm_output",
+      "type": "function",
+      "name": "clean_llm_output",
+      "filePath": "api/app/guards/output_guard.py",
+      "lineRange": [
+        25,
+        80
+      ],
+      "summary": "Strips markdown fences and prose to isolate the JSON payload in LLM output.",
+      "tags": [
+        "utility",
+        "llm-output",
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/output_guard.py:validate_output_schema",
+      "type": "function",
+      "name": "validate_output_schema",
+      "filePath": "api/app/guards/output_guard.py",
+      "lineRange": [
+        83,
+        133
+      ],
+      "summary": "Validates cleaned LLM output against a Pydantic schema with fallback repair.",
+      "tags": [
+        "validation",
+        "llm-output",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/output_guard.py:sanitize_error_message",
+      "type": "function",
+      "name": "sanitize_error_message",
+      "filePath": "api/app/guards/output_guard.py",
+      "lineRange": [
+        136,
+        194
+      ],
+      "summary": "Redacts internal paths and details from errors before client exposure.",
+      "tags": [
+        "security",
+        "error-handling",
+        "sanitization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/output_guard.py:validate_llm_response_length",
+      "type": "function",
+      "name": "validate_llm_response_length",
+      "filePath": "api/app/guards/output_guard.py",
+      "lineRange": [
+        197,
+        227
+      ],
+      "summary": "Caps LLM response length with optional truncation.",
+      "tags": [
+        "validation",
+        "llm-output",
+        "content-limits"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:api/app/guards/output_guard.py:detect_suspicious_output",
+      "type": "function",
+      "name": "detect_suspicious_output",
+      "filePath": "api/app/guards/output_guard.py",
+      "lineRange": [
+        230,
+        281
+      ],
+      "summary": "Flags repetitive or low-entropy outputs indicating model generation failure.",
+      "tags": [
+        "validation",
+        "llm-output",
+        "anomaly-detection"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:_content_fingerprint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:_get_client_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:create_batch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:delete_job",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:extract_document",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:get_job",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:get_job_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:get_stats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:health",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:home",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:list_jobs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:list_templates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/audit_logger.py",
+      "target": "class:api/app/guards/audit_logger.py:AuditLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/audit_logger.py",
+      "target": "class:api/app/guards/audit_logger.py:SecurityEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/audit_logger.py",
+      "target": "class:api/app/guards/audit_logger.py:SecurityEventType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "class:api/app/guards/content_guard.py:ContentLimits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "class:api/app/guards/content_guard.py:ContentValidationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_document_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_extraction_errors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_extraction_fields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_field_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_field_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_prompt_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_source_span",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "class:api/app/guards/input_guard.py:InputValidationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "function:api/app/guards/input_guard.py:_detect_mime_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "function:api/app/guards/input_guard.py:_get_image_dimensions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "function:api/app/guards/input_guard.py:validate_file_upload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "function:api/app/guards/input_guard.py:validate_image_dimensions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "class:api/app/guards/output_guard.py:OutputValidationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:clean_llm_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:detect_suspicious_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:sanitize_error_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:validate_llm_response_length",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:validate_output_schema",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:_content_fingerprint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:_get_client_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:create_batch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:delete_job",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:evaluate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:extract_document",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:get_job",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:get_job_history",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:get_stats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:health",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:home",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:list_jobs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "function:api/app/api/routes.py:list_templates",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/audit_logger.py",
+      "target": "class:api/app/guards/audit_logger.py:AuditLogger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/audit_logger.py",
+      "target": "class:api/app/guards/audit_logger.py:SecurityEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/audit_logger.py",
+      "target": "class:api/app/guards/audit_logger.py:SecurityEventType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "class:api/app/guards/content_guard.py:ContentLimits",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "class:api/app/guards/content_guard.py:ContentValidationError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_document_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_extraction_errors",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_extraction_fields",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_field_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_field_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_prompt_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "function:api/app/guards/content_guard.py:validate_source_span",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "class:api/app/guards/input_guard.py:InputValidationError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "function:api/app/guards/input_guard.py:_detect_mime_type",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "function:api/app/guards/input_guard.py:_get_image_dimensions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "function:api/app/guards/input_guard.py:validate_file_upload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/input_guard.py",
+      "target": "function:api/app/guards/input_guard.py:validate_image_dimensions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "class:api/app/guards/output_guard.py:OutputValidationError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:clean_llm_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:detect_suspicious_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:sanitize_error_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:validate_llm_response_length",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "function:api/app/guards/output_guard.py:validate_output_schema",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "file:api/app/core/config.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "file:api/app/guards/audit_logger.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "file:api/app/guards/input_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "file:api/app/guards/output_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "file:api/app/guards/rate_limiter.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "file:api/app/schemas/documents.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/api/routes.py",
+      "target": "file:api/app/services/extraction_service.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/__init__.py",
+      "target": "file:api/app/guards/audit_logger.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/__init__.py",
+      "target": "file:api/app/guards/content_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/__init__.py",
+      "target": "file:api/app/guards/input_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/__init__.py",
+      "target": "file:api/app/guards/output_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/__init__.py",
+      "target": "file:api/app/guards/pii_detector.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/__init__.py",
+      "target": "file:api/app/guards/rate_limiter.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/__init__.py",
+      "target": "file:api/app/guards/timeout_guard.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:api/app/guards/audit_logger.py",
+      "target": "file:api/tests/test_guards.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:api/app/guards/content_guard.py",
+      "target": "file:api/tests/test_guards.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:api/app/guards/output_guard.py",
+      "target": "file:api/tests/test_guards.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "api/app/temporal/client.py", "language": "python", "sizeLines": 14, "fileCategory": "code"},
+    {"path": "api/app/temporal/worker.py", "language": "python", "sizeLines": 47, "fileCategory": "code"},
+    {"path": "api/app/temporal/workflows.py", "language": "python", "sizeLines": 78, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "api/app/temporal/client.py": ["api/app/core/config.py"],
+    "api/app/temporal/worker.py": ["api/app/temporal/activities.py", "api/app/temporal/client.py", "api/app/temporal/workflows.py"],
+    "api/app/temporal/workflows.py": []
+  }
+}

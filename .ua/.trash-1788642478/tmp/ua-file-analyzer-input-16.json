@@ -1,0 +1,98 @@
+{
+ "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+ "batchFiles": [
+  {
+   "path": "docs/ai_guardrails.md",
+   "language": "markdown",
+   "sizeLines": 1112,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/architecture.md",
+   "language": "markdown",
+   "sizeLines": 43,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/async_jobs.md",
+   "language": "markdown",
+   "sizeLines": 62,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/backend.md",
+   "language": "markdown",
+   "sizeLines": 44,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/catalog_review.md",
+   "language": "markdown",
+   "sizeLines": 49,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/frontend.md",
+   "language": "markdown",
+   "sizeLines": 50,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/hallucination_audit_2026-09-06.md",
+   "language": "markdown",
+   "sizeLines": 79,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/hallucination_fixes_2026-09-06.md",
+   "language": "markdown",
+   "sizeLines": 265,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/hallucination_fixes_manifest_2026-09-06.json",
+   "language": "json",
+   "sizeLines": 81,
+   "fileCategory": "config"
+  },
+  {
+   "path": "docs/langfuse_tracing.md",
+   "language": "markdown",
+   "sizeLines": 83,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/local_ocr.md",
+   "language": "markdown",
+   "sizeLines": 79,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/rag_kb.md",
+   "language": "markdown",
+   "sizeLines": 46,
+   "fileCategory": "docs"
+  },
+  {
+   "path": "docs/timeout_recovery.md",
+   "language": "markdown",
+   "sizeLines": 74,
+   "fileCategory": "docs"
+  }
+ ],
+ "batchImportData": {
+  "docs/ai_guardrails.md": [],
+  "docs/architecture.md": [],
+  "docs/async_jobs.md": [],
+  "docs/backend.md": [],
+  "docs/catalog_review.md": [],
+  "docs/frontend.md": [],
+  "docs/hallucination_audit_2026-09-06.md": [],
+  "docs/hallucination_fixes_2026-09-06.md": [],
+  "docs/hallucination_fixes_manifest_2026-09-06.json": [],
+  "docs/langfuse_tracing.md": [],
+  "docs/local_ocr.md": [],
+  "docs/rag_kb.md": [],
+  "docs/timeout_recovery.md": []
+ }
+}

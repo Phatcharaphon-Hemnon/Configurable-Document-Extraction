@@ -1,0 +1,13 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "api/app/data/knowledge_base/field_catalog/delivery_note_fields.json", "language": "json", "sizeLines": 22, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/field_catalog/invoice_fields.json", "language": "json", "sizeLines": 173, "fileCategory": "config"},
+    {"path": "api/app/data/knowledge_base/field_catalog/po_fields.json", "language": "json", "sizeLines": 24, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "api/app/data/knowledge_base/field_catalog/delivery_note_fields.json": [],
+    "api/app/data/knowledge_base/field_catalog/invoice_fields.json": [],
+    "api/app/data/knowledge_base/field_catalog/po_fields.json": []
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "AGENTS.md", "language": "markdown", "sizeLines": 95, "fileCategory": "docs"},
+    {"path": "CHANGELOG.md", "language": "markdown", "sizeLines": 207, "fileCategory": "docs"},
+    {"path": "README.md", "language": "markdown", "sizeLines": 160, "fileCategory": "docs"},
+    {"path": "eval_report.md", "language": "markdown", "sizeLines": 80, "fileCategory": "docs"},
+    {"path": "ruff.toml", "language": "toml", "sizeLines": 26, "fileCategory": "config"},
+    {"path": "sonar-project.properties", "language": "properties", "sizeLines": 31, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "AGENTS.md": [],
+    "CHANGELOG.md": [],
+    "README.md": [],
+    "eval_report.md": [],
+    "ruff.toml": [],
+    "sonar-project.properties": []
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "nodes": [
+    {
+      "id": "config:api/app/data/knowledge_base/few_shot/po/example_01.json",
+      "type": "config",
+      "name": "example_01.json",
+      "filePath": "api/app/data/knowledge_base/few_shot/po/example_01.json",
+      "summary": "Few-shot purchase-order example pairing standard Thai office-supply PO text with its expected structured extraction output.",
+      "tags": ["configuration", "few-shot", "purchase-order"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:api/app/data/knowledge_base/few_shot/po/example_02.json",
+      "type": "config",
+      "name": "example_02.json",
+      "filePath": "api/app/data/knowledge_base/few_shot/po/example_02.json",
+      "summary": "Few-shot purchase-order example with USD industrial-parts order including shipment notes and part-number line items.",
+      "tags": ["configuration", "few-shot", "purchase-order"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:api/app/data/knowledge_base/few_shot/po/example_03.json",
+      "type": "config",
+      "name": "example_03.json",
+      "filePath": "api/app/data/knowledge_base/few_shot/po/example_03.json",
+      "summary": "Few-shot Thai-language purchase-order example demonstrating Buddhist-calendar dates and single cement line item extraction.",
+      "tags": ["configuration", "few-shot", "purchase-order"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:api/app/data/knowledge_base/few_shot/po/example_04.json",
+      "type": "config",
+      "name": "example_04.json",
+      "filePath": "api/app/data/knowledge_base/few_shot/po/example_04.json",
+      "summary": "Few-shot IT-equipment purchase-order example covering laptops and peripherals with split deposit payment terms.",
+      "tags": ["configuration", "few-shot", "purchase-order"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:api/app/data/knowledge_base/few_shot/po/example_05.json",
+      "type": "config",
+      "name": "example_05.json",
+      "filePath": "api/app/data/knowledge_base/few_shot/po/example_05.json",
+      "summary": "Minimal few-shot purchase-order example with only supplier, date, and PHP total to teach sparse-field extraction.",
+      "tags": ["configuration", "few-shot", "purchase-order"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

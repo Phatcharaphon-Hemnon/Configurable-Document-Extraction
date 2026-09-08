@@ -1,0 +1,17 @@
+{
+  "projectRoot": "/home/phatcharaphon/Project/Configurable-Document-Extraction",
+  "batchFiles": [
+    {"path": "api/app/database/__init__.py", "language": "python", "sizeLines": 6, "fileCategory": "code"},
+    {"path": "api/app/database/job_repository.py", "language": "python", "sizeLines": 269, "fileCategory": "code"},
+    {"path": "api/app/database/models.py", "language": "python", "sizeLines": 98, "fileCategory": "code"},
+    {"path": "api/app/services/job_store.py", "language": "python", "sizeLines": 162, "fileCategory": "code"},
+    {"path": "api/tests/test_async_jobs.py", "language": "python", "sizeLines": 124, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "api/app/database/__init__.py": ["api/app/database/job_repository.py", "api/app/database/models.py"],
+    "api/app/database/job_repository.py": ["api/app/database/models.py"],
+    "api/app/database/models.py": [],
+    "api/app/services/job_store.py": ["api/app/database/job_repository.py", "api/app/database/models.py"],
+    "api/tests/test_async_jobs.py": ["api/app/core/config.py", "api/app/schemas/documents.py", "api/app/services/extraction_service.py", "api/app/services/job_store.py"]
+  }
+}

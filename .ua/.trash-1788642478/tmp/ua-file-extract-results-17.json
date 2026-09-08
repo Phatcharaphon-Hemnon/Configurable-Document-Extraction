@@ -1,0 +1,707 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 14,
+  "filesSkipped": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 14,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 14
+    }
+  },
+  "results": [
+    {
+      "path": "skills/langfuse/references/ci-cd.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 41,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "Langfuse CI/CD",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "Checklist",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "GitHub specific checklist",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "Common Issues",
+          "level": 2,
+          "line": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/langfuse/references/cli.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 60,
+      "nonEmptyLines": 45,
+      "sections": [
+        {
+          "heading": "Langfuse CLI Reference",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "Install",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Discovery",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "Credentials",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "Tips",
+          "level": 2,
+          "line": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "skills/langfuse/references/create-dataset.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 35,
+      "nonEmptyLines": 27,
+      "sections": [
+        {
+          "heading": "Langfuse Dataset Construction",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "Primary Guide",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "Workflow",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "Critical Rules",
+          "level": 2,
+          "line": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/langfuse/references/error-analysis.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 87,
+      "nonEmptyLines": 56,
+      "sections": [
+        {
+          "heading": "Error Analysis",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "Primary Guide",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Rules CRITICAL",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Langfuse Implementation Notes",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Credentials",
+          "level": 3,
+          "line": 42
+        },
+        {
+          "heading": "Annotation target: OBSERVATION versus TRACE",
+          "level": 3,
+          "line": 48
+        },
+        {
+          "heading": "Annotation queues",
+          "level": 3,
+          "line": 52
+        },
+        {
+          "heading": "Prompt fixes",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "Setup evaluators",
+          "level": 3,
+          "line": 74
+        },
+        {
+          "heading": "Common gotchas",
+          "level": 3,
+          "line": 79
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "skills/langfuse/references/instrumentation.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 122,
+      "nonEmptyLines": 83,
+      "sections": [
+        {
+          "heading": "Langfuse Observability",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "Workflow",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "1. Assess Current State",
+          "level": 3,
+          "line": 16
+        },
+        {
+          "heading": "2. Verify Baseline Requirements",
+          "level": 3,
+          "line": 28
+        },
+        {
+          "heading": "3. Run and Self-Audit the Traces (required)",
+          "level": 3,
+          "line": 57
+        },
+        {
+          "heading": "4. Explore Traces With the User",
+          "level": 3,
+          "line": 73
+        },
+        {
+          "heading": "Always Explain Why",
+          "level": 2,
+          "line": 88
+        },
+        {
+          "heading": "Multi-agent systems (subagent dispatch)",
+          "level": 2,
+          "line": 102
+        },
+        {
+          "heading": "Common Mistakes",
+          "level": 2,
+          "line": 111
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "skills/langfuse/references/judge-calibration.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 293,
+      "nonEmptyLines": 220,
+      "sections": [
+        {
+          "heading": "Judge Calibration (LLM-as-a-Judge)",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "Goal",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "1) Choose the calibration mode",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "Simple calibration",
+          "level": 3,
+          "line": 25
+        },
+        {
+          "heading": "Advanced calibration",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "2) Primary workflow",
+          "level": 2,
+          "line": 48
+        },
+        {
+          "heading": "3) Langfuse experiment workflow",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "4) Label validation",
+          "level": 2,
+          "line": 114
+        },
+        {
+          "heading": "5) Simple metrics",
+          "level": 2,
+          "line": 131
+        },
+        {
+          "heading": "6) Advanced metrics",
+          "level": 2,
+          "line": 144
+        },
+        {
+          "heading": "Dataset and split discipline",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "Per-row classification mapping",
+          "level": 3,
+          "line": 158
+        },
+        {
+          "heading": "Aggregate metrics",
+          "level": 3,
+          "line": 170
+        },
+        {
+          "heading": "Advanced quality gates",
+          "level": 3,
+          "line": 186
+        },
+        {
+          "heading": "7) Report format",
+          "level": 2,
+          "line": 200
+        },
+        {
+          "heading": "Simple report",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "Advanced report",
+          "level": 3,
+          "line": 211
+        },
+        {
+          "heading": "8) Langfuse implementation notes",
+          "level": 2,
+          "line": 220
+        },
+        {
+          "heading": "9) Classification logic (pseudo-code)",
+          "level": 2,
+          "line": 254
+        },
+        {
+          "heading": "10) Common failure modes",
+          "level": 2,
+          "line": 275
+        },
+        {
+          "heading": "11) What to do after calibration",
+          "level": 2,
+          "line": 286
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 21
+      }
+    },
+    {
+      "path": "skills/langfuse/references/prompt-engineering.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 35,
+      "nonEmptyLines": 27,
+      "sections": [
+        {
+          "heading": "Prompt Engineering",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "Universal principles",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "Adjusting an existing prompt",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Model-specific tuning",
+          "level": 2,
+          "line": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/langfuse/references/prompt-migration.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 79,
+      "nonEmptyLines": 53,
+      "sections": [
+        {
+          "heading": "Langfuse Prompt Migration",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "Prerequisites",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "1. Inventory every prompt (before writing any code)",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "2. Convert templating and decide structure",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "3. Present the plan, then create and refactor",
+          "level": 2,
+          "line": 62
+        },
+        {
+          "heading": "4. Verify",
+          "level": 2,
+          "line": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "skills/langfuse/references/sdk-upgrade.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 34,
+      "nonEmptyLines": 24,
+      "sections": [
+        {
+          "heading": "Langfuse SDK upgrade",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "Sources of truth",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "Workflow",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "Completion report",
+          "level": 2,
+          "line": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/langfuse/references/setting-up-evals.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 65,
+      "nonEmptyLines": 44,
+      "sections": [
+        {
+          "heading": "Setting up evals",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "Find the measurement gap",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "Define the metric set",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Build the evaluator",
+          "level": 2,
+          "line": 54
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/langfuse/references/skill-feedback.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 35,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "Skill Feedback",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "Submission options",
+          "level": 2,
+          "line": 27
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "skills/langfuse/references/trace-evaluator-upgrade.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 76,
+      "nonEmptyLines": 59,
+      "sections": [
+        {
+          "heading": "Evaluator upgrade",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "Inventory and scope",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "Trace to observation",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Dataset item to experiment",
+          "level": 2,
+          "line": 52
+        },
+        {
+          "heading": "Cut over and report",
+          "level": 2,
+          "line": 69
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "skills/langfuse/references/user-feedback.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 66,
+      "nonEmptyLines": 44,
+      "sections": [
+        {
+          "heading": "User Feedback",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "Workflow",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "1. Determine What Feedback to Capture",
+          "level": 3,
+          "line": 18
+        },
+        {
+          "heading": "2. Choose Score Names",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "3. Implement Score Creation",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "4. Verify",
+          "level": 3,
+          "line": 54
+        },
+        {
+          "heading": "Common Mistakes",
+          "level": 2,
+          "line": 60
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "skills/langfuse/references/v4-project-migration.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 75,
+      "nonEmptyLines": 58,
+      "sections": [
+        {
+          "heading": "Langfuse v4 project migration",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "Sources of truth",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Choose the execution mode",
+          "level": 2,
+          "line": 27
+        },
+        {
+          "heading": "Migrate the codebase",
+          "level": 2,
+          "line": 34
+        },
+        {
+          "heading": "Migrate evaluators",
+          "level": 2,
+          "line": 45
+        },
+        {
+          "heading": "Deprecated trace input/output escape hatch",
+          "level": 3,
+          "line": 54
+        },
+        {
+          "heading": "Migrate exports",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "Validate and report",
+          "level": 2,
+          "line": 68
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    }
+  ]
+}
