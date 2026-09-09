@@ -6,6 +6,8 @@ from typing import Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.schemas.documents import ExtractedTable
+
 
 class RoutingResponseSchema(BaseModel):
     """Router output — doc_type restricted to the 3 fixed types."""
@@ -27,6 +29,7 @@ class ExtractionResponseSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     fields: list[ExtractedFieldEntry]
+    tables: list[ExtractedTable] = Field(default_factory=list)
 
 
 class JudgeIssueEntry(BaseModel):

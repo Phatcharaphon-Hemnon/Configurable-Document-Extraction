@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "annotation_method": "Assistant visual transcription from original sources before pipeline evaluation; provisional, not independently human-adjudicated. Exact catalog field keys; no aliases. Null cells and listed excluded fields are unscored. Printed source errors are preserved.",
+  "release_subset": [
+    "Invoice1.jpg",
+    "THAI_RECEIPT.jpg",
+    "THAI_bill.jpg",
+    "Delivery1.webp",
+    "Delivery_note2.png",
+    "purchase_orders1.pdf",
+    "Invoice+purchase.pdf",
+    "Thai(invoice)+EN(Purchase).pdf"
+  ],
+  "files": [
+    {
+      "filename": "Delivery1.webp",
+      "sha256": "3f6f73f532e6c00a249c9d323dc4107aa30c8b49e2dae039a6c7765716330fd8",
+      "pages": [
+        {
+          "doc_type": "delivery_note",
+          "language": "en",
+          "fields": {
+            "delivery_note_number": "000-000-0000",
+            "sender_name": "Your Company Name",
+            "sender_address": "77 Hammersmith Road, West Kensington London, W14 0QH",
+            "recipient_name": "Buyer Ltd.",
+            "recipient_address": "Billy Buyer 43 Customer Road Manchester, M4 1HS",
+            "delivered_by": "Delivery company",
+            "total_weight": "25 Kg",
+            "delivery_method": "Air Freight/Courier",
+            "order_number": "1 of 1",
+            "client_number": "000-000",
+            "location": "London",
+            "invoice_date": "25.10.2019"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Product code",
+                "Description",
+                "Quantity",
+                "Price (incl. VAT)"
+              ],
+              "rows": [
+                [
+                  "SKU1345",
+                  "Example product 1",
+                  5,
+                  89
+                ],
+                [
+                  "SKU5678",
+                  "Example product 2",
+                  8,
+                  47.89
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "Template placeholders are printed data. Invoice Date is preserved as invoice_date; no delivery date is printed.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "filename": "Delivery_note2.png",
+      "sha256": "09b12cab8e36e2205e3729eacdbe38e157b213905884a235e80e5572658c89ed",
+      "pages": [
+        {
+          "doc_type": "delivery_note",
+          "language": "en",
+          "fields": {
+            "delivery_note_number": "US-001",
+            "delivery_date": "11/02/2019",
+            "sender_name": "East Repair Inc.",
+            "sender_address": "1912 Harvest Lane New York, NY 12210",
+            "recipient_name": "John Smith",
+            "recipient_address": "3787 Pineview Drive Cambridge, MA 12210",
+            "po_number": "2312/2019",
+            "due_date": "26/02/2019",
+            "subtotal": 145,
+            "sales_tax": 9.07,
+            "total_amount": 154.06
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "DESCRIPTION",
+                "UNIT PRICE",
+                "QTY",
+                "AMOUNT"
+              ],
+              "rows": [
+                [
+                  "Front and rear brake cables",
+                  100,
+                  1,
+                  100
+                ],
+                [
+                  "New set of pedal arms",
+                  15,
+                  2,
+                  30
+                ],
+                [
+                  "Labor 3hrs",
+                  5,
+                  3,
+                  15
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "Source prints sales tax 9.07 and total 154.06; preserve both despite arithmetic inconsistency. Deliver To billing address differs from Ship To.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "filename": "ICR.png",
+      "sha256": "b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f",
+      "pages": [
+        {
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "invoice_date": "12/7/2014",
+            "total_amount": 305
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "column_1",
+                "column_2"
+              ],
+              "rows": [
+                [
+                  null,
+                  160
+                ],
+                [
+                  null,
+                  100
+                ],
+                [
+                  "SAMOSAS",
+                  45
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [
+            "seller_name",
+            "seller_address",
+            "bill_to_name"
+          ],
+          "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "filename": "Invoice+purchase.pdf",
+      "sha256": "f99e23a58301ac8b3c6e86e73052e9150c7bde8f3931f9a1b41d2c375e59221f",
+      "pages": [
+        {
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_name": "KEDAI PAPAN YEW CHUAN",
+            "seller_address": "LOT 276 JALAN BANTING 43800 DENGKIL, SELANGOR.",
+            "seller_phone": "03-87686092",
+            "tax_id": "000781500416",
+            "bill_to_name": "SUCI ALAM JAYA TRANSPORT",
+            "bill_to_address": "NO 1 JALAN AMAN 2 TAMAN DESA 43800 DENGKIL SELANGOR",
+            "cashier": "USER",
+            "discount": 0,
+            "rounding": 0,
+            "change_amount": 0,
+            "invoice_number": "CS00013033",
+            "invoice_date": "23/05/2018",
+            "subtotal_amount": 153.5,
+            "tax_amount": 9.21,
+            "total_amount": 162.71,
+            "paid_amount": 162.71,
+            "total_quantity": 8,
+            "time": "15:28:00"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Item",
+                "Qty",
+                "S/Price",
+                "(GST) S/Price",
+                "(GST) Amount",
+                "Tax"
+              ],
+              "rows": [
+                [
+                  "101870 PASIR HALUS (D)",
+                  1,
+                  65,
+                  68.9,
+                  68.9,
+                  "SR"
+                ],
+                [
+                  "101756 SIMEN",
+                  5,
+                  16.5,
+                  17.49,
+                  87.45,
+                  "SR"
+                ],
+                [
+                  "100160 KAPUR AIR (A1)",
+                  2,
+                  3,
+                  3.18,
+                  6.36,
+                  "SR"
+                ]
+              ]
+            },
+            {
+              "name": "gst_summary",
+              "columns": [
+                "Tax Code",
+                "%",
+                "Amt(RM)",
+                "Tax(RM)"
+              ],
+              "rows": [
+                [
+                  "SR",
+                  6,
+                  153.5,
+                  9.21
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "",
+          "page_number": 1
+        },
+        {
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_name": "KEDAI PAPAN YEW CHUAN",
+            "seller_address": "LOT 276 JALAN BANTING 43800 DENGKIL, SELANGOR.",
+            "seller_phone": "03-87686092",
+            "tax_id": "000781500416",
+            "bill_to_name": "SUCI ALAM JAYA TRANSPORT",
+            "bill_to_address": "NO 1 JALAN AMAN 2 TAMAN DESA 43800 DENGKIL SELANGOR",
+            "cashier": "USER",
+            "discount": 0,
+            "rounding": 0,
+            "change_amount": 0,
+            "invoice_number": "CS00013125",
+            "invoice_date": "26/05/2018",
+            "subtotal_amount": 115,
+            "tax_amount": 6.9,
+            "total_amount": 121.9,
+            "paid_amount": 121.9,
+            "total_quantity": 5,
+            "time": "11:22:00"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Item",
+                "Qty",
+                "S/Price",
+                "(GST) S/Price",
+                "(GST) Amount",
+                "Tax"
+              ],
+              "rows": [
+                [
+                  "100588 SILING PRIMP 1X9 (B)",
+                  5,
+                  23,
+                  24.38,
+                  121.9,
+                  "SR"
+                ]
+              ]
+            },
+            {
+              "name": "gst_summary",
+              "columns": [
+                "Tax Code",
+                "%",
+                "Amt(RM)",
+                "Tax(RM)"
+              ],
+              "rows": [
+                [
+                  "SR",
+                  6,
+                  115,
+                  6.9
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "",
+          "page_number": 2
+        },
+        {
+          "doc_type": "purchase_order",
+          "language": "en",
+          "fields": {
+            "po_number": "10256",
+            "order_date": "2016-07-15",
+            "buyer_name": "Paula Parente"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Product ID:",
+                "Product:",
+                "Quantity:",
+                "Unit Price:"
+              ],
+              "rows": [
+                [
+                  "53",
+                  "Perth Pasties",
+                  15,
+                  26.2
+                ],
+                [
+                  "77",
+                  "Original Frankfurter grüne Soße",
+                  12,
+                  10.4
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
+          "page_number": 3
+        }
+      ]
+    },
+    {
+      "filename": "Invoice1.jpg",
+      "sha256": "69f0ac05640746713f1c346a4a6cdd2d01927ae328bcf34819a67833f99a71ad",
+      "pages": [
+        {
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "invoice_number": "CS00012726",
+            "invoice_date": "13/01/2018",
+            "seller_name": "SYARIKAT PERNIAGAAN GIN KEE",
+            "seller_address": "NO 290, JALAN AIR PANAS, SETAPAK, 53200, KUALA LUMPUR.",
+            "seller_phone": "03-40210276",
+            "tax_id": "000750673920",
+            "subtotal_amount": 12,
+            "tax_amount": 0.72,
+            "total_amount": 12.72,
+            "paid_amount": 12.72,
+            "change_amount": 0,
+            "discount": 0,
+            "rounding": 0,
+            "cashier": "USER",
+            "time": "15:52:00",
+            "total_quantity": 6
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Item",
+                "Qty",
+                "S/Price",
+                "Amount",
+                "Tax"
+              ],
+              "rows": [
+                [
+                  "1432 GLOVE 1200 (PER PAIR)",
+                  6,
+                  2.12,
+                  12.72,
+                  "SR"
+                ]
+              ]
+            },
+            {
+              "name": "gst_summary",
+              "columns": [
+                "Tax Code",
+                "%",
+                "Amt (RM)",
+                "Tax (RM)"
+              ],
+              "rows": [
+                [
+                  "SR",
+                  6,
+                  12,
+                  0.72
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "Primary labels are English; Malay merchant proper name preserved. Item code and description share one printed Item column.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "filename": "Invoice2.jpg",
+      "sha256": "dedc362a14f4dd64d59b93352ca9f7a51319af9457672f478d60a529a0854354",
+      "pages": [
+        {
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "invoice_number": "7025F713",
+            "invoice_date": "25/10/2017",
+            "seller_name": "GARDENIA BAKERIES (KL) SDN BHD",
+            "seller_address": "Lot 3, Jalan Pelabur 23/1, 40300 Shah Alam, Selangor.",
+            "seller_phone": "03-55423228",
+            "tax_id": "000381399440",
+            "bill_to_name": "MAKASSAR FRESH MARKET SDN BHD",
+            "bill_to_address": "GROUND FLOOR, NO. 4 & 6, JALAN SS 15/4B, 47500 SUBANG JAYA, SELANGOR",
+            "tax_amount": 0.48,
+            "total_amount": 35.01
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Description",
+                "U.P",
+                "Iss",
+                "Exc",
+                "D",
+                "Sale",
+                "Amt(RM)"
+              ],
+              "rows": [
+                [
+                  "O.C. WHITE",
+                  2.13,
+                  3,
+                  0,
+                  0,
+                  3,
+                  6.39
+                ],
+                [
+                  "WHOLEMEAL",
+                  2.78,
+                  3,
+                  0,
+                  0,
+                  3,
+                  8.34
+                ],
+                [
+                  "O.C JUMBO",
+                  2.97,
+                  4,
+                  0,
+                  0,
+                  4,
+                  11.88
+                ],
+                [
+                  "CR-CHOCLT",
+                  0.72,
+                  20,
+                  9,
+                  0,
+                  11,
+                  7.92
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [
+            "dd",
+            "salesperson"
+          ],
+          "notes": "Separate GST summary totals are not item rows; DD timestamp and salesperson identifier excluded due to print quality.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "filename": "THAI_RECEIPT.jpg",
+      "sha256": "450b970467019dcd2d4282c667e57e4d752f437f3242a09f782e9f4e807495f1",
+      "pages": [
+        {
+          "doc_type": "invoice",
+          "language": "th",
+          "fields": {
+            "invoice_number": "5812003668",
+            "invoice_date": "29/12/2558",
+            "seller_name": "MC Shop Co., Ltd",
+            "seller_address": "4, 4/1-2, 4/4 อาคารศูนย์การค้าเซ็นทรัลเวิลด์ ถนนราชดำริห์ แขวงปทุมวัน เขตปทุมวัน กรุงเทพฯ 10330",
+            "seller_phone": "(662) 613-1183",
+            "tax_id": "0105543022904",
+            "bill_to_address": "186/47 ซ.ลาดพร้าว 87 (จันทราสุข) แขวงคลองเจ้าคุณสิงห์ เขตวังทองหลาง กทม. 10310",
+            "subtotal_amount": 6576.64,
+            "tax_amount": 460.36,
+            "total_amount": 7037,
+            "discount": 3743,
+            "branch": "00003"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "ลำดับ",
+                "รหัสสินค้า",
+                "รายการสินค้า",
+                "จำนวน",
+                "ราคาต่อหน่วย",
+                "รวม",
+                "ส่วนลด%",
+                "จำนวนเงิน"
+              ],
+              "rows": [
+                [
+                  1,
+                  "5415280238060",
+                  "ORELIE BP Plover Black",
+                  1,
+                  5490,
+                  5490,
+                  20,
+                  4392
+                ],
+                [
+                  2,
+                  "5415065377441",
+                  "CLAS SEOUL BLACK",
+                  1,
+                  5290,
+                  5290,
+                  50,
+                  2645
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [
+            "bill_to_name"
+          ],
+          "notes": "Buyer name not scored due to ambiguous Thai characters. No email, due date, paid/change amounts are printed. Keep Buddhist Era date. Thai address transcription is provisional.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "filename": "THAI_bill.jpg",
+      "sha256": "6c554da9a7371fc418e1cf7fa53022169cf682a7b5da4f10b801b35fd4c82402",
+      "pages": [
+        {
+          "doc_type": "invoice",
+          "language": "th",
+          "fields": {
+            "invoice_number": "4504RC112566/004044",
+            "invoice_date": "27/11/2566",
+            "seller_name": "หจก.บุญรอดคอฟฟี่",
+            "tax_id": "0323560000723",
+            "total_amount": 60,
+            "paid_amount": 100,
+            "change_amount": 40,
+            "tax_amount": 3.93,
+            "branch": "4504",
+            "time": "10:57",
+            "cashier": "4504014 นวพร",
+            "customer_count": 1
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "column_1",
+                "column_2",
+                "column_3"
+              ],
+              "rows": [
+                [
+                  null,
+                  1,
+                  60
+                ],
+                [
+                  "- DI 0%",
+                  0,
+                  0
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "Unlabeled item columns use positional names; line code D1/DI is excluded from exact cell scoring. Price includes VAT. Wi-Fi credentials and advertising are outside the data-field contract.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "filename": "Thai(invoice)+EN(Purchase).pdf",
+      "sha256": "24b3e6e42b6fda6fa777d692279afd88bf48632015d73dec78946b0d56f1d271",
+      "pages": [
+        {
+          "doc_type": "invoice",
+          "language": "th",
+          "fields": {
+            "total_amount": 0,
+            "subtotal_amount": 0,
+            "tax_amount": 0,
+            "currency": "THB"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "N° ลำดับ",
+                "DESCRIPTION รายการ",
+                "PRICE/ UNIT ราคาต่อหน่วย",
+                "QUANTITY ปริมาณ",
+                "TOTAL (THB) รวม (บาท)"
+              ],
+              "rows": [
+                [
+                  null,
+                  null,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  null,
+                  null,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "Unfilled bilingual form: IDs, dates, companies and addresses are blank; only printed zero amounts/currency are scored. Blank cells are unscored, not guessed.",
+          "page_number": 1
+        },
+        {
+          "doc_type": "purchase_order",
+          "language": "en",
+          "fields": {
+            "po_number": "10344",
+            "order_date": "2016-11-01",
+            "buyer_name": "Karl Jablonski"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Product ID:",
+                "Product:",
+                "Quantity:",
+                "Unit Price:"
+              ],
+              "rows": [
+                [
+                  "4",
+                  "Chef Anton's Cajun Seasoning",
+                  35,
+                  17.6
+                ],
+                [
+                  "8",
+                  "Northwoods Cranberry Sauce",
+                  70,
+                  32
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "",
+          "page_number": 2
+        }
+      ]
+    },
+    {
+      "filename": "purchase_orders1.pdf",
+      "sha256": "2d2e41d87b116938930e5d32fd734a25b4a48fb6de91d8f9557336582f5d7c61",
+      "pages": [
+        {
+          "doc_type": "purchase_order",
+          "language": "en",
+          "fields": {
+            "po_number": "10256",
+            "order_date": "2016-07-15",
+            "buyer_name": "Paula Parente"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Product ID:",
+                "Product:",
+                "Quantity:",
+                "Unit Price:"
+              ],
+              "rows": [
+                [
+                  "53",
+                  "Perth Pasties",
+                  15,
+                  26.2
+                ],
+                [
+                  "77",
+                  "Original Frankfurter grüne Soße",
+                  12,
+                  10.4
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "filename": "purchase_orders_2.pdf",
+      "sha256": "7f64dabac88fbcf623b85de6051094bb3411f856b541cb914c5294216261d893",
+      "pages": [
+        {
+          "doc_type": "purchase_order",
+          "language": "en",
+          "fields": {
+            "po_number": "10540",
+            "order_date": "2017-05-19",
+            "buyer_name": "Horst Kloss"
+          },
+          "tables": [
+            {
+              "name": "line_items",
+              "columns": [
+                "Product ID:",
+                "Product:",
+                "Quantity:",
+                "Unit Price:"
+              ],
+              "rows": [
+                [
+                  "3",
+                  "Aniseed Syrup",
+                  60,
+                  10
+                ],
+                [
+                  "26",
+                  "Gumbär Gummibärchen",
+                  40,
+                  31.23
+                ],
+                [
+                  "38",
+                  "Côte de Blaye",
+                  30,
+                  263.5
+                ],
+                [
+                  "68",
+                  "Scottish Longbreads",
+                  35,
+                  12.5
+                ]
+              ]
+            }
+          ],
+          "excluded_fields": [],
+          "notes": "",
+          "page_number": 1
+        }
+      ]
+    }
+  ]
+}

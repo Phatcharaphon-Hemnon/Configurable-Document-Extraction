@@ -76,3 +76,11 @@ python scripts/time_gateway_modes.py
 If strict mode ever degrades (slow but the others fast), re-time before
 changing `DISABLE_STRICT_JSON_SCHEMA` — the fallback tiers do not produce
 parseable output for these schemas.
+
+## Per-page timing on failures
+
+`TimeoutGuard.track` records elapsed stage time in a `finally` block, including
+provider exceptions and task cancellation, exactly once. Context variables isolate
+page timing and stage progress. Reports keep full pipeline latency and show any
+unattributed time separately; older runs may lack timing for provider-failed stages.
+Regression coverage is in `test_stage_failure_timing.py`.

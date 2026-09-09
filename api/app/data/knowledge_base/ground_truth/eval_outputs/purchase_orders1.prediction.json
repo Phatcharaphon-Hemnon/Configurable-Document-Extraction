@@ -1,0 +1,652 @@
+{
+  "filename": "purchase_orders1.pdf",
+  "eval_seconds": 471.4574965790016,
+  "error": null,
+  "documents": [
+    {
+      "id": "b35aab60-bdee-4636-bf7f-37400d3ce643",
+      "doc_type": "purchase_order",
+      "source": {
+        "source_id": "179af16a-0971-4c8c-8798-09f1386aa079",
+        "filename": "purchase_orders1.pdf",
+        "page_number": 1,
+        "page_count": 1,
+        "preview_url": "/sources/179af16a-0971-4c8c-8798-09f1386aa079/pages/1",
+        "download_url": "/sources/179af16a-0971-4c8c-8798-09f1386aa079"
+      },
+      "ocr_blocks": [
+        {
+          "text": "Purchase",
+          "confidence": 0.9605798299999999,
+          "box": [
+            977.0,
+            384.0,
+            293.0,
+            51.0
+          ]
+        },
+        {
+          "text": "Orders",
+          "confidence": 0.9668431099999999,
+          "box": [
+            1293.0,
+            384.0,
+            214.0,
+            51.0
+          ]
+        },
+        {
+          "text": "Order",
+          "confidence": 0.96610603,
+          "box": [
+            132.0,
+            510.0,
+            125.0,
+            38.0
+          ]
+        },
+        {
+          "text": "ID",
+          "confidence": 0.9601746400000001,
+          "box": [
+            277.0,
+            511.0,
+            42.0,
+            36.0
+          ]
+        },
+        {
+          "text": "เฉ",
+          "confidence": 0.69784973,
+          "box": [
+            589.0,
+            474.0,
+            141.0,
+            115.0
+          ]
+        },
+        {
+          "text": "Date",
+          "confidence": 0.9675885,
+          "box": [
+            748.0,
+            511.0,
+            100.0,
+            37.0
+          ]
+        },
+        {
+          "text": "[Customer",
+          "confidence": 0.67407845,
+          "box": [
+            1180.0,
+            474.0,
+            229.0,
+            115.0
+          ]
+        },
+        {
+          "text": "Name",
+          "confidence": 0.9652605400000001,
+          "box": [
+            1428.0,
+            511.0,
+            127.0,
+            37.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.9580378,
+          "box": [
+            1889.0,
+            474.0,
+            2.0,
+            115.0
+          ]
+        },
+        {
+          "text": "10256",
+          "confidence": 0.9661853,
+          "box": [
+            135.0,
+            629.0,
+            132.0,
+            37.0
+          ]
+        },
+        {
+          "text": "201",
+          "confidence": 0.82651917,
+          "box": [
+            589.0,
+            592.0,
+            86.0,
+            115.0
+          ]
+        },
+        {
+          "text": "6-07-15",
+          "confidence": 0.9634877799999999,
+          "box": [
+            688.0,
+            629.0,
+            168.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Paula",
+          "confidence": 0.8274123400000001,
+          "box": [
+            1180.0,
+            592.0,
+            140.0,
+            115.0
+          ]
+        },
+        {
+          "text": "Parente",
+          "confidence": 0.96490021,
+          "box": [
+            1340.0,
+            629.0,
+            168.0,
+            37.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.94455162,
+          "box": [
+            1889.0,
+            592.0,
+            2.0,
+            115.0
+          ]
+        },
+        {
+          "text": "Products",
+          "confidence": 0.96941948,
+          "box": [
+            1146.0,
+            1101.0,
+            191.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Product",
+          "confidence": 0.9637281,
+          "box": [
+            135.0,
+            1337.0,
+            166.0,
+            37.0
+          ]
+        },
+        {
+          "text": "ID:",
+          "confidence": 0.71209198,
+          "box": [
+            321.0,
+            1337.0,
+            56.0,
+            36.0
+          ]
+        },
+        {
+          "text": "Product:",
+          "confidence": 0.96324341,
+          "box": [
+            725.0,
+            1332.0,
+            179.0,
+            56.0
+          ]
+        },
+        {
+          "text": "Quantity:",
+          "confidence": 0.96112396,
+          "box": [
+            1786.0,
+            1332.0,
+            195.0,
+            57.0
+          ]
+        },
+        {
+          "text": "Unit",
+          "confidence": 0.9670825200000001,
+          "box": [
+            2142.0,
+            1337.0,
+            84.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Price:",
+          "confidence": 0.96868637,
+          "box": [
+            2246.0,
+            1337.0,
+            119.0,
+            37.0
+          ]
+        },
+        {
+          "text": "53",
+          "confidence": 0.9625295300000001,
+          "box": [
+            132.0,
+            1455.0,
+            51.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Perth",
+          "confidence": 0.96106064,
+          "box": [
+            725.0,
+            1455.0,
+            111.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Pasties",
+          "confidence": 0.96106064,
+          "box": [
+            859.0,
+            1455.0,
+            157.0,
+            37.0
+          ]
+        },
+        {
+          "text": "15",
+          "confidence": 0.96637535,
+          "box": [
+            1789.0,
+            1455.0,
+            48.0,
+            37.0
+          ]
+        },
+        {
+          "text": "26.2",
+          "confidence": 0.96222031,
+          "box": [
+            2140.0,
+            1455.0,
+            93.0,
+            37.0
+          ]
+        },
+        {
+          "text": "77",
+          "confidence": 0.9607051099999999,
+          "box": [
+            132.0,
+            1575.0,
+            52.0,
+            35.0
+          ]
+        },
+        {
+          "text": "Original",
+          "confidence": 0.9624379000000001,
+          "box": [
+            722.0,
+            1573.0,
+            168.0,
+            48.0
+          ]
+        },
+        {
+          "text": "Frankfurter",
+          "confidence": 0.9327526899999999,
+          "box": [
+            911.0,
+            1573.0,
+            240.0,
+            38.0
+          ]
+        },
+        {
+          "text": "grune",
+          "confidence": 0.7182261699999999,
+          "box": [
+            1167.0,
+            1574.0,
+            124.0,
+            47.0
+          ]
+        },
+        {
+          "text": "SoBe",
+          "confidence": 0.96631828,
+          "box": [
+            1309.0,
+            1573.0,
+            115.0,
+            38.0
+          ]
+        },
+        {
+          "text": "12",
+          "confidence": 0.96971695,
+          "box": [
+            1789.0,
+            1574.0,
+            48.0,
+            36.0
+          ]
+        },
+        {
+          "text": "10.4",
+          "confidence": 0.96058022,
+          "box": [
+            2143.0,
+            1574.0,
+            90.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Page",
+          "confidence": 0.9647782100000001,
+          "box": [
+            1191.0,
+            3376.0,
+            75.0,
+            31.0
+          ]
+        },
+        {
+          "text": "1",
+          "confidence": 0.96139191,
+          "box": [
+            1282.0,
+            3376.0,
+            9.0,
+            24.0
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "line_items",
+          "columns": [
+            {
+              "key": "product_id",
+              "label": "Product ID:"
+            },
+            {
+              "key": "product",
+              "label": "Product:"
+            },
+            {
+              "key": "quantity",
+              "label": "Quantity:"
+            },
+            {
+              "key": "unit_price",
+              "label": "Unit Price:"
+            }
+          ],
+          "rows": [
+            [
+              {
+                "column": "product_id",
+                "value": "53",
+                "confidence": 1.0,
+                "source_span": "\"53\""
+              },
+              {
+                "column": "product",
+                "value": "Perth Pasties",
+                "confidence": 1.0,
+                "source_span": "\"Perth Pasties\""
+              },
+              {
+                "column": "quantity",
+                "value": "15",
+                "confidence": 1.0,
+                "source_span": "\"15\""
+              },
+              {
+                "column": "unit_price",
+                "value": "26.2",
+                "confidence": 1.0,
+                "source_span": "\"26.2\""
+              }
+            ],
+            [
+              {
+                "column": "product_id",
+                "value": "77",
+                "confidence": 1.0,
+                "source_span": "\"77\""
+              },
+              {
+                "column": "product",
+                "value": "Original Frankfurter grune SoBe",
+                "confidence": 1.0,
+                "source_span": "\"Original Frankfurter grune SoBe\""
+              },
+              {
+                "column": "quantity",
+                "value": "12",
+                "confidence": 1.0,
+                "source_span": "\"12\""
+              },
+              {
+                "column": "unit_price",
+                "value": "10.4",
+                "confidence": 1.0,
+                "source_span": "\"10.4\""
+              }
+            ]
+          ]
+        }
+      ],
+      "timings": {
+        "router": 48.54185311299807,
+        "extractor": 248.9308405269985,
+        "validator": 0.0079528999995091,
+        "judge": 170.44921937500112,
+        "pipeline": 469.2453721640013,
+        "ocr": 1.6595371479997993,
+        "render": 0.48798841000098037,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 406,
+          "output_tokens": 58,
+          "total_tokens": 464,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 725,
+          "output_tokens": 350,
+          "total_tokens": 1075,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_purchase_order": {
+          "input_tokens": 964,
+          "output_tokens": 679,
+          "total_tokens": 1643,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "judge_status": "flagged",
+      "language": "en",
+      "fields": [
+        {
+          "name": "po_number",
+          "value": "10256",
+          "confidence": 1.0,
+          "source_span": "\"10256\"",
+          "is_new_field": false
+        },
+        {
+          "name": "order_date",
+          "value": "2016-07-15",
+          "confidence": 1.0,
+          "source_span": "\"2016-07-15\"",
+          "is_new_field": false
+        },
+        {
+          "name": "supplier_name",
+          "value": "Paula Parente",
+          "confidence": 1.0,
+          "source_span": "\"Paula Parente\"",
+          "is_new_field": false
+        },
+        {
+          "name": "buyer_name",
+          "value": "Paula Parente",
+          "confidence": 1.0,
+          "source_span": "\"Paula Parente\"",
+          "is_new_field": false
+        }
+      ],
+      "validation_errors": [
+        "Missing required field: total_amount",
+        "Missing required field: currency",
+        "po_number: source_span not found in document (possible hallucination)",
+        "order_date: source_span not found in document (possible hallucination)",
+        "supplier_name: source_span not found in document (possible hallucination)",
+        "buyer_name: source_span not found in document (possible hallucination)",
+        "line_items row 1 product_id: source_span not found in document (possible hallucination)",
+        "line_items row 1 product: source_span not found in document (possible hallucination)",
+        "line_items row 1 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 1 unit_price: source_span not found in document (possible hallucination)",
+        "line_items row 2 product_id: source_span not found in document (possible hallucination)",
+        "line_items row 2 product: source_span not found in document (possible hallucination)",
+        "line_items row 2 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 2 unit_price: source_span not found in document (possible hallucination)"
+      ],
+      "needs_review": true,
+      "completeness_score": 0.6,
+      "judge": {
+        "score": 0.7,
+        "issues": [
+          {
+            "field": "po_number",
+            "message": "The PO number in the source text is '10256', but the predicted value is '10256'. There are no issues with this field.",
+            "severity": "info"
+          },
+          {
+            "field": "order_date",
+            "message": "The order date in the source text is '2016-07-15', but the predicted value is '2016-07-15'. There are no issues with this field.",
+            "severity": "info"
+          },
+          {
+            "field": "supplier_name",
+            "message": "The supplier name in the source text is 'Paula Parente', but the predicted value is 'Paula Parente'. There are no issues with this field.",
+            "severity": "info"
+          },
+          {
+            "field": "buyer_name",
+            "message": "The buyer name in the source text is 'Paula Parente', but the predicted value is 'Paula Parente'. There are no issues with this field.",
+            "severity": "info"
+          },
+          {
+            "field": "line_items",
+            "message": "The line items in the source text are present and correctly formatted, but the predicted values for 'product_id', 'product', 'quantity', and 'unit_price' are correct. There are no issues with this field.",
+            "severity": "info"
+          }
+        ],
+        "notes": "The document is a noisy scan, so some values may have been misinterpreted."
+      },
+      "routing_reason": "The document contains 'Order ID', 'Customer Name', and 'Products' sections, which are typical for a purchase order.",
+      "full_text": "Purchase Orders\nOrder ID | เฉ Date | [Customer Name | |\n10256 | 201 6-07-15 | Paula Parente | |\nProducts\nProduct ID: | Product: | Quantity: | Unit Price:\n53 | Perth Pasties | 15 | 26.2\n77 | Original Frankfurter grune SoBe | 12 | 10.4\nPage 1",
+      "error": null,
+      "failed_stage": null,
+      "error_details": null,
+      "extraction_source": "ocr",
+      "extracted_at": "2026-09-09T07:03:10.078740",
+      "auto_evaluation": null
+    }
+  ],
+  "pages": [
+    {
+      "expected": "purchase_order",
+      "predicted": "purchase_order",
+      "router_ok": true,
+      "language_ok": true,
+      "language": "en",
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1": 0.8571428571428571,
+      "tp": 3,
+      "fp": 1,
+      "fn": 0,
+      "fields_expected": 3,
+      "cells_total": 8,
+      "cells_ok": 7,
+      "columns_total": 4,
+      "columns_found": 4,
+      "rows_total": 2,
+      "rows_found": 2,
+      "extra_rows": 0,
+      "extra_columns": 0,
+      "excluded_cells": 0,
+      "failed": false,
+      "error": null,
+      "needs_review": true,
+      "returned": true,
+      "judge_status": "flagged",
+      "timings": {
+        "router": 48.54185311299807,
+        "extractor": 248.9308405269985,
+        "validator": 0.0079528999995091,
+        "judge": 170.44921937500112,
+        "pipeline": 469.2453721640013,
+        "ocr": 1.6595371479997993,
+        "render": 0.48798841000098037,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 406,
+          "output_tokens": 58,
+          "total_tokens": 464,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 725,
+          "output_tokens": 350,
+          "total_tokens": 1075,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_purchase_order": {
+          "input_tokens": 964,
+          "output_tokens": 679,
+          "total_tokens": 1643,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "mismatches": [],
+      "unexpected_fields": {
+        "supplier_name": "Paula Parente"
+      },
+      "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
+      "stem": "purchase_orders1.pdf / 1",
+      "filename": "purchase_orders1.pdf",
+      "page_number": 1,
+      "format": ".pdf"
+    }
+  ]
+}

@@ -17,6 +17,13 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
+# Keep package and browser caches inside this checkout, never under the user's home.
+export XDG_CACHE_HOME="$ROOT/.cache/xdg"
+export PIP_CACHE_DIR="$ROOT/.cache/pip"
+export npm_config_cache="$ROOT/.cache/npm"
+export PLAYWRIGHT_BROWSERS_PATH="$ROOT/.cache/playwright"
+export PROJECT_CACHE_DIR="$ROOT/.cache"
+mkdir -p "$XDG_CACHE_HOME" "$PIP_CACHE_DIR" "$npm_config_cache" "$PLAYWRIGHT_BROWSERS_PATH"
 
 step() { printf '\n\033[1;32m==> %s\033[0m\n' "$*"; }
 warn() { printf '\033[1;33mWARNING:\033[0m %s\n' "$*"; }

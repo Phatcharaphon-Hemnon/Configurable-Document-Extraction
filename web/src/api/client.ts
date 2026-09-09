@@ -74,3 +74,7 @@ export function evaluateExtraction(payload: EvaluatePayload): Promise<EvaluateRe
     'Evaluation failed',
   );
 }
+
+export function sourceUrl(path?: string | null): string | undefined {
+  return path ? `${API_BASE_URL.replace(/\/$/, '')}${path}` : undefined;
+}

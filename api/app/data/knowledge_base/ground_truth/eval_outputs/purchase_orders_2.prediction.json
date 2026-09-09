@@ -1,0 +1,781 @@
+{
+  "filename": "purchase_orders_2.pdf",
+  "eval_seconds": 811.6769430700006,
+  "error": null,
+  "documents": [
+    {
+      "id": "3bc96c9d-1d5f-471a-a60a-38eb97e71541",
+      "doc_type": "purchase_order",
+      "source": {
+        "source_id": "920e7b71-4ebf-4987-82c7-03b208cefba5",
+        "filename": "purchase_orders_2.pdf",
+        "page_number": 1,
+        "page_count": 1,
+        "preview_url": "/sources/920e7b71-4ebf-4987-82c7-03b208cefba5/pages/1",
+        "download_url": "/sources/920e7b71-4ebf-4987-82c7-03b208cefba5"
+      },
+      "ocr_blocks": [
+        {
+          "text": "Purchase",
+          "confidence": 0.9605798299999999,
+          "box": [
+            977.0,
+            384.0,
+            293.0,
+            51.0
+          ]
+        },
+        {
+          "text": "Orders",
+          "confidence": 0.9668431099999999,
+          "box": [
+            1293.0,
+            384.0,
+            214.0,
+            51.0
+          ]
+        },
+        {
+          "text": "Order",
+          "confidence": 0.96610603,
+          "box": [
+            132.0,
+            510.0,
+            125.0,
+            38.0
+          ]
+        },
+        {
+          "text": "ID",
+          "confidence": 0.9601746400000001,
+          "box": [
+            277.0,
+            511.0,
+            42.0,
+            36.0
+          ]
+        },
+        {
+          "text": "เฉ",
+          "confidence": 0.69784973,
+          "box": [
+            589.0,
+            474.0,
+            141.0,
+            115.0
+          ]
+        },
+        {
+          "text": "Date",
+          "confidence": 0.9675885,
+          "box": [
+            748.0,
+            511.0,
+            100.0,
+            37.0
+          ]
+        },
+        {
+          "text": "[Customer",
+          "confidence": 0.67407845,
+          "box": [
+            1180.0,
+            474.0,
+            229.0,
+            115.0
+          ]
+        },
+        {
+          "text": "Name",
+          "confidence": 0.9652605400000001,
+          "box": [
+            1428.0,
+            511.0,
+            127.0,
+            37.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.9580378,
+          "box": [
+            1889.0,
+            474.0,
+            2.0,
+            115.0
+          ]
+        },
+        {
+          "text": "10540",
+          "confidence": 0.9678636899999999,
+          "box": [
+            135.0,
+            629.0,
+            131.0,
+            37.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.95069397,
+          "box": [
+            589.0,
+            592.0,
+            3.0,
+            115.0
+          ]
+        },
+        {
+          "text": "2017-05-19",
+          "confidence": 0.96188347,
+          "box": [
+            604.0,
+            629.0,
+            251.0,
+            37.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.9491072800000001,
+          "box": [
+            1180.0,
+            592.0,
+            3.0,
+            115.0
+          ]
+        },
+        {
+          "text": "Horst",
+          "confidence": 0.96394295,
+          "box": [
+            1197.0,
+            629.0,
+            114.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Kloss",
+          "confidence": 0.95975922,
+          "box": [
+            1330.0,
+            629.0,
+            117.0,
+            37.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.94455162,
+          "box": [
+            1889.0,
+            592.0,
+            2.0,
+            115.0
+          ]
+        },
+        {
+          "text": "Products",
+          "confidence": 0.96941948,
+          "box": [
+            1146.0,
+            1101.0,
+            191.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Product",
+          "confidence": 0.9637281,
+          "box": [
+            135.0,
+            1337.0,
+            166.0,
+            37.0
+          ]
+        },
+        {
+          "text": "ID:",
+          "confidence": 0.71209198,
+          "box": [
+            321.0,
+            1337.0,
+            56.0,
+            36.0
+          ]
+        },
+        {
+          "text": "Product:",
+          "confidence": 0.96324341,
+          "box": [
+            725.0,
+            1332.0,
+            179.0,
+            56.0
+          ]
+        },
+        {
+          "text": "Quantity:",
+          "confidence": 0.96112396,
+          "box": [
+            1786.0,
+            1332.0,
+            195.0,
+            57.0
+          ]
+        },
+        {
+          "text": "Unit",
+          "confidence": 0.9670825200000001,
+          "box": [
+            2142.0,
+            1337.0,
+            84.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Price:",
+          "confidence": 0.96868637,
+          "box": [
+            2246.0,
+            1337.0,
+            119.0,
+            37.0
+          ]
+        },
+        {
+          "text": "3",
+          "confidence": 0.95872368,
+          "box": [
+            132.0,
+            1455.0,
+            23.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Aniseed",
+          "confidence": 0.91803726,
+          "box": [
+            721.0,
+            1455.0,
+            177.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Syrup",
+          "confidence": 0.95996307,
+          "box": [
+            917.0,
+            1454.0,
+            127.0,
+            48.0
+          ]
+        },
+        {
+          "text": "60",
+          "confidence": 0.9695722999999999,
+          "box": [
+            1786.0,
+            1455.0,
+            50.0,
+            37.0
+          ]
+        },
+        {
+          "text": "10",
+          "confidence": 0.96896851,
+          "box": [
+            2143.0,
+            1455.0,
+            48.0,
+            37.0
+          ]
+        },
+        {
+          "text": "26",
+          "confidence": 0.96447784,
+          "box": [
+            132.0,
+            1574.0,
+            52.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Gumbar",
+          "confidence": 0.9056712299999999,
+          "box": [
+            722.0,
+            1573.0,
+            178.0,
+            38.0
+          ]
+        },
+        {
+          "text": "Gummibarchen",
+          "confidence": 0.89277992,
+          "box": [
+            917.0,
+            1573.0,
+            336.0,
+            38.0
+          ]
+        },
+        {
+          "text": "40",
+          "confidence": 0.96505928,
+          "box": [
+            1785.0,
+            1574.0,
+            51.0,
+            37.0
+          ]
+        },
+        {
+          "text": "31.23",
+          "confidence": 0.9554908000000001,
+          "box": [
+            2140.0,
+            1574.0,
+            120.0,
+            37.0
+          ]
+        },
+        {
+          "text": "38",
+          "confidence": 0.96665581,
+          "box": [
+            132.0,
+            1692.0,
+            52.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Cdte",
+          "confidence": 0.53540634,
+          "box": [
+            722.0,
+            1691.0,
+            102.0,
+            38.0
+          ]
+        },
+        {
+          "text": "de",
+          "confidence": 0.93281029,
+          "box": [
+            841.0,
+            1692.0,
+            53.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Blaye",
+          "confidence": 0.92360603,
+          "box": [
+            913.0,
+            1692.0,
+            120.0,
+            47.0
+          ]
+        },
+        {
+          "text": "30",
+          "confidence": 0.96346588,
+          "box": [
+            1786.0,
+            1692.0,
+            50.0,
+            37.0
+          ]
+        },
+        {
+          "text": "263.5",
+          "confidence": 0.9658034499999999,
+          "box": [
+            2140.0,
+            1692.0,
+            121.0,
+            37.0
+          ]
+        },
+        {
+          "text": "68",
+          "confidence": 0.96724632,
+          "box": [
+            132.0,
+            1810.0,
+            52.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Scottish",
+          "confidence": 0.93301247,
+          "box": [
+            722.0,
+            1809.0,
+            173.0,
+            38.0
+          ]
+        },
+        {
+          "text": "Longbreads",
+          "confidence": 0.92708099,
+          "box": [
+            916.0,
+            1810.0,
+            258.0,
+            47.0
+          ]
+        },
+        {
+          "text": "35",
+          "confidence": 0.96658501,
+          "box": [
+            1786.0,
+            1810.0,
+            51.0,
+            37.0
+          ]
+        },
+        {
+          "text": "12.5",
+          "confidence": 0.9531971699999999,
+          "box": [
+            2143.0,
+            1810.0,
+            90.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Page",
+          "confidence": 0.93351204,
+          "box": [
+            1191.0,
+            3376.0,
+            75.0,
+            31.0
+          ]
+        },
+        {
+          "text": "1",
+          "confidence": 0.93351204,
+          "box": [
+            1282.0,
+            3376.0,
+            9.0,
+            24.0
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "line_items",
+          "columns": [
+            {
+              "key": "product_id",
+              "label": "Product ID:"
+            },
+            {
+              "key": "product",
+              "label": "Product:"
+            },
+            {
+              "key": "quantity",
+              "label": "Quantity:"
+            },
+            {
+              "key": "unit_price",
+              "label": "Unit Price:"
+            }
+          ],
+          "rows": [
+            [
+              {
+                "column": "product_id",
+                "value": "3",
+                "confidence": 1.0,
+                "source_span": "\"3\""
+              },
+              {
+                "column": "product",
+                "value": "Aniseed Syrup",
+                "confidence": 1.0,
+                "source_span": "\"Aniseed Syrup\""
+              },
+              {
+                "column": "quantity",
+                "value": "60",
+                "confidence": 1.0,
+                "source_span": "\"60\""
+              },
+              {
+                "column": "unit_price",
+                "value": "10",
+                "confidence": 1.0,
+                "source_span": "\"10\""
+              }
+            ],
+            [
+              {
+                "column": "product_id",
+                "value": "26",
+                "confidence": 1.0,
+                "source_span": "\"26\""
+              },
+              {
+                "column": "product",
+                "value": "Gumbar Gummibarchen",
+                "confidence": 1.0,
+                "source_span": "\"Gumbar Gummibarchen\""
+              },
+              {
+                "column": "quantity",
+                "value": "40",
+                "confidence": 1.0,
+                "source_span": "\"40\""
+              },
+              {
+                "column": "unit_price",
+                "value": "31.23",
+                "confidence": 1.0,
+                "source_span": "\"31.23\""
+              }
+            ],
+            [
+              {
+                "column": "product_id",
+                "value": "38",
+                "confidence": 1.0,
+                "source_span": "\"38\""
+              },
+              {
+                "column": "product",
+                "value": "Cdte de Blaye",
+                "confidence": 1.0,
+                "source_span": "\"Cdte de Blaye\""
+              },
+              {
+                "column": "quantity",
+                "value": "30",
+                "confidence": 1.0,
+                "source_span": "\"30\""
+              },
+              {
+                "column": "unit_price",
+                "value": "263.5",
+                "confidence": 1.0,
+                "source_span": "\"263.5\""
+              }
+            ],
+            [
+              {
+                "column": "product_id",
+                "value": "68",
+                "confidence": 1.0,
+                "source_span": "\"68\""
+              },
+              {
+                "column": "product",
+                "value": "Scottish Longbreads",
+                "confidence": 1.0,
+                "source_span": "\"Scottish Longbreads\""
+              },
+              {
+                "column": "quantity",
+                "value": "35",
+                "confidence": 1.0,
+                "source_span": "\"35\""
+              },
+              {
+                "column": "unit_price",
+                "value": "12.5",
+                "confidence": 1.0,
+                "source_span": "\"12.5\""
+              }
+            ]
+          ]
+        }
+      ],
+      "timings": {
+        "router": 82.50978417999795,
+        "extractor": 521.739943118002,
+        "validator": 0.007605769998917822,
+        "judge": 203.82813191600144,
+        "pipeline": 808.8756606539973,
+        "ocr": 1.8733598420003545,
+        "render": 0.6179869270017662,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 446,
+          "output_tokens": 63,
+          "total_tokens": 509,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 968,
+          "output_tokens": 261,
+          "total_tokens": 1229,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_purchase_order": {
+          "input_tokens": 1003,
+          "output_tokens": 1140,
+          "total_tokens": 2143,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "judge_status": "unavailable",
+      "language": "th",
+      "fields": [
+        {
+          "name": "po_number",
+          "value": "10540",
+          "confidence": 1.0,
+          "source_span": "\"10540\"",
+          "is_new_field": false
+        },
+        {
+          "name": "order_date",
+          "value": "2017-05-19",
+          "confidence": 1.0,
+          "source_span": "\"2017-05-19\"",
+          "is_new_field": false
+        },
+        {
+          "name": "supplier_name",
+          "value": "Horst Kloss",
+          "confidence": 1.0,
+          "source_span": "\"Horst Kloss\"",
+          "is_new_field": false
+        }
+      ],
+      "validation_errors": [
+        "Missing required field: total_amount",
+        "Missing required field: currency",
+        "po_number: source_span not found in document (possible hallucination)",
+        "order_date: source_span not found in document (possible hallucination)",
+        "supplier_name: source_span not found in document (possible hallucination)",
+        "line_items row 1 product_id: source_span not found in document (possible hallucination)",
+        "line_items row 1 product: source_span not found in document (possible hallucination)",
+        "line_items row 1 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 1 unit_price: source_span not found in document (possible hallucination)",
+        "line_items row 2 product_id: source_span not found in document (possible hallucination)",
+        "line_items row 2 product: source_span not found in document (possible hallucination)",
+        "line_items row 2 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 2 unit_price: source_span not found in document (possible hallucination)",
+        "line_items row 3 product_id: source_span not found in document (possible hallucination)",
+        "line_items row 3 product: source_span not found in document (possible hallucination)",
+        "line_items row 3 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 3 unit_price: source_span not found in document (possible hallucination)",
+        "line_items row 4 product_id: source_span not found in document (possible hallucination)",
+        "line_items row 4 product: source_span not found in document (possible hallucination)",
+        "line_items row 4 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 4 unit_price: source_span not found in document (possible hallucination)",
+        "Judge unavailable: Judge returned issues for fields absent from the prediction"
+      ],
+      "needs_review": true,
+      "completeness_score": 0.6,
+      "judge": null,
+      "routing_reason": "The document contains 'Order ID', 'Product ID:', and 'Product:' which are typical fields found in purchase orders, and the language is Thai.",
+      "full_text": "Purchase Orders\nOrder ID | เฉ Date | [Customer Name | |\n10540 | | 2017-05-19 | | Horst Kloss | |\nProducts\nProduct ID: | Product: | Quantity: | Unit Price:\n3 | Aniseed Syrup | 60 | 10\n26 | Gumbar Gummibarchen | 40 | 31.23\n38 | Cdte de Blaye | 30 | 263.5\n68 | Scottish Longbreads | 35 | 12.5\nPage 1",
+      "error": null,
+      "failed_stage": null,
+      "error_details": null,
+      "extraction_source": "ocr",
+      "extracted_at": "2026-09-09T07:21:23.089111",
+      "auto_evaluation": null
+    }
+  ],
+  "pages": [
+    {
+      "expected": "purchase_order",
+      "predicted": "purchase_order",
+      "router_ok": true,
+      "language_ok": false,
+      "language": "en",
+      "precision": 0.6666666666666666,
+      "recall": 0.6666666666666666,
+      "f1": 0.6666666666666666,
+      "tp": 2,
+      "fp": 1,
+      "fn": 1,
+      "fields_expected": 3,
+      "cells_total": 16,
+      "cells_ok": 14,
+      "columns_total": 4,
+      "columns_found": 4,
+      "rows_total": 4,
+      "rows_found": 4,
+      "extra_rows": 0,
+      "extra_columns": 0,
+      "excluded_cells": 0,
+      "failed": false,
+      "error": null,
+      "needs_review": true,
+      "returned": true,
+      "judge_status": "unavailable",
+      "timings": {
+        "router": 82.50978417999795,
+        "extractor": 521.739943118002,
+        "validator": 0.007605769998917822,
+        "judge": 203.82813191600144,
+        "pipeline": 808.8756606539973,
+        "ocr": 1.8733598420003545,
+        "render": 0.6179869270017662,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 446,
+          "output_tokens": 63,
+          "total_tokens": 509,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 968,
+          "output_tokens": 261,
+          "total_tokens": 1229,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_purchase_order": {
+          "input_tokens": 1003,
+          "output_tokens": 1140,
+          "total_tokens": 2143,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "mismatches": [
+        {
+          "field": "buyer_name",
+          "expected": "Horst Kloss",
+          "predicted": null
+        }
+      ],
+      "unexpected_fields": {
+        "supplier_name": "Horst Kloss"
+      },
+      "notes": "",
+      "stem": "purchase_orders_2.pdf / 1",
+      "filename": "purchase_orders_2.pdf",
+      "page_number": 1,
+      "format": ".pdf"
+    }
+  ]
+}

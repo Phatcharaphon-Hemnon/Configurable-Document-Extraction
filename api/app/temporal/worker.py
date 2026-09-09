@@ -18,10 +18,11 @@ from app.temporal.activities import (
     extract_activity,
     judge_activity,
     parse_activity,
+    process_page_activity,
     validate_activity,
 )
 from app.temporal.client import TASK_QUEUE, get_temporal_client
-from app.temporal.workflows import ExtractDocumentWorkflow
+from app.temporal.workflows import ExtractDocumentWorkflow, ExtractPageWorkflow
 
 
 async def main() -> None:
@@ -30,9 +31,11 @@ async def main() -> None:
     worker = Worker(
         client,
         task_queue=TASK_QUEUE,
-        workflows=[ExtractDocumentWorkflow],
+        workflows=[ExtractDocumentWorkflow, ExtractPageWorkflow],
+        max_concurrent_activities=1,
         activities=[
             parse_activity,
+            process_page_activity,
             classify_activity,
             extract_activity,
             validate_activity,

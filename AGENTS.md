@@ -1,7 +1,7 @@
 # AGENTS.md — Project Memory
 
 > Read this file first. It is the persistent memory for any AI agent (or human)
-> working on this repository. Last updated: 2026-09-08.
+> working on this repository. Last updated: 2026-09-09.
 
 ## What this project is
 
@@ -10,12 +10,12 @@ structured data from scanned/photographed business documents using a
 multi-agent AI pipeline.
 
 - **Fixed 3 document types**: `invoice`, `purchase_order`, `delivery_note`
-- **OCR (local)**: all uploads (images + PDFs) OCR'd on-host with RapidOCR
-  (`api/app/services/rapidocr_client.py`; PDFs rendered at 300 DPI via
+- **OCR (local)**: all uploads (images + PDFs) OCR'd on-host with configurable local OCR
+  (`api/app/services/local_ocr.py`; default Tesseract `eng+tha`, RapidOCR optional; PDFs rendered at 300 DPI via
   PyMuPDF). Single text model only — no vision model required.
 - **Multi-document PDFs**: one uploaded PDF may contain several documents
   (e.g. invoice + PO); each PDF page becomes its own extraction result
-- **Agent pipeline**: `RapidOCR → Router → Extractor (per doc type) → Validator → Judge`
+- **Agent pipeline**: `Local OCR → Router → Extractor (per doc type) → Validator → Judge`
 - **Stack**: FastAPI + Temporal (workflow) + Langfuse (LLM observability) +
   React/TypeScript frontend
 
@@ -75,7 +75,8 @@ required), `kimi`, `ollama-cloud`, `ollama-local`, `mistral`, `openclaw`
 API is not OpenAI-compatible) — reach it via `openrouter`/`opencode`.
 Default: Ollama Cloud (`https://ollama.com/v1`), model `gpt-oss:20b`
 (text-only, used for Router + Extractor + Judge). See `docs/ai_provider.md`.
-Parsing: local RapidOCR (`OCR_DPI`; see `docs/local_ocr.md`).
+Parsing: local Tesseract Thai/English by default (`OCR_ENGINE`, `OCR_LANGUAGES`,
+`OCR_DPI`; see `docs/multilingual_ocr.md`).
 Monitoring: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST`
 (all optional — Langfuse disabled when missing).
 See `api/.env.example` for the full list.
@@ -101,3 +102,7 @@ cd web && npm run build                                 # typecheck+build
   See `docs/llm_request_queue.md`. Use one API process per account.
 - Temporal worker is optional: `TEMPORAL_ENABLED=false` (default) keeps the
   in-process pipeline; set true + run `python -m app.temporal.worker` from `api/` to use it.
+
+- Canonical history: root `data/extraction.db`; originals/previews: `data/sources/`.
+  `api/data/` is retired; see `docs/page_storage.md`.
+- Gold evaluation: `api/scripts/run_eval.py --all`; see `docs/evaluation.md`.

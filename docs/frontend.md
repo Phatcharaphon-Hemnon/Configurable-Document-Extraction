@@ -48,3 +48,12 @@ web/src/
 
 `web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api` (the `/api`
 suffix is required).
+
+## Page and history regression
+
+`web/tests/pageResults.spec.ts` stubs API responses to verify the eight Thai table
+columns, mixed-PDF page source switching and read-only history. Run
+`cd web && npm run test:browser` after provisioning Chromium with
+`npm run browser:install`. Browser tools store their dependencies inside the project.
+The Vite server in Playwright configuration is test infrastructure; normal application
+startup remains `scripts/run_all.sh`.

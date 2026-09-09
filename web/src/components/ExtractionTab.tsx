@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
+import { sourceUrl } from '../api/client';
 import { PipelineStepper } from './PipelineStepper';
 import { AlertTriangleIcon, CheckCircleIcon } from './icons';
-import { JUDGE_PASS_SCORE, formatFieldValue, getPipelineStage, mergeFieldValues } from '../utils/pipeline';
+import { JUDGE_PASS_SCORE, formatFieldValue, getPipelineStage } from '../utils/pipeline';
 import type { CombinedField, DocumentGroup, ExtractionResult, ProviderErrorDetails } from '../types/extraction';
 
 interface ExtractionTabProps {
@@ -28,7 +29,7 @@ function parseLineItems(raw: unknown): LineItem[] | null {
   }
 }
 
-function useImagePreview(group: DocumentGroup | null): string | null {
+function useImagePreview(group: DocumentGroup | null, doc: ExtractionResult | null): string | null {
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,7 +37,11 @@ function useImagePreview(group: DocumentGroup | null): string | null {
       setUrl(null);
       return;
     }
-    const imageFile = group.files.find((f) => f.type.startsWith('image/'));
+    if (doc?.source?.preview_url) {
+      setUrl(sourceUrl(doc.source.preview_url) ?? null);
+      return;
+    }
+    const imageFile = group.files.find((f) => f.type.startsWith('image/') && (!doc?.source || f.name === doc.source.filename));
     if (!imageFile) {
       setUrl(null);
       return;
@@ -44,17 +49,13 @@ function useImagePreview(group: DocumentGroup | null): string | null {
     const objectUrl = URL.createObjectURL(imageFile);
     setUrl(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
-  }, [group]);
+  }, [group, doc]);
 
   return url;
 }
 
-function copyToClipboard(fields: CombinedField[]) {
-  navigator.clipboard.writeText(JSON.stringify(mergeFieldValues(fields), null, 2));
-}
-
-function downloadJson(fields: CombinedField[], label: string) {
-  const blob = new Blob([JSON.stringify(mergeFieldValues(fields), null, 2)], { type: 'application/json' });
+function downloadJson(doc: ExtractionResult | null, label: string) {
+  const blob = new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -99,7 +100,7 @@ function ProviderErrorBlock({ details }: { details: ProviderErrorDetails }) {
 
 export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, combinedFields }: ExtractionTabProps) {
   const [filter, setFilter] = useState('');
-  const imagePreviewUrl = useImagePreview(group);
+  const imagePreviewUrl = useImagePreview(group, doc);
 
   const filteredFields = useMemo(() => {
     const q = filter.trim().toLowerCase();
@@ -136,6 +137,7 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
   if (group.status !== 'done') {
     return (
       <div className="empty-state">
+        {group.progress && <p>{group.progress.completed_pages}/{group.progress.total_pages} pages · {group.progress.stage}</p>}
         <p>{group.status === 'queued' ? 'Queued — waiting for an available slot…' : group.status === 'uploading' ? 'Uploading document…' : 'Processing document…'}</p>
       </div>
     );
@@ -169,6 +171,7 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
           {documents.map((d, idx) => (
             <button key={d.id} className={idx === docIndex ? 'active' : ''} onClick={() => onSelectDoc(idx)}>
               Page {idx + 1}
+              <span>{d.source ? `${d.source.filename} · Page ${d.source.page_number}/${d.source.page_count}` : `Page ${idx + 1}`} · {d.language || "?"} · {d.error ? "failed" : d.needs_review ? "review" : "done"}</span>
               <span className="page-tab-type">{d.doc_type.replace(/_/g, ' ')}</span>
             </button>
           ))}
@@ -234,7 +237,7 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
       {!doc?.error && (
         <>
           <div className="completeness-row">
-            <span className="completeness-label">Field completeness</span>
+            <span className="completeness-label">Required-field coverage</span>
             <div className="confidence-bar-container completeness-bar">
               <div className="confidence-bar" style={{ width: `${completeness * 100}%` }} />
             </div>
@@ -301,44 +304,35 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
             </table>
           </div>
 
-          {lineItems && (
-            <>
-              <div className="section-head">
-                <h3 className="section-title">Line Items</h3>
-                <span className="field-count">{lineItems.length} rows</span>
-              </div>
+          {(doc?.tables?.length ? doc.tables : lineItems ? [{
+            name: 'line_items', columns: Array.from(new Set(lineItems.flatMap(item => Object.keys(item)))).map(key => ({key, label: key})),
+            rows: lineItems.map(item => Object.entries(item).map(([column, value]) => ({column, value: String(value ?? '—'), confidence: 0, source_span: null}))),
+          }] : []).map((table, tableIndex) => (
+            <section key={`${table.name}-${tableIndex}`}>
+              <div className="section-head"><h3>{table.name}</h3><span>{table.rows.length} rows · {table.columns.length} columns</span></div>
               <div className="table-wrap">
                 <table className="fields-table line-items-table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Item</th>
-                      <th>Qty</th>
-                      <th>Unit Price</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {lineItems.map((item, idx) => (
-                      <tr key={idx}>
-                        <td className="line-item-num">{idx + 1}</td>
-                        <td className="field-value">{String(item.name ?? item.description ?? '—')}</td>
-                        <td>{String(item.quantity ?? '—')}</td>
-                        <td>{String(item.unit_price ?? '—')}</td>
-                        <td>{String(item.total_price ?? item.amount ?? '—')}</td>
-                      </tr>
-                    ))}
-                  </tbody>
+                  <thead><tr><th>#</th>{table.columns.map(column => <th key={column.key}>{column.label}</th>)}</tr></thead>
+                  <tbody>{table.rows.map((row, index) => <tr key={index}>
+                    <td>{index + 1}</td>
+                    {table.columns.map(column => {
+                      const cell = row.find(item => item.column === column.key);
+                      return <td key={column.key} title={cell?.source_span || 'No cell evidence'}>
+                        {String(cell?.value ?? '—')}
+                      </td>;
+                    })}
+                  </tr>)}</tbody>
                 </table>
               </div>
-            </>
-          )}
-
+            </section>
+          ))}
+          {doc && <p className="box-text">Judge: {doc.judge_status || (doc.judge ? 'reviewed' : 'unavailable')}</p>}
+          {group.response?.file_errors?.map(error => <p key={error} className="box-text">{error}</p>)}
           <div className="actions-row">
-            <button className="button-secondary" onClick={() => copyToClipboard(combinedFields)}>
+            <button className="button-secondary" onClick={() => navigator.clipboard.writeText(JSON.stringify(doc, null, 2))}>
               Copy Data
             </button>
-            <button className="button-primary" onClick={() => downloadJson(combinedFields, group.label)}>
+            <button className="button-primary" onClick={() => downloadJson(doc, `${doc?.source?.filename || group.label}-page-${doc?.source?.page_number || docIndex + 1}`)}>
               Save JSON
             </button>
           </div>
@@ -348,17 +342,17 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
   );
 
   return (
-    <div className={imagePreviewUrl ? 'extraction-layout with-preview' : 'extraction-layout'}>
+    <div className="extraction-layout with-preview">
       <div className="extraction-main">{fieldsPanel}</div>
-      {imagePreviewUrl && (
-        <aside className="source-panel">
-          <h3 className="section-title flush-top">Source</h3>
-          <a href={imagePreviewUrl} target="_blank" rel="noreferrer" title="Open full size">
-            <img src={imagePreviewUrl} alt="Uploaded document" className="source-image" />
-          </a>
-          <p className="source-caption">{group.label}</p>
-        </aside>
-      )}
+      <aside className="source-panel">
+        <h3 className="section-title flush-top">Source</h3>
+        {imagePreviewUrl ? <a href={imagePreviewUrl} target="_blank" rel="noreferrer">
+          <img src={imagePreviewUrl} alt={`Source page ${doc?.source?.page_number || docIndex + 1}`} className="source-image" />
+        </a> : <p>Page preview unavailable for this saved result.</p>}
+        <p>{doc?.source?.filename || group.label}{doc?.source && ` · Page ${doc.source.page_number}/${doc.source.page_count}`}</p>
+        {doc?.source?.download_url && <a href={sourceUrl(doc.source.download_url)}>Download original</a>}
+        {doc?.full_text && <details><summary>OCR text</summary><pre className="ocr-text">{doc.full_text}</pre></details>}
+      </aside>
     </div>
   );
 }

@@ -421,6 +421,7 @@ class Client:
         started = asyncio.get_running_loop().time()
         while budget.attempts < RATE_LIMIT_MAX_RETRIES:
             budget.attempts += 1
+            self.last_attempts = budget.attempts
             logger.info(
                 "LLM request job=%s stage=%s attempt=%d/%d elapsed=%.1fs",
                 job_context.get(), stage_context.get(), budget.attempts,

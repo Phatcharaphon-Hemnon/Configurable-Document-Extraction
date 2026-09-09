@@ -1,0 +1,1235 @@
+{
+  "filename": "Delivery_note2.png",
+  "eval_seconds": 702.5756895599989,
+  "error": null,
+  "documents": [
+    {
+      "id": "a7daec53-c797-4f35-a0ca-0f69ac814d4d",
+      "doc_type": "delivery_note",
+      "source": {
+        "source_id": "c85dd635-b77b-4ecf-a978-f0bda179ac75",
+        "filename": "Delivery_note2.png",
+        "page_number": 1,
+        "page_count": 1,
+        "preview_url": "/sources/c85dd635-b77b-4ecf-a978-f0bda179ac75/pages/1",
+        "download_url": "/sources/c85dd635-b77b-4ecf-a978-f0bda179ac75"
+      },
+      "ocr_blocks": [
+        {
+          "text": "DELIVER",
+          "confidence": 0.96656471,
+          "box": [
+            80.0,
+            300.0,
+            85.0,
+            16.0
+          ]
+        },
+        {
+          "text": "TO",
+          "confidence": 0.9655426,
+          "box": [
+            171.0,
+            300.0,
+            27.0,
+            16.0
+          ]
+        },
+        {
+          "text": "SHIP",
+          "confidence": 0.94697304,
+          "box": [
+            355.0,
+            300.0,
+            47.0,
+            16.0
+          ]
+        },
+        {
+          "text": "TO",
+          "confidence": 0.9268350200000001,
+          "box": [
+            407.0,
+            300.0,
+            28.0,
+            16.0
+          ]
+        },
+        {
+          "text": "DELIVERY",
+          "confidence": 0.9140873700000001,
+          "box": [
+            822.0,
+            300.0,
+            99.0,
+            16.0
+          ]
+        },
+        {
+          "text": "#",
+          "confidence": 0.92088959,
+          "box": [
+            927.0,
+            300.0,
+            11.0,
+            15.0
+          ]
+        },
+        {
+          "text": "บ",
+          "confidence": 0.96053322,
+          "box": [
+            1055.0,
+            300.0,
+            12.0,
+            16.0
+          ]
+        },
+        {
+          "text": "ร",
+          "confidence": 0.86990112,
+          "box": [
+            1069.0,
+            299.0,
+            11.0,
+            17.0
+          ]
+        },
+        {
+          "text": "-001",
+          "confidence": 0.9209470399999999,
+          "box": [
+            1079.0,
+            299.0,
+            41.0,
+            17.0
+          ]
+        },
+        {
+          "text": "John",
+          "confidence": 0.95914146,
+          "box": [
+            78.0,
+            334.0,
+            44.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Smith",
+          "confidence": 0.95914146,
+          "box": [
+            128.0,
+            334.0,
+            51.0,
+            17.0
+          ]
+        },
+        {
+          "text": "John",
+          "confidence": 0.93807518,
+          "box": [
+            354.0,
+            334.0,
+            43.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Smith",
+          "confidence": 0.96411812,
+          "box": [
+            404.0,
+            334.0,
+            51.0,
+            17.0
+          ]
+        },
+        {
+          "text": "DELIVERY",
+          "confidence": 0.96714417,
+          "box": [
+            780.0,
+            341.0,
+            98.0,
+            15.0
+          ]
+        },
+        {
+          "text": "DATE",
+          "confidence": 0.96424339,
+          "box": [
+            885.0,
+            341.0,
+            52.0,
+            15.0
+          ]
+        },
+        {
+          "text": "11/02/2019",
+          "confidence": 0.77406502,
+          "box": [
+            1024.0,
+            340.0,
+            99.0,
+            17.0
+          ]
+        },
+        {
+          "text": "2",
+          "confidence": 0.8975659899999999,
+          "box": [
+            78.0,
+            363.0,
+            12.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Court",
+          "confidence": 0.8975659899999999,
+          "box": [
+            96.0,
+            363.0,
+            49.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Square",
+          "confidence": 0.9041641199999999,
+          "box": [
+            150.0,
+            363.0,
+            65.0,
+            20.0
+          ]
+        },
+        {
+          "text": "3787",
+          "confidence": 0.9681320999999999,
+          "box": [
+            355.0,
+            363.0,
+            44.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Pineview",
+          "confidence": 0.96702148,
+          "box": [
+            405.0,
+            363.0,
+            81.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Drive",
+          "confidence": 0.97004021,
+          "box": [
+            492.0,
+            363.0,
+            46.0,
+            17.0
+          ]
+        },
+        {
+          "text": "New",
+          "confidence": 0.96549446,
+          "box": [
+            79.0,
+            392.0,
+            41.0,
+            17.0
+          ]
+        },
+        {
+          "text": "York,",
+          "confidence": 0.96929314,
+          "box": [
+            124.0,
+            392.0,
+            47.0,
+            19.0
+          ]
+        },
+        {
+          "text": "NY",
+          "confidence": 0.96636864,
+          "box": [
+            177.0,
+            392.0,
+            28.0,
+            16.0
+          ]
+        },
+        {
+          "text": "12210",
+          "confidence": 0.9636206799999999,
+          "box": [
+            212.0,
+            392.0,
+            55.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Cambridge,",
+          "confidence": 0.9624872600000001,
+          "box": [
+            355.0,
+            392.0,
+            103.0,
+            21.0
+          ]
+        },
+        {
+          "text": "MA",
+          "confidence": 0.96298691,
+          "box": [
+            465.0,
+            392.0,
+            30.0,
+            16.0
+          ]
+        },
+        {
+          "text": "12210",
+          "confidence": 0.95954391,
+          "box": [
+            502.0,
+            392.0,
+            54.0,
+            17.0
+          ]
+        },
+        {
+          "text": "P.O#",
+          "confidence": 0.6218383,
+          "box": [
+            888.0,
+            382.0,
+            50.0,
+            16.0
+          ]
+        },
+        {
+          "text": "2312/2019",
+          "confidence": 0.95265518,
+          "box": [
+            1028.0,
+            381.0,
+            95.0,
+            17.0
+          ]
+        },
+        {
+          "text": "อ",
+          "confidence": 0.8802056899999999,
+          "box": [
+            837.0,
+            422.0,
+            13.0,
+            16.0
+          ]
+        },
+        {
+          "text": "บ",
+          "confidence": 0.93239227,
+          "box": [
+            851.0,
+            423.0,
+            13.0,
+            16.0
+          ]
+        },
+        {
+          "text": "ธ",
+          "confidence": 0.9269219200000001,
+          "box": [
+            866.0,
+            422.0,
+            11.0,
+            16.0
+          ]
+        },
+        {
+          "text": "DATE",
+          "confidence": 0.96736305,
+          "box": [
+            885.0,
+            422.0,
+            52.0,
+            16.0
+          ]
+        },
+        {
+          "text": "26/02/2019",
+          "confidence": 0.91802521,
+          "box": [
+            1022.0,
+            422.0,
+            101.0,
+            17.0
+          ]
+        },
+        {
+          "text": "East",
+          "confidence": 0.96377045,
+          "box": [
+            426.0,
+            499.0,
+            93.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Repair",
+          "confidence": 0.95933426,
+          "box": [
+            536.0,
+            499.0,
+            120.0,
+            47.0
+          ]
+        },
+        {
+          "text": "Inc.",
+          "confidence": 0.9671793399999999,
+          "box": [
+            692.0,
+            499.0,
+            71.0,
+            37.0
+          ]
+        },
+        {
+          "text": "1912",
+          "confidence": 0.96136269,
+          "box": [
+            514.0,
+            553.0,
+            43.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Harvest",
+          "confidence": 0.96136269,
+          "box": [
+            563.0,
+            553.0,
+            70.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Lane",
+          "confidence": 0.96908432,
+          "box": [
+            638.0,
+            553.0,
+            45.0,
+            17.0
+          ]
+        },
+        {
+          "text": "New",
+          "confidence": 0.96776367,
+          "box": [
+            507.0,
+            582.0,
+            41.0,
+            17.0
+          ]
+        },
+        {
+          "text": "York,",
+          "confidence": 0.9601980600000001,
+          "box": [
+            553.0,
+            582.0,
+            46.0,
+            19.0
+          ]
+        },
+        {
+          "text": "NY",
+          "confidence": 0.9601980600000001,
+          "box": [
+            606.0,
+            582.0,
+            28.0,
+            16.0
+          ]
+        },
+        {
+          "text": "12210",
+          "confidence": 0.95333344,
+          "box": [
+            640.0,
+            582.0,
+            55.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Front",
+          "confidence": 0.96939896,
+          "box": [
+            79.0,
+            732.0,
+            47.0,
+            17.0
+          ]
+        },
+        {
+          "text": "and",
+          "confidence": 0.96041519,
+          "box": [
+            131.0,
+            732.0,
+            33.0,
+            17.0
+          ]
+        },
+        {
+          "text": "rear",
+          "confidence": 0.95869125,
+          "box": [
+            170.0,
+            736.0,
+            37.0,
+            13.0
+          ]
+        },
+        {
+          "text": "brake",
+          "confidence": 0.95869125,
+          "box": [
+            212.0,
+            732.0,
+            50.0,
+            17.0
+          ]
+        },
+        {
+          "text": "cables",
+          "confidence": 0.9695635199999999,
+          "box": [
+            267.0,
+            732.0,
+            59.0,
+            17.0
+          ]
+        },
+        {
+          "text": "100.00",
+          "confidence": 0.9666835,
+          "box": [
+            691.0,
+            727.0,
+            64.0,
+            31.0
+          ]
+        },
+        {
+          "text": "1",
+          "confidence": 0.93851822,
+          "box": [
+            814.0,
+            732.0,
+            7.0,
+            16.0
+          ]
+        },
+        {
+          "text": "100.00",
+          "confidence": 0.9635788,
+          "box": [
+            1063.0,
+            731.0,
+            60.0,
+            18.0
+          ]
+        },
+        {
+          "text": "New",
+          "confidence": 0.96970177,
+          "box": [
+            79.0,
+            772.0,
+            40.0,
+            17.0
+          ]
+        },
+        {
+          "text": "set",
+          "confidence": 0.9641701500000001,
+          "box": [
+            124.0,
+            773.0,
+            28.0,
+            16.0
+          ]
+        },
+        {
+          "text": "of",
+          "confidence": 0.9610502599999999,
+          "box": [
+            157.0,
+            772.0,
+            18.0,
+            17.0
+          ]
+        },
+        {
+          "text": "pedal",
+          "confidence": 0.96269547,
+          "box": [
+            179.0,
+            772.0,
+            49.0,
+            20.0
+          ]
+        },
+        {
+          "text": "arms.",
+          "confidence": 0.88766075,
+          "box": [
+            233.0,
+            776.0,
+            46.0,
+            13.0
+          ]
+        },
+        {
+          "text": "15.00",
+          "confidence": 0.96470528,
+          "box": [
+            702.0,
+            768.0,
+            49.0,
+            28.0
+          ]
+        },
+        {
+          "text": "2",
+          "confidence": 0.9579849199999999,
+          "box": [
+            813.0,
+            772.0,
+            11.0,
+            17.0
+          ]
+        },
+        {
+          "text": "30.00",
+          "confidence": 0.95093231,
+          "box": [
+            1073.0,
+            772.0,
+            50.0,
+            17.0
+          ]
+        },
+        {
+          "text": "SUBTOTAL",
+          "confidence": 0.96459648,
+          "box": [
+            768.0,
+            889.0,
+            106.0,
+            16.0
+          ]
+        },
+        {
+          "text": "145.00",
+          "confidence": 0.9565048199999999,
+          "box": [
+            1062.0,
+            889.0,
+            60.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Sales",
+          "confidence": 0.96375877,
+          "box": [
+            738.0,
+            925.0,
+            44.0,
+            15.0
+          ]
+        },
+        {
+          "text": "Tax",
+          "confidence": 0.96641342,
+          "box": [
+            788.0,
+            926.0,
+            30.0,
+            14.0
+          ]
+        },
+        {
+          "text": "6.25%",
+          "confidence": 0.93429214,
+          "box": [
+            823.0,
+            925.0,
+            51.0,
+            15.0
+          ]
+        },
+        {
+          "text": "9.07",
+          "confidence": 0.95682289,
+          "box": [
+            1088.0,
+            925.0,
+            35.0,
+            15.0
+          ]
+        },
+        {
+          "text": "DELIVERY",
+          "confidence": 0.96278015,
+          "box": [
+            846.0,
+            1006.0,
+            117.0,
+            19.0
+          ]
+        },
+        {
+          "text": "NOTE",
+          "confidence": 0.96841896,
+          "box": [
+            972.0,
+            1006.0,
+            65.0,
+            19.0
+          ]
+        },
+        {
+          "text": "TOTAL",
+          "confidence": 0.95862213,
+          "box": [
+            1045.0,
+            1006.0,
+            77.0,
+            19.0
+          ]
+        },
+        {
+          "text": "$154.06",
+          "confidence": 0.9649722300000001,
+          "box": [
+            1036.0,
+            1053.0,
+            86.0,
+            22.0
+          ]
+        },
+        {
+          "text": "TERMS",
+          "confidence": 0.93266151,
+          "box": [
+            79.0,
+            1469.0,
+            70.0,
+            16.0
+          ]
+        },
+        {
+          "text": "&",
+          "confidence": 0.93266151,
+          "box": [
+            155.0,
+            1469.0,
+            12.0,
+            16.0
+          ]
+        },
+        {
+          "text": "CONDITIONS",
+          "confidence": 0.96872665,
+          "box": [
+            174.0,
+            1469.0,
+            125.0,
+            16.0
+          ]
+        },
+        {
+          "text": "Payment",
+          "confidence": 0.96679626,
+          "box": [
+            79.0,
+            1498.0,
+            79.0,
+            20.0
+          ]
+        },
+        {
+          "text": "is",
+          "confidence": 0.96679626,
+          "box": [
+            164.0,
+            1498.0,
+            14.0,
+            16.0
+          ]
+        },
+        {
+          "text": "due",
+          "confidence": 0.9692738300000001,
+          "box": [
+            183.0,
+            1498.0,
+            35.0,
+            16.0
+          ]
+        },
+        {
+          "text": "within",
+          "confidence": 0.9587127700000001,
+          "box": [
+            222.0,
+            1498.0,
+            52.0,
+            16.0
+          ]
+        },
+        {
+          "text": "15",
+          "confidence": 0.9587127700000001,
+          "box": [
+            281.0,
+            1498.0,
+            22.0,
+            16.0
+          ]
+        },
+        {
+          "text": "days",
+          "confidence": 0.9615857699999999,
+          "box": [
+            307.0,
+            1498.0,
+            44.0,
+            20.0
+          ]
+        },
+        {
+          "text": "Please",
+          "confidence": 0.96976807,
+          "box": [
+            79.0,
+            1555.0,
+            61.0,
+            17.0
+          ]
+        },
+        {
+          "text": "make",
+          "confidence": 0.9699140900000001,
+          "box": [
+            146.0,
+            1556.0,
+            49.0,
+            16.0
+          ]
+        },
+        {
+          "text": "checks",
+          "confidence": 0.96622086,
+          "box": [
+            200.0,
+            1556.0,
+            63.0,
+            16.0
+          ]
+        },
+        {
+          "text": "payable",
+          "confidence": 0.96622086,
+          "box": [
+            269.0,
+            1556.0,
+            71.0,
+            21.0
+          ]
+        },
+        {
+          "text": "to:",
+          "confidence": 0.96966888,
+          "box": [
+            344.0,
+            1557.0,
+            23.0,
+            15.0
+          ]
+        },
+        {
+          "text": "East",
+          "confidence": 0.96854065,
+          "box": [
+            373.0,
+            1555.0,
+            41.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Repair",
+          "confidence": 0.96756325,
+          "box": [
+            419.0,
+            1555.0,
+            60.0,
+            21.0
+          ]
+        },
+        {
+          "text": "Inc.",
+          "confidence": 0.9658895099999999,
+          "box": [
+            484.0,
+            1556.0,
+            31.0,
+            16.0
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "line_items",
+          "columns": [
+            {
+              "key": "item",
+              "label": "item"
+            },
+            {
+              "key": "quantity",
+              "label": "quantity"
+            },
+            {
+              "key": "unit_price",
+              "label": "unit_price"
+            },
+            {
+              "key": "total_price",
+              "label": "total_price"
+            }
+          ],
+          "rows": [
+            [
+              {
+                "column": "item",
+                "value": "Front and rear brake cables",
+                "confidence": 1.0,
+                "source_span": "\"Front and rear brake cables\""
+              },
+              {
+                "column": "quantity",
+                "value": "1",
+                "confidence": 1.0,
+                "source_span": "\"1\""
+              },
+              {
+                "column": "unit_price",
+                "value": "100.00",
+                "confidence": 1.0,
+                "source_span": "\"100.00\""
+              },
+              {
+                "column": "total_price",
+                "value": "100.00",
+                "confidence": 1.0,
+                "source_span": "\"100.00\""
+              }
+            ],
+            [
+              {
+                "column": "item",
+                "value": "New set of pedal arms.",
+                "confidence": 1.0,
+                "source_span": "\"New set of pedal arms.\""
+              },
+              {
+                "column": "quantity",
+                "value": "2",
+                "confidence": 1.0,
+                "source_span": "\"2\""
+              },
+              {
+                "column": "unit_price",
+                "value": "15.00",
+                "confidence": 1.0,
+                "source_span": "\"15.00\""
+              },
+              {
+                "column": "total_price",
+                "value": "30.00",
+                "confidence": 1.0,
+                "source_span": "\"30.00\""
+              }
+            ]
+          ]
+        }
+      ],
+      "timings": {
+        "router": 79.99512614299965,
+        "extractor": 443.0198101679998,
+        "validator": 0.002109148001181893,
+        "judge": 177.13834013999804,
+        "pipeline": 700.6602953770016,
+        "ocr": 1.6157459970017953,
+        "render": 0.28435716799867805,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 549,
+          "output_tokens": 58,
+          "total_tokens": 607,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 986,
+          "output_tokens": 208,
+          "total_tokens": 1194,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_delivery_note": {
+          "input_tokens": 1098,
+          "output_tokens": 1019,
+          "total_tokens": 2117,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "judge_status": "unavailable",
+      "language": "en",
+      "fields": [
+        {
+          "name": "delivery_note_number",
+          "value": "บร -001",
+          "confidence": 1.0,
+          "source_span": "\"บร -001\"",
+          "is_new_field": false
+        },
+        {
+          "name": "delivery_date",
+          "value": "26/02/2019",
+          "confidence": 1.0,
+          "source_span": "\"26/02/2019\"",
+          "is_new_field": false
+        },
+        {
+          "name": "delivered_by",
+          "value": "East Repair Inc.",
+          "confidence": 1.0,
+          "source_span": "\"East Repair Inc.\"",
+          "is_new_field": false
+        },
+        {
+          "name": "recipient_name",
+          "value": "John Smith",
+          "confidence": 1.0,
+          "source_span": "\"John Smith\"",
+          "is_new_field": false
+        },
+        {
+          "name": "recipient_address",
+          "value": "3787 Pineview Drive, Cambridge, MA 12210",
+          "confidence": 1.0,
+          "source_span": "\"3787 Pineview Drive, Cambridge, MA 12210\"",
+          "is_new_field": false
+        },
+        {
+          "name": "sender_name",
+          "value": "New York, NY 12210",
+          "confidence": 1.0,
+          "source_span": "\"New York, NY 12210\"",
+          "is_new_field": false
+        },
+        {
+          "name": "sender_address",
+          "value": "1912 Harvest Lane",
+          "confidence": 1.0,
+          "source_span": "\"1912 Harvest Lane\"",
+          "is_new_field": false
+        },
+        {
+          "name": "notes",
+          "value": "TERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.\nIMPORTANT: You MUST respond with a single valid JSON object that strictly conforms to the following JSON Schema. Do NOT include any markdown fences, commentary, or extra text — only the raw JSON object.",
+          "confidence": 1.0,
+          "source_span": "\"TERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.\nIMPORTANT: You MUST respond with a single valid JSON object that strictly conforms to the following JSON Schema. Do NOT include any markdown fences, commentary, or extra text — only the raw JSON object. \"",
+          "is_new_field": false
+        }
+      ],
+      "validation_errors": [
+        "delivery_note_number: source_span not found in document (possible hallucination)",
+        "delivery_date: source_span not found in document (possible hallucination)",
+        "delivered_by: source_span not found in document (possible hallucination)",
+        "recipient_name: source_span not found in document (possible hallucination)",
+        "recipient_address: source_span not found in document (possible hallucination)",
+        "sender_name: source_span not found in document (possible hallucination)",
+        "sender_address: source_span not found in document (possible hallucination)",
+        "notes: source_span not found in document (possible hallucination)",
+        "line_items row 1 item: source_span not found in document (possible hallucination)",
+        "line_items row 1 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 1 unit_price: source_span not found in document (possible hallucination)",
+        "line_items row 1 total_price: source_span not found in document (possible hallucination)",
+        "line_items row 2 item: source_span not found in document (possible hallucination)",
+        "line_items row 2 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 2 unit_price: source_span not found in document (possible hallucination)",
+        "line_items row 2 total_price: source_span not found in document (possible hallucination)",
+        "Judge unavailable: Judge returned issues for fields absent from the prediction"
+      ],
+      "needs_review": true,
+      "completeness_score": 1.0,
+      "judge": null,
+      "routing_reason": "The document contains a delivery note format with delivery details, shipping address, and total amount, indicating it is a delivery note.",
+      "full_text": "DELIVER TO | SHIP TO | DELIVERY # | บร -001\nJohn Smith | John Smith | DELIVERY DATE | 11/02/2019\n2 Court Square | 3787 Pineview Drive\nP.O# | 2312/2019\nNew York, NY 12210 | Cambridge, MA 12210\nอบธ DATE | 26/02/2019\nEast Repair Inc.\n1912 Harvest Lane\nNew York, NY 12210\nFront and rear brake cables | 100.00 | 1 | 100.00\nNew set of pedal arms. | 15.00 | 2 | 30.00\nSUBTOTAL | 145.00\nSales Tax 6.25% | 9.07\nDELIVERY NOTE TOTAL\n$154.06\nTERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.",
+      "error": null,
+      "failed_stage": null,
+      "error_details": null,
+      "extraction_source": "ocr",
+      "extracted_at": "2026-09-09T04:28:36.125527",
+      "auto_evaluation": null
+    }
+  ],
+  "pages": [
+    {
+      "expected": "delivery_note",
+      "predicted": "delivery_note",
+      "router_ok": true,
+      "language_ok": true,
+      "language": "en",
+      "precision": 0.125,
+      "recall": 0.09090909090909091,
+      "f1": 0.10526315789473685,
+      "tp": 1,
+      "fp": 7,
+      "fn": 10,
+      "fields_expected": 11,
+      "cells_total": 12,
+      "cells_ok": 2,
+      "columns_total": 4,
+      "columns_found": 1,
+      "rows_total": 3,
+      "rows_found": 2,
+      "extra_rows": 0,
+      "extra_columns": 0,
+      "excluded_cells": 0,
+      "failed": false,
+      "error": null,
+      "needs_review": true,
+      "returned": true,
+      "judge_status": "unavailable",
+      "timings": {
+        "router": 79.99512614299965,
+        "extractor": 443.0198101679998,
+        "validator": 0.002109148001181893,
+        "judge": 177.13834013999804,
+        "pipeline": 700.6602953770016,
+        "ocr": 1.6157459970017953,
+        "render": 0.28435716799867805,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 549,
+          "output_tokens": 58,
+          "total_tokens": 607,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 986,
+          "output_tokens": 208,
+          "total_tokens": 1194,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_delivery_note": {
+          "input_tokens": 1098,
+          "output_tokens": 1019,
+          "total_tokens": 2117,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "mismatches": [
+        {
+          "field": "delivery_note_number",
+          "expected": "US-001",
+          "predicted": "บร -001"
+        },
+        {
+          "field": "delivery_date",
+          "expected": "11/02/2019",
+          "predicted": "26/02/2019"
+        },
+        {
+          "field": "sender_name",
+          "expected": "East Repair Inc.",
+          "predicted": "New York, NY 12210"
+        },
+        {
+          "field": "sender_address",
+          "expected": "1912 Harvest Lane New York, NY 12210",
+          "predicted": "1912 Harvest Lane"
+        },
+        {
+          "field": "recipient_address",
+          "expected": "3787 Pineview Drive Cambridge, MA 12210",
+          "predicted": "3787 Pineview Drive, Cambridge, MA 12210"
+        },
+        {
+          "field": "po_number",
+          "expected": "2312/2019",
+          "predicted": null
+        },
+        {
+          "field": "due_date",
+          "expected": "26/02/2019",
+          "predicted": null
+        },
+        {
+          "field": "subtotal",
+          "expected": 145,
+          "predicted": null
+        },
+        {
+          "field": "sales_tax",
+          "expected": 9.07,
+          "predicted": null
+        },
+        {
+          "field": "total_amount",
+          "expected": 154.06,
+          "predicted": null
+        }
+      ],
+      "unexpected_fields": {
+        "delivered_by": "East Repair Inc.",
+        "notes": "TERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.\nIMPORTANT: You MUST respond with a single valid JSON object that strictly conforms to the following JSON Schema. Do NOT include any markdown fences, commentary, or extra text — only the raw JSON object."
+      },
+      "notes": "Source prints sales tax 9.07 and total 154.06; preserve both despite arithmetic inconsistency. Deliver To billing address differs from Ship To.",
+      "stem": "Delivery_note2.png / 1",
+      "filename": "Delivery_note2.png",
+      "page_number": 1,
+      "format": ".png"
+    }
+  ]
+}

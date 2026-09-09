@@ -1,4 +1,8 @@
-# Local OCR Pipeline (RapidOCR)
+# Local OCR Pipeline (RapidOCR compatibility)
+
+The multilingual release defaults to Tesseract `eng+tha`; see
+[multilingual OCR](multilingual_ocr.md). This document describes the optional
+`OCR_ENGINE=rapidocr` implementation.
 
 > Last updated: 2026-09-04. All uploads (images + PDFs) are OCR'd on-host.
 > Single text model only — no vision model, API key, or network required.

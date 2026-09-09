@@ -100,6 +100,7 @@ async def test_new_field_is_registered_in_catalog(tmp_path):
         ["loyalty_points"],
     )
     service = _make_service(tmp_path, _routing(), extraction, _judge())
+    service.ocr.aparse_file = AsyncMock(return_value=["No: INV-1 Total: 5 Points: 120"])
     response = await service.extract_group([
         UploadedFilePart("scan.png", "image/png", b"img"),
     ])

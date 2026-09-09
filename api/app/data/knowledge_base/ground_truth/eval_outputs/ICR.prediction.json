@@ -1,0 +1,1377 @@
+{
+  "filename": "ICR.png",
+  "eval_seconds": 564.6210875940014,
+  "error": null,
+  "documents": [
+    {
+      "id": "63b92893-d069-4794-9a26-9061230b3f50",
+      "doc_type": "invoice",
+      "source": {
+        "source_id": "704d1e1d-c537-4fa3-8267-3eb38ad28160",
+        "filename": "ICR.png",
+        "page_number": 1,
+        "page_count": 1,
+        "preview_url": "/sources/704d1e1d-c537-4fa3-8267-3eb38ad28160/pages/1",
+        "download_url": "/sources/704d1e1d-c537-4fa3-8267-3eb38ad28160"
+      },
+      "ocr_blocks": [
+        {
+          "text": "—",
+          "confidence": 0.0,
+          "box": [
+            0.0,
+            114.0,
+            5.0,
+            30.0
+          ]
+        },
+        {
+          "text": "TAXINVOICE",
+          "confidence": 0.54055027,
+          "box": [
+            49.0,
+            118.0,
+            280.0,
+            46.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.54817268,
+          "box": [
+            829.0,
+            165.0,
+            19.0,
+            24.0
+          ]
+        },
+        {
+          "text": "86",
+          "confidence": 0.6791271999999999,
+          "box": [
+            1203.0,
+            102.0,
+            123.0,
+            73.0
+          ]
+        },
+        {
+          "text": "_",
+          "confidence": 0.38554077,
+          "box": [
+            0.0,
+            198.0,
+            4.0,
+            15.0
+          ]
+        },
+        {
+          "text": "BELASTINGFAKTUUR",
+          "confidence": 0.80642174,
+          "box": [
+            51.0,
+            165.0,
+            479.0,
+            46.0
+          ]
+        },
+        {
+          "text": "Bin",
+          "confidence": 0.6049297,
+          "box": [
+            829.0,
+            138.0,
+            87.0,
+            109.0
+          ]
+        },
+        {
+          "text": "2%",
+          "confidence": 0.43240509000000005,
+          "box": [
+            1002.0,
+            138.0,
+            103.0,
+            109.0
+          ]
+        },
+        {
+          "text": "๕",
+          "confidence": 0.66806755,
+          "box": [
+            1104.0,
+            142.0,
+            76.0,
+            101.0
+          ]
+        },
+        {
+          "text": "๕",
+          "confidence": 0.6140755099999999,
+          "box": [
+            1179.0,
+            138.0,
+            89.0,
+            109.0
+          ]
+        },
+        {
+          "text": ",",
+          "confidence": 0.0,
+          "box": [
+            0.0,
+            258.0,
+            6.0,
+            46.0
+          ]
+        },
+        {
+          "text": "โญ",
+          "confidence": 0.49332333,
+          "box": [
+            48.0,
+            271.0,
+            100.0,
+            29.0
+          ]
+        },
+        {
+          "text": "ภ",
+          "confidence": 0.6503289800000001,
+          "box": [
+            84.0,
+            247.0,
+            24.0,
+            64.0
+          ]
+        },
+        {
+          "text": "ล",
+          "confidence": 0.80475067,
+          "box": [
+            108.0,
+            247.0,
+            24.0,
+            64.0
+          ]
+        },
+        {
+          "text": "ท",
+          "confidence": 0.94366829,
+          "box": [
+            132.0,
+            247.0,
+            20.0,
+            64.0
+          ]
+        },
+        {
+          "text": "ให",
+          "confidence": 0.195215,
+          "box": [
+            157.0,
+            271.0,
+            27.0,
+            28.0
+          ]
+        },
+        {
+          "text": "ศร",
+          "confidence": 0.29449417,
+          "box": [
+            339.0,
+            246.0,
+            88.0,
+            64.0
+          ]
+        },
+        {
+          "text": "เบ",
+          "confidence": 0.35990517,
+          "box": [
+            427.0,
+            253.0,
+            148.0,
+            44.0
+          ]
+        },
+        {
+          "text": "1",
+          "confidence": 0.59785114,
+          "box": [
+            659.0,
+            255.0,
+            16.0,
+            45.0
+          ]
+        },
+        {
+          "text": "๕",
+          "confidence": 0.35050041,
+          "box": [
+            747.0,
+            251.0,
+            80.0,
+            42.0
+          ]
+        },
+        {
+          "text": ".",
+          "confidence": 0.31071594,
+          "box": [
+            0.0,
+            314.0,
+            5.0,
+            22.0
+          ]
+        },
+        {
+          "text": "อ",
+          "confidence": 0.40006222,
+          "box": [
+            832.0,
+            307.0,
+            132.0,
+            31.0
+          ]
+        },
+        {
+          "text": "ไฮ",
+          "confidence": 0.6012429,
+          "box": [
+            972.0,
+            299.0,
+            441.0,
+            33.0
+          ]
+        },
+        {
+          "text": "ก",
+          "confidence": 0.79829987,
+          "box": [
+            1283.0,
+            291.0,
+            78.0,
+            51.0
+          ]
+        },
+        {
+          "text": "ค",
+          "confidence": 0.51736198,
+          "box": [
+            1360.0,
+            291.0,
+            55.0,
+            51.0
+          ]
+        },
+        {
+          "text": "‘",
+          "confidence": 0.49842758000000004,
+          "box": [
+            0.0,
+            336.0,
+            6.0,
+            31.0
+          ]
+        },
+        {
+          "text": "ed",
+          "confidence": 0.66645149,
+          "box": [
+            139.0,
+            334.0,
+            35.0,
+            28.0
+          ]
+        },
+        {
+          "text": "r",
+          "confidence": 0.46462215,
+          "box": [
+            223.0,
+            379.0,
+            11.0,
+            21.0
+          ]
+        },
+        {
+          "text": "SB",
+          "confidence": 0.49543017999999994,
+          "box": [
+            299.0,
+            376.0,
+            94.0,
+            84.0
+          ]
+        },
+        {
+          "text": "ั",
+          "confidence": 0.62181206,
+          "box": [
+            506.0,
+            383.0,
+            18.0,
+            58.0
+          ]
+        },
+        {
+          "text": "77",
+          "confidence": 0.52151649,
+          "box": [
+            524.0,
+            358.0,
+            120.0,
+            88.0
+          ]
+        },
+        {
+          "text": "/7",
+          "confidence": 0.55301815,
+          "box": [
+            775.0,
+            356.0,
+            62.0,
+            90.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.63724247,
+          "box": [
+            1271.0,
+            394.0,
+            7.0,
+            5.0
+          ]
+        },
+        {
+          "text": "(",
+          "confidence": 0.38989674,
+          "box": [
+            532.0,
+            413.0,
+            6.0,
+            13.0
+          ]
+        },
+        {
+          "text": "NA",
+          "confidence": 0.518246,
+          "box": [
+            786.0,
+            407.0,
+            95.0,
+            25.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.72841042,
+          "box": [
+            0.0,
+            439.0,
+            5.0,
+            23.0
+          ]
+        },
+        {
+          "text": "B.T.W.Reg",
+          "confidence": 0.8775421099999999,
+          "box": [
+            831.0,
+            439.0,
+            133.0,
+            30.0
+          ]
+        },
+        {
+          "text": "Nr",
+          "confidence": 0.28251007,
+          "box": [
+            972.0,
+            439.0,
+            36.0,
+            24.0
+          ]
+        },
+        {
+          "text": "ร่",
+          "confidence": 0.20010498,
+          "box": [
+            0.0,
+            467.0,
+            9.0,
+            43.0
+          ]
+        },
+        {
+          "text": "-",
+          "confidence": 0.50402016,
+          "box": [
+            279.0,
+            470.0,
+            127.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ี",
+          "confidence": 0.32902617999999995,
+          "box": [
+            405.0,
+            470.0,
+            13.0,
+            27.0
+          ]
+        },
+        {
+          "text": "3--",
+          "confidence": 0.240513,
+          "box": [
+            417.0,
+            470.0,
+            16.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ี",
+          "confidence": 0.6153579299999999,
+          "box": [
+            432.0,
+            470.0,
+            8.0,
+            27.0
+          ]
+        },
+        {
+          "text": "33@",
+          "confidence": 0.33329468,
+          "box": [
+            439.0,
+            470.0,
+            43.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ช",
+          "confidence": 0.63995201,
+          "box": [
+            481.0,
+            470.0,
+            6.0,
+            27.0
+          ]
+        },
+        {
+          "text": "8",
+          "confidence": 0.74724762,
+          "box": [
+            486.0,
+            470.0,
+            8.0,
+            27.0
+          ]
+        },
+        {
+          "text": "๐",
+          "confidence": 0.58585068,
+          "box": [
+            493.0,
+            470.0,
+            4.0,
+            27.0
+          ]
+        },
+        {
+          "text": "8",
+          "confidence": 0.8690617399999999,
+          "box": [
+            496.0,
+            470.0,
+            5.0,
+            27.0
+          ]
+        },
+        {
+          "text": "๐83",
+          "confidence": 0.50679871,
+          "box": [
+            500.0,
+            470.0,
+            19.0,
+            27.0
+          ]
+        },
+        {
+          "text": "เอ",
+          "confidence": 0.5981348400000001,
+          "box": [
+            518.0,
+            470.0,
+            43.0,
+            27.0
+          ]
+        },
+        {
+          "text": "อช",
+          "confidence": 0.37914459,
+          "box": [
+            560.0,
+            470.0,
+            8.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ชี",
+          "confidence": 0.20222023,
+          "box": [
+            567.0,
+            470.0,
+            48.0,
+            27.0
+          ]
+        },
+        {
+          "text": "้",
+          "confidence": 0.15879638999999998,
+          "box": [
+            633.0,
+            470.0,
+            14.0,
+            27.0
+          ]
+        },
+        {
+          "text": "เ",
+          "confidence": 0.69123978,
+          "box": [
+            646.0,
+            470.0,
+            13.0,
+            27.0
+          ]
+        },
+        {
+          "text": "เ",
+          "confidence": 0.30572845,
+          "box": [
+            658.0,
+            470.0,
+            8.0,
+            27.0
+          ]
+        },
+        {
+          "text": "เ",
+          "confidence": 0.18946159,
+          "box": [
+            665.0,
+            487.0,
+            28.0,
+            5.0
+          ]
+        },
+        {
+          "text": "ั",
+          "confidence": 0.60399483,
+          "box": [
+            692.0,
+            470.0,
+            30.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ั",
+          "confidence": 0.07840393,
+          "box": [
+            721.0,
+            470.0,
+            23.0,
+            27.0
+          ]
+        },
+        {
+          "text": "-",
+          "confidence": 0.29379204000000003,
+          "box": [
+            743.0,
+            470.0,
+            41.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ั",
+          "confidence": 0.25277763,
+          "box": [
+            783.0,
+            470.0,
+            40.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ี",
+          "confidence": 0.38661254999999994,
+          "box": [
+            822.0,
+            470.0,
+            18.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ี",
+          "confidence": 0.30833191,
+          "box": [
+            839.0,
+            470.0,
+            29.0,
+            27.0
+          ]
+        },
+        {
+          "text": "้",
+          "confidence": 0.3912537,
+          "box": [
+            867.0,
+            470.0,
+            32.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ี",
+          "confidence": 0.45309921000000003,
+          "box": [
+            898.0,
+            470.0,
+            8.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ื",
+          "confidence": 0.43022266000000003,
+          "box": [
+            905.0,
+            470.0,
+            4.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ี",
+          "confidence": 0.0630043,
+          "box": [
+            908.0,
+            470.0,
+            11.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ื",
+          "confidence": 0.0,
+          "box": [
+            933.0,
+            470.0,
+            5.0,
+            27.0
+          ]
+        },
+        {
+          "text": "้",
+          "confidence": 0.0,
+          "box": [
+            943.0,
+            470.0,
+            6.0,
+            27.0
+          ]
+        },
+        {
+          "text": "้",
+          "confidence": 0.0276783,
+          "box": [
+            954.0,
+            470.0,
+            4.0,
+            27.0
+          ]
+        },
+        {
+          "text": "้",
+          "confidence": 0.0276783,
+          "box": [
+            965.0,
+            470.0,
+            11.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ี",
+          "confidence": 0.6580916600000001,
+          "box": [
+            975.0,
+            470.0,
+            10.0,
+            27.0
+          ]
+        },
+        {
+          "text": "้",
+          "confidence": 0.7103621699999999,
+          "box": [
+            984.0,
+            470.0,
+            38.0,
+            27.0
+          ]
+        },
+        {
+          "text": "-",
+          "confidence": 0.36403198000000003,
+          "box": [
+            1021.0,
+            470.0,
+            23.0,
+            27.0
+          ]
+        },
+        {
+          "text": "ี",
+          "confidence": 0.72812286,
+          "box": [
+            1043.0,
+            470.0,
+            23.0,
+            27.0
+          ]
+        },
+        {
+          "text": "--",
+          "confidence": 0.24795578,
+          "box": [
+            1065.0,
+            470.0,
+            21.0,
+            27.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.45263748,
+          "box": [
+            0.0,
+            530.0,
+            6.0,
+            50.0
+          ]
+        },
+        {
+          "text": "SIGE",
+          "confidence": 0.50349842,
+          "box": [
+            301.0,
+            527.0,
+            209.0,
+            52.0
+          ]
+        },
+        {
+          "text": "OVC",
+          "confidence": 0.36008919,
+          "box": [
+            591.0,
+            536.0,
+            213.0,
+            49.0
+          ]
+        },
+        {
+          "text": "[60",
+          "confidence": 0.0,
+          "box": [
+            1081.0,
+            491.0,
+            171.0,
+            110.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.56271595,
+          "box": [
+            0.0,
+            613.0,
+            9.0,
+            63.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.86351311,
+          "box": [
+            281.0,
+            583.0,
+            35.0,
+            103.0
+          ]
+        },
+        {
+          "text": "Sard",
+          "confidence": 0.49828583000000004,
+          "box": [
+            366.0,
+            583.0,
+            216.0,
+            103.0
+          ]
+        },
+        {
+          "text": "1",
+          "confidence": 0.30051544,
+          "box": [
+            667.0,
+            587.0,
+            72.0,
+            80.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.63217426,
+          "box": [
+            6.0,
+            911.0,
+            3.0,
+            4.0
+          ]
+        },
+        {
+          "text": "โอ",
+          "confidence": 0.77955032,
+          "box": [
+            55.0,
+            881.0,
+            93.0,
+            28.0
+          ]
+        },
+        {
+          "text": "ห",
+          "confidence": 0.5640096299999999,
+          "box": [
+            88.0,
+            859.0,
+            23.0,
+            60.0
+          ]
+        },
+        {
+          "text": "ท",
+          "confidence": 0.66150154,
+          "box": [
+            110.0,
+            859.0,
+            20.0,
+            60.0
+          ]
+        },
+        {
+          "text": "ร",
+          "confidence": 0.9566449,
+          "box": [
+            129.0,
+            859.0,
+            23.0,
+            60.0
+          ]
+        },
+        {
+          "text": "Subtotaal",
+          "confidence": 0.92950027,
+          "box": [
+            926.0,
+            863.0,
+            154.0,
+            45.0
+          ]
+        },
+        {
+          "text": "Terme",
+          "confidence": 0.96603813,
+          "box": [
+            54.0,
+            908.0,
+            96.0,
+            45.0
+          ]
+        },
+        {
+          "text": "V.A.T.",
+          "confidence": 0.42346436,
+          "box": [
+            843.0,
+            927.0,
+            89.0,
+            29.0
+          ]
+        },
+        {
+          "text": "inclusive",
+          "confidence": 0.8767266100000001,
+          "box": [
+            943.0,
+            926.0,
+            133.0,
+            31.0
+          ]
+        },
+        {
+          "text": "a",
+          "confidence": 0.5122712700000001,
+          "box": [
+            1086.0,
+            909.0,
+            169.0,
+            86.0
+          ]
+        },
+        {
+          "text": "ea",
+          "confidence": 0.245681,
+          "box": [
+            60.0,
+            949.0,
+            200.0,
+            46.0
+          ]
+        },
+        {
+          "text": "pea",
+          "confidence": 0.18866158,
+          "box": [
+            538.0,
+            950.0,
+            51.0,
+            51.0
+          ]
+        },
+        {
+          "text": "จ",
+          "confidence": 0.05952942,
+          "box": [
+            805.0,
+            960.0,
+            30.0,
+            26.0
+          ]
+        },
+        {
+          "text": "อ",
+          "confidence": 0.27064011,
+          "box": [
+            847.0,
+            960.0,
+            29.0,
+            28.0
+          ]
+        },
+        {
+          "text": "ไก",
+          "confidence": 0.13080101,
+          "box": [
+            878.0,
+            959.0,
+            161.0,
+            38.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.7751803599999999,
+          "box": [
+            1085.0,
+            931.0,
+            5.0,
+            63.0
+          ]
+        },
+        {
+          "text": "Delete",
+          "confidence": 0.96439247,
+          "box": [
+            543.0,
+            989.0,
+            68.0,
+            22.0
+          ]
+        },
+        {
+          "text": "as",
+          "confidence": 0.96811722,
+          "box": [
+            618.0,
+            996.0,
+            26.0,
+            15.0
+          ]
+        },
+        {
+          "text": "applicable",
+          "confidence": 0.96311829,
+          "box": [
+            651.0,
+            992.0,
+            111.0,
+            23.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.18660339,
+          "box": [
+            8.0,
+            1052.0,
+            2.0,
+            2.0
+          ]
+        },
+        {
+          "text": "Skrap",
+          "confidence": 0.93064514,
+          "box": [
+            543.0,
+            1012.0,
+            61.0,
+            26.0
+          ]
+        },
+        {
+          "text": "waar",
+          "confidence": 0.9654023700000001,
+          "box": [
+            611.0,
+            1019.0,
+            53.0,
+            15.0
+          ]
+        },
+        {
+          "text": "nie",
+          "confidence": 0.85165764,
+          "box": [
+            668.0,
+            1008.0,
+            35.0,
+            37.0
+          ]
+        },
+        {
+          "text": "van",
+          "confidence": 0.90406937,
+          "box": [
+            711.0,
+            1008.0,
+            35.0,
+            37.0
+          ]
+        },
+        {
+          "text": "toepassing",
+          "confidence": 0.88513939,
+          "box": [
+            757.0,
+            1015.0,
+            119.0,
+            26.0
+          ]
+        },
+        {
+          "text": "nie",
+          "confidence": 0.9553418,
+          "box": [
+            884.0,
+            1023.0,
+            32.0,
+            15.0
+          ]
+        },
+        {
+          "text": "TOTAL",
+          "confidence": 0.96094955,
+          "box": [
+            935.0,
+            1013.0,
+            116.0,
+            44.0
+          ]
+        },
+        {
+          "text": "๒",
+          "confidence": 0.4801078,
+          "box": [
+            1087.0,
+            1000.0,
+            90.0,
+            86.0
+          ]
+        },
+        {
+          "text": "3",
+          "confidence": 0.4801078,
+          "box": [
+            1212.0,
+            996.0,
+            48.0,
+            94.0
+          ]
+        },
+        {
+          "text": "—_—",
+          "confidence": 0.50437054,
+          "box": [
+            1299.0,
+            1025.0,
+            70.0,
+            21.0
+          ]
+        },
+        {
+          "text": "TOTAAL",
+          "confidence": 0.9573378800000001,
+          "box": [
+            939.0,
+            1058.0,
+            139.0,
+            33.0
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "line_items",
+          "columns": [
+            {
+              "key": "1",
+              "label": "รายการ"
+            },
+            {
+              "key": "2",
+              "label": "ราคา"
+            }
+          ],
+          "rows": [
+            [
+              {
+                "column": "1",
+                "value": "Subtotal",
+                "confidence": 1.0,
+                "source_span": "\"Subtotal\""
+              },
+              {
+                "column": "2",
+                "value": "23",
+                "confidence": 1.0,
+                "source_span": "\"23\""
+              }
+            ]
+          ]
+        }
+      ],
+      "timings": {
+        "router": 74.32607372599887,
+        "extractor": 380.8697794459986,
+        "validator": 0.001703944002656499,
+        "judge": 95.61721188299998,
+        "pipeline": 552.2601927069991,
+        "ocr": 9.314713112999016,
+        "render": 2.9681226249995234,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 528,
+          "output_tokens": 52,
+          "total_tokens": 580,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 636,
+          "output_tokens": 83,
+          "total_tokens": 719,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_invoice": {
+          "input_tokens": 1119,
+          "output_tokens": 841,
+          "total_tokens": 1960,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "judge_status": "flagged",
+      "language": "en",
+      "fields": [
+        {
+          "name": "invoice_number",
+          "value": "86",
+          "confidence": 1.0,
+          "source_span": "\"86\"",
+          "is_new_field": false
+        },
+        {
+          "name": "seller_name",
+          "value": "ศรเบ",
+          "confidence": 1.0,
+          "source_span": "\"ศรเบ\"",
+          "is_new_field": false
+        },
+        {
+          "name": "total_amount",
+          "value": "23",
+          "confidence": 1.0,
+          "source_span": "\"23\"",
+          "is_new_field": false
+        },
+        {
+          "name": "line_items",
+          "value": "[{\"column\": \"1\", \"value\": \"Subtotal\", \"confidence\": 1.0, \"source_span\": \"\\\"Subtotal\\\"\"}, {\"column\": \"2\", \"value\": \"23\", \"confidence\": 1.0, \"source_span\": \"\\\"23\\\"\"}]",
+          "confidence": 1.0,
+          "source_span": "\"Subtotal ๒ 3\"",
+          "is_new_field": false
+        }
+      ],
+      "validation_errors": [
+        "Missing required field: invoice_date",
+        "invoice_number: source_span not found in document (possible hallucination)",
+        "seller_name: source_span not found in document (possible hallucination)",
+        "total_amount: source_span not found in document (possible hallucination)",
+        "line_items: array row 0 contains unsupported values (possible hallucination)",
+        "line_items: array row 1 contains unsupported values (possible hallucination)",
+        "line_items row 1 1: source_span not found in document (possible hallucination)",
+        "line_items row 1 2: source_span not found in document (possible hallucination)"
+      ],
+      "needs_review": true,
+      "completeness_score": 0.75,
+      "judge": {
+        "score": 0.45,
+        "issues": [
+          {
+            "field": "line_items",
+            "message": "The value 'Subtotal' in the line_items field is not a valid amount and should be removed or corrected.",
+            "severity": "warning"
+          },
+          {
+            "field": "line_items",
+            "message": "The value '23' in the line_items field is not a valid amount and should be removed or corrected.",
+            "severity": "warning"
+          }
+        ],
+        "notes": ""
+      },
+      "routing_reason": "The document contains elements typical of an invoice, such as 'TAXINVOICE', 'BELASTINGFAKTUUR', and 'TOTAL'.",
+      "full_text": "— TAXINVOICE | 86\nBELASTINGFAKTUUR | : Bin 2% ๕๕\n_\n, โญภลทให | ศรเบ | 1 | ๕\n. | อไฮกค\n‘ | ed\nr\nSB ั 77 /7 | :\n( | NA\n: | B.T.W.Reg Nr\nร่ | - ี 3-- ี 33@ ช 8 ๐ 8 ๐83 เออชชี้เเัั - ัีี้ีืีื้้้ี้ - ี --\nเ | [60\n| | SIGE | OVC\n| | | Sard 1\nโอหทร | Subtotaal\n| Terme\nV.A.T. inclusive | a\nea | pea | จอไก\nDelete as applicable\nSkrap waar nie van toepassing nie TOTAL ๒ 3 —_—\n:\nTOTAAL",
+      "error": null,
+      "failed_stage": null,
+      "error_details": null,
+      "extraction_source": "ocr",
+      "extracted_at": "2026-09-09T04:38:00.760895",
+      "auto_evaluation": null
+    }
+  ],
+  "pages": [
+    {
+      "expected": "invoice",
+      "predicted": "invoice",
+      "router_ok": true,
+      "language_ok": true,
+      "language": "en",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0,
+      "tp": 0,
+      "fp": 3,
+      "fn": 2,
+      "fields_expected": 2,
+      "cells_total": 4,
+      "cells_ok": 0,
+      "columns_total": 2,
+      "columns_found": 0,
+      "rows_total": 3,
+      "rows_found": 0,
+      "extra_rows": 0,
+      "extra_columns": 0,
+      "excluded_cells": 2,
+      "failed": false,
+      "error": null,
+      "needs_review": true,
+      "returned": true,
+      "judge_status": "flagged",
+      "timings": {
+        "router": 74.32607372599887,
+        "extractor": 380.8697794459986,
+        "validator": 0.001703944002656499,
+        "judge": 95.61721188299998,
+        "pipeline": 552.2601927069991,
+        "ocr": 9.314713112999016,
+        "render": 2.9681226249995234,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 528,
+          "output_tokens": 52,
+          "total_tokens": 580,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 636,
+          "output_tokens": 83,
+          "total_tokens": 719,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_invoice": {
+          "input_tokens": 1119,
+          "output_tokens": 841,
+          "total_tokens": 1960,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "mismatches": [
+        {
+          "field": "invoice_date",
+          "expected": "12/7/2014",
+          "predicted": null
+        },
+        {
+          "field": "total_amount",
+          "expected": 305,
+          "predicted": "23"
+        }
+      ],
+      "unexpected_fields": {
+        "invoice_number": "86",
+        "line_items": "[{\"column\": \"1\", \"value\": \"Subtotal\", \"confidence\": 1.0, \"source_span\": \"\\\"Subtotal\\\"\"}, {\"column\": \"2\", \"value\": \"23\", \"confidence\": 1.0, \"source_span\": \"\\\"23\\\"\"}]"
+      },
+      "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
+      "stem": "ICR.png / 1",
+      "filename": "ICR.png",
+      "page_number": 1,
+      "format": ".png"
+    }
+  ]
+}

@@ -11,11 +11,13 @@ Rules (project spec):
 from __future__ import annotations
 
 import json
+import os
 import re
 import threading
 from pathlib import Path
 
-from app.schemas.documents import DocType, FieldDefinition
+from app.core.security import check_evidence
+from app.schemas.documents import DocType, ExtractedField, FieldDefinition, RegistrationOutcome
 
 # Catalog file names use the legacy short keys.
 _FILE_BY_DOC_TYPE: dict[DocType, str] = {
@@ -72,7 +74,7 @@ def is_registerable_new_field(name: str, value: object, confidence: float) -> bo
     non-placeholder value, sane snake_case name, sufficient confidence."""
     return (
         not is_placeholder_value(value)
-        and confidence >= NEW_FIELD_MIN_CONFIDENCE
+        and confidence >= min_new_field_confidence()
         and is_sane_field_name(name)
     )
 
@@ -220,3 +222,39 @@ class FieldCatalog:
             for f in self.get_fields(doc_type)
         ]
         return "\n".join(lines) if lines else "(catalog empty — extract clearly labeled fields)"
+
+
+def min_new_field_confidence() -> float:
+    try:
+        return max(0, min(1, float(os.getenv("NEW_FIELD_MIN_CONFIDENCE", str(NEW_FIELD_MIN_CONFIDENCE)))))
+    except ValueError:
+        return NEW_FIELD_MIN_CONFIDENCE
+
+
+def skip_reason(name: str, value: object, confidence: float) -> str | None:
+    if is_placeholder_value(value):
+        return "placeholder value"
+    if not is_sane_field_name(name):
+        return "invalid snake_case name"
+    if confidence < min_new_field_confidence():
+        return "low confidence"
+    return None
+
+
+def register_discovered_fields(catalog: FieldCatalog, doc_type: DocType,
+                               fields: list[ExtractedField], document_text: str | None = None) -> RegistrationOutcome:
+    known = catalog.known_names(doc_type)
+    outcome = RegistrationOutcome(fields=[f.model_copy(update={"is_new_field": normalize_field_name(f.name) not in known}) for f in fields])
+    eligible = []
+    for field in outcome.fields:
+        if not field.is_new_field:
+            continue
+        reason = skip_reason(field.name, field.value, field.confidence)
+        if reason is None and document_text is not None:
+            reason = check_evidence(field.name, field.value, field.source_span, document_text)
+        if reason:
+            outcome.skipped.append({"name": field.name, "reason": reason})
+        else:
+            eligible.append(field.name)
+    outcome.added = catalog.add_fields(doc_type, eligible)
+    return outcome

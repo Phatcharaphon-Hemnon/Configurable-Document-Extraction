@@ -53,3 +53,17 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: npm ci
       - run: npm run build
+
+  release-reports:
+    name: "Release / Evaluation assets"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evaluation-release-assets
+          if-no-files-found: error
+          path: |
+            eval_report.md
+            eval_artifacts/metrics.json
+            eval_artifacts/predictions.json

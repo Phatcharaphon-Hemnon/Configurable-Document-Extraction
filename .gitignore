@@ -42,3 +42,16 @@ Thumbs.db
 # Compiled vite config artifacts (tsc -b output)
 web/vite.config.js
 web/vite.config.d.ts
+
+# Runtime documents, OCR installation, and database snapshots
+.local/
+data/sources/
+data/backups/
+data/logs/
+*.db-wal
+*.db-shm
+
+# Project-owned caches and browser test outputs
+.cache/
+web/test-results/
+web/playwright-report/

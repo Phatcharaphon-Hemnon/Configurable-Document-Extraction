@@ -5,12 +5,15 @@ from __future__ import annotations
 import asyncio
 import logging
 from contextlib import asynccontextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass
 from typing import Any, Awaitable, Callable, TypeVar
 
 from app.services.request_control import stage_context, stage_deadline
 
 logger = logging.getLogger(__name__)
+page_timings: ContextVar[dict | None] = ContextVar("page_timings", default=None)
+stage_notifier: ContextVar[Callable | None] = ContextVar("stage_notifier", default=None)
 
 T = TypeVar("T")
 
@@ -132,6 +135,9 @@ class TimeoutGuard:
         if stage not in self._timings:
             self._timings[stage] = []
         self._timings[stage].append(duration)
+        measured = page_timings.get()
+        if measured is not None:
+            measured[stage] = measured.get(stage, 0) + duration
 
         # Check if we're approaching the timeout
         timeout = self._get_timeout(stage)
@@ -161,6 +167,9 @@ class TimeoutGuard:
             StageTimeoutError: If the stage exceeds its timeout.
         """
         timeout = self._get_timeout(stage)
+        notify = stage_notifier.get()
+        if notify:
+            notify(stage)
         start = asyncio.get_event_loop().time()
         stage_token = stage_context.set(stage)
         deadline_token = stage_deadline.set(start + timeout)
@@ -169,14 +178,9 @@ class TimeoutGuard:
             async with asyncio.timeout(timeout):
                 yield
         except TimeoutError:
-            duration = asyncio.get_event_loop().time() - start
-            self._record_timing(stage, duration)
-            raise StageTimeoutError(stage, timeout)
-        else:
-            duration = asyncio.get_event_loop().time() - start
-            self._record_timing(stage, duration)
-
+            raise StageTimeoutError(stage, timeout) from None
         finally:
+            self._record_timing(stage, asyncio.get_event_loop().time() - start)
             stage_context.reset(stage_token)
             stage_deadline.reset(deadline_token)
 

@@ -7,6 +7,8 @@ that enters an LLM prompt must pass through :func:`sanitize_document_text`.
 from __future__ import annotations
 
 import re
+import unicodedata
+from decimal import Decimal, InvalidOperation
 
 # Patterns commonly used to smuggle instructions through document text.
 _INJECTION_PATTERNS: tuple[re.Pattern[str], ...] = (
@@ -43,7 +45,7 @@ def sanitize_document_text(text: str | None) -> str:
     for pattern in _INJECTION_PATTERNS:
         cleaned = pattern.sub(_REDACTED, cleaned)
 
-    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    cleaned = re.sub(r"[^\S\n]+", " ", cleaned).strip()
     if len(cleaned) > MAX_PROMPT_CHARS:
         cleaned = cleaned[:MAX_PROMPT_CHARS] + " …[truncated]"
     return cleaned
@@ -85,17 +87,33 @@ def check_evidence(
     if is_image_extraction:
         return None
 
-    # For text extractions, validate source_span against document text
-    if document_text:
-        def _norm(s: str) -> str:
-            return re.sub(r"\s+", " ", s).strip().lower()
-
-        span, doc = _norm(str(source_span)), _norm(document_text)
-        # Evidence must overlap the document; allow substring OR token overlap.
-        if span not in doc:
-            span_tokens = set(span.split())
-            doc_tokens = set(doc.split())
-            overlap = span_tokens & doc_tokens
-            if len(span_tokens) == 0 or len(overlap) / max(len(span_tokens), 1) < 0.75:
-                return f"{field_name}: source_span not found in document (possible hallucination)"
+    if not document_text:
+        return f"{field_name}: document text unavailable for evidence verification"
+    if normalize_evidence(source_span) not in normalize_evidence(document_text):
+        return f"{field_name}: source_span not found in document (possible hallucination)"
+    if not value_in_text(value, source_span):
+        return f"{field_name}: value not supported by source_span (possible hallucination)"
     return None
+
+
+def normalize_evidence(text: str) -> str:
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFC", text)).strip().casefold()
+
+
+def value_in_text(value: object, text: str) -> bool:
+    """Compare complete strings or numeric magnitudes; no synonyms or fuzzy token overlap."""
+    if value is None:
+        return True
+    value_text = normalize_evidence(str(value))
+    normalized = normalize_evidence(text)
+    # Numeric coercion is allowed for actual numbers and decimal-formatted strings,
+    # never leading-zero identifiers.
+    numeric = isinstance(value, (int, float)) or bool(re.fullmatch(r"-?\d+[,.]\d[\d,.]*", value_text))
+    if numeric:
+        try:
+            expected = Decimal(value_text.replace(",", ""))
+            return any(Decimal(token.replace(",", "")) == expected for token in
+                       re.findall(r"(?<![\w.])-?\d[\d,]*(?:\.\d+)?(?![\w.])", normalized))
+        except InvalidOperation:
+            return False
+    return bool(re.search(r"(?<!\w)" + re.escape(value_text) + r"(?!\w)", normalized))

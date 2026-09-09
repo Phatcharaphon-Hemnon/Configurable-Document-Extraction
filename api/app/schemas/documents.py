@@ -12,6 +12,8 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
 
+from app.schemas.ocr import OCRBlock
+
 DocType = Literal["invoice", "purchase_order", "delivery_note"]
 
 DOC_TYPES: tuple[DocType, ...] = ("invoice", "purchase_order", "delivery_note")
@@ -63,6 +65,12 @@ class ExtractedField(BaseModel):
     )
 
 
+class RegistrationOutcome(BaseModel):
+    fields: list[ExtractedField]
+    added: list[str] = Field(default_factory=list)
+    skipped: list[dict[str, str]] = Field(default_factory=list)
+
+
 class ValidationResult(BaseModel):
     is_valid: bool
     completeness_score: float = Field(default=1.0, ge=0.0, le=1.0)
@@ -107,12 +115,52 @@ class ProviderErrorDetails(BaseModel):
     request_id: str | None = None
 
 
+class TableColumn(BaseModel):
+    key: str
+    label: str
+
+
+class TableCell(BaseModel):
+    column: str
+    value: str | float | None = None
+    confidence: float = Field(default=0.0, ge=0, le=1)
+    source_span: str | None = None
+
+
+class ExtractedTable(BaseModel):
+    name: str = "line_items"
+    columns: list[TableColumn] = Field(default_factory=list)
+    rows: list[list[TableCell]] = Field(default_factory=list)
+
+
+class SourceReference(BaseModel):
+    source_id: UUID
+    filename: str
+    page_number: int = Field(ge=1)
+    page_count: int = Field(ge=1)
+    preview_url: str | None = None
+    download_url: str | None = None
+
+
+class JobProgress(BaseModel):
+    completed_pages: int = 0
+    total_pages: int = 0
+    stage: str = "queued"
+    queue_seconds: float = 0
+
+
 class ExtractionResult(BaseModel):
     """Result for ONE document. A single upload may yield several results
     (multi-page / multi-document files) — see FileExtractionResponse."""
 
     id: UUID = Field(default_factory=uuid4)
     doc_type: DocType
+    source: SourceReference | None = None
+    ocr_blocks: list[OCRBlock] = Field(default_factory=list)
+    tables: list[ExtractedTable] = Field(default_factory=list)
+    timings: dict[str, float] = Field(default_factory=dict)
+    usage: dict[str, dict[str, int]] = Field(default_factory=dict)
+    judge_status: Literal["passed", "flagged", "skipped", "unavailable"] = "unavailable"
     language: str | None = None
     fields: list[ExtractedField] = Field(default_factory=list)
     validation_errors: list[str] = Field(default_factory=list)
@@ -122,7 +170,7 @@ class ExtractionResult(BaseModel):
     routing_reason: str | None = None
     full_text: str | None = None
     error: str | None = None
-    failed_stage: Literal["router", "extractor", "validator", "judge"] | None = None
+    failed_stage: Literal["ocr", "router", "extractor", "validator", "judge"] | None = None
     error_details: ProviderErrorDetails | None = Field(
         default=None,
         description="Redacted provider failure (status/code/message/request_id) for UI details.",
@@ -146,6 +194,8 @@ class FileExtractionResponse(BaseModel):
     documents: list[ExtractionResult] = Field(default_factory=list)
     error: str | None = None
     job_id: str | None = None
+    file_errors: list[str] = Field(default_factory=list)
+    timings: dict[str, float] = Field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -188,6 +238,7 @@ class BatchCreateResponse(BaseModel):
 
 
 class BatchStatusResponse(BaseModel):
+    progress: JobProgress | None = None
     job_id: UUID
     status: str
     result: FileExtractionResponse | None = None
