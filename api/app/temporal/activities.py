@@ -15,9 +15,9 @@ from temporalio import activity
 from app.core.config import get_settings
 from app.core.security import sanitize_document_text
 from app.schemas.documents import ExtractedField
-from app.services.field_catalog import FieldCatalog
+from app.services.field_catalog import FieldCatalog, register_discovered_fields
 from app.services.knowledge_base import KnowledgeBaseRepository
-from app.services.rapidocr_client import RapidOCRClient
+from app.services.local_ocr import LocalOCRClient
 
 
 def _settings():
@@ -28,23 +28,14 @@ def _catalog() -> FieldCatalog:
     return KnowledgeBaseRepository(Path(_settings().knowledge_base_path)).catalog
 
 
-def _ocr_client() -> RapidOCRClient:
-    s = _settings()
-    return RapidOCRClient(
-        dpi=getattr(s, "ocr_dpi", 300),
-        enable_cache=getattr(s, "ocr_cache_enabled", True),
-    )
+def _ocr_client() -> LocalOCRClient:
+    return LocalOCRClient(_settings())
 
 
 @activity.defn
 async def parse_activity(filename: str, raw_content: bytes) -> list[str]:
-    """OCR path: parse a document into page texts (local RapidOCR)."""
-    client = _ocr_client()
-    try:
-        return await client.aparse_file(raw_content, filename)
-    except Exception:
-        # OCR failure → downstream text stages handle empty text.
-        return [""]
+    """OCR every page with the configured multilingual local engine."""
+    return await _ocr_client().aparse_file(raw_content, filename)
 
 
 @activity.defn
@@ -64,8 +55,7 @@ async def extract_activity(filename: str, page_text: str, doc_type: str) -> dict
 
     extractors = build_extractors(_settings(), _catalog())
     fields, new_names = await extractors[doc_type].extract(text=page_text or "")
-    if new_names:
-        _catalog().add_fields(doc_type, new_names)
+    fields = register_discovered_fields(_catalog(), doc_type, fields, document_text=page_text).fields
     return {
         "doc_type": doc_type,
         "fields": [f.model_dump(mode="json") for f in fields],
@@ -101,3 +91,22 @@ async def judge_activity(result: dict[str, Any], page_text: str) -> dict[str, An
     out["judge"] = json.loads(judge.model_dump_json())
     out["needs_review"] = result.get("needs_review", False) or judge.score < 0.7
     return out
+
+
+_page_service = None
+
+
+@activity.defn
+async def process_page_activity(filename: str, page_text: str) -> dict[str, Any]:
+    """Same validated pipeline as the API, with no nested workflow or runtime job writes."""
+    global _page_service
+    if _page_service is None:
+        from copy import copy
+
+        from app.services.extraction_service import DocumentExtractionService
+        settings = copy(_settings())
+        settings.database_enabled = False
+        settings.temporal_enabled = False
+        _page_service = DocumentExtractionService(settings)
+    result = await _page_service._extract_one_page(filename, page_text)
+    return result.model_dump(mode="json")

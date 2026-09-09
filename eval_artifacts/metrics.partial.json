@@ -1,0 +1,1470 @@
+[
+  {
+    "expected": "delivery_note",
+    "predicted": "delivery_note",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.1,
+    "recall": 0.08333333333333333,
+    "f1": 0.0909090909090909,
+    "tp": 1,
+    "fp": 9,
+    "fn": 11,
+    "fields_expected": 12,
+    "cells_total": 8,
+    "cells_ok": 4,
+    "columns_total": 4,
+    "columns_found": 2,
+    "rows_total": 2,
+    "rows_found": 2,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 7.210113664999881,
+      "extractor": 138.99385265399997,
+      "validator": 0.011590970999350247,
+      "judge": 180.10132963500018,
+      "pipeline": 327.0779865459999,
+      "ocr": 2.933570518000124,
+      "render": 0.2313012249996973,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 554,
+        "output_tokens": 57,
+        "total_tokens": 611,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_delivery_note": {
+        "input_tokens": 1103,
+        "output_tokens": 1017,
+        "total_tokens": 2120,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [
+      {
+        "field": "delivery_note_number",
+        "expected": "000-000-0000",
+        "predicted": "101"
+      },
+      {
+        "field": "sender_name",
+        "expected": "Your Company Name",
+        "predicted": "Buyer Ltd."
+      },
+      {
+        "field": "sender_address",
+        "expected": "77 Hammersmith Road, West Kensington London, W14 0QH",
+        "predicted": "77 Hammersmith Road, West Kensington"
+      },
+      {
+        "field": "recipient_name",
+        "expected": "Buyer Ltd.",
+        "predicted": "Client Number: 000-000"
+      },
+      {
+        "field": "recipient_address",
+        "expected": "Billy Buyer 43 Customer Road Manchester, M4 1HS",
+        "predicted": "Manchester, M4 THS"
+      },
+      {
+        "field": "delivered_by",
+        "expected": "Delivery company",
+        "predicted": "Camer"
+      },
+      {
+        "field": "delivery_method",
+        "expected": "Air Freight/Courier",
+        "predicted": null
+      },
+      {
+        "field": "order_number",
+        "expected": "1 of 1",
+        "predicted": null
+      },
+      {
+        "field": "client_number",
+        "expected": "000-000",
+        "predicted": null
+      },
+      {
+        "field": "location",
+        "expected": "London",
+        "predicted": null
+      },
+      {
+        "field": "invoice_date",
+        "expected": "25.10.2019",
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {
+      "delivery_date": "26.10.2019",
+      "items": "[{\"description\": \"Example product 1\", \"quantity\": 5, \"price\": 89.0}, {\"description\": \"Example product 2\", \"quantity\": 8, \"price\": 47.89}]",
+      "notes": "Returns must be made within 30 days. Please use the included retums label."
+    },
+    "notes": "Template placeholders are printed data. Invoice Date is preserved as invoice_date; no delivery date is printed.",
+    "stem": "Delivery1.webp / 1",
+    "filename": "Delivery1.webp",
+    "page_number": 1,
+    "format": ".webp"
+  },
+  {
+    "expected": "delivery_note",
+    "predicted": "delivery_note",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "en",
+    "precision": 0.2,
+    "recall": 0.18181818181818182,
+    "f1": 0.1904761904761905,
+    "tp": 2,
+    "fp": 8,
+    "fn": 9,
+    "fields_expected": 11,
+    "cells_total": 12,
+    "cells_ok": 2,
+    "columns_total": 4,
+    "columns_found": 1,
+    "rows_total": 3,
+    "rows_found": 2,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "flagged",
+    "timings": {
+      "router": 33.70026087499991,
+      "extractor": 376.0621990290001,
+      "validator": 0.005010478000258445,
+      "judge": 145.5041490200001,
+      "pipeline": 556.3415464050004,
+      "ocr": 1.803551948999484,
+      "render": 0.35716856100043515,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 549,
+        "output_tokens": 54,
+        "total_tokens": 603,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "input_tokens": 1275,
+        "output_tokens": 604,
+        "total_tokens": 1879,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_delivery_note": {
+        "input_tokens": 1098,
+        "output_tokens": 1254,
+        "total_tokens": 2352,
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "delivery_note_number",
+        "expected": "US-001",
+        "predicted": "DELIVERY #"
+      },
+      {
+        "field": "sender_name",
+        "expected": "East Repair Inc.",
+        "predicted": "John Smith"
+      },
+      {
+        "field": "sender_address",
+        "expected": "1912 Harvest Lane New York, NY 12210",
+        "predicted": "1912 Harvest Lane | New York, NY 12210"
+      },
+      {
+        "field": "recipient_address",
+        "expected": "3787 Pineview Drive Cambridge, MA 12210",
+        "predicted": "2 Court Square | 3787 Pineview Drive | P.O# | 2312/2019 | New York, NY 12210 | Cambridge, MA 12210"
+      },
+      {
+        "field": "po_number",
+        "expected": "2312/2019",
+        "predicted": null
+      },
+      {
+        "field": "due_date",
+        "expected": "26/02/2019",
+        "predicted": null
+      },
+      {
+        "field": "subtotal",
+        "expected": 145,
+        "predicted": null
+      },
+      {
+        "field": "sales_tax",
+        "expected": 9.07,
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 154.06,
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {
+      "delivered_by": "East Repair Inc.",
+      "items": "Front and rear brake cables | 100.00 | 1 | 100.00\nNew set of pedal arms. | 15.00 | 2 | 30.00",
+      "total_weight": "145.00",
+      "notes": "SUBTOTAL | 145.00\nSales Tax 6.25% | 9.07\nDELIVERY NOTE TOTAL\n$154.06\nTERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.\n\nIMPORTANT: You MUST respond with a single valid JSON object that strictly conforms to the following JSON Schema. Do NOT include any markdown fences, commentary, or extra text — only the raw JSON object."
+    },
+    "notes": "Source prints sales tax 9.07 and total 154.06; preserve both despite arithmetic inconsistency. Deliver To billing address differs from Ship To.",
+    "stem": "Delivery_note2.png / 1",
+    "filename": "Delivery_note2.png",
+    "page_number": 1,
+    "format": ".png"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 13,
+    "fn": 2,
+    "fields_expected": 2,
+    "cells_total": 4,
+    "cells_ok": 0,
+    "columns_total": 2,
+    "columns_found": 0,
+    "rows_total": 3,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 2,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 31.250538517000678,
+      "extractor": 348.15501956799926,
+      "validator": 0.0035222819997215993,
+      "judge": 152.9037150539998,
+      "pipeline": 533.2462826140008,
+      "ocr": 6.95315378199939,
+      "render": 2.278184877000058,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 528,
+        "output_tokens": 44,
+        "total_tokens": 572,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "input_tokens": 761,
+        "output_tokens": 803,
+        "total_tokens": 1564,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "input_tokens": 1119,
+        "output_tokens": 982,
+        "total_tokens": 2101,
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "invoice_date",
+        "expected": "12/7/2014",
+        "predicted": "2023-04-01"
+      },
+      {
+        "field": "total_amount",
+        "expected": 305,
+        "predicted": "23"
+      }
+    ],
+    "unexpected_fields": {
+      "invoice_number": "86",
+      "bill_to_address": "อไฮกค",
+      "seller_email": "B.T.W.Reg Nr",
+      "tax_id": "3-- 33@ ช 8 ๐ 8 ๐83",
+      "currency": "THB",
+      "payment_due_date": "2023-04-01",
+      "subtotal_amount": "23",
+      "tax_amount": "2",
+      "paid_amount": "2",
+      "change_amount": "0",
+      "line_items": "[{\"column\": \"column_1\", \"value\": \"1\", \"confidence\": 0.9, \"source_span\": \"1\"}, {\"column\": \"column_2\", \"value\": \"๕\", \"confidence\": 0.9, \"source_span\": \"๕\"}]"
+    },
+    "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
+    "stem": "ICR.png / 1",
+    "filename": "ICR.png",
+    "page_number": 1,
+    "format": ".png"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 18,
+    "fields_expected": 18,
+    "cells_total": 22,
+    "cells_ok": 0,
+    "columns_total": 10,
+    "columns_found": 0,
+    "rows_total": 4,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": true,
+    "error": "Extractor failed: LLM request timed out",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 59.00013936100004,
+      "extractor": 402.1401063889998,
+      "pipeline": 461.8452797689997,
+      "ocr": 7.415767282000161,
+      "render": 0.8434310590000678,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 911,
+        "output_tokens": 60,
+        "total_tokens": 971,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "seller_name",
+        "expected": "KEDAI PAPAN YEW CHUAN",
+        "predicted": null
+      },
+      {
+        "field": "seller_address",
+        "expected": "LOT 276 JALAN BANTING 43800 DENGKIL, SELANGOR.",
+        "predicted": null
+      },
+      {
+        "field": "seller_phone",
+        "expected": "03-87686092",
+        "predicted": null
+      },
+      {
+        "field": "tax_id",
+        "expected": "000781500416",
+        "predicted": null
+      },
+      {
+        "field": "bill_to_name",
+        "expected": "SUCI ALAM JAYA TRANSPORT",
+        "predicted": null
+      },
+      {
+        "field": "bill_to_address",
+        "expected": "NO 1 JALAN AMAN 2 TAMAN DESA 43800 DENGKIL SELANGOR",
+        "predicted": null
+      },
+      {
+        "field": "cashier",
+        "expected": "USER",
+        "predicted": null
+      },
+      {
+        "field": "discount",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "rounding",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "change_amount",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "invoice_number",
+        "expected": "CS00013033",
+        "predicted": null
+      },
+      {
+        "field": "invoice_date",
+        "expected": "23/05/2018",
+        "predicted": null
+      },
+      {
+        "field": "subtotal_amount",
+        "expected": 153.5,
+        "predicted": null
+      },
+      {
+        "field": "tax_amount",
+        "expected": 9.21,
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 162.71,
+        "predicted": null
+      },
+      {
+        "field": "paid_amount",
+        "expected": 162.71,
+        "predicted": null
+      },
+      {
+        "field": "total_quantity",
+        "expected": 8,
+        "predicted": null
+      },
+      {
+        "field": "time",
+        "expected": "15:28:00",
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "",
+    "stem": "Invoice+purchase.pdf / 1",
+    "filename": "Invoice+purchase.pdf",
+    "page_number": 1,
+    "format": ".pdf"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 18,
+    "fields_expected": 18,
+    "cells_total": 10,
+    "cells_ok": 0,
+    "columns_total": 10,
+    "columns_found": 0,
+    "rows_total": 2,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": true,
+    "error": "Extractor failed: LLM request timed out",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 50.90935763899961,
+      "extractor": 402.2153780690005,
+      "pipeline": 453.5923916319998,
+      "ocr": 6.487349134999931,
+      "render": 0.8228363480002372,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 778,
+        "output_tokens": 59,
+        "total_tokens": 837,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "seller_name",
+        "expected": "KEDAI PAPAN YEW CHUAN",
+        "predicted": null
+      },
+      {
+        "field": "seller_address",
+        "expected": "LOT 276 JALAN BANTING 43800 DENGKIL, SELANGOR.",
+        "predicted": null
+      },
+      {
+        "field": "seller_phone",
+        "expected": "03-87686092",
+        "predicted": null
+      },
+      {
+        "field": "tax_id",
+        "expected": "000781500416",
+        "predicted": null
+      },
+      {
+        "field": "bill_to_name",
+        "expected": "SUCI ALAM JAYA TRANSPORT",
+        "predicted": null
+      },
+      {
+        "field": "bill_to_address",
+        "expected": "NO 1 JALAN AMAN 2 TAMAN DESA 43800 DENGKIL SELANGOR",
+        "predicted": null
+      },
+      {
+        "field": "cashier",
+        "expected": "USER",
+        "predicted": null
+      },
+      {
+        "field": "discount",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "rounding",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "change_amount",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "invoice_number",
+        "expected": "CS00013125",
+        "predicted": null
+      },
+      {
+        "field": "invoice_date",
+        "expected": "26/05/2018",
+        "predicted": null
+      },
+      {
+        "field": "subtotal_amount",
+        "expected": 115,
+        "predicted": null
+      },
+      {
+        "field": "tax_amount",
+        "expected": 6.9,
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 121.9,
+        "predicted": null
+      },
+      {
+        "field": "paid_amount",
+        "expected": 121.9,
+        "predicted": null
+      },
+      {
+        "field": "total_quantity",
+        "expected": 5,
+        "predicted": null
+      },
+      {
+        "field": "time",
+        "expected": "11:22:00",
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "",
+    "stem": "Invoice+purchase.pdf / 2",
+    "filename": "Invoice+purchase.pdf",
+    "page_number": 2,
+    "format": ".pdf"
+  },
+  {
+    "expected": "purchase_order",
+    "predicted": "purchase_order",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.8571428571428571,
+    "tp": 3,
+    "fp": 1,
+    "fn": 0,
+    "fields_expected": 3,
+    "cells_total": 8,
+    "cells_ok": 7,
+    "columns_total": 4,
+    "columns_found": 4,
+    "rows_total": 2,
+    "rows_found": 2,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "flagged",
+    "timings": {
+      "router": 31.698577974999353,
+      "extractor": 190.66703514399978,
+      "validator": 0.0023635529996681726,
+      "judge": 58.612018529000125,
+      "pipeline": 281.46538983900064,
+      "ocr": 1.6948156640000889,
+      "render": 0.4708831520001695,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 406,
+        "output_tokens": 53,
+        "total_tokens": 459,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "input_tokens": 719,
+        "output_tokens": 104,
+        "total_tokens": 823,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_purchase_order": {
+        "input_tokens": 964,
+        "output_tokens": 902,
+        "total_tokens": 1866,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [],
+    "unexpected_fields": {
+      "supplier_name": "Paula Parente"
+    },
+    "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
+    "stem": "Invoice+purchase.pdf / 3",
+    "filename": "Invoice+purchase.pdf",
+    "page_number": 3,
+    "format": ".pdf"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 16,
+    "fields_expected": 16,
+    "cells_total": 9,
+    "cells_ok": 0,
+    "columns_total": 9,
+    "columns_found": 0,
+    "rows_total": 2,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": true,
+    "error": "Extractor failed: LLM request timed out",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 5.900238841999453,
+      "extractor": 402.2151426250002,
+      "pipeline": 408.5985582560006,
+      "ocr": 4.5458883680003055,
+      "render": 0.7210182299986627,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 706,
+        "output_tokens": 46,
+        "total_tokens": 752,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "invoice_number",
+        "expected": "CS00012726",
+        "predicted": null
+      },
+      {
+        "field": "invoice_date",
+        "expected": "13/01/2018",
+        "predicted": null
+      },
+      {
+        "field": "seller_name",
+        "expected": "SYARIKAT PERNIAGAAN GIN KEE",
+        "predicted": null
+      },
+      {
+        "field": "seller_address",
+        "expected": "NO 290, JALAN AIR PANAS, SETAPAK, 53200, KUALA LUMPUR.",
+        "predicted": null
+      },
+      {
+        "field": "seller_phone",
+        "expected": "03-40210276",
+        "predicted": null
+      },
+      {
+        "field": "tax_id",
+        "expected": "000750673920",
+        "predicted": null
+      },
+      {
+        "field": "subtotal_amount",
+        "expected": 12,
+        "predicted": null
+      },
+      {
+        "field": "tax_amount",
+        "expected": 0.72,
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 12.72,
+        "predicted": null
+      },
+      {
+        "field": "paid_amount",
+        "expected": 12.72,
+        "predicted": null
+      },
+      {
+        "field": "change_amount",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "discount",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "rounding",
+        "expected": 0,
+        "predicted": null
+      },
+      {
+        "field": "cashier",
+        "expected": "USER",
+        "predicted": null
+      },
+      {
+        "field": "time",
+        "expected": "15:52:00",
+        "predicted": null
+      },
+      {
+        "field": "total_quantity",
+        "expected": 6,
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "Primary labels are English; Malay merchant proper name preserved. Item code and description share one printed Item column.",
+    "stem": "Invoice1.jpg / 1",
+    "filename": "Invoice1.jpg",
+    "page_number": 1,
+    "format": ".jpg"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 10,
+    "fields_expected": 10,
+    "cells_total": 28,
+    "cells_ok": 0,
+    "columns_total": 7,
+    "columns_found": 0,
+    "rows_total": 4,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": true,
+    "error": "Extractor failed: LLM request timed out",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 48.88849926699913,
+      "extractor": 402.19316323599924,
+      "pipeline": 451.5468977140008,
+      "ocr": 9.154302905000804,
+      "render": 1.220139934999679,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 802,
+        "output_tokens": 55,
+        "total_tokens": 857,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "invoice_number",
+        "expected": "7025F713",
+        "predicted": null
+      },
+      {
+        "field": "invoice_date",
+        "expected": "25/10/2017",
+        "predicted": null
+      },
+      {
+        "field": "seller_name",
+        "expected": "GARDENIA BAKERIES (KL) SDN BHD",
+        "predicted": null
+      },
+      {
+        "field": "seller_address",
+        "expected": "Lot 3, Jalan Pelabur 23/1, 40300 Shah Alam, Selangor.",
+        "predicted": null
+      },
+      {
+        "field": "seller_phone",
+        "expected": "03-55423228",
+        "predicted": null
+      },
+      {
+        "field": "tax_id",
+        "expected": "000381399440",
+        "predicted": null
+      },
+      {
+        "field": "bill_to_name",
+        "expected": "MAKASSAR FRESH MARKET SDN BHD",
+        "predicted": null
+      },
+      {
+        "field": "bill_to_address",
+        "expected": "GROUND FLOOR, NO. 4 & 6, JALAN SS 15/4B, 47500 SUBANG JAYA, SELANGOR",
+        "predicted": null
+      },
+      {
+        "field": "tax_amount",
+        "expected": 0.48,
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 35.01,
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "Separate GST summary totals are not item rows; DD timestamp and salesperson identifier excluded due to print quality.",
+    "stem": "Invoice2.jpg / 1",
+    "filename": "Invoice2.jpg",
+    "page_number": 1,
+    "format": ".jpg"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "th",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 12,
+    "fields_expected": 12,
+    "cells_total": 16,
+    "cells_ok": 0,
+    "columns_total": 8,
+    "columns_found": 0,
+    "rows_total": 2,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": true,
+    "error": "Extractor failed: LLM request timed out",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 66.79981082199993,
+      "extractor": 402.17964081800164,
+      "pipeline": 469.4520779120012,
+      "ocr": 9.456370930000048,
+      "render": 1.890633381999578,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 1019,
+        "output_tokens": 53,
+        "total_tokens": 1072,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "invoice_number",
+        "expected": "5812003668",
+        "predicted": null
+      },
+      {
+        "field": "invoice_date",
+        "expected": "29/12/2558",
+        "predicted": null
+      },
+      {
+        "field": "seller_name",
+        "expected": "MC Shop Co., Ltd",
+        "predicted": null
+      },
+      {
+        "field": "seller_address",
+        "expected": "4, 4/1-2, 4/4 อาคารศูนย์การค้าเซ็นทรัลเวิลด์ ถนนราชดำริห์ แขวงปทุมวัน เขตปทุมวัน กรุงเทพฯ 10330",
+        "predicted": null
+      },
+      {
+        "field": "seller_phone",
+        "expected": "(662) 613-1183",
+        "predicted": null
+      },
+      {
+        "field": "tax_id",
+        "expected": "0105543022904",
+        "predicted": null
+      },
+      {
+        "field": "bill_to_address",
+        "expected": "186/47 ซ.ลาดพร้าว 87 (จันทราสุข) แขวงคลองเจ้าคุณสิงห์ เขตวังทองหลาง กทม. 10310",
+        "predicted": null
+      },
+      {
+        "field": "subtotal_amount",
+        "expected": 6576.64,
+        "predicted": null
+      },
+      {
+        "field": "tax_amount",
+        "expected": 460.36,
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 7037,
+        "predicted": null
+      },
+      {
+        "field": "discount",
+        "expected": 3743,
+        "predicted": null
+      },
+      {
+        "field": "branch",
+        "expected": "00003",
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "Buyer name not scored due to ambiguous Thai characters. No email, due date, paid/change amounts are printed. Keep Buddhist Era date. Thai address transcription is provisional.",
+    "stem": "THAI_RECEIPT.jpg / 1",
+    "filename": "THAI_RECEIPT.jpg",
+    "page_number": 1,
+    "format": ".jpg"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "th",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 12,
+    "fields_expected": 12,
+    "cells_total": 5,
+    "cells_ok": 0,
+    "columns_total": 3,
+    "columns_found": 0,
+    "rows_total": 2,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 1,
+    "failed": true,
+    "error": "Extractor failed: LLM request timed out",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 7.703710232000958,
+      "extractor": 402.2162347459998,
+      "pipeline": 410.45641380100096,
+      "ocr": 6.512845592000303,
+      "render": 1.2069853379998676,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 656,
+        "output_tokens": 55,
+        "total_tokens": 711,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "invoice_number",
+        "expected": "4504RC112566/004044",
+        "predicted": null
+      },
+      {
+        "field": "invoice_date",
+        "expected": "27/11/2566",
+        "predicted": null
+      },
+      {
+        "field": "seller_name",
+        "expected": "หจก.บุญรอดคอฟฟี่",
+        "predicted": null
+      },
+      {
+        "field": "tax_id",
+        "expected": "0323560000723",
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 60,
+        "predicted": null
+      },
+      {
+        "field": "paid_amount",
+        "expected": 100,
+        "predicted": null
+      },
+      {
+        "field": "change_amount",
+        "expected": 40,
+        "predicted": null
+      },
+      {
+        "field": "tax_amount",
+        "expected": 3.93,
+        "predicted": null
+      },
+      {
+        "field": "branch",
+        "expected": "4504",
+        "predicted": null
+      },
+      {
+        "field": "time",
+        "expected": "10:57",
+        "predicted": null
+      },
+      {
+        "field": "cashier",
+        "expected": "4504014 นวพร",
+        "predicted": null
+      },
+      {
+        "field": "customer_count",
+        "expected": 1,
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "Unlabeled item columns use positional names; line code D1/DI is excluded from exact cell scoring. Price includes VAT. Wi-Fi credentials and advertising are outside the data-field contract.",
+    "stem": "THAI_bill.jpg / 1",
+    "filename": "THAI_bill.jpg",
+    "page_number": 1,
+    "format": ".jpg"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "th",
+    "precision": 0.23529411764705882,
+    "recall": 1.0,
+    "f1": 0.38095238095238093,
+    "tp": 4,
+    "fp": 13,
+    "fn": 0,
+    "fields_expected": 4,
+    "cells_total": 6,
+    "cells_ok": 0,
+    "columns_total": 5,
+    "columns_found": 0,
+    "rows_total": 2,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 4,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 8.446893737998835,
+      "extractor": 159.21048425299887,
+      "validator": 0.0038397019998228643,
+      "judge": 180.10081582400016,
+      "pipeline": 348.3327364120014,
+      "ocr": 5.313143012999717,
+      "render": 0.481686480999997,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 670,
+        "output_tokens": 62,
+        "total_tokens": 732,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "input_tokens": 1255,
+        "output_tokens": 1020,
+        "total_tokens": 2275,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [],
+    "unexpected_fields": {
+      "invoice_number": "0",
+      "invoice_date": "2023-01-01",
+      "seller_name": "Client name",
+      "bill_to_name": "Client name",
+      "bill_to_address": "Address",
+      "seller_address": "Address",
+      "seller_phone": "Tax ID",
+      "seller_email": "Tax ID",
+      "tax_id": "Tax ID",
+      "payment_due_date": "2023-01-01",
+      "paid_amount": "0.00",
+      "change_amount": "0.00",
+      "line_items": "[]"
+    },
+    "notes": "Unfilled bilingual form: IDs, dates, companies and addresses are blank; only printed zero amounts/currency are scored. Blank cells are unscored, not guessed.",
+    "stem": "Thai(invoice)+EN(Purchase).pdf / 1",
+    "filename": "Thai(invoice)+EN(Purchase).pdf",
+    "page_number": 1,
+    "format": ".pdf"
+  },
+  {
+    "expected": "purchase_order",
+    "predicted": "purchase_order",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "en",
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.8571428571428571,
+    "tp": 3,
+    "fp": 1,
+    "fn": 0,
+    "fields_expected": 3,
+    "cells_total": 8,
+    "cells_ok": 8,
+    "columns_total": 4,
+    "columns_found": 4,
+    "rows_total": 2,
+    "rows_found": 2,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "flagged",
+    "timings": {
+      "router": 26.359439902000304,
+      "extractor": 136.05176644200037,
+      "validator": 0.0026357990009273635,
+      "judge": 55.13683135300016,
+      "pipeline": 218.42921234599999,
+      "ocr": 1.3995984089997364,
+      "render": 0.4082489570009784,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 411,
+        "output_tokens": 53,
+        "total_tokens": 464,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "input_tokens": 733,
+        "output_tokens": 92,
+        "total_tokens": 825,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_purchase_order": {
+        "input_tokens": 964,
+        "output_tokens": 917,
+        "total_tokens": 1881,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [],
+    "unexpected_fields": {
+      "supplier_name": "Karl Jablonski"
+    },
+    "notes": "",
+    "stem": "Thai(invoice)+EN(Purchase).pdf / 2",
+    "filename": "Thai(invoice)+EN(Purchase).pdf",
+    "page_number": 2,
+    "format": ".pdf"
+  },
+  {
+    "expected": "purchase_order",
+    "predicted": "purchase_order",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.8571428571428571,
+    "tp": 3,
+    "fp": 1,
+    "fn": 0,
+    "fields_expected": 3,
+    "cells_total": 8,
+    "cells_ok": 7,
+    "columns_total": 4,
+    "columns_found": 4,
+    "rows_total": 2,
+    "rows_found": 2,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "flagged",
+    "timings": {
+      "router": 22.033035235999705,
+      "extractor": 151.31735340699925,
+      "validator": 0.0015058570006658556,
+      "judge": 51.876233942999534,
+      "pipeline": 226.39148467400082,
+      "ocr": 1.5133098410005914,
+      "render": 0.5504142829995544,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 406,
+        "output_tokens": 53,
+        "total_tokens": 459,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "input_tokens": 803,
+        "output_tokens": 107,
+        "total_tokens": 910,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_purchase_order": {
+        "input_tokens": 964,
+        "output_tokens": 992,
+        "total_tokens": 1956,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [],
+    "unexpected_fields": {
+      "supplier_name": "Paula Parente"
+    },
+    "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
+    "stem": "purchase_orders1.pdf / 1",
+    "filename": "purchase_orders1.pdf",
+    "page_number": 1,
+    "format": ".pdf"
+  },
+  {
+    "expected": "purchase_order",
+    "predicted": "purchase_order",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 3,
+    "fields_expected": 3,
+    "cells_total": 16,
+    "cells_ok": 0,
+    "columns_total": 4,
+    "columns_found": 0,
+    "rows_total": 4,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": true,
+    "error": "Extractor failed: LLM request timed out",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 25.714701524999327,
+      "extractor": 402.22310896899944,
+      "pipeline": 428.6215550400011,
+      "ocr": 1.4804012039985537,
+      "render": 0.42240931000014825,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 446,
+        "output_tokens": 53,
+        "total_tokens": 499,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_purchase_order": {
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "po_number",
+        "expected": "10540",
+        "predicted": null
+      },
+      {
+        "field": "order_date",
+        "expected": "2017-05-19",
+        "predicted": null
+      },
+      {
+        "field": "buyer_name",
+        "expected": "Horst Kloss",
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "",
+    "stem": "purchase_orders_2.pdf / 1",
+    "filename": "purchase_orders_2.pdf",
+    "page_number": 1,
+    "format": ".pdf"
+  }
+]

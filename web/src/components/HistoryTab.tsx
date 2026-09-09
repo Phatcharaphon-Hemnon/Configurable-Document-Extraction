@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { ExtractionTab } from './ExtractionTab';
+import type { DocumentGroup } from '../types/extraction';
 
 type Job = {
   id: string;
@@ -43,6 +45,9 @@ async function fetchWithTimeout(url: string): Promise<Response> {
 }
 
 export function HistoryTab() {
+  const [selected, setSelected] = useState<DocumentGroup | null>(null);
+  const [selectedPage, setSelectedPage] = useState(0);
+  const [opening, setOpening] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -59,6 +64,7 @@ export function HistoryTab() {
   const fetchHistory = async () => {
     try {
       setLoading(true);
+      setError(null);
       const res = await fetchWithTimeout(`${API_BASE}/history?limit=${limit}&offset=${page * limit}`);
       if (!res.ok) throw new Error('Failed to fetch history');
       const data = await res.json();
@@ -80,6 +86,20 @@ export function HistoryTab() {
     } catch {
       // Stats not available
     }
+  };
+
+  const openJob = async (job: Job) => {
+    setOpening(true);
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/history/${job.id}`);
+      if (!res.ok) throw new Error('Could not load saved result');
+      const detail = await res.json();
+      setSelected({id: job.id, label: job.filename, files: [], jobId: job.id, readOnly: true,
+        status: detail.result ? 'done' : job.status === 'failed' ? 'error' : 'processing',
+        response: detail.result, error: detail.error, progress: detail.progress});
+      setSelectedPage(0);
+    } catch (err) { setError(err instanceof Error ? err.message : 'Could not open history'); }
+    finally { setOpening(false); }
   };
 
   const deleteJob = async (jobId: string) => {
@@ -105,7 +125,7 @@ export function HistoryTab() {
       case 'failed': return '#4D1717';
       case 'queued': return '#CBCBCB';
       case 'processing': return '#174D38';
-      default: return '#666';
+      default: return '#CBCBCB';
     }
   };
 
@@ -122,6 +142,15 @@ export function HistoryTab() {
     );
   }
 
+  if (selected) {
+    const doc = selected.response?.documents[selectedPage] ?? null;
+    return <div className="history-tab">
+      <button className="button-secondary" onClick={() => setSelected(null)}>Back to history</button>
+      <ExtractionTab group={selected} doc={doc} docIndex={selectedPage} onSelectDoc={setSelectedPage}
+        onRetry={() => setSelected(null)} combinedFields={doc?.fields.map(field => [field.name, field]) ?? []} />
+    </div>;
+  }
+
   return (
     <div className="history-tab">
       {/* Stats Cards */}
@@ -132,7 +161,7 @@ export function HistoryTab() {
             <div className="stat-label">Total Jobs</div>
           </div>
           <div className="stat-card">
-            <div className="stat-value">{stats.avg_completeness.toFixed(1)}%</div>
+            <div className="stat-value">{(stats.avg_completeness * 100).toFixed(1)}%</div>
             <div className="stat-label">Avg Completeness</div>
           </div>
           <div className="stat-card">
@@ -169,7 +198,9 @@ export function HistoryTab() {
               jobs.map((job) => (
                 <tr key={job.id}>
                   <td className="filename-cell" title={job.filename}>
-                    {job.filename.length > 30 ? job.filename.slice(0, 30) + '...' : job.filename}
+                    <button className="button-secondary" disabled={opening} onClick={() => void openJob(job)}>
+                      {job.filename.length > 30 ? job.filename.slice(0, 30) + '...' : job.filename}
+                    </button>
                   </td>
                   <td>
                     <span className="doc-type-badge">{job.doc_type || '-'}</span>

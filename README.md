@@ -218,3 +218,12 @@ proxies `/api` to `http://127.0.0.1:8000` automatically.
 - `docs/async_jobs.md` — async upload/poll job flow
 - `docs/adr/` — architecture decision records
 - `AGENTS.md` — persistent memory for AI coding agents
+
+## Multilingual page extraction release
+
+All PDF pages retain their results and source previews, including mixed document types
+and languages. Tables use their printed columns. History opens saved results without
+starting a new extraction. See [page storage](docs/page_storage.md),
+[multilingual OCR setup](docs/multilingual_ocr.md), [table contracts](docs/dynamic_tables.md)
+and [evaluation instructions](docs/evaluation.md). Runtime history is now at
+`data/extraction.db`; local Tesseract English/Thai dependencies must be available.

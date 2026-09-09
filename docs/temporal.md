@@ -52,3 +52,14 @@ service path.
 source .venv/bin/activate
 TEMPORAL_ENABLED=true python -m pytest api/tests/test_async_jobs.py -q
 ```
+
+## Shared multilingual page pipeline
+
+The API performs local page OCR/source persistence, then calls `ExtractPageWorkflow`
+for each page when Temporal is enabled. `process_page_activity` uses the same
+Router/Extractor/Validator/Judge implementation as the in-process path, including
+structured tables, evidence gates and explicit Judge outcomes. The legacy
+`ExtractDocumentWorkflow` also delegates each page to this shared activity.
+Activity retries are disabled to avoid multiplying the provider retry budget.
+The worker permits one concurrent activity; use one API process for FIFO ordering.
+Workflow wiring is unit-tested; a live Temporal server was not used for this release.

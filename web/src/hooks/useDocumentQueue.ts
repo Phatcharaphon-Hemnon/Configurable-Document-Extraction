@@ -73,7 +73,7 @@ export function useDocumentQueue() {
           signal: controller.signal,
           onStatus: (current) => {
             if (current.status === 'queued' || current.status === 'processing') {
-              patchGroup(group.id, { status: current.status });
+              patchGroup(group.id, { status: current.status, progress: current.progress });
             }
           },
         });

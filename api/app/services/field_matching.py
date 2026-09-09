@@ -74,10 +74,6 @@ def build_alternative_name_lookup(
         norm = _normalize_name(cf.name)
         if norm not in lookup:
             lookup[norm] = cf
-        for alt in cf.alternative_names:
-            alt_norm = _normalize_name(alt)
-            if alt_norm not in lookup:
-                lookup[alt_norm] = cf
     return lookup
 
 

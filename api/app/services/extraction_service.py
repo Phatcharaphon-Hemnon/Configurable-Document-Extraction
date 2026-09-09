@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
+from contextvars import ContextVar
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -20,7 +22,7 @@ from app.core.security import sanitize_document_text
 from app.guards.audit_logger import AuditLogger
 from app.guards.content_guard import ContentLimits, validate_document_text
 from app.guards.pii_detector import PIIDetector
-from app.guards.timeout_guard import StageTimeoutConfig, TimeoutGuard
+from app.guards.timeout_guard import StageTimeoutConfig, TimeoutGuard, stage_notifier
 from app.observability.langfuse import LangfuseTracer
 from app.schemas.documents import (
     BatchCreateResponse,
@@ -33,14 +35,16 @@ from app.schemas.documents import (
     ProviderErrorDetails,
 )
 from app.services.client import ClientError
-from app.services.field_catalog import is_registerable_new_field, normalize_field_name
+from app.services.field_catalog import register_discovered_fields
 from app.services.field_matching import values_match
 from app.services.job_store import InMemoryJobStore, JobRecord, SQLiteJobStore
 from app.services.knowledge_base import KnowledgeBaseRepository
-from app.services.rapidocr_client import RapidOCRClient
+from app.services.local_ocr import LocalOCRClient, OCRPage
 from app.services.request_control import job_context
+from app.services.source_storage import SourceStorage
 
 logger = logging.getLogger(__name__)
+queue_wait: ContextVar[float] = ContextVar("queue_wait", default=0)
 
 
 def _provider_error_details(
@@ -136,10 +140,8 @@ class DocumentExtractionService:
         self.catalog = self.knowledge_base.catalog
         # Local OCR (RapidOCR, ONNX): handles both PDFs (rendered at OCR_DPI
         # via PyMuPDF) and images. Runs fully offline — no API key, no network.
-        self.ocr = RapidOCRClient(
-            dpi=getattr(settings, "ocr_dpi", 300),
-            enable_cache=getattr(settings, "ocr_cache_enabled", True),
-        )
+        self.ocr = LocalOCRClient(settings)
+        self.sources = SourceStorage(settings.source_storage_path)
         self.tracer = LangfuseTracer(settings)
         self.router = RouterAgent(settings)
         self.extractors = build_extractors(settings, self.catalog)
@@ -264,86 +266,109 @@ class DocumentExtractionService:
             job = JobRecord(job_id=job_id, status="queued")
         job_id_str = str(job.job_id)
 
+        started = time.perf_counter()
+        documents = []
+        file_errors = []
+        progress = {"completed_pages": 0, "total_pages": 0, "stage": "ocr"}
         try:
-            # Unified local-OCR path (RapidOCR): every upload — image or PDF —
-            # is OCR'd locally into per-page text, then flows through the
-            # text-only pipeline (Router → Extractor → Validator → Judge)
-            # using the single configured text model. No vision model and no
-            # cloud OCR calls are required.
-            try:
-                parse_results = await asyncio.gather(*[
-                    self.ocr.aparse_file(part.raw_content, part.filename)
-                    for part in parts
-                ])
-            except Exception as exc:
-                self.job_store.save_result(job.job_id, {
-                    "documents": [],
-                    "error": f"Failed to OCR uploaded file(s): {exc}",
-                })
-                return FileExtractionResponse(
-                    request=request_meta,
-                    error=f"Failed to OCR uploaded file(s): {exc}",
-                    job_id=job_id_str,
-                )
-
-            pages_with_index = [
-                (idx, page_text)
-                for idx, parsed_pages in enumerate(parse_results)
-                for page_text in parsed_pages
-            ]
-
-            text_docs = [
-                await self._extract_one_page(filename=combined_name, page_text=page_text)
-                for _, page_text in pages_with_index
-            ]
-            results_by_index: dict[int, list[ExtractionResult]] = {}
-            for (idx, _), document in zip(pages_with_index, text_docs):
-                results_by_index.setdefault(idx, []).append(document)
-
-            documents = [doc for i in range(len(parts)) for doc in results_by_index.get(i, [])]
-            if not documents:
-                self.job_store.save_result(job.job_id, {
-                    "documents": [],
-                    "error": "No readable pages/text found in the uploaded file(s).",
-                })
-                return FileExtractionResponse(
-                    request=request_meta,
-                    error="No readable pages/text found in the uploaded file(s).",
-                    job_id=job_id_str,
-                )
-
-            # Save successful results to database
-            result_dict = {
-                "documents": [doc.model_dump() for doc in documents],
-            }
-            self.job_store.save_result(job.job_id, result_dict)
-
-            return FileExtractionResponse(
-                request=request_meta,
-                documents=documents,
-                job_id=job_id_str,
-            )
+            for part in parts:
+                source_id = self.sources.save(part.filename, part.raw_content, part.content_type)
+                self.job_store.set_progress(job.job_id, progress)
+                try:
+                    parsed = await self.ocr.aparse_file(part.raw_content, part.filename)
+                except Exception as exc:
+                    file_errors.append(f"{part.filename}: Failed to OCR: {exc}")
+                    continue
+                details = getattr(self.ocr, "last_pages", [])
+                if not isinstance(details, list) or len(details) != len(parsed):
+                    details = [OCRPage(text=text) for text in parsed]
+                progress["total_pages"] += len(parsed)
+                for page_index, (page_text, ocr_page) in enumerate(zip(parsed, details), 1):
+                    source = self.sources.reference(source_id, page_index, len(parsed), ocr_page.preview)
+                    def notify_stage(stage):
+                        progress["stage"] = stage
+                        self.job_store.set_progress(job.job_id, progress)
+                    stage_token = stage_notifier.set(notify_stage)
+                    try:
+                        if ocr_page.error or not page_text.strip():
+                            message = ocr_page.error or "No readable text on this page"
+                            document = ExtractionResult(doc_type="invoice", fields=[], needs_review=True,
+                                completeness_score=0, error=message, failed_stage="ocr", validation_errors=[message])
+                        elif self.settings.temporal_enabled:
+                            from app.temporal.client import get_temporal_client
+                            client = await get_temporal_client()
+                            raw = await client.execute_workflow("ExtractPageWorkflow", args=[part.filename, page_text],
+                                id=f"{job.job_id}-page-{len(documents) + 1}", task_queue=self.settings.temporal_task_queue)
+                            document = ExtractionResult.model_validate(raw)
+                        else:
+                            document = await self._extract_one_page(filename=part.filename, page_text=page_text)
+                    except asyncio.CancelledError:
+                        raise
+                    except Exception as exc:
+                        document = ExtractionResult(doc_type="invoice", fields=[], needs_review=True,
+                            completeness_score=0, error=f"Page pipeline failed: {exc}", validation_errors=[str(exc)])
+                    finally:
+                        stage_notifier.reset(stage_token)
+                    document.source = source
+                    document.ocr_blocks = ocr_page.blocks
+                    document.full_text = page_text
+                    document.timings.update(ocr=ocr_page.seconds, render=ocr_page.render_seconds,
+                                            ocr_cached=float(ocr_page.cached))
+                    documents.append(document)
+                    self.job_store.save_result(job.job_id, FileExtractionResponse(
+                        request=request_meta, documents=documents, job_id=job_id_str,
+                        file_errors=file_errors).model_dump(mode="json"), status="processing")
+                    progress["completed_pages"] += 1
+                    self.job_store.set_progress(job.job_id, progress)
+            response = FileExtractionResponse(request=request_meta, documents=documents, job_id=job_id_str,
+                file_errors=file_errors, error="; ".join(file_errors) if not documents else None,
+                timings={"processing": time.perf_counter() - started, "queue": queue_wait.get()})
+            if not documents and not response.error:
+                response.error = "No readable pages found"
+            progress["stage"] = "completed" if documents else "failed"
+            self.job_store.set_progress(job.job_id, progress)
+            self.job_store.save_result(job.job_id, response.model_dump(mode="json"))
+            return response
         except asyncio.CancelledError:
-            # Client disconnected / server shutting down: record the job as
-            # failed instead of orphaning it as 'queued', then re-raise.
-            try:
-                self.job_store.fail_job(job.job_id, "Cancelled (client disconnected or server shutdown)")
-            except Exception:
-                logger.warning("Could not mark job %s as cancelled", job.job_id)
+            self.job_store.fail_job(job.job_id, "Cancelled (server shutdown)")
             raise
         except Exception as exc:
-            # Save error to database
-            self.job_store.save_result(job.job_id, {
-                "documents": [],
-                "error": str(exc),
-            })
+            self.job_store.fail_job(job.job_id, str(exc))
             raise
 
     # ------------------------------------------------------------------
     # Single page pipeline
     # ------------------------------------------------------------------
 
-    async def _extract_one_page(
+    async def _extract_one_page(self, filename: str, page_text: str, **kwargs) -> ExtractionResult:
+        from app.guards.timeout_guard import page_timings
+        measured: dict[str, float] = {}
+        token = page_timings.set(measured)
+        started = time.perf_counter()
+        agents = {"router": self.router, "judge": self.judge}
+        agents.update({f"extractor_{key}": agent for key, agent in self.extractors.items()})
+        for agent in agents.values():
+            client = getattr(agent, "_client", None)
+            if client is not None:
+                client.last_usage = None
+                client.last_attempts = 0
+        try:
+            result = await self._extract_page_impl(filename, page_text, **kwargs)
+            result.timings.update(measured, pipeline=time.perf_counter() - started)
+            for name, agent in agents.items():
+                client = getattr(agent, "_client", None)
+                attempts = getattr(client, "last_attempts", 0)
+                usage = _agent_usage(agent) or {}
+                if isinstance(attempts, int) and attempts:
+                    usage["attempts"] = attempts
+                    usage["retries"] = max(0, attempts - 1)
+                if usage:
+                    result.usage[name] = usage
+            return result
+        finally:
+            page_timings.reset(token)
+
+    async def _extract_page_impl(
         self,
         filename: str,
         page_text: str,
@@ -463,7 +488,7 @@ class DocumentExtractionService:
                     text=page_text or "",
                     few_shot=few_shot,
                 )
-            if not fields:
+            if not fields and not getattr(self.extractors[routing.doc_type], "last_tables", []):
                 raise ValueError("No usable fields were extracted from the OCR text. "
                                  "Check the OCR text or retry extraction with a suitable text model.")
             extract_gen.end(
@@ -495,25 +520,9 @@ class DocumentExtractionService:
         elif has_text:
             extraction_source = "text"
 
-        # Register AI-discovered field names into the catalog (project rule).
-        # The service is the source of truth for is_new_field AND for what is
-        # worth registering: only REAL values (non-placeholder), sane snake_case
-        # names, confidence >= threshold. 'N/A' junk never reaches the catalog.
-        known_before = self.catalog.known_names(routing.doc_type)
-        fields = [
-            f.model_copy(update={"is_new_field": normalize_field_name(f.name) not in known_before})
-            for f in fields
-        ]
-        new_field_names = [
-            f.name
-            for f in fields
-            if f.is_new_field and is_registerable_new_field(f.name, f.value, f.confidence)
-        ]
-        if new_field_names:
-            added = self.catalog.add_fields(routing.doc_type, new_field_names)
-            if added:
-                logger.info("Catalog updated for %s: +%s", routing.doc_type, added)
-                trace.span("catalog-update", output={"added": added})
+        tables = getattr(self.extractors[routing.doc_type], "last_tables", [])
+        if not isinstance(tables, list):
+            tables = []
 
         # --- 3. Validator (deterministic + hallucination guard) ---
         # RapidOCR text is real OCR output, so the strict evidence check
@@ -526,6 +535,7 @@ class DocumentExtractionService:
                     fields=fields,
                     document_text=page_text or None,
                     is_image_extraction=False,
+                    tables=tables,
                 )
             trace.span("validate-fields", output={"errors": validation_errors,
                                                    "completeness": completeness,
@@ -539,6 +549,11 @@ class DocumentExtractionService:
                 fields=fields,
             )
 
+        outcome = register_discovered_fields(self.catalog, routing.doc_type, fields, document_text=page_text)
+        fields = outcome.fields
+        if outcome.added:
+            trace.span("catalog-update", output={"added": outcome.added})
+
         # --- 4. Judge (text-only; single model, no vision required) ---
         # Skipped entirely for clean extractions: completeness 100%, no
         # validation errors, every field confident. Saves a full LLM stage.
@@ -548,7 +563,7 @@ class DocumentExtractionService:
             and not validation_errors
             and completeness >= 1.0
             and bool(fields)
-            and min(f.confidence for f in fields) >= self.settings.judge_skip_confidence
+            and min([f.confidence for f in fields] + [c.confidence for t in tables for row in t.rows for c in row]) >= self.settings.judge_skip_confidence
         )
         if skip_judge:
             trace.span("judge-skipped", output={"reason": "clean extraction"})
@@ -565,6 +580,7 @@ class DocumentExtractionService:
                     judge_result = await self.judge.evaluate(
                         fields=fields,
                         source_text=page_text or None,
+                        tables=tables,
                     )
                 judge_gen.end(
                     output={"score": judge_result.score,
@@ -573,7 +589,7 @@ class DocumentExtractionService:
                             "notes": judge_result.notes},
                     usage=_agent_usage(self.judge),
                 )
-                needs_review = needs_review or judge_result.score < JUDGE_PASS_SCORE
+                needs_review = needs_review or judge_result.score < JUDGE_PASS_SCORE or bool(judge_result.issues)
             except Exception as exc:
                 details = _provider_error_details(
                     exc,
@@ -640,6 +656,8 @@ class DocumentExtractionService:
             doc_type=routing.doc_type,
             language=routing.language,
             fields=fields,
+            tables=tables,
+            judge_status="skipped" if skip_judge else "unavailable" if judge_result is None else "flagged" if judge_result.score < JUDGE_PASS_SCORE or judge_result.issues else "passed",
             validation_errors=validation_errors,
             needs_review=needs_review,
             completeness_score=completeness,
@@ -684,9 +702,9 @@ class DocumentExtractionService:
         if job is None:
             return None
         result = None
-        # Only completed jobs carry a valid FileExtractionResponse; failed
-        # rows store just an error message (surfaced via `error` below).
-        if job.status == "completed" and job.result is not None:
+        # Completed and checkpointed partial pages remain readable, including
+        # after a later page fails or the worker is interrupted.
+        if job.result is not None and job.result.get("documents"):
             try:
                 result = FileExtractionResponse.model_validate(job.result)
             except Exception:
@@ -698,7 +716,7 @@ class DocumentExtractionService:
                 error = self.job_store.get_error(job_id)
             except Exception:
                 error = None
-        return BatchStatusResponse(job_id=job.job_id, status=job.status, result=result, error=error)
+        return BatchStatusResponse(job_id=job.job_id, status=job.status, result=result, error=error, progress=job.progress)
 
     async def run_job(self, job_id: UUID, parts: list[UploadedFilePart]) -> None:
         """Background-task entry point: run extraction for an existing job.
@@ -706,12 +724,15 @@ class DocumentExtractionService:
         Waits before OCR/stage timers. Failures are persisted; cancellation
         is persisted and re-raised so the background-task owner can clean up.
         """
+        queued_at = time.perf_counter()
         logger.info("Job %s queued", job_id)
         token = job_context.set(str(job_id))
+        queue_token = queue_wait.set(0)
         try:
             async with self._job_lock:
                 self.job_store.mark_processing(job_id)
                 logger.info("Job %s processing", job_id)
+                queue_wait.set(time.perf_counter() - queued_at)
                 await self.extract_group(parts, job_id=job_id)
                 job = self.job_store.get(job_id)
                 logger.info("Job %s %s", job_id, job.status if job else "unknown")
@@ -727,6 +748,7 @@ class DocumentExtractionService:
             )
         finally:
             job_context.reset(token)
+            queue_wait.reset(queue_token)
 
 
 def coerce_field_dates(fields: list[ExtractedField], date_field_names: set[str]) -> list[ExtractedField]:

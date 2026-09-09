@@ -8,6 +8,7 @@ import logging
 from uuid import UUID
 
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile, status
+from fastapi.responses import FileResponse
 
 from app.core.config import get_settings
 from app.guards.audit_logger import AuditLogger
@@ -301,7 +302,32 @@ def get_job_history(job_id: str) -> dict:
     if job is None:
         raise HTTPException(status_code=404, detail="Job not found")
 
-    return job
+    batch = service.get_batch_status(parsed_job_id)
+    return {**job, "result": batch.result.model_dump(mode="json") if batch and batch.result else None,
+            "progress": batch.progress.model_dump() if batch and batch.progress else None}
+
+
+@router.get("/sources/{source_id}")
+def download_source(source_id: UUID):
+    try:
+        path, meta = service.sources.original(source_id)
+        if not path.is_file():
+            raise FileNotFoundError()
+        return FileResponse(path, media_type=meta["content_type"], filename=meta["filename"],
+                            headers={"X-Content-Type-Options": "nosniff"})
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Original source unavailable") from None
+
+
+@router.get("/sources/{source_id}/pages/{page_number}")
+def preview_source(source_id: UUID, page_number: int):
+    try:
+        path = service.sources.preview(source_id, page_number)
+        if not path.is_file():
+            raise FileNotFoundError()
+        return FileResponse(path, media_type="image/png", headers={"X-Content-Type-Options": "nosniff"})
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Page preview unavailable") from None
 
 
 @router.delete("/history/{job_id}")

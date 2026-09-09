@@ -27,7 +27,22 @@ export type ProviderErrorDetails = {
   request_id?: string | null;
 };
 
+export type ExtractedTable = {
+  name: string;
+  columns: {key: string; label: string}[];
+  rows: {column: string; value: string | number | null; confidence: number; source_span?: string | null}[][];
+};
+export type SourceReference = {
+  source_id: string; filename: string; page_number: number; page_count: number;
+  preview_url?: string | null; download_url?: string | null;
+};
+export type JobProgress = {completed_pages: number; total_pages: number; stage: string; queue_seconds: number};
+
 export type ExtractionResult = {
+  source?: SourceReference | null;
+  tables?: ExtractedTable[];
+  timings?: Record<string, number>;
+  judge_status?: 'passed' | 'flagged' | 'skipped' | 'unavailable';
   id: string;
   doc_type: DocType;
   language: string | null;
@@ -39,7 +54,7 @@ export type ExtractionResult = {
   routing_reason?: string | null;
   full_text?: string | null;
   error?: string | null;
-  failed_stage?: 'router' | 'extractor' | 'validator' | 'judge' | null;
+  failed_stage?: 'ocr' | 'router' | 'extractor' | 'validator' | 'judge' | null;
   error_details?: ProviderErrorDetails | null;
   extraction_source?: 'vision' | 'ocr' | 'text' | null;
   auto_evaluation?: EvaluateResponse | null;
@@ -54,6 +69,8 @@ export type FileUploadMeta = {
 export type FileExtractionResponse = {
   request: FileUploadMeta;
   documents: ExtractionResult[];
+  file_errors?: string[];
+  timings?: Record<string, number>;
   error?: string | null;
   job_id?: string | null;
 };
@@ -64,6 +81,7 @@ export type JobAcceptedResponse = {
 };
 
 export type JobStatusResponse = {
+  progress?: JobProgress | null;
   job_id: string;
   status: string;
   result?: FileExtractionResponse | null;
@@ -82,6 +100,8 @@ export type EvaluateResponse = {
 };
 
 export type DocumentGroup = {
+  progress?: JobProgress | null;
+  readOnly?: boolean;
   id: string;
   label: string;
   files: File[];

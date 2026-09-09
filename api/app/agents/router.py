@@ -42,7 +42,7 @@ class RouterAgent:
             raise ClientError("Router requires document text or an image to classify")
 
         prompt = (
-            f"{_ROUTER_PROMPT}\nFilename (weak hint): {filename}\n"
+            f"{_ROUTER_PROMPT}\nFilename (weak hint): {sanitize_document_text(filename)}\n"
             if filename
             else _ROUTER_PROMPT
         )

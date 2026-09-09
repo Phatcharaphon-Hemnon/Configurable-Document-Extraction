@@ -7,7 +7,14 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+REPO_ROOT = Path(__file__).resolve().parents[3]
+API_ROOT = REPO_ROOT / "api"
+load_dotenv(API_ROOT / ".env")
+
+
+def runtime_path(value: str) -> str:
+    path = Path(value).expanduser()
+    return str(path if path.is_absolute() else REPO_ROOT / path)
 
 
 @dataclass(frozen=True)
@@ -61,7 +68,8 @@ class Settings:
         self.frontend_origins = os.getenv("FRONTEND_ORIGINS", "http://localhost:5173")
         self.max_upload_mb = int(os.getenv("MAX_UPLOAD_MB", "10"))
         self.supported_languages = os.getenv("SUPPORTED_LANGUAGES", "en,th")
-        self.knowledge_base_path = os.getenv("KNOWLEDGE_BASE_PATH", "app/data/knowledge_base")
+        kb = Path(os.getenv("KNOWLEDGE_BASE_PATH", "app/data/knowledge_base"))
+        self.knowledge_base_path = str(kb if kb.is_absolute() else API_ROOT / kb)
 
         # Fixed 3-document-type system. Few-shot examples cost tokens → default OFF.
         self.few_shot_examples_per_doc_type = int(os.getenv("FEW_SHOT_EXAMPLES_PER_DOC_TYPE", "0"))
@@ -133,6 +141,15 @@ class Settings:
         # --- Document parsing (local RapidOCR — no API key, no network) ---
         # OCR_DPI controls PDF render resolution (150–600, default 300).
         self.ocr_dpi = int(os.getenv("OCR_DPI", "300"))
+        self.cache_path = runtime_path(os.getenv("PROJECT_CACHE_DIR", ".cache"))
+        self.ocr_cache_path = str(Path(self.cache_path) / "ocr-results")
+        self.ocr_cache_max_files = max(1, int(os.getenv("OCR_CACHE_MAX_FILES", "128")))
+        self.ocr_engine = os.getenv("OCR_ENGINE", "tesseract")
+        self.ocr_languages = os.getenv("OCR_LANGUAGES", "eng+tha")
+        local_binary = REPO_ROOT / ".local/ocr/usr/bin/tesseract"
+        self.tesseract_cmd = os.getenv("TESSERACT_CMD", str(local_binary) if local_binary.exists() else "tesseract")
+        local_models = REPO_ROOT / ".local/ocr/usr/share/tessdata"
+        self.tessdata_dir = os.getenv("TESSDATA_DIR", str(local_models) if local_models.exists() else "")
 
         # --- Langfuse (optional; disabled when keys are missing) ---
         self.langfuse_public_key = os.getenv("LANGFUSE_PUBLIC_KEY", "")
@@ -172,11 +189,12 @@ class Settings:
 
         # Audit logging
         self.audit_log_enabled = os.getenv("AUDIT_LOG_ENABLED", "true").lower() == "true"
-        self.audit_log_file = os.getenv("AUDIT_LOG_FILE", "logs/security_audit.jsonl")
+        self.audit_log_file = runtime_path(os.getenv("AUDIT_LOG_FILE", "data/logs/security_audit.jsonl"))
 
         # --- Database Configuration ---
         self.database_enabled = os.getenv("DATABASE_ENABLED", "true").lower() == "true"
-        self.database_path = os.getenv("DATABASE_PATH", "data/extraction.db")
+        self.database_path = runtime_path(os.getenv("DATABASE_PATH", "data/extraction.db"))
+        self.source_storage_path = runtime_path(os.getenv("SOURCE_STORAGE_PATH", "data/sources"))
 
     @property
     def frontend_origin_list(self) -> list[str]:

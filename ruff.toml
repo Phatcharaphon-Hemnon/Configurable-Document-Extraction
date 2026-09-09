@@ -1,6 +1,7 @@
 # Ruff configuration for the FastAPI backend.
 # CI runs `ruff check api/`; keep this file next to the package it governs.
 target-version = "py311"
+cache-dir = ".cache/ruff"
 line-length = 120
 extend-exclude = ["data", "__pycache__"]
 
