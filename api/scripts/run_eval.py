@@ -42,6 +42,34 @@ DEFAULT_SUBSET = [
     "Thai(invoice)+EN(Purchase).pdf",
 ]
 FORMATS = {".pdf", ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff", ".tif", ".gif"}
+# Per-file prediction JSONs live beside gold inputs but are never gold inputs
+# themselves: FORMATS excludes ".json" and --all only scans top-level files,
+# so this folder cannot pollute gold selection or hash guards.
+PER_FILE_DIRNAME = "eval_outputs"
+
+
+def per_file_json_path(gold_dir: Path, filename: str) -> Path:
+    """Result JSON path for one gold file: <gold_dir>/eval_outputs/<stem>.prediction.json."""
+    return gold_dir / PER_FILE_DIRNAME / f"{Path(filename).stem}.prediction.json"
+
+
+def write_per_file_json(path: Path, filename: str, response: dict, records: list[dict], seconds: float) -> None:
+    """Persist one file's full prediction plus its per-page score records."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "filename": filename,
+                "eval_seconds": seconds,
+                "error": response.get("error"),
+                "documents": response.get("documents", []),
+                "pages": records,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
 
 
 def expected_doc_type(stem: str) -> str:
@@ -290,6 +318,22 @@ def build_report(results: list[dict], config: dict, summary: dict) -> str:
     return "\n".join(lines)
 
 
+def build_combined_report(
+    results: list[dict],
+    subset: list[dict],
+    config: dict,
+    release_config: dict,
+    summary: dict,
+    subset_summary: dict,
+) -> str:
+    """One release document: full-run report followed by the fixed-subset section."""
+    full = build_report(results, config, summary)
+    sub_lines = build_report(subset, release_config, subset_summary).split("\n")
+    if sub_lines and sub_lines[0].startswith("# "):
+        sub_lines[0] = "## Release subset (fixed files from manifest.release_subset)"
+    return full + "\n---\n\n" + "\n".join(sub_lines) + "\n"
+
+
 async def run(args):
     gold_dir = args.gold_dir.resolve()
     manifest = GoldManifest.model_validate_json((gold_dir / "manifest.json").read_text(encoding="utf-8"))
@@ -378,9 +422,11 @@ async def run(args):
                 except Exception as exc:
                     docs = []
                     response = {"documents": [], "error": str(exc)}
-            response["eval_seconds"] = time.perf_counter() - started
+            file_seconds = time.perf_counter() - started
+            response["eval_seconds"] = file_seconds
             responses[name] = response
             # Record results incrementally: an interrupted run cannot silently look complete.
+            file_start = len(results)
             for i, gold in enumerate(available[name].pages):
                 record = score_page(gold, docs[i] if i < len(docs) else None)
                 record.update(
@@ -395,6 +441,9 @@ async def run(args):
                     flush=True,
                 )
             response["extra_pages"] = max(0, len(docs) - len(available[name].pages))
+            write_per_file_json(
+                per_file_json_path(gold_dir, name), name, response, results[file_start:], file_seconds
+            )
             (artifact_dir / "predictions.json").write_text(
                 json.dumps(responses, ensure_ascii=False, indent=2), encoding="utf-8"
             )
@@ -425,13 +474,15 @@ async def run(args):
     }
     (artifact_dir / "metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8")
     prefix = "mock_" if args.mock else ""
-    (output / f"{prefix}eval.md").write_text(build_report(results, config, summary), encoding="utf-8")
-    release_config = {**config, "report_scope": "fixed 8-file release subset (derived from full run)"}
-    (output / f"{prefix}eval_report.md").write_text(
-        build_report(subset, release_config, summarize(subset)), encoding="utf-8"
+    # Single release document: full run plus the fixed-subset section (no separate eval.md).
+    release_config = {**config, "report_scope": "fixed release subset section inside this report"}
+    report_name = f"{prefix}eval_report.md"
+    (output / report_name).write_text(
+        build_combined_report(results, subset, config, release_config, summary, summarize(subset)),
+        encoding="utf-8",
     )
     print(
-        f"Report: {output / f'{prefix}eval.md'}; pages={summary['returned']}/{summary['n_total']}; F1={summary['macro_f1']:.3f}",
+        f"Report: {output / report_name}; pages={summary['returned']}/{summary['n_total']}; F1={summary['macro_f1']:.3f}",
         flush=True,
     )
     return 0 if summary["n_scored"] else 2

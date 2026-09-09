@@ -64,8 +64,6 @@ jobs:
           name: evaluation-release-assets
           if-no-files-found: error
           path: |
-            eval.md
             eval_report.md
-            release_notes.md
             eval_artifacts/metrics.json
             eval_artifacts/predictions.json

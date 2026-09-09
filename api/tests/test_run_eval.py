@@ -11,10 +11,15 @@ if str(_API_DIR) not in sys.path:
 
 from scripts.run_eval import (  # noqa: E402
     DEFAULT_SUBSET,
+    FORMATS,
+    PER_FILE_DIRNAME,
+    build_combined_report,
     build_report,
     expected_doc_type,
     mock_predict,
+    per_file_json_path,
     summarize,
+    write_per_file_json,
 )
 
 
@@ -80,3 +85,42 @@ def test_ids_keep_leading_zero_and_no_alias_matching():
     gold = GoldPage(page_number=1, doc_type='invoice', language='en', fields={'invoice_number':'00123'})
     doc = ExtractionResult(doc_type='invoice', fields=[dict(name='invoice_id', value='00123',confidence=.9,source_span='00123')])
     assert score_page(gold, doc)['f1'] == 0
+
+
+def test_per_file_json_path_stays_out_of_gold_selection(tmp_path):
+    path = per_file_json_path(tmp_path, "Invoice+purchase.pdf")
+    assert path.parent == tmp_path / PER_FILE_DIRNAME
+    assert path.suffix == ".json"
+    assert path.suffix not in FORMATS  # never picked up by --all gold scan
+    assert path.name == "Invoice+purchase.prediction.json"
+
+
+def test_write_per_file_json_roundtrip(tmp_path):
+    target = per_file_json_path(tmp_path, "THAI_bill.jpg")
+    response = {"documents": [{"doc_type": "invoice"}], "error": None}
+    records = [{"stem": "THAI_bill.jpg / 1", "f1": 0.5}]
+    write_per_file_json(target, "THAI_bill.jpg", response, records, 12.5)
+    import json
+
+    saved = json.loads(target.read_text(encoding="utf-8"))
+    assert saved["filename"] == "THAI_bill.jpg"
+    assert saved["eval_seconds"] == 12.5
+    assert saved["documents"] == response["documents"]
+    assert saved["pages"] == records
+
+
+def test_combined_report_holds_full_and_subset_sections():
+    rows = [
+        {"stem": "a / 1", "filename": "a", "expected": "invoice", "predicted": "invoice",
+         "router_ok": True, "precision": 1.0, "recall": 1.0, "f1": 1.0,
+         "needs_review": False, "judge_score": 0.9, "judge_skipped": False, "notes": ""},
+        {"stem": "b / 1", "filename": "b", "expected": "invoice", "predicted": "invoice",
+         "router_ok": True, "precision": 0.5, "recall": 0.5, "f1": 0.5,
+         "needs_review": True, "judge_score": 0.5, "judge_skipped": False, "notes": ""},
+    ]
+    config = {"mock": True, "few_shot": 0}
+    combined = build_combined_report(rows, rows[:1], config, config, summarize(rows), summarize(rows[:1]))
+    assert combined.count("# Eval report") == 1  # single title
+    assert "## Release subset" in combined
+    assert combined.index("## Release subset") > combined.index("## Per-page results")
+    assert "b / 1" in combined  # full section keeps all pages

@@ -20,8 +20,9 @@ for plumbing checks; mock reports are explicitly labeled and are not release met
 Evaluation uses an isolated catalog copy, source directory and job store, with
 few-shot examples off by default. It does not pollute application history or add
 gold answers to RAG. It writes incremental predictions and metrics so an interrupted
-run is visibly incomplete. Final `eval.md` covers the full run; `eval_report.md`
-contains the fixed release subset. `eval_artifacts/metrics.json` and
+run is visibly incomplete, plus one JSON per gold file in
+`ground_truth/eval_outputs/`. The single `eval_report.md` covers the full run
+followed by the fixed release-subset section. `eval_artifacts/metrics.json` and
 `predictions.json` preserve machine-readable evidence.
 
 Field precision/recall/F1 use exact normalized field names and matching values,
