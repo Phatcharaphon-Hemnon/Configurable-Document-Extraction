@@ -59,11 +59,18 @@ them forces invention or permanent review.
   with `merge_eval_runs.py`): **review rate 100% → 64% (5/14 fully clean,
   4 judge-skipped), macro F1 0.439 → 0.446, router accuracy still 1.000**,
   triage flags 294 → 60, quoted-span 139 → 0, missing-required 10 → 0.
+- Follow-up local loop (fail-fast gate + bracket-strip + cell fallbacks):
+  **flags 60 → 50, macro F1 0.445, review still 64%**, ICR 2088s → 73s.
+  Remainder = genuine small-model errors for the stronger-model loop
+  (blocked: no cloud key on this host; 7GB RAM rules out local 20B).
 
 ## Noted exceptions (stay flagged by design)
 
-- `ICR.png` — extractor timeout twice; trilingual noisy scan with wrecked
-  OCR. Needs a stronger model or better OCR, not looser guards.
+- `ICR.png` — **fail-fast OCR-coherence gate** (`is_ocr_text_coherent`,
+  threshold 0.35 tuned on the gold set: ICR 0.29, clean pages ≥ 0.42):
+  extractor timeout ×2 (~2000s stalls on trilingual soup) is now an honest
+  `failed_stage: ocr` error in **~63s**, extractor never called. Needs a
+  stronger model or better OCR, not looser guards.
 - `Invoice2.jpg` — OCR-mangled date (`25/10/2 ด 17`) copied verbatim but
   unparseable; invented `THB` currency.
 - `THAI_RECEIPT.jpg`, `Thai(invoice)+EN(Purchase).pdf p1` — heavy Thai OCR

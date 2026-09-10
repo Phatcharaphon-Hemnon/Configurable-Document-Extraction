@@ -31,6 +31,27 @@ quoted/bracketed spans (139), OCR-spacing/date-format mismatches, plus
 macro F1 0.439 → 0.446, router 1.000. Remainder = genuine small-model
 errors for the stronger-model loop. See `docs/review_zero_plan.md`.
 
+## 2026-09-10 — ICR fail-fast OCR-coherence gate + full local re-eval
+
+**Problem:** `ICR.png` burned ~2000s (full LLM retry budget) twice on
+trilingual OCR soup, then `FAILED: Extractor failed: LLM request timed
+out`. No cloud key exists locally and 7GB RAM rules out a local 20B
+model, so the stronger-model loop stays queued.
+
+**Changed:**
+- `api/app/core/security.py` — `ocr_text_coherence` /
+  `is_ocr_text_coherent` (wordlike-token ratio, threshold 0.35 tuned on
+  the gold set: ICR 0.29, clean pages ≥ 0.42; short texts exempt).
+- `api/app/services/extraction_service.py` — coherence gate between
+  router and extractor: degenerate OCR fails fast with `failed_stage:
+  "ocr"` and a rescan/manual-review message; extractor never called.
+- Tests: coherence unit test + service fail-fast test (soup errors in
+  <120s, extractor + judge never called).
+
+**Verified:** 339 passed, 2 skipped, ruff clean. Full 14-page local loop
+(3 chunks merged): ICR 2088s → 73s honest error, flags 60 → 50, macro
+F1 0.445, review 64%, router 1.000. Report + artifacts promoted.
+
 ## 2026-09-04 — Langfuse v4 tracing overhaul
 
 **Problem:** tracing was silently dead — the wrapper called

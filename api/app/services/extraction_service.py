@@ -18,7 +18,7 @@ from app.agents.judge import JUDGE_PASS_SCORE, JudgeAgent
 from app.agents.router import RouterAgent
 from app.agents.validator import ValidatorAgent
 from app.core.config import Settings
-from app.core.security import is_verbatim_span, sanitize_document_text
+from app.core.security import is_ocr_text_coherent, is_verbatim_span, sanitize_document_text
 from app.guards.audit_logger import AuditLogger
 from app.guards.content_guard import ContentLimits, validate_document_text
 from app.guards.pii_detector import PIIDetector
@@ -520,6 +520,19 @@ class DocumentExtractionService:
             )
 
         # --- 2. Extractor (per doc type) ---
+        # Fail fast on degenerate OCR text: a small model stalls ~2000s
+        # (full retry budget) on script-salad scans instead of extracting.
+        # An honest flagged error beats a timeout burn with no data.
+        if page_text and not is_ocr_text_coherent(page_text):
+            trace.span("validate-fields", output={"error": "ocr text incoherent"}, level="ERROR")
+            trace.end(level="ERROR")
+            self.tracer.flush()
+            return self._failed(
+                routing,
+                "OCR text incoherent: too fragmented for reliable extraction "
+                "(rescan at higher DPI or review manually)",
+                "ocr",
+            )
         few_shot: list[dict] | None = None
         limit = self.settings.few_shot_examples_per_doc_type
         if limit > 0:

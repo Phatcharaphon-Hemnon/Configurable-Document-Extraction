@@ -90,6 +90,36 @@ def collapse_ocr_spacing(text: str) -> str:
     return re.sub(r"(?<=\d)\s+(?=\d)", "", text)
 
 
+def ocr_text_coherence(text: str) -> float:
+    """Fraction of whitespace tokens with >= 3 alphanumeric chars.
+
+    Coherent OCR (any language — `\\w` is Unicode-aware, so Thai script
+    counts) scores ~0.4-0.7. Degenerate scans (single chars, pipes,
+    script-salad fragments like the ICR trilingual soup) score ~0.3.
+    """
+    tokens = re.findall(r"\S+", text)
+    if not tokens:
+        return 0.0
+    wordlike = sum(1 for t in tokens if sum(1 for c in t if c.isalnum()) >= 3)
+    return wordlike / len(tokens)
+
+
+def is_ocr_text_coherent(text: str | None, *, min_tokens: int = 20,
+                         threshold: float = 0.35) -> bool:
+    """False only for long-enough texts that are mostly OCR noise.
+
+    Short texts (headers, tiny receipts) are exempt — there is too little
+    signal to judge. Tuned against the 14-page gold set: the ICR soup
+    scores 0.29, every clean page scores >= 0.42.
+    """
+    if not text:
+        return True  # empty text has its own evidence flag downstream
+    tokens = re.findall(r"\S+", text)
+    if len(tokens) < min_tokens:
+        return True
+    return ocr_text_coherence(text) >= threshold
+
+
 def token_overlap(a: str, b: str) -> float:
     """Fraction of a's tokens present in b (unordered, OCR-noise fallback)."""
     tokens_a = set(normalize_evidence(a).split())

@@ -226,3 +226,26 @@ async def test_empty_extraction_fails_before_validator_and_judge(tmp_path):
     assert doc.judge is None
     service.validator.validate.assert_not_called()
     service.judge.evaluate.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_incoherent_ocr_fails_fast_before_extractor(tmp_path):
+    """ICR-class soup must error in seconds, never burn the ~2000s LLM retry budget."""
+    import time
+
+    soup = ("— TAXINVOICE | 86 BELASTINGFAKTUUR | : Bin 2% ๕๕ _ , โญภลทให | ศรเบ | 1 | ๕ "
+            ". | อไฮกค ‘ | ed r SB ั 77 /7 | : ( | NA B.T.W.Reg Nr TOTAAL "
+            "โอหทร | Subtotaal | Terme V.A.T. inclusive | a ea | pea | จอไก " * 3)
+    service = _make_service(tmp_path, _routing(), _extraction(), _judge())
+    service.ocr.aparse_file = AsyncMock(return_value=[soup])
+    started = time.perf_counter()
+    response = await service.extract_group([UploadedFilePart("icr.png", "image/png", b"img")])
+    elapsed = time.perf_counter() - started
+    doc = response.documents[0]
+    assert doc.failed_stage == "ocr"
+    assert doc.needs_review is True
+    assert "incoherent" in (doc.error or "")
+    assert elapsed < 120, f"fail-fast guard took {elapsed:.1f}s"
+    for extractor in service.extractors.values():
+        extractor.extract.assert_not_called()
+    service.judge.evaluate.assert_not_called()

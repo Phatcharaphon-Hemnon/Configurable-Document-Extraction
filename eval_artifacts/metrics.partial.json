@@ -1,236 +1,5 @@
 [
   {
-    "expected": "delivery_note",
-    "predicted": "delivery_note",
-    "router_ok": true,
-    "language_ok": false,
-    "language": "en",
-    "precision": 0.1111111111111111,
-    "recall": 0.08333333333333333,
-    "f1": 0.09523809523809525,
-    "tp": 1,
-    "fp": 8,
-    "fn": 11,
-    "fields_expected": 12,
-    "cells_total": 8,
-    "cells_ok": 4,
-    "columns_total": 4,
-    "columns_found": 3,
-    "rows_total": 2,
-    "rows_found": 2,
-    "extra_rows": 0,
-    "extra_columns": 0,
-    "excluded_cells": 0,
-    "failed": false,
-    "error": null,
-    "needs_review": false,
-    "returned": true,
-    "judge_status": "skipped",
-    "timings": {
-      "router": 68.60421553800188,
-      "extractor": 450.47552516499854,
-      "validator": 0.038974133000010625,
-      "pipeline": 520.1205222080025,
-      "ocr": 3.7876453380013118,
-      "render": 0.30787436299942783,
-      "ocr_cached": 0.0
-    },
-    "usage": {
-      "router": {
-        "input_tokens": 554,
-        "output_tokens": 52,
-        "total_tokens": 606,
-        "attempts": 1,
-        "retries": 0
-      },
-      "extractor_delivery_note": {
-        "input_tokens": 1170,
-        "output_tokens": 1040,
-        "total_tokens": 2210,
-        "attempts": 1,
-        "retries": 0
-      }
-    },
-    "mismatches": [
-      {
-        "field": "delivery_note_number",
-        "expected": "000-000-0000",
-        "predicted": "101"
-      },
-      {
-        "field": "sender_name",
-        "expected": "Your Company Name",
-        "predicted": "Buyer Ltd."
-      },
-      {
-        "field": "sender_address",
-        "expected": "77 Hammersmith Road, West Kensington London, W14 0QH",
-        "predicted": "43 Customer Rood"
-      },
-      {
-        "field": "recipient_name",
-        "expected": "Buyer Ltd.",
-        "predicted": "Client Number: | 000-000"
-      },
-      {
-        "field": "recipient_address",
-        "expected": "Billy Buyer 43 Customer Road Manchester, M4 1HS",
-        "predicted": "Manchester, M4 THS"
-      },
-      {
-        "field": "delivered_by",
-        "expected": "Delivery company",
-        "predicted": "Cute"
-      },
-      {
-        "field": "delivery_method",
-        "expected": "Air Freight/Courier",
-        "predicted": null
-      },
-      {
-        "field": "order_number",
-        "expected": "1 of 1",
-        "predicted": null
-      },
-      {
-        "field": "client_number",
-        "expected": "000-000",
-        "predicted": null
-      },
-      {
-        "field": "location",
-        "expected": "London",
-        "predicted": null
-      },
-      {
-        "field": "invoice_date",
-        "expected": "25.10.2019",
-        "predicted": null
-      }
-    ],
-    "unexpected_fields": {
-      "delivery_date": "26.10.2019",
-      "notes": "Returns must be made within 30 days. Please use the included retums label."
-    },
-    "notes": "Template placeholders are printed data. Invoice Date is preserved as invoice_date; no delivery date is printed.",
-    "stem": "Delivery1.webp / 1",
-    "filename": "Delivery1.webp",
-    "page_number": 1,
-    "format": ".webp"
-  },
-  {
-    "expected": "delivery_note",
-    "predicted": "delivery_note",
-    "router_ok": true,
-    "language_ok": true,
-    "language": "en",
-    "precision": 0.375,
-    "recall": 0.2727272727272727,
-    "f1": 0.3157894736842105,
-    "tp": 3,
-    "fp": 5,
-    "fn": 8,
-    "fields_expected": 11,
-    "cells_total": 12,
-    "cells_ok": 0,
-    "columns_total": 4,
-    "columns_found": 0,
-    "rows_total": 3,
-    "rows_found": 0,
-    "extra_rows": 0,
-    "extra_columns": 4,
-    "excluded_cells": 0,
-    "failed": false,
-    "error": null,
-    "needs_review": true,
-    "returned": true,
-    "judge_status": "flagged",
-    "timings": {
-      "router": 76.34864528300022,
-      "extractor": 510.6704920350021,
-      "validator": 0.017742378000548342,
-      "judge": 285.27356984400103,
-      "pipeline": 873.5590103439972,
-      "ocr": 1.6797024129991769,
-      "render": 0.3362745509984961,
-      "ocr_cached": 0.0
-    },
-    "usage": {
-      "router": {
-        "input_tokens": 549,
-        "output_tokens": 58,
-        "total_tokens": 607,
-        "attempts": 1,
-        "retries": 0
-      },
-      "judge": {
-        "input_tokens": 1512,
-        "output_tokens": 347,
-        "total_tokens": 1859,
-        "attempts": 1,
-        "retries": 0
-      },
-      "extractor_delivery_note": {
-        "input_tokens": 1165,
-        "output_tokens": 1273,
-        "total_tokens": 2438,
-        "attempts": 1,
-        "retries": 0
-      }
-    },
-    "mismatches": [
-      {
-        "field": "delivery_note_number",
-        "expected": "US-001",
-        "predicted": "บร -001"
-      },
-      {
-        "field": "delivery_date",
-        "expected": "11/02/2019",
-        "predicted": "26/02/2019"
-      },
-      {
-        "field": "sender_name",
-        "expected": "East Repair Inc.",
-        "predicted": "New York, NY 12210"
-      },
-      {
-        "field": "po_number",
-        "expected": "2312/2019",
-        "predicted": null
-      },
-      {
-        "field": "due_date",
-        "expected": "26/02/2019",
-        "predicted": null
-      },
-      {
-        "field": "subtotal",
-        "expected": 145,
-        "predicted": null
-      },
-      {
-        "field": "sales_tax",
-        "expected": 9.07,
-        "predicted": null
-      },
-      {
-        "field": "total_amount",
-        "expected": 154.06,
-        "predicted": null
-      }
-    ],
-    "unexpected_fields": {
-      "delivered_by": "East Repair Inc.",
-      "notes": "TERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.\nIMPORTANT: You MUST respond with a single valid JSON object that strictly conforms to the following JSON Schema. Do NOT include any markdown fences, commentary or extra text — only the raw JSON object."
-    },
-    "notes": "Source prints sales tax 9.07 and total 154.06; preserve both despite arithmetic inconsistency. Deliver To billing address differs from Ship To.",
-    "stem": "Delivery_note2.png / 1",
-    "filename": "Delivery_note2.png",
-    "page_number": 1,
-    "format": ".png"
-  },
-  {
     "expected": "invoice",
     "predicted": "invoice",
     "router_ok": true,
@@ -258,13 +27,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 120.87060175900115,
-      "extractor": 796.0945778530004,
-      "validator": 0.09655597099845181,
-      "judge": 581.0964029850002,
-      "pipeline": 1499.2155657529984,
-      "ocr": 6.74298046200056,
-      "render": 0.9371051099988108,
+      "router": 132.7932270809979,
+      "extractor": 765.9295700989969,
+      "validator": 0.06661795899708522,
+      "judge": 565.8383623069967,
+      "pipeline": 1465.423703044995,
+      "ocr": 6.226844554003037,
+      "render": 0.719729324002401,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -385,13 +154,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 107.68068397599927,
-      "extractor": 581.5566336310003,
-      "validator": 0.020857372001046315,
-      "judge": 281.5178053239979,
-      "pipeline": 971.6082423699991,
-      "ocr": 6.29814872100178,
-      "render": 0.817241856999317,
+      "router": 103.32766481400176,
+      "extractor": 563.4283819530028,
+      "validator": 0.015886508001131006,
+      "judge": 273.4194747100046,
+      "pipeline": 940.6806713240003,
+      "ocr": 5.660437386002741,
+      "render": 0.6951035970050725,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -496,12 +265,12 @@
     "returned": true,
     "judge_status": "skipped",
     "timings": {
-      "router": 60.04730097799984,
-      "extractor": 196.24709114000143,
-      "validator": 0.007537543002399616,
-      "pipeline": 257.4901770079996,
-      "ocr": 1.7307106530024612,
-      "render": 0.4868566920013109,
+      "router": 60.07986608400097,
+      "extractor": 318.3494030990041,
+      "validator": 0.012162436003563926,
+      "pipeline": 379.46853464000014,
+      "ocr": 1.4546329959994182,
+      "render": 0.3502155909955036,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -514,8 +283,8 @@
       },
       "extractor_purchase_order": {
         "input_tokens": 1027,
-        "output_tokens": 664,
-        "total_tokens": 1691,
+        "output_tokens": 679,
+        "total_tokens": 1706,
         "attempts": 1,
         "retries": 0
       }
@@ -535,6 +304,187 @@
     "filename": "Invoice+purchase.pdf",
     "page_number": 3,
     "format": ".pdf"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": false,
+    "language_ok": true,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 2,
+    "fields_expected": 2,
+    "cells_total": 4,
+    "cells_ok": 0,
+    "columns_total": 2,
+    "columns_found": 0,
+    "rows_total": 3,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 2,
+    "failed": true,
+    "error": "OCR text incoherent: too fragmented for reliable extraction (rescan at higher DPI or review manually)",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 62.481592511998315,
+      "pipeline": 62.64401932399778,
+      "ocr": 8.00807494900073,
+      "render": 2.395281172997784,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 528,
+        "output_tokens": 52,
+        "total_tokens": 580,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [
+      {
+        "field": "invoice_date",
+        "expected": "12/7/2014",
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 305,
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
+    "stem": "ICR.png / 1",
+    "filename": "ICR.png",
+    "page_number": 1,
+    "format": ".png"
+  },
+  {
+    "expected": "delivery_note",
+    "predicted": "delivery_note",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.1111111111111111,
+    "recall": 0.08333333333333333,
+    "f1": 0.09523809523809525,
+    "tp": 1,
+    "fp": 8,
+    "fn": 11,
+    "fields_expected": 12,
+    "cells_total": 8,
+    "cells_ok": 4,
+    "columns_total": 4,
+    "columns_found": 3,
+    "rows_total": 2,
+    "rows_found": 2,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": false,
+    "returned": true,
+    "judge_status": "skipped",
+    "timings": {
+      "router": 69.11053757800255,
+      "extractor": 444.63311578999856,
+      "validator": 0.021040265004558023,
+      "pipeline": 514.6462116630064,
+      "ocr": 3.3290382389968727,
+      "render": 0.30048809900472406,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 554,
+        "output_tokens": 52,
+        "total_tokens": 606,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_delivery_note": {
+        "input_tokens": 1170,
+        "output_tokens": 1040,
+        "total_tokens": 2210,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [
+      {
+        "field": "delivery_note_number",
+        "expected": "000-000-0000",
+        "predicted": "101"
+      },
+      {
+        "field": "sender_name",
+        "expected": "Your Company Name",
+        "predicted": "Buyer Ltd."
+      },
+      {
+        "field": "sender_address",
+        "expected": "77 Hammersmith Road, West Kensington London, W14 0QH",
+        "predicted": "43 Customer Rood"
+      },
+      {
+        "field": "recipient_name",
+        "expected": "Buyer Ltd.",
+        "predicted": "Client Number: | 000-000"
+      },
+      {
+        "field": "recipient_address",
+        "expected": "Billy Buyer 43 Customer Road Manchester, M4 1HS",
+        "predicted": "Manchester, M4 THS"
+      },
+      {
+        "field": "delivered_by",
+        "expected": "Delivery company",
+        "predicted": "Cute"
+      },
+      {
+        "field": "delivery_method",
+        "expected": "Air Freight/Courier",
+        "predicted": null
+      },
+      {
+        "field": "order_number",
+        "expected": "1 of 1",
+        "predicted": null
+      },
+      {
+        "field": "client_number",
+        "expected": "000-000",
+        "predicted": null
+      },
+      {
+        "field": "location",
+        "expected": "London",
+        "predicted": null
+      },
+      {
+        "field": "invoice_date",
+        "expected": "25.10.2019",
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {
+      "delivery_date": "26.10.2019",
+      "notes": "Returns must be made within 30 days. Please use the included retums label."
+    },
+    "notes": "Template placeholders are printed data. Invoice Date is preserved as invoice_date; no delivery date is printed.",
+    "stem": "Delivery1.webp / 1",
+    "filename": "Delivery1.webp",
+    "page_number": 1,
+    "format": ".webp"
   },
   {
     "expected": "invoice",
@@ -564,20 +514,20 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 86.33182088500325,
-      "extractor": 779.1510454090021,
-      "validator": 0.025764989000890637,
-      "judge": 340.16202888800035,
-      "pipeline": 1206.4053843960028,
-      "ocr": 5.318259641000623,
-      "render": 0.8512426369998138,
+      "router": 96.30253446300048,
+      "extractor": 752.6496820989996,
+      "validator": 0.032444905999000184,
+      "judge": 325.40115589999914,
+      "pipeline": 1175.5214619969993,
+      "ocr": 4.568025477994524,
+      "render": 0.7312677699956112,
       "ocr_cached": 0.0
     },
     "usage": {
       "router": {
         "input_tokens": 706,
-        "output_tokens": 55,
-        "total_tokens": 761,
+        "output_tokens": 47,
+        "total_tokens": 753,
         "attempts": 1,
         "retries": 0
       },
@@ -668,13 +618,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 110.648818398,
-      "extractor": 989.483300038999,
-      "validator": 0.034164663000410656,
-      "judge": 400.60873238800195,
-      "pipeline": 1501.499781128001,
-      "ocr": 9.073465289002343,
-      "render": 1.1648902529996121,
+      "router": 108.38790866400086,
+      "extractor": 930.0015051310038,
+      "validator": 0.034043696003209334,
+      "judge": 383.7279262669981,
+      "pipeline": 1423.072341968007,
+      "ocr": 9.004548693999823,
+      "render": 1.1645258979988284,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -760,6 +710,118 @@
     "format": ".jpg"
   },
   {
+    "expected": "delivery_note",
+    "predicted": "delivery_note",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "en",
+    "precision": 0.375,
+    "recall": 0.2727272727272727,
+    "f1": 0.3157894736842105,
+    "tp": 3,
+    "fp": 5,
+    "fn": 8,
+    "fields_expected": 11,
+    "cells_total": 12,
+    "cells_ok": 0,
+    "columns_total": 4,
+    "columns_found": 0,
+    "rows_total": 3,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 4,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "flagged",
+    "timings": {
+      "router": 74.23750490300154,
+      "extractor": 521.949185685,
+      "validator": 0.017279286999837495,
+      "judge": 281.5941096440001,
+      "pipeline": 879.074507025005,
+      "ocr": 1.326031801996578,
+      "render": 0.223721096997906,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 549,
+        "output_tokens": 58,
+        "total_tokens": 607,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "input_tokens": 1512,
+        "output_tokens": 347,
+        "total_tokens": 1859,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_delivery_note": {
+        "input_tokens": 1165,
+        "output_tokens": 1273,
+        "total_tokens": 2438,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [
+      {
+        "field": "delivery_note_number",
+        "expected": "US-001",
+        "predicted": "บร -001"
+      },
+      {
+        "field": "delivery_date",
+        "expected": "11/02/2019",
+        "predicted": "26/02/2019"
+      },
+      {
+        "field": "sender_name",
+        "expected": "East Repair Inc.",
+        "predicted": "New York, NY 12210"
+      },
+      {
+        "field": "po_number",
+        "expected": "2312/2019",
+        "predicted": null
+      },
+      {
+        "field": "due_date",
+        "expected": "26/02/2019",
+        "predicted": null
+      },
+      {
+        "field": "subtotal",
+        "expected": 145,
+        "predicted": null
+      },
+      {
+        "field": "sales_tax",
+        "expected": 9.07,
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 154.06,
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {
+      "delivered_by": "East Repair Inc.",
+      "notes": "TERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.\nIMPORTANT: You MUST respond with a single valid JSON object that strictly conforms to the following JSON Schema. Do NOT include any markdown fences, commentary or extra text — only the raw JSON object."
+    },
+    "notes": "Source prints sales tax 9.07 and total 154.06; preserve both despite arithmetic inconsistency. Deliver To billing address differs from Ship To.",
+    "stem": "Delivery_note2.png / 1",
+    "filename": "Delivery_note2.png",
+    "page_number": 1,
+    "format": ".png"
+  },
+  {
     "expected": "invoice",
     "predicted": "invoice",
     "router_ok": true,
@@ -785,15 +847,15 @@
     "error": null,
     "needs_review": true,
     "returned": true,
-    "judge_status": "unavailable",
+    "judge_status": "flagged",
     "timings": {
-      "router": 138.98934585199822,
-      "extractor": 907.3878984090006,
-      "validator": 0.06011229000068852,
-      "judge": 110.05194210100308,
-      "pipeline": 1157.8896137529991,
-      "ocr": 11.146792374998768,
-      "render": 1.6158228019994567,
+      "router": 137.55600351100293,
+      "extractor": 898.0103843199977,
+      "validator": 0.06582865599921206,
+      "judge": 392.2194624600015,
+      "pipeline": 1429.2933746240014,
+      "ocr": 10.536689209999167,
+      "render": 1.583924531005323,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -805,6 +867,9 @@
         "retries": 0
       },
       "judge": {
+        "input_tokens": 2784,
+        "output_tokens": 122,
+        "total_tokens": 2906,
         "attempts": 1,
         "retries": 0
       },
@@ -871,79 +936,12 @@
     "predicted": "invoice",
     "router_ok": true,
     "language_ok": true,
-    "language": "en",
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1": 0,
-    "tp": 0,
-    "fp": 0,
-    "fn": 2,
-    "fields_expected": 2,
-    "cells_total": 4,
-    "cells_ok": 0,
-    "columns_total": 2,
-    "columns_found": 0,
-    "rows_total": 3,
-    "rows_found": 0,
-    "extra_rows": 0,
-    "extra_columns": 0,
-    "excluded_cells": 2,
-    "failed": true,
-    "error": "Extractor failed: LLM request timed out",
-    "needs_review": true,
-    "returned": true,
-    "judge_status": "unavailable",
-    "timings": {
-      "router": 74.67992890499954,
-      "extractor": 2002.2168781319997,
-      "pipeline": 2077.3849857200003,
-      "ocr": 8.029137551999156,
-      "render": 2.776706564000051,
-      "ocr_cached": 0.0
-    },
-    "usage": {
-      "router": {
-        "input_tokens": 528,
-        "output_tokens": 52,
-        "total_tokens": 580,
-        "attempts": 1,
-        "retries": 0
-      },
-      "extractor_invoice": {
-        "attempts": 2,
-        "retries": 1
-      }
-    },
-    "mismatches": [
-      {
-        "field": "invoice_date",
-        "expected": "12/7/2014",
-        "predicted": null
-      },
-      {
-        "field": "total_amount",
-        "expected": 305,
-        "predicted": null
-      }
-    ],
-    "unexpected_fields": {},
-    "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
-    "stem": "ICR.png / 1",
-    "filename": "ICR.png",
-    "page_number": 1,
-    "format": ".png"
-  },
-  {
-    "expected": "invoice",
-    "predicted": "invoice",
-    "router_ok": true,
-    "language_ok": true,
     "language": "th",
-    "precision": 0.5454545454545454,
+    "precision": 0.5,
     "recall": 0.5,
-    "f1": 0.5217391304347826,
+    "f1": 0.5,
     "tp": 6,
-    "fp": 5,
+    "fp": 6,
     "fn": 6,
     "fields_expected": 12,
     "cells_total": 5,
@@ -953,42 +951,39 @@
     "rows_total": 2,
     "rows_found": 0,
     "extra_rows": 0,
-    "extra_columns": 3,
+    "extra_columns": 2,
     "excluded_cells": 1,
     "failed": false,
     "error": null,
     "needs_review": true,
     "returned": true,
-    "judge_status": "flagged",
+    "judge_status": "unavailable",
     "timings": {
-      "router": 11.33865240600062,
-      "extractor": 527.270825601001,
-      "validator": 0.05971461400258704,
-      "judge": 256.4788686440006,
-      "pipeline": 795.8701518099988,
-      "ocr": 6.543852611001057,
-      "render": 1.1220055329977185,
+      "router": 88.31574465399899,
+      "extractor": 693.0756629979951,
+      "validator": 0.04522070199891459,
+      "judge": 129.72827583400067,
+      "pipeline": 912.5144990590052,
+      "ocr": 7.786294416997407,
+      "render": 1.141064909999841,
       "ocr_cached": 0.0
     },
     "usage": {
       "router": {
         "input_tokens": 656,
-        "output_tokens": 44,
-        "total_tokens": 700,
+        "output_tokens": 41,
+        "total_tokens": 697,
         "attempts": 1,
         "retries": 0
       },
       "judge": {
-        "input_tokens": 1768,
-        "output_tokens": 122,
-        "total_tokens": 1890,
         "attempts": 1,
         "retries": 0
       },
       "extractor_invoice": {
         "input_tokens": 1315,
-        "output_tokens": 1643,
-        "total_tokens": 2958,
+        "output_tokens": 1633,
+        "total_tokens": 2948,
         "attempts": 1,
         "retries": 0
       }
@@ -1026,9 +1021,10 @@
       }
     ],
     "unexpected_fields": {
-      "currency": "บาท",
+      "seller_address": "หจกค. บุญรอดคอลฟฟี (ตลาดรัตนบุรี) Cafe Amazon สาขา 4504",
+      "currency": "THB",
       "subtotal_amount": "60.00",
-      "line_items": "[{\"column\": \"1\", \"value\": \"อเค | ชา.\", \"confidence\": 1.0, \"source_span\": \"๑อเค | ชา.\"}, {\"column\": \"2\", \"value\": \"DI ชาเขียวนม sau ขนาดใหญ่\", \"confidence\": 1.0, \"source_span\": \"DI ชาเขียวนม sau ขนาดใหญ่\"}, {\"column\": \"3\", \"value\": \"1\", \"confidence\": 1.0, \"source_span\": \"1\"}, {\"column\": \"4\", \"value\": \"60.00\", \"confidence\": 1.0, \"source_span\": \"60.00\"}, {\"column\": \"5\", \"value\": \"- DI 0%\", \"confidence\": 1.0, \"source_span\": \"- DI 0%\"}, {\"column\": \"6\", \"value\": \"pees OD\", \"confidence\": 1.0, \"source_span\": \"pees OD\"}]"
+      "line_items": "[{\"column\": \"1\", \"value\": \"อเค | ชา.\", \"confidence\": 1.0, \"source_span\": \"๑อเค | ชา.\"}, {\"column\": \"2\", \"value\": \"DI ชาเขียวนม sau ขนาดใหญ่\", \"confidence\": 1.0, \"source_span\": \"DI ชาเขียวนม sau ขนาดใหญ่\"}, {\"column\": \"3\", \"value\": \"60.00\", \"confidence\": 1.0, \"source_span\": \"ล\"}, {\"column\": \"4\", \"value\": \"DI 0%\", \"confidence\": 1.0, \"source_span\": \"- DI 0%\"}, {\"column\": \"5\", \"value\": \"60.00\", \"confidence\": 1.0, \"source_span\": \"Total Baht) | COO\"}]"
     },
     "notes": "Unlabeled item columns use positional names; line code D1/DI is excluded from exact cell scoring. Price includes VAT. Wi-Fi credentials and advertising are outside the data-field contract.",
     "stem": "THAI_bill.jpg / 1",
@@ -1064,13 +1060,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 95.05409369599874,
-      "extractor": 493.2708080699995,
-      "validator": 0.008205615002225386,
-      "judge": 208.23833057900265,
-      "pipeline": 797.5523257709974,
-      "ocr": 5.195587831000012,
-      "render": 0.6044150039997476,
+      "router": 107.28198988000076,
+      "extractor": 502.08365906600375,
+      "validator": 0.022064341996156145,
+      "judge": 204.62287010400178,
+      "pipeline": 815.3301869390052,
+      "ocr": 6.259500195003056,
+      "render": 0.5591863809968345,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -1151,12 +1147,12 @@
     "returned": true,
     "judge_status": "skipped",
     "timings": {
-      "router": 63.606733207001525,
-      "extractor": 552.3233436070004,
-      "validator": 0.007135598003515042,
-      "pipeline": 616.5394790530008,
-      "ocr": 1.6184874060018046,
-      "render": 0.555007740000292,
+      "router": 62.90559948600276,
+      "extractor": 557.8235810429978,
+      "validator": 0.0077900910036987625,
+      "pipeline": 621.5475300899998,
+      "ocr": 1.9234600069976295,
+      "render": 0.6889768330001971,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -1213,12 +1209,12 @@
     "returned": true,
     "judge_status": "skipped",
     "timings": {
-      "router": 49.60470328199881,
-      "extractor": 310.34805925500405,
-      "validator": 0.009601651996490546,
-      "pipeline": 360.5401143390045,
-      "ocr": 1.4429206169952522,
-      "render": 0.45034457199653843,
+      "router": 51.292325894995884,
+      "extractor": 319.1102379310032,
+      "validator": 0.009175569997751154,
+      "pipeline": 371.51237650599796,
+      "ocr": 1.5507689229998505,
+      "render": 0.4284273689991096,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -1281,12 +1277,12 @@
     "returned": true,
     "judge_status": "skipped",
     "timings": {
-      "router": 53.553550719007035,
-      "extractor": 388.3364524100034,
-      "validator": 0.013040735000686254,
-      "pipeline": 442.4159267789946,
-      "ocr": 1.495133928998257,
-      "render": 0.5453247999976156,
+      "router": 47.09859918500297,
+      "extractor": 383.43955266899866,
+      "validator": 0.020942044000548776,
+      "pipeline": 431.6395203649954,
+      "ocr": 1.468834521001554,
+      "render": 0.4441731159968185,
       "ocr_cached": 0.0
     },
     "usage": {

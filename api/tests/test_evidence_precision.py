@@ -90,6 +90,24 @@ def test_comma_decimal_separator_matches():
     assert value_in_text(12.0, "Total 1,200") is False
 
 
+def test_ocr_coherence_separates_soup_from_documents():
+    from app.core.security import is_ocr_text_coherent, ocr_text_coherence
+
+    soup = ("— TAXINVOICE | 86 BELASTINGFAKTUUR | : Bin 2% ๕๕ _ , โญภลทให | ศรเบ | 1 | ๕ "
+            ". | อไฮกค ‘ | ed r SB ั 77 /7 | : ( | NA : | B.T.W.Reg Nr ร่ | - ี 3-- ี 33@ "
+            "ช 8 ๐ 8 ๐83 เออชชี้เเัั - ัีี้ีืีื้้้ี้ - ี -- เ | [60 | | SIGE | OVC Sard 1 "
+            "โอหทร | Subtotaal | Terme V.A.T. inclusive | a ea | pea | จอไก TOTAAL")
+    assert ocr_text_coherence(soup) < 0.35
+    assert is_ocr_text_coherent(soup) is False
+
+    clean_po = "Purchase Orders\nOrder ID | Date | Customer Name\n10256 | 2016-07-15 | Paula Parente\nProducts\nProduct ID: | Product: | Quantity: | Unit Price:\n53 | Perth Pasties | 15 | 26.2"
+    assert is_ocr_text_coherent(clean_po) is True
+    # Short texts are exempt — too little signal to judge.
+    assert is_ocr_text_coherent("Total 100") is True
+    assert is_ocr_text_coherent("") is True
+    assert is_ocr_text_coherent(None) is True
+
+
 def test_value_side_quotes_stripped_before_compare():
     doc = "101870 | 1 | 65.00 | 68.90"
     assert value_in_text("'101870 | 1 |'", doc) is True
