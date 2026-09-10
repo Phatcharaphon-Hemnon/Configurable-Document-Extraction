@@ -115,6 +115,12 @@ class ValidatorAgent:
                     if cell.value is None:
                         errors.append(f"{label}: unreadable cell")
                     problem = check_evidence(label, cell.value, cell.source_span, document_text)
+                    if problem and cell.value is not None and document_text and value_in_text(cell.value, document_text):
+                        # Imprecise row-level span (model quotes "id | name" for
+                        # every cell) but the value itself is grounded in the
+                        # document — not a hallucination. A phantom value
+                        # absent from the text still flags above.
+                        problem = None
                     if problem:
                         errors.append(problem)
                     if cell.confidence < LOW_CONFIDENCE_THRESHOLD:
@@ -135,7 +141,7 @@ class ValidatorAgent:
 def _check_array_rows(field: ExtractedField, document_text: str | None) -> list[str]:
     """Legacy arrays lack cell spans; require every cell to exist in the OCR text."""
     if not document_text:
-        return []
+        return [f"{field.name}: no document text to verify array rows against (possible hallucination)"]
     try:
         rows = json.loads(str(field.value))
     except (ValueError, TypeError):

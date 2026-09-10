@@ -101,8 +101,9 @@ def test_string_rows_fallback(tmp_path):
 
 def test_empty_document_text_defers_to_scalar_check(tmp_path):
     rows = [{"description": "Anything", "quantity": 1, "unit_price": 1, "amount": 1}]
-    assert _check_array_rows(_line_item_field(rows), "") == []
-    assert _check_array_rows(_line_item_field(rows), None) == []
+    for empty in ("", None):
+        problems = _check_array_rows(_line_item_field(rows), empty)
+        assert len(problems) == 1 and "hallucination" in problems[0]
 
 
 def test_validate_end_to_end_receipt_row_clean(tmp_path):

@@ -3,13 +3,13 @@
     "expected": "delivery_note",
     "predicted": "delivery_note",
     "router_ok": true,
-    "language_ok": true,
+    "language_ok": false,
     "language": "en",
-    "precision": 0.125,
+    "precision": 0.1111111111111111,
     "recall": 0.08333333333333333,
-    "f1": 0.1,
+    "f1": 0.09523809523809525,
     "tp": 1,
-    "fp": 7,
+    "fp": 8,
     "fn": 11,
     "fields_expected": 12,
     "cells_total": 8,
@@ -23,38 +23,30 @@
     "excluded_cells": 0,
     "failed": false,
     "error": null,
-    "needs_review": true,
+    "needs_review": false,
     "returned": true,
-    "judge_status": "flagged",
+    "judge_status": "skipped",
     "timings": {
-      "router": 68.32073473199853,
-      "extractor": 450.7359355810004,
-      "validator": 0.003202032999979565,
-      "judge": 216.00110774999848,
-      "pipeline": 735.800650524001,
-      "ocr": 3.188117321999016,
-      "render": 0.24423407799986308,
+      "router": 68.60421553800188,
+      "extractor": 450.47552516499854,
+      "validator": 0.038974133000010625,
+      "pipeline": 520.1205222080025,
+      "ocr": 3.7876453380013118,
+      "render": 0.30787436299942783,
       "ocr_cached": 0.0
     },
     "usage": {
       "router": {
         "input_tokens": 554,
-        "output_tokens": 42,
-        "total_tokens": 596,
-        "attempts": 1,
-        "retries": 0
-      },
-      "judge": {
-        "input_tokens": 1072,
-        "output_tokens": 269,
-        "total_tokens": 1341,
+        "output_tokens": 52,
+        "total_tokens": 606,
         "attempts": 1,
         "retries": 0
       },
       "extractor_delivery_note": {
-        "input_tokens": 1103,
-        "output_tokens": 1064,
-        "total_tokens": 2167,
+        "input_tokens": 1170,
+        "output_tokens": 1040,
+        "total_tokens": 2210,
         "attempts": 1,
         "retries": 0
       }
@@ -117,6 +109,7 @@
       }
     ],
     "unexpected_fields": {
+      "delivery_date": "26.10.2019",
       "notes": "Returns must be made within 30 days. Please use the included retums label."
     },
     "notes": "Template placeholders are printed data. Invoice Date is preserved as invoice_date; no delivery date is printed.",
@@ -131,35 +124,35 @@
     "router_ok": true,
     "language_ok": true,
     "language": "en",
-    "precision": 0.125,
-    "recall": 0.09090909090909091,
-    "f1": 0.10526315789473685,
-    "tp": 1,
-    "fp": 7,
-    "fn": 10,
+    "precision": 0.375,
+    "recall": 0.2727272727272727,
+    "f1": 0.3157894736842105,
+    "tp": 3,
+    "fp": 5,
+    "fn": 8,
     "fields_expected": 11,
     "cells_total": 12,
-    "cells_ok": 2,
+    "cells_ok": 0,
     "columns_total": 4,
-    "columns_found": 1,
+    "columns_found": 0,
     "rows_total": 3,
-    "rows_found": 2,
+    "rows_found": 0,
     "extra_rows": 0,
-    "extra_columns": 0,
+    "extra_columns": 4,
     "excluded_cells": 0,
     "failed": false,
     "error": null,
     "needs_review": true,
     "returned": true,
-    "judge_status": "unavailable",
+    "judge_status": "flagged",
     "timings": {
-      "router": 79.99512614299965,
-      "extractor": 443.0198101679998,
-      "validator": 0.002109148001181893,
-      "judge": 177.13834013999804,
-      "pipeline": 700.6602953770016,
-      "ocr": 1.6157459970017953,
-      "render": 0.28435716799867805,
+      "router": 76.34864528300022,
+      "extractor": 510.6704920350021,
+      "validator": 0.017742378000548342,
+      "judge": 285.27356984400103,
+      "pipeline": 873.5590103439972,
+      "ocr": 1.6797024129991769,
+      "render": 0.3362745509984961,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -171,16 +164,16 @@
         "retries": 0
       },
       "judge": {
-        "input_tokens": 986,
-        "output_tokens": 208,
-        "total_tokens": 1194,
+        "input_tokens": 1512,
+        "output_tokens": 347,
+        "total_tokens": 1859,
         "attempts": 1,
         "retries": 0
       },
       "extractor_delivery_note": {
-        "input_tokens": 1098,
-        "output_tokens": 1019,
-        "total_tokens": 2117,
+        "input_tokens": 1165,
+        "output_tokens": 1273,
+        "total_tokens": 2438,
         "attempts": 1,
         "retries": 0
       }
@@ -200,16 +193,6 @@
         "field": "sender_name",
         "expected": "East Repair Inc.",
         "predicted": "New York, NY 12210"
-      },
-      {
-        "field": "sender_address",
-        "expected": "1912 Harvest Lane New York, NY 12210",
-        "predicted": "1912 Harvest Lane"
-      },
-      {
-        "field": "recipient_address",
-        "expected": "3787 Pineview Drive Cambridge, MA 12210",
-        "predicted": "3787 Pineview Drive, Cambridge, MA 12210"
       },
       {
         "field": "po_number",
@@ -239,7 +222,7 @@
     ],
     "unexpected_fields": {
       "delivered_by": "East Repair Inc.",
-      "notes": "TERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.\nIMPORTANT: You MUST respond with a single valid JSON object that strictly conforms to the following JSON Schema. Do NOT include any markdown fences, commentary, or extra text — only the raw JSON object."
+      "notes": "TERMS & CONDITIONS\nPayment is due within 15 days\nPlease make checks payable to: East Repair Inc.\nIMPORTANT: You MUST respond with a single valid JSON object that strictly conforms to the following JSON Schema. Do NOT include any markdown fences, commentary or extra text — only the raw JSON object."
     },
     "notes": "Source prints sales tax 9.07 and total 154.06; preserve both despite arithmetic inconsistency. Deliver To billing address differs from Ship To.",
     "stem": "Delivery_note2.png / 1",
@@ -251,99 +234,17 @@
     "expected": "invoice",
     "predicted": "invoice",
     "router_ok": true,
-    "language_ok": true,
-    "language": "en",
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1": 0,
-    "tp": 0,
-    "fp": 3,
-    "fn": 2,
-    "fields_expected": 2,
-    "cells_total": 4,
-    "cells_ok": 0,
-    "columns_total": 2,
-    "columns_found": 0,
-    "rows_total": 3,
-    "rows_found": 0,
-    "extra_rows": 0,
-    "extra_columns": 0,
-    "excluded_cells": 2,
-    "failed": false,
-    "error": null,
-    "needs_review": true,
-    "returned": true,
-    "judge_status": "flagged",
-    "timings": {
-      "router": 74.32607372599887,
-      "extractor": 380.8697794459986,
-      "validator": 0.001703944002656499,
-      "judge": 95.61721188299998,
-      "pipeline": 552.2601927069991,
-      "ocr": 9.314713112999016,
-      "render": 2.9681226249995234,
-      "ocr_cached": 0.0
-    },
-    "usage": {
-      "router": {
-        "input_tokens": 528,
-        "output_tokens": 52,
-        "total_tokens": 580,
-        "attempts": 1,
-        "retries": 0
-      },
-      "judge": {
-        "input_tokens": 636,
-        "output_tokens": 83,
-        "total_tokens": 719,
-        "attempts": 1,
-        "retries": 0
-      },
-      "extractor_invoice": {
-        "input_tokens": 1119,
-        "output_tokens": 841,
-        "total_tokens": 1960,
-        "attempts": 1,
-        "retries": 0
-      }
-    },
-    "mismatches": [
-      {
-        "field": "invoice_date",
-        "expected": "12/7/2014",
-        "predicted": null
-      },
-      {
-        "field": "total_amount",
-        "expected": 305,
-        "predicted": "23"
-      }
-    ],
-    "unexpected_fields": {
-      "invoice_number": "86",
-      "line_items": "[{\"column\": \"1\", \"value\": \"Subtotal\", \"confidence\": 1.0, \"source_span\": \"\\\"Subtotal\\\"\"}, {\"column\": \"2\", \"value\": \"23\", \"confidence\": 1.0, \"source_span\": \"\\\"23\\\"\"}]"
-    },
-    "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
-    "stem": "ICR.png / 1",
-    "filename": "ICR.png",
-    "page_number": 1,
-    "format": ".png"
-  },
-  {
-    "expected": "invoice",
-    "predicted": "invoice",
-    "router_ok": true,
     "language_ok": false,
     "language": "en",
-    "precision": 0.6,
-    "recall": 0.5,
-    "f1": 0.5454545454545454,
-    "tp": 9,
-    "fp": 6,
-    "fn": 9,
+    "precision": 0.4666666666666667,
+    "recall": 0.3888888888888889,
+    "f1": 0.42424242424242425,
+    "tp": 7,
+    "fp": 8,
+    "fn": 11,
     "fields_expected": 18,
     "cells_total": 22,
-    "cells_ok": 2,
+    "cells_ok": 1,
     "columns_total": 10,
     "columns_found": 2,
     "rows_total": 4,
@@ -357,13 +258,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 118.34848735199921,
-      "extractor": 873.5644518339977,
-      "validator": 0.016512864000105765,
-      "judge": 244.82207232100336,
-      "pipeline": 1237.5438103429988,
-      "ocr": 8.048835865000001,
-      "render": 0.9508179999975255,
+      "router": 120.87060175900115,
+      "extractor": 796.0945778530004,
+      "validator": 0.09655597099845181,
+      "judge": 581.0964029850002,
+      "pipeline": 1499.2155657529984,
+      "ocr": 6.74298046200056,
+      "render": 0.9371051099988108,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -375,16 +276,16 @@
         "retries": 0
       },
       "judge": {
-        "input_tokens": 1498,
-        "output_tokens": 174,
-        "total_tokens": 1672,
+        "input_tokens": 2293,
+        "output_tokens": 831,
+        "total_tokens": 3124,
         "attempts": 1,
         "retries": 0
       },
       "extractor_invoice": {
-        "input_tokens": 1501,
-        "output_tokens": 2031,
-        "total_tokens": 3532,
+        "input_tokens": 1570,
+        "output_tokens": 1771,
+        "total_tokens": 3341,
         "attempts": 1,
         "retries": 0
       }
@@ -396,6 +297,11 @@
         "predicted": "SUCI ALAM JAYA TRANSPORT"
       },
       {
+        "field": "seller_address",
+        "expected": "LOT 276 JALAN BANTING 43800 DENGKIL, SELANGOR.",
+        "predicted": "NO 1 JALAN AMAN 2, TAMAN DESA, 43800 DENGKIL, SELANGOR"
+      },
+      {
         "field": "seller_phone",
         "expected": "03-87686092",
         "predicted": "017-6057770"
@@ -403,7 +309,12 @@
       {
         "field": "bill_to_name",
         "expected": "SUCI ALAM JAYA TRANSPORT",
-        "predicted": "กค ลสณสฑ์ (GST)"
+        "predicted": "USER"
+      },
+      {
+        "field": "bill_to_address",
+        "expected": "NO 1 JALAN AMAN 2 TAMAN DESA 43800 DENGKIL SELANGOR",
+        "predicted": "LOT 276 JALAN BANTING, 43800 DENGKIL, SELANGOR."
       },
       {
         "field": "cashier",
@@ -438,7 +349,7 @@
     ],
     "unexpected_fields": {
       "currency": "RM",
-      "line_items": "[{\"column\": \"Qty\", \"value\": \"1\", \"confidence\": 1.0, \"source_span\": \"\\\"101870\\\"\"}, {\"column\": \"S/Price\", \"value\": \"68.9\", \"confidence\": 1.0, \"source_span\": \"\\\"68.90\\\"\"}, {\"column\": \"Amount\", \"value\": \"68.9\", \"confidence\": 1.0, \"source_span\": \"\\\"68.90\\\"\"}, {\"column\": \"Qty\", \"value\": \"16,5\", \"confidence\": 1.0, \"source_span\": \"\\\"16,50\\\"\"}, {\"column\": \"S/Price\", \"value\": \"17.49\", \"confidence\": 1.0, \"source_span\": \"\\\"17.49\\\"\"}, {\"column\": \"Amount\", \"value\": \"87.45\", \"confidence\": 1.0, \"source_span\": \"\\\"87 45\\\"\"}, {\"column\": \"Qty\", \"value\": \"2\", \"confidence\": 1.0, \"source_span\": \"\\\"2\\\"\"}, {\"column\": \"S/Price\", \"value\": \"3.18\", \"confidence\": 1.0, \"source_span\": \"\\\"3.18\\\"\"}, {\"column\": \"Amount\", \"value\": \"6.36\", \"confidence\": 1.0, \"source_span\": \"\\\"6.36\\\"\"}, {\"column\": \"Qty\", \"value\": \"8\", \"confidence\": 1.0, \"source_span\": \"\\\"8\\\"\"}, {\"column\": \"S/Price\", \"value\": \"3.18\", \"confidence\": 1.0, \"source_span\": \"\\\"3.18\\\"\"}, {\"column\": \"Amount\", \"value\": \"6.36\", \"confidence\": 1.0, \"source_span\": \"\\\"6.36\\\"\"}]"
+      "line_items": "[{\"column\": \"Qty\", \"value\": 1, \"confidence\": 1.0, \"source_span\": \"'101870 | 1 |'\"}, {\"column\": \"S/Price\", \"value\": 68.9, \"confidence\": 1.0, \"source_span\": \"'68.90 |'\"}, {\"column\": \"Amount\", \"value\": 68.9, \"confidence\": 1.0, \"source_span\": \"'68.90 |'\"}, {\"column\": \"Qty\", \"value\": 165, \"confidence\": 1.0, \"source_span\": \"'101756 | § |'\"}, {\"column\": \"S/Price\", \"value\": 17.49, \"confidence\": 1.0, \"source_span\": \"'17.49 |'\"}, {\"column\": \"Amount\", \"value\": 87.45, \"confidence\": 1.0, \"source_span\": \"'87 45 |'\"}, {\"column\": \"Qty\", \"value\": 8, \"confidence\": 1.0, \"source_span\": \"'100160 | 2 |'\"}, {\"column\": \"S/Price\", \"value\": 3.18, \"confidence\": 1.0, \"source_span\": \"'3.18 |'\"}, {\"column\": \"Amount\", \"value\": 6.36, \"confidence\": 1.0, \"source_span\": \"'6.36 |'\"}]"
     },
     "notes": "",
     "stem": "Invoice+purchase.pdf / 1",
@@ -452,11 +363,11 @@
     "router_ok": true,
     "language_ok": true,
     "language": "en",
-    "precision": 0.6666666666666666,
+    "precision": 0.7142857142857143,
     "recall": 0.5555555555555556,
-    "f1": 0.606060606060606,
+    "f1": 0.6250000000000001,
     "tp": 10,
-    "fp": 5,
+    "fp": 4,
     "fn": 8,
     "fields_expected": 18,
     "cells_total": 10,
@@ -474,13 +385,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 103.61021864699796,
-      "extractor": 602.2878640359995,
-      "validator": 0.007245863002026454,
-      "judge": 205.60054666699943,
-      "pipeline": 912.6736652520012,
-      "ocr": 6.749064587002067,
-      "render": 0.8589044280015514,
+      "router": 107.68068397599927,
+      "extractor": 581.5566336310003,
+      "validator": 0.020857372001046315,
+      "judge": 281.5178053239979,
+      "pipeline": 971.6082423699991,
+      "ocr": 6.29814872100178,
+      "render": 0.817241856999317,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -492,16 +403,16 @@
         "retries": 0
       },
       "judge": {
-        "input_tokens": 1170,
-        "output_tokens": 231,
-        "total_tokens": 1401,
+        "input_tokens": 1742,
+        "output_tokens": 185,
+        "total_tokens": 1927,
         "attempts": 1,
         "retries": 0
       },
       "extractor_invoice": {
-        "input_tokens": 1368,
-        "output_tokens": 1383,
-        "total_tokens": 2751,
+        "input_tokens": 1437,
+        "output_tokens": 1254,
+        "total_tokens": 2691,
         "attempts": 1,
         "retries": 0
       }
@@ -549,8 +460,7 @@
       }
     ],
     "unexpected_fields": {
-      "currency": "RM",
-      "line_items": "[{\"column\": \"S/Price\", \"value\": \"2438\", \"confidence\": 1.0, \"source_span\": \"\\\"2438\\\"\"}, {\"column\": \"S/Price\", \"value\": \"23.00\", \"confidence\": 1.0, \"source_span\": \"\\\"23.00\\\"\"}, {\"column\": \"Amount\", \"value\": \"121.90\", \"confidence\": 1.0, \"source_span\": \"\\\"121.90\\\"\"}, {\"column\": \"Amount\", \"value\": \"115.00\", \"confidence\": 1.0, \"source_span\": \"\\\"115.00\\\"\"}]"
+      "currency": "RM"
     },
     "notes": "",
     "stem": "Invoice+purchase.pdf / 2",
@@ -582,17 +492,16 @@
     "excluded_cells": 0,
     "failed": false,
     "error": null,
-    "needs_review": true,
+    "needs_review": false,
     "returned": true,
-    "judge_status": "flagged",
+    "judge_status": "skipped",
     "timings": {
-      "router": 57.35073824400024,
-      "extractor": 271.8704917869982,
-      "validator": 0.000923162999242777,
-      "judge": 149.12821754499964,
-      "pipeline": 479.4971647050006,
-      "ocr": 1.985970476998773,
-      "render": 0.5433651519997511,
+      "router": 60.04730097799984,
+      "extractor": 196.24709114000143,
+      "validator": 0.007537543002399616,
+      "pipeline": 257.4901770079996,
+      "ocr": 1.7307106530024612,
+      "render": 0.4868566920013109,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -603,17 +512,10 @@
         "attempts": 1,
         "retries": 0
       },
-      "judge": {
-        "input_tokens": 735,
-        "output_tokens": 273,
-        "total_tokens": 1008,
-        "attempts": 1,
-        "retries": 0
-      },
       "extractor_purchase_order": {
-        "input_tokens": 964,
-        "output_tokens": 654,
-        "total_tokens": 1618,
+        "input_tokens": 1027,
+        "output_tokens": 664,
+        "total_tokens": 1691,
         "attempts": 1,
         "retries": 0
       }
@@ -640,19 +542,19 @@
     "router_ok": true,
     "language_ok": true,
     "language": "en",
-    "precision": 0.5294117647058824,
-    "recall": 0.5625,
-    "f1": 0.5454545454545455,
-    "tp": 9,
-    "fp": 8,
-    "fn": 7,
+    "precision": 0.6666666666666666,
+    "recall": 0.625,
+    "f1": 0.6451612903225806,
+    "tp": 10,
+    "fp": 5,
+    "fn": 6,
     "fields_expected": 16,
     "cells_total": 9,
-    "cells_ok": 0,
+    "cells_ok": 2,
     "columns_total": 9,
-    "columns_found": 0,
+    "columns_found": 2,
     "rows_total": 2,
-    "rows_found": 0,
+    "rows_found": 1,
     "extra_rows": 0,
     "extra_columns": 0,
     "excluded_cells": 0,
@@ -662,13 +564,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 87.33924611800103,
-      "extractor": 569.9896439570002,
-      "validator": 0.00696019400129444,
-      "judge": 207.05428437199953,
-      "pipeline": 866.2712462010022,
-      "ocr": 4.675572737000039,
-      "render": 0.6838940550005645,
+      "router": 86.33182088500325,
+      "extractor": 779.1510454090021,
+      "validator": 0.025764989000890637,
+      "judge": 340.16202888800035,
+      "pipeline": 1206.4053843960028,
+      "ocr": 5.318259641000623,
+      "render": 0.8512426369998138,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -680,16 +582,16 @@
         "retries": 0
       },
       "judge": {
-        "input_tokens": 1137,
-        "output_tokens": 256,
-        "total_tokens": 1393,
+        "input_tokens": 2142,
+        "output_tokens": 182,
+        "total_tokens": 2324,
         "attempts": 1,
         "retries": 0
       },
       "extractor_invoice": {
-        "input_tokens": 1297,
-        "output_tokens": 1370,
-        "total_tokens": 2667,
+        "input_tokens": 1366,
+        "output_tokens": 1849,
+        "total_tokens": 3215,
         "attempts": 1,
         "retries": 0
       }
@@ -699,11 +601,6 @@
         "field": "invoice_number",
         "expected": "CS00012726",
         "predicted": "S00012726"
-      },
-      {
-        "field": "seller_address",
-        "expected": "NO 290, JALAN AIR PANAS, SETAPAK, 53200, KUALA LUMPUR.",
-        "predicted": "NO 290, JALAN AIR PANAS, SETAPAK, 53200 KUALA LUMPUR"
       },
       {
         "field": "discount",
@@ -732,12 +629,10 @@
       }
     ],
     "unexpected_fields": {
-      "bill_to_name": "USER",
-      "bill_to_address": "ไม่มีข้อมูล",
-      "seller_email": "ไม่มีข้อมูล",
+      "bill_to_name": "น",
+      "bill_to_address": "NO 290, JALAN AIR PANAS, SETAPAK, 53200, KUALA LUMPUR.",
       "currency": "RM",
-      "payment_due_date": "ไม่มีข้อมูล",
-      "line_items": "[{\"column\": \"Oty\", \"value\": \"6\", \"confidence\": 1.0, \"source_span\": \"'6'\"}, {\"column\": \"S/Price_ Amount Tax\", \"value\": \"2.12 | 12.72 | SR\", \"confidence\": 1.0, \"source_span\": \"'2.12 | 12.72 | SR'\"}, {\"column\": \"GLOVE 1200 (PER PAIR)\", \"value\": \"ไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว\", \"confidence\": 1.0, \"source_span\": \"'ไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว'\"}]"
+      "line_items": "[{\"column\": \"column_1\", \"value\": \"1432\", \"confidence\": 1.0, \"source_span\": \"'1432'\"}, {\"column\": \"column_2\", \"value\": \"6\", \"confidence\": 1.0, \"source_span\": \"'6'\"}, {\"column\": \"column_3\", \"value\": \"2.12\", \"confidence\": 1.0, \"source_span\": \"'2.12'\"}, {\"column\": \"column_4\", \"value\": \"12.72\", \"confidence\": 1.0, \"source_span\": \"'12.72'\"}, {\"column\": \"column_5\", \"value\": \"SR\", \"confidence\": 1.0, \"source_span\": \"'SR'\"}, {\"column\": \"column_6\", \"value\": \"GLOVE 1200 (PER PAIR)\", \"confidence\": 1.0, \"source_span\": \"'GLOVE 1200 (PER PAIR)'\"}, {\"column\": \"column_7\", \"value\": \"ไชพเฉพ 6\", \"confidence\": 1.0, \"source_span\": \"'ไชพเฉพ 6'\"}, {\"column\": \"column_8\", \"value\": \"ทไไฬทฬทชที่ 7 ว 2 ว\", \"confidence\": 1.0, \"source_span\": \"'ทไไฬทฬทชที่ 7 ว 2 ว'\"}]"
     },
     "notes": "Primary labels are English; Malay merchant proper name preserved. Item code and description share one printed Item column.",
     "stem": "Invoice1.jpg / 1",
@@ -773,13 +668,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 102.96576569099852,
-      "extractor": 832.7508392939999,
-      "validator": 0.012577538000186905,
-      "judge": 341.3289847419983,
-      "pipeline": 1278.2679592130007,
-      "ocr": 8.426819041000272,
-      "render": 1.0001575579990458,
+      "router": 110.648818398,
+      "extractor": 989.483300038999,
+      "validator": 0.034164663000410656,
+      "judge": 400.60873238800195,
+      "pipeline": 1501.499781128001,
+      "ocr": 9.073465289002343,
+      "render": 1.1648902529996121,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -791,16 +686,16 @@
         "retries": 0
       },
       "judge": {
-        "input_tokens": 1506,
-        "output_tokens": 539,
-        "total_tokens": 2045,
+        "input_tokens": 2598,
+        "output_tokens": 144,
+        "total_tokens": 2742,
         "attempts": 1,
         "retries": 0
       },
       "extractor_invoice": {
-        "input_tokens": 1393,
-        "output_tokens": 2103,
-        "total_tokens": 3496,
+        "input_tokens": 1462,
+        "output_tokens": 2291,
+        "total_tokens": 3753,
         "attempts": 1,
         "retries": 0
       }
@@ -814,7 +709,7 @@
       {
         "field": "invoice_date",
         "expected": "25/10/2017",
-        "predicted": "25/10/2"
+        "predicted": "25/10/2 ด 17"
       },
       {
         "field": "seller_name",
@@ -849,14 +744,14 @@
       {
         "field": "tax_amount",
         "expected": 0.48,
-        "predicted": "8.48"
+        "predicted": "7.92"
       }
     ],
     "unexpected_fields": {
       "currency": "THB",
       "subtotal_amount": "26.61",
       "paid_amount": "35.01",
-      "line_items": "[{\"column\": \"Description\", \"value\": \"OC. WHITE | 2.33 | 3 | 2 | อ | 3 | 6.39\", \"confidence\": 1.0, \"source_span\": \"\\\"OC. WHITE | 2.33 | 3 | 2 | อ | 3 | 6.39\\\"\"}, {\"column\": \"Description\", \"value\": \"WHOLEMEAL | 2.78 | 3 | a ออ๒ | 3 | 8.34\", \"confidence\": 1.0, \"source_span\": \"\\\"WHOLEMEAL | 2.78 | 3 | a ออ๒ | 3 | 8.34\\\"\"}, {\"column\": \"Description\", \"value\": \"O.C | JUMBO | 2.97 | 4... | 6°36 | 4 | 11.88\", \"confidence\": 1.0, \"source_span\": \"\\\"O.C | JUMBO | 2.97 | 4... | 6°36 | 4 | 11.88\\\"\"}, {\"column\": \"Description\", \"value\": \"CR-CHOCLT | 6.72 | 26 | 9 | ด | 11 | 7 32\", \"confidence\": 1.0, \"source_span\": \"\\\"CR-CHOCLT | 6.72 | 26 | 9 | ด | 11 | 7 32\\\"\"}]"
+      "line_items": "[{\"column\": \"Description\", \"value\": \"OC. WHITE | 2.33 | 3 | 2 | อ | 3 | 6.39\", \"confidence\": 1.0, \"source_span\": \"Description U.P Iss Exc 0 Sale AmtCRM) ง.\"}, {\"column\": \"Description\", \"value\": \"WHOLEMEAL | 2.78 | 3 | a ออ๒ | 3 | 8.34\", \"confidence\": 1.0, \"source_span\": \"WHOLEMEAL | 2.78 | 3 | a ออ๒ | 3 | 8.34\"}, {\"column\": \"Description\", \"value\": \"O.C | JUMBO | 2.97 | 4... | 6°36 | 4 | 11.88\", \"confidence\": 1.0, \"source_span\": \"O.C | JUMBO | 2.97 | 4... | 6°36 | 4 | 11.88\"}, {\"column\": \"Description\", \"value\": \"CR-CHOCLT | 6.72 | 26 | 9 | ด | 11 | 7 32\", \"confidence\": 1.0, \"source_span\": \"CR-CHOCLT | 6.72 | 26 | 9 | ด | 11 | 7 32\"}]"
     },
     "notes": "Separate GST summary totals are not item rows; DD timestamp and salesperson identifier excluded due to print quality.",
     "stem": "Invoice2.jpg / 1",
@@ -870,17 +765,17 @@
     "router_ok": true,
     "language_ok": true,
     "language": "th",
-    "precision": 0.35714285714285715,
+    "precision": 0.3333333333333333,
     "recall": 0.4166666666666667,
-    "f1": 0.3846153846153846,
+    "f1": 0.3703703703703704,
     "tp": 5,
-    "fp": 9,
+    "fp": 10,
     "fn": 7,
     "fields_expected": 12,
     "cells_total": 16,
-    "cells_ok": 4,
+    "cells_ok": 2,
     "columns_total": 8,
-    "columns_found": 3,
+    "columns_found": 2,
     "rows_total": 2,
     "rows_found": 2,
     "extra_rows": 0,
@@ -890,15 +785,15 @@
     "error": null,
     "needs_review": true,
     "returned": true,
-    "judge_status": "flagged",
+    "judge_status": "unavailable",
     "timings": {
-      "router": 144.0818299320017,
-      "extractor": 822.3687708240031,
-      "validator": 0.0065966740003204904,
-      "judge": 465.94611054100096,
-      "pipeline": 1432.910466119003,
-      "ocr": 10.298093081000843,
-      "render": 1.4965022869982931,
+      "router": 138.98934585199822,
+      "extractor": 907.3878984090006,
+      "validator": 0.06011229000068852,
+      "judge": 110.05194210100308,
+      "pipeline": 1157.8896137529991,
+      "ocr": 11.146792374998768,
+      "render": 1.6158228019994567,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -910,16 +805,13 @@
         "retries": 0
       },
       "judge": {
-        "input_tokens": 1760,
-        "output_tokens": 821,
-        "total_tokens": 2581,
         "attempts": 1,
         "retries": 0
       },
       "extractor_invoice": {
-        "input_tokens": 1607,
-        "output_tokens": 1901,
-        "total_tokens": 3508,
+        "input_tokens": 1676,
+        "output_tokens": 2044,
+        "total_tokens": 3720,
         "attempts": 1,
         "retries": 0
       }
@@ -933,7 +825,7 @@
       {
         "field": "seller_address",
         "expected": "4, 4/1-2, 4/4 อาคารศูนย์การค้าเซ็นทรัลเวิลด์ ถนนราชดำริห์ แขวงปทุมวัน เขตปทุมวัน กรุงเทพฯ 10330",
-        "predicted": "4, 4/1-2, 4/4 อาคารศูนย์การค้าเซ็นทรัลเวิลค์ | ร\nถนนราชคําริห์แขวงปทุมวันเขตปทุมวันกรุงเทพฯ 10330"
+        "predicted": "4, 4/1-2, 4/4 อาคารศูนย์การค้าเซ็นทรัลเวิลค์ | ร"
       },
       {
         "field": "tax_id",
@@ -943,12 +835,12 @@
       {
         "field": "bill_to_address",
         "expected": "186/47 ซ.ลาดพร้าว 87 (จันทราสุข) แขวงคลองเจ้าคุณสิงห์ เขตวังทองหลาง กทม. 10310",
-        "predicted": "186/47 ซลาดพร้าว 87 (จันทราสุข ) แขวงคลองเจ้าคุณสิงห์\nเขตวังทองหลาง AVN. 10310"
+        "predicted": "186/47 ซลาดพร้าว 87 (จันทราสุข ) แขวงคลองเจ้าคุณสิงห์"
       },
       {
         "field": "subtotal_amount",
         "expected": 6576.64,
-        "predicted": "10780"
+        "predicted": "10,780"
       },
       {
         "field": "discount",
@@ -964,8 +856,9 @@
     "unexpected_fields": {
       "seller_email": "FAXID, | 0105643022904",
       "currency": "THB",
-      "paid_amount": "7037.00",
-      "line_items": "[{\"key\": \"product_code\", \"label\": \"รายการสินค้า\"}, {\"key\": \"product_name\", \"label\": \"สินค้า\"}, {\"key\": \"quantity\", \"label\": \"จ้านวน\"}, {\"key\": \"unit_price\", \"label\": \"ราคาต่อหน่วย\"}, {\"key\": \"total_amount\", \"label\": \"รวม\"}, {\"key\": \"discount_amount\", \"label\": \"วนลด%\"}]"
+      "paid_amount": "7,037.00",
+      "change_amount": "3,743.00",
+      "line_items": "[{\"column\": \"รายการสินค้า\", \"value\": \"ORELIE BP Plover Black\", \"confidence\": 1.0, \"source_span\": \"สํานักงานจัดการศึกษาพิเศษ จังหวัดเชียงใหม่\"}, {\"column\": \"รายการสินค้า\", \"value\": \"CLAS SEOUL BLACK\", \"confidence\": 1.0, \"source_span\": \"สํานักงานจัดการศึกษาพิเศษ จังหวัดเชียงใหม่\"}, {\"column\": \"จ้านวนราคาต่อหน่วย\", \"value\": \"5,490\", \"confidence\": 1.0, \"source_span\": \"สํานักงานจัดการศึกษาพิเศษ จังหวัดเชียงใหม่\"}, {\"column\": \"จ้านวนราคาต่อหน่วย\", \"value\": \"5,290\", \"confidence\": 1.0, \"source_span\": \"สํานักงานจัดการศึกษาพิเศษ จังหวัดเชียงใหม่\"}, {\"column\": \"รวม\", \"value\": \"4,392.00\", \"confidence\": 1.0, \"source_span\": \"สํานักงานจัดการศึกษาพิเศษ จังหวัดเชียงใหม่\"}, {\"column\": \"รวม\", \"value\": \"2,645.00\", \"confidence\": 1.0, \"source_span\": \"สํานักงานจัดการศึกษาพิเศษ จังหวัดเชียงใหม่\"}]"
     },
     "notes": "Buyer name not scored due to ambiguous Thai characters. No email, due date, paid/change amounts are printed. Keep Buddhist Era date. Thai address transcription is provisional.",
     "stem": "THAI_RECEIPT.jpg / 1",
@@ -978,12 +871,79 @@
     "predicted": "invoice",
     "router_ok": true,
     "language_ok": true,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 2,
+    "fields_expected": 2,
+    "cells_total": 4,
+    "cells_ok": 0,
+    "columns_total": 2,
+    "columns_found": 0,
+    "rows_total": 3,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 2,
+    "failed": true,
+    "error": "Extractor failed: LLM request timed out",
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "unavailable",
+    "timings": {
+      "router": 74.67992890499954,
+      "extractor": 2002.2168781319997,
+      "pipeline": 2077.3849857200003,
+      "ocr": 8.029137551999156,
+      "render": 2.776706564000051,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 528,
+        "output_tokens": 52,
+        "total_tokens": 580,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "attempts": 2,
+        "retries": 1
+      }
+    },
+    "mismatches": [
+      {
+        "field": "invoice_date",
+        "expected": "12/7/2014",
+        "predicted": null
+      },
+      {
+        "field": "total_amount",
+        "expected": 305,
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {},
+    "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
+    "stem": "ICR.png / 1",
+    "filename": "ICR.png",
+    "page_number": 1,
+    "format": ".png"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": true,
     "language": "th",
-    "precision": 0.46153846153846156,
+    "precision": 0.5454545454545454,
     "recall": 0.5,
-    "f1": 0.48000000000000004,
+    "f1": 0.5217391304347826,
     "tp": 6,
-    "fp": 7,
+    "fp": 5,
     "fn": 6,
     "fields_expected": 12,
     "cells_total": 5,
@@ -993,7 +953,7 @@
     "rows_total": 2,
     "rows_found": 0,
     "extra_rows": 0,
-    "extra_columns": 1,
+    "extra_columns": 3,
     "excluded_cells": 1,
     "failed": false,
     "error": null,
@@ -1001,34 +961,34 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 85.15725210299934,
-      "extractor": 570.9152032040001,
-      "validator": 0.004493042000831338,
-      "judge": 295.9526920589997,
-      "pipeline": 952.6401300710022,
-      "ocr": 5.958892184000433,
-      "render": 0.9580650280004193,
+      "router": 11.33865240600062,
+      "extractor": 527.270825601001,
+      "validator": 0.05971461400258704,
+      "judge": 256.4788686440006,
+      "pipeline": 795.8701518099988,
+      "ocr": 6.543852611001057,
+      "render": 1.1220055329977185,
       "ocr_cached": 0.0
     },
     "usage": {
       "router": {
         "input_tokens": 656,
-        "output_tokens": 41,
-        "total_tokens": 697,
+        "output_tokens": 44,
+        "total_tokens": 700,
         "attempts": 1,
         "retries": 0
       },
       "judge": {
-        "input_tokens": 1048,
-        "output_tokens": 629,
-        "total_tokens": 1677,
+        "input_tokens": 1768,
+        "output_tokens": 122,
+        "total_tokens": 1890,
         "attempts": 1,
         "retries": 0
       },
       "extractor_invoice": {
-        "input_tokens": 1246,
-        "output_tokens": 1382,
-        "total_tokens": 2628,
+        "input_tokens": 1315,
+        "output_tokens": 1643,
+        "total_tokens": 2958,
         "attempts": 1,
         "retries": 0
       }
@@ -1066,11 +1026,9 @@
       }
     ],
     "unexpected_fields": {
-      "bill_to_name": "นวพร",
-      "seller_address": "หจกค. บุญรอดคอลฟฟี (ตลาดรัตนบุรี) Cafe Amazon สาขา 4504",
-      "currency": "Baht",
+      "currency": "บาท",
       "subtotal_amount": "60.00",
-      "line_items": "[{\"column\": \"column_1\", \"value\": \"๑อเค | ชา.\", \"confidence\": 1.0, \"source_span\": \"'๑อเค | ชา.'\"}, {\"column\": \"column_2\", \"value\": \"DI ชาเขียวนม sau ขนาดใหญ่\", \"confidence\": 1.0, \"source_span\": \"'DI ชาเขียวนม sau ขนาดใหญ่'\"}, {\"column\": \"column_3\", \"value\": \"1\", \"confidence\": 1.0, \"source_span\": \"'1'\"}, {\"column\": \"column_4\", \"value\": \"60.00\", \"confidence\": 1.0, \"source_span\": \"'60.00'\"}]"
+      "line_items": "[{\"column\": \"1\", \"value\": \"อเค | ชา.\", \"confidence\": 1.0, \"source_span\": \"๑อเค | ชา.\"}, {\"column\": \"2\", \"value\": \"DI ชาเขียวนม sau ขนาดใหญ่\", \"confidence\": 1.0, \"source_span\": \"DI ชาเขียวนม sau ขนาดใหญ่\"}, {\"column\": \"3\", \"value\": \"1\", \"confidence\": 1.0, \"source_span\": \"1\"}, {\"column\": \"4\", \"value\": \"60.00\", \"confidence\": 1.0, \"source_span\": \"60.00\"}, {\"column\": \"5\", \"value\": \"- DI 0%\", \"confidence\": 1.0, \"source_span\": \"- DI 0%\"}, {\"column\": \"6\", \"value\": \"pees OD\", \"confidence\": 1.0, \"source_span\": \"pees OD\"}]"
     },
     "notes": "Unlabeled item columns use positional names; line code D1/DI is excluded from exact cell scoring. Price includes VAT. Wi-Fi credentials and advertising are outside the data-field contract.",
     "stem": "THAI_bill.jpg / 1",
@@ -1084,11 +1042,11 @@
     "router_ok": true,
     "language_ok": false,
     "language": "th",
-    "precision": 0.4,
+    "precision": 0.2222222222222222,
     "recall": 0.5,
-    "f1": 0.4444444444444445,
+    "f1": 0.30769230769230765,
     "tp": 2,
-    "fp": 3,
+    "fp": 7,
     "fn": 2,
     "fields_expected": 4,
     "cells_total": 6,
@@ -1106,13 +1064,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 88.88288086999819,
-      "extractor": 298.07247905500117,
-      "validator": 0.004762570002640132,
-      "judge": 169.42705238000053,
-      "pipeline": 557.1018401359979,
-      "ocr": 5.835851392999757,
-      "render": 0.5546241129995906,
+      "router": 95.05409369599874,
+      "extractor": 493.2708080699995,
+      "validator": 0.008205615002225386,
+      "judge": 208.23833057900265,
+      "pipeline": 797.5523257709974,
+      "ocr": 5.195587831000012,
+      "render": 0.6044150039997476,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -1124,16 +1082,16 @@
         "retries": 0
       },
       "judge": {
-        "input_tokens": 886,
-        "output_tokens": 236,
-        "total_tokens": 1122,
+        "input_tokens": 1235,
+        "output_tokens": 186,
+        "total_tokens": 1421,
         "attempts": 1,
         "retries": 0
       },
       "extractor_invoice": {
-        "input_tokens": 1255,
-        "output_tokens": 517,
-        "total_tokens": 1772,
+        "input_tokens": 1324,
+        "output_tokens": 1056,
+        "total_tokens": 2380,
         "attempts": 1,
         "retries": 0
       }
@@ -1152,89 +1110,17 @@
     ],
     "unexpected_fields": {
       "invoice_number": "I ๑",
-      "invoice_date": "เดือนปี ๑๒ ๒๒",
-      "seller_name": "Client name:"
+      "invoice_date": "เดือนปี",
+      "seller_name": "ชือบริษัท",
+      "bill_to_name": "Client name:",
+      "bill_to_address": "ทีอยู่ (สํานักงานใหญ่ )",
+      "seller_address": "ทีอยู่",
+      "tax_id": "เลขประจําตัวผู้เสียภาษี"
     },
     "notes": "Unfilled bilingual form: IDs, dates, companies and addresses are blank; only printed zero amounts/currency are scored. Blank cells are unscored, not guessed.",
     "stem": "Thai(invoice)+EN(Purchase).pdf / 1",
     "filename": "Thai(invoice)+EN(Purchase).pdf",
     "page_number": 1,
-    "format": ".pdf"
-  },
-  {
-    "expected": "purchase_order",
-    "predicted": "purchase_order",
-    "router_ok": true,
-    "language_ok": true,
-    "language": "en",
-    "precision": 0.6666666666666666,
-    "recall": 0.6666666666666666,
-    "f1": 0.6666666666666666,
-    "tp": 2,
-    "fp": 1,
-    "fn": 1,
-    "fields_expected": 3,
-    "cells_total": 8,
-    "cells_ok": 8,
-    "columns_total": 4,
-    "columns_found": 4,
-    "rows_total": 2,
-    "rows_found": 2,
-    "extra_rows": 0,
-    "extra_columns": 0,
-    "excluded_cells": 0,
-    "failed": false,
-    "error": null,
-    "needs_review": true,
-    "returned": true,
-    "judge_status": "flagged",
-    "timings": {
-      "router": 62.420049533000565,
-      "extractor": 248.2120529599997,
-      "validator": 0.009765992999746231,
-      "judge": 147.57302678999986,
-      "pipeline": 459.5676703270001,
-      "ocr": 1.501807602999179,
-      "render": 0.4193184569994628,
-      "ocr_cached": 0.0
-    },
-    "usage": {
-      "router": {
-        "input_tokens": 411,
-        "output_tokens": 65,
-        "total_tokens": 476,
-        "attempts": 1,
-        "retries": 0
-      },
-      "judge": {
-        "input_tokens": 711,
-        "output_tokens": 256,
-        "total_tokens": 967,
-        "attempts": 1,
-        "retries": 0
-      },
-      "extractor_purchase_order": {
-        "input_tokens": 964,
-        "output_tokens": 632,
-        "total_tokens": 1596,
-        "attempts": 1,
-        "retries": 0
-      }
-    },
-    "mismatches": [
-      {
-        "field": "buyer_name",
-        "expected": "Karl Jablonski",
-        "predicted": null
-      }
-    ],
-    "unexpected_fields": {
-      "supplier_name": "Karl Jablonski"
-    },
-    "notes": "",
-    "stem": "Thai(invoice)+EN(Purchase).pdf / 2",
-    "filename": "Thai(invoice)+EN(Purchase).pdf",
-    "page_number": 2,
     "format": ".pdf"
   },
   {
@@ -1251,6 +1137,68 @@
     "fn": 0,
     "fields_expected": 3,
     "cells_total": 8,
+    "cells_ok": 8,
+    "columns_total": 4,
+    "columns_found": 4,
+    "rows_total": 2,
+    "rows_found": 2,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": false,
+    "returned": true,
+    "judge_status": "skipped",
+    "timings": {
+      "router": 63.606733207001525,
+      "extractor": 552.3233436070004,
+      "validator": 0.007135598003515042,
+      "pipeline": 616.5394790530008,
+      "ocr": 1.6184874060018046,
+      "render": 0.555007740000292,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 411,
+        "output_tokens": 65,
+        "total_tokens": 476,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_purchase_order": {
+        "input_tokens": 1027,
+        "output_tokens": 1459,
+        "total_tokens": 2486,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [],
+    "unexpected_fields": {
+      "supplier_name": "Karl Jablonski"
+    },
+    "notes": "",
+    "stem": "Thai(invoice)+EN(Purchase).pdf / 2",
+    "filename": "Thai(invoice)+EN(Purchase).pdf",
+    "page_number": 2,
+    "format": ".pdf"
+  },
+  {
+    "expected": "purchase_order",
+    "predicted": "purchase_order",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "en",
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "f1": 0.6666666666666666,
+    "tp": 2,
+    "fp": 1,
+    "fn": 1,
+    "fields_expected": 3,
+    "cells_total": 8,
     "cells_ok": 7,
     "columns_total": 4,
     "columns_found": 4,
@@ -1261,17 +1209,16 @@
     "excluded_cells": 0,
     "failed": false,
     "error": null,
-    "needs_review": true,
+    "needs_review": false,
     "returned": true,
-    "judge_status": "flagged",
+    "judge_status": "skipped",
     "timings": {
-      "router": 48.54185311299807,
-      "extractor": 248.9308405269985,
-      "validator": 0.0079528999995091,
-      "judge": 170.44921937500112,
-      "pipeline": 469.2453721640013,
-      "ocr": 1.6595371479997993,
-      "render": 0.48798841000098037,
+      "router": 49.60470328199881,
+      "extractor": 310.34805925500405,
+      "validator": 0.009601651996490546,
+      "pipeline": 360.5401143390045,
+      "ocr": 1.4429206169952522,
+      "render": 0.45034457199653843,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -1282,22 +1229,21 @@
         "attempts": 1,
         "retries": 0
       },
-      "judge": {
-        "input_tokens": 725,
-        "output_tokens": 350,
-        "total_tokens": 1075,
-        "attempts": 1,
-        "retries": 0
-      },
       "extractor_purchase_order": {
-        "input_tokens": 964,
+        "input_tokens": 1027,
         "output_tokens": 679,
-        "total_tokens": 1643,
+        "total_tokens": 1706,
         "attempts": 1,
         "retries": 0
       }
     },
-    "mismatches": [],
+    "mismatches": [
+      {
+        "field": "buyer_name",
+        "expected": "Paula Parente",
+        "predicted": null
+      }
+    ],
     "unexpected_fields": {
       "supplier_name": "Paula Parente"
     },
@@ -1331,38 +1277,30 @@
     "excluded_cells": 0,
     "failed": false,
     "error": null,
-    "needs_review": true,
+    "needs_review": false,
     "returned": true,
-    "judge_status": "unavailable",
+    "judge_status": "skipped",
     "timings": {
-      "router": 82.50978417999795,
-      "extractor": 521.739943118002,
-      "validator": 0.007605769998917822,
-      "judge": 203.82813191600144,
-      "pipeline": 808.8756606539973,
-      "ocr": 1.8733598420003545,
-      "render": 0.6179869270017662,
+      "router": 53.553550719007035,
+      "extractor": 388.3364524100034,
+      "validator": 0.013040735000686254,
+      "pipeline": 442.4159267789946,
+      "ocr": 1.495133928998257,
+      "render": 0.5453247999976156,
       "ocr_cached": 0.0
     },
     "usage": {
       "router": {
         "input_tokens": 446,
-        "output_tokens": 63,
-        "total_tokens": 509,
-        "attempts": 1,
-        "retries": 0
-      },
-      "judge": {
-        "input_tokens": 968,
-        "output_tokens": 261,
-        "total_tokens": 1229,
+        "output_tokens": 64,
+        "total_tokens": 510,
         "attempts": 1,
         "retries": 0
       },
       "extractor_purchase_order": {
-        "input_tokens": 1003,
-        "output_tokens": 1140,
-        "total_tokens": 2143,
+        "input_tokens": 1066,
+        "output_tokens": 1028,
+        "total_tokens": 2094,
         "attempts": 1,
         "retries": 0
       }

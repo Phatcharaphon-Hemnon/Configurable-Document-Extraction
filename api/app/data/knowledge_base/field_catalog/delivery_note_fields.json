@@ -4,7 +4,7 @@
   "fields": [
     {"name": "delivery_note_number", "type": "string",  "required": true,  "validation_rule": "Non-empty alphanumeric identifier",
      "alternative_names": ["do_number", "do_no", "dn_number", "dn_no", "delivery_order_number", "delivery_no"]},
-    {"name": "delivery_date",        "type": "date",    "required": true,  "validation_rule": "Date in any recognisable format"},
+    {"name": "delivery_date",        "type": "date",    "required": false, "validation_rule": "Date in any recognisable format when printed; never invent"},
     {"name": "delivered_by",         "type": "string",  "required": true,  "validation_rule": "Non-empty string",
      "alternative_names": ["courier", "carrier", "driver", "transporter", "logistics_provider"]},
     {"name": "recipient_name",       "type": "string",  "required": false, "validation_rule": "Non-empty string",

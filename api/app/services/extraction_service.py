@@ -18,7 +18,7 @@ from app.agents.judge import JUDGE_PASS_SCORE, JudgeAgent
 from app.agents.router import RouterAgent
 from app.agents.validator import ValidatorAgent
 from app.core.config import Settings
-from app.core.security import sanitize_document_text
+from app.core.security import is_verbatim_span, sanitize_document_text
 from app.guards.audit_logger import AuditLogger
 from app.guards.content_guard import ContentLimits, validate_document_text
 from app.guards.pii_detector import PIIDetector
@@ -45,6 +45,56 @@ from app.services.source_storage import SourceStorage
 
 logger = logging.getLogger(__name__)
 queue_wait: ContextVar[float] = ContextVar("queue_wait", default=0)
+
+
+def _judge_demands_review(judge_result) -> bool:
+    """True when the judge reports a real problem.
+
+    `info`-severity issues are confirmations ("value X is supported"),
+    not problems — only `warning`/`error` issues or a sub-threshold score
+    keep a page in review.
+    """
+    if judge_result is None:
+        return False
+    if judge_result.score < JUDGE_PASS_SCORE:
+        return True
+    return any(getattr(i, "severity", "warning") in ("warning", "error")
+               for i in (judge_result.issues or []))
+
+
+def _is_numeric_value(value: object) -> bool:
+    """True for numbers and decimal-formatted numeric strings (not IDs/dates)."""
+    import re as _re
+
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, (int, float)):
+        return True
+    if isinstance(value, str):
+        return bool(_re.fullmatch(r"-?\d+[,.]\d[\d,.]*", value.strip()))
+    return False
+
+
+def _all_numeric_spans_verbatim(fields: list[ExtractedField], tables: list, page_text: str | None) -> bool:
+    """Judge-skip gate: every numeric field/cell span must be a contiguous
+    page-text substring. A confidently-wrong number with a paraphrased span
+    must always get an independent judge review (never skip)."""
+    if not page_text:
+        return False
+    spans = [
+        (f.value, f.source_span)
+        for f in fields
+        if f.value is not None and f.source_span
+    ]
+    for table in tables or []:
+        for row in table.rows:
+            for cell in row:
+                if cell.value is not None and cell.source_span:
+                    spans.append((cell.value, cell.source_span))
+    for value, span in spans:
+        if _is_numeric_value(value) and not is_verbatim_span(span, page_text):
+            return False
+    return True
 
 
 def _provider_error_details(
@@ -555,8 +605,10 @@ class DocumentExtractionService:
             trace.span("catalog-update", output={"added": outcome.added})
 
         # --- 4. Judge (text-only; single model, no vision required) ---
-        # Skipped entirely for clean extractions: completeness 100%, no
-        # validation errors, every field confident. Saves a full LLM stage.
+        # Skipped only for clean extractions: completeness 100%, no
+        # validation errors, every field confident, AND every numeric span
+        # verbatim. A confidently-wrong number with a paraphrased span must
+        # never skip the only independent sanity check. Saves a full LLM stage.
         judge_result = None
         skip_judge = (
             self.settings.judge_skip_when_clean
@@ -564,6 +616,7 @@ class DocumentExtractionService:
             and completeness >= 1.0
             and bool(fields)
             and min([f.confidence for f in fields] + [c.confidence for t in tables for row in t.rows for c in row]) >= self.settings.judge_skip_confidence
+            and _all_numeric_spans_verbatim(fields, tables, page_text)
         )
         if skip_judge:
             trace.span("judge-skipped", output={"reason": "clean extraction"})
@@ -589,7 +642,7 @@ class DocumentExtractionService:
                             "notes": judge_result.notes},
                     usage=_agent_usage(self.judge),
                 )
-                needs_review = needs_review or judge_result.score < JUDGE_PASS_SCORE or bool(judge_result.issues)
+                needs_review = needs_review or _judge_demands_review(judge_result)
             except Exception as exc:
                 details = _provider_error_details(
                     exc,
@@ -657,7 +710,7 @@ class DocumentExtractionService:
             language=routing.language,
             fields=fields,
             tables=tables,
-            judge_status="skipped" if skip_judge else "unavailable" if judge_result is None else "flagged" if judge_result.score < JUDGE_PASS_SCORE or judge_result.issues else "passed",
+            judge_status="skipped" if skip_judge else "unavailable" if judge_result is None else "flagged" if _judge_demands_review(judge_result) else "passed",
             validation_errors=validation_errors,
             needs_review=needs_review,
             completeness_score=completeness,

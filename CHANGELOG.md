@@ -2,6 +2,35 @@
 
 All notable changes to this project, newest first. Deep dives live in `docs/`.
 
+## 2026-09-10 — Zero-review loop: evidence-guard precision + eval re-runs
+
+**Problem:** 2026-09-09 eval at 100% `needs_review` (294 flags, 14/14 pages).
+Triage (`docs/review_triage.md`) showed mostly validator false positives:
+quoted/bracketed spans (139), OCR-spacing/date-format mismatches, plus
+`required` flags for fields no gold PO/DN prints.
+
+**Changed** (strict-direction only — flag, never drop):
+- `api/app/core/security.py` — quote/bracket/escape-tolerant span matching,
+  OCR-spacing + comma-decimal + dot-drop numerics, date-aware values,
+  short-span verbatim rule, empty-text flags, image-bypass removed.
+- `api/app/agents/validator.py` — doc-grounded fallback for imprecise
+  row-level table spans (phantoms still flag); empty-text arrays flag.
+- `api/app/schemas/llm_schemas.py` — `source_span` required non-empty
+  (span-less output retries). `extraction_service.py` — verbatim-numeric
+  judge gate; info-only judge issues don't force review. `judge.py` —
+  provenance block in prompt. `field_catalog.py` — new-field floor
+  `max(configured, 0.8)`; Thai no-data placeholders omitted.
+- `extractors.py` prompt — bare verbatim spans, placeholder ban. Catalogs —
+  PO totals/currency/supplier + DN delivery_date optional (gold-backed).
+- New scripts: `audit_review_causes.py` (triage ledger),
+  `merge_eval_runs.py` (chunked-run merge). New tests:
+  `test_evidence_precision.py`, `test_catalog_required_alignment.py`.
+
+**Verified:** 337 passed, 2 skipped, ruff clean. Live `qwen2.5:3b` loop
+(2 chunks merged): review 100% → 64% (5/14 clean, 4 judge-skipped),
+macro F1 0.439 → 0.446, router 1.000. Remainder = genuine small-model
+errors for the stronger-model loop. See `docs/review_zero_plan.md`.
+
 ## 2026-09-04 — Langfuse v4 tracing overhaul
 
 **Problem:** tracing was silently dead — the wrapper called

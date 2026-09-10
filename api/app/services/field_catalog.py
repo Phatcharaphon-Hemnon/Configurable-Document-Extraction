@@ -32,6 +32,8 @@ PLACEHOLDER_VALUES: frozenset[str] = frozenset({
     "not available", "not applicable", "not answerable", "unanswerable",
     "no answer", "not provided", "not stated", "not found", "unknown",
     "no value", "?", "??", "tbd", "blank", "empty",
+    # Thai equivalents seen in model output ("no data / not specified").
+    "ไม่มีข้อมูล", "ไม่ระบุ", "ไม่มี", "-",
 })
 
 # A field name must look like a clean snake_case identifier to be catalog-worthy.
@@ -39,6 +41,11 @@ _SANE_NAME_RE = re.compile(r"^[a-z][a-z0-9_]{0,47}$")
 
 # Minimum confidence for an AI-discovered field to be written into the catalog.
 NEW_FIELD_MIN_CONFIDENCE = 0.6
+
+# Hard floor: the effective bar is max(configured, floor), so a confident
+# hallucination at exactly the validator's low-confidence boundary (0.6)
+# can never auto-register into the catalog and compound itself.
+NEW_FIELD_CONFIDENCE_FLOOR = 0.8
 
 _lock = threading.Lock()
 
@@ -226,9 +233,10 @@ class FieldCatalog:
 
 def min_new_field_confidence() -> float:
     try:
-        return max(0, min(1, float(os.getenv("NEW_FIELD_MIN_CONFIDENCE", str(NEW_FIELD_MIN_CONFIDENCE)))))
+        configured = max(0, min(1, float(os.getenv("NEW_FIELD_MIN_CONFIDENCE", str(NEW_FIELD_MIN_CONFIDENCE)))))
     except ValueError:
-        return NEW_FIELD_MIN_CONFIDENCE
+        configured = NEW_FIELD_MIN_CONFIDENCE
+    return max(configured, NEW_FIELD_CONFIDENCE_FLOOR)
 
 
 def skip_reason(name: str, value: object, confidence: float) -> str | None:

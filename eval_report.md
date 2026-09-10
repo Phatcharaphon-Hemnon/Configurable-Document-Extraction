@@ -1,12 +1,12 @@
 # Eval report — multilingual page extraction
 
-Generated 2026-09-09T04:04:33.242073+00:00 · **LIVE pipeline**
+Generated 2026-09-10T01:06:56.107887+00:00 · **LIVE pipeline**
 
 ## Run configuration
 
 | Setting | Value |
 |---|---|
-| generated_at | 2026-09-09T04:04:33.242073+00:00 |
+| generated_at | 2026-09-10T01:06:56.107887+00:00 |
 | provider | ollama-local |
 | model | qwen2.5:3b |
 | ocr | tesseract |
@@ -14,84 +14,86 @@ Generated 2026-09-09T04:04:33.242073+00:00 · **LIVE pipeline**
 | dpi | 300 |
 | few_shot | 0 |
 | concurrency | 1 |
-| files | 11 |
+| files | ['Delivery1.webp', 'Delivery_note2.png', 'ICR.png', 'Invoice+purchase.pdf', 'Invoice1.jpg', 'Invoice2.jpg', 'THAI_RECEIPT.jpg', 'THAI_bill.jpg', 'Thai(invoice)+EN(Purchase).pdf', 'purchase_orders1.pdf', 'purchase_orders_2.pdf'] |
 | gold_sha256 | 5dcbf9c0d485427c95cb0a940ebeb59dbc59d29431ecdf13aeeb2073394c3b45 |
-| revision | 7a856e64bde0d6c8795b4d474dcbabc7ba200a87 |
+| revision | 11b8d12df9e8f4c5056f6165dc1d0e405d425beb |
 | working_tree | uncommitted implementation |
-| implementation_sha256 | 9a3b9d1e1a10d8e0a98566531e52caa07c2e3cc69881f0b9c79083669ecae757 |
-| source_hashes | {'Delivery1.webp': '3f6f73f532e6c00a249c9d323dc4107aa30c8b49e2dae039a6c7765716330fd8', 'Delivery_note2.png': '09b12cab8e36e2205e3729eacdbe38e157b213905884a235e80e5572658c89ed', 'ICR.png': 'b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f', 'Invoice+purchase.pdf': 'f99e23a58301ac8b3c6e86e73052e9150c7bde8f3931f9a1b41d2c375e59221f', 'Invoice1.jpg': '69f0ac05640746713f1c346a4a6cdd2d01927ae328bcf34819a67833f99a71ad', 'Invoice2.jpg': 'dedc362a14f4dd64d59b93352ca9f7a51319af9457672f478d60a529a0854354', 'THAI_RECEIPT.jpg': '450b970467019dcd2d4282c667e57e4d752f437f3242a09f782e9f4e807495f1', 'THAI_bill.jpg': '6c554da9a7371fc418e1cf7fa53022169cf682a7b5da4f10b801b35fd4c82402', 'Thai(invoice)+EN(Purchase).pdf': '24b3e6e42b6fda6fa777d692279afd88bf48632015d73dec78946b0d56f1d271', 'purchase_orders1.pdf': '2d2e41d87b116938930e5d32fd734a25b4a48fb6de91d8f9557336582f5d7c61', 'purchase_orders_2.pdf': '7f64dabac88fbcf623b85de6051094bb3411f856b541cb914c5294216261d893'} |
+| implementation_sha256 | c86020ea0677b9c6e32b9230ab515d2d044de207448803bdc5dc174ecf84245f |
+| source_hashes | {'ICR.png': 'b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f', 'THAI_bill.jpg': '6c554da9a7371fc418e1cf7fa53022169cf682a7b5da4f10b801b35fd4c82402', 'Thai(invoice)+EN(Purchase).pdf': '24b3e6e42b6fda6fa777d692279afd88bf48632015d73dec78946b0d56f1d271', 'purchase_orders1.pdf': '2d2e41d87b116938930e5d32fd734a25b4a48fb6de91d8f9557336582f5d7c61', 'purchase_orders_2.pdf': '7f64dabac88fbcf623b85de6051094bb3411f856b541cb914c5294216261d893'} |
 | ocr_model_hashes | {'eng.traineddata': '7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2', 'tha.traineddata': '294227cc2d1292b0acb28d61d4115c88252b96d466ca90b417cf4cf0c67bf07c'} |
+| combined_from | ['eval_rerun', 'eval_rerun2'] |
+| report_scope | combined full run across two chunks (3h cap) |
 
 ## End-to-end metrics (all expected pages, including failures)
 
 | Metric | Value |
 |---|---|
 | Pages returned / expected | 14 / 14 |
-| Successful / failed pages | 14 / 0 |
-| Field macro precision / recall / F1 | 0.435 / 0.451 / **0.439** |
-| Successful-page-only F1 | 0.439 |
-| Routing / language accuracy | 1.000 / 0.714 |
-| Table cell accuracy | 0.331 |
-| Table row / column coverage | 0.667 / 0.359 |
-| Review rate | 100.0% |
-| Median / p95 page seconds | 775.30 / 1444.71 |
+| Successful / failed pages | 13 / 1 |
+| Field macro precision / recall / F1 | 0.447 / 0.460 / **0.446** |
+| Successful-page-only F1 | 0.480 |
+| Routing / language accuracy | 1.000 / 0.643 |
+| Table cell accuracy | 0.312 |
+| Table row / column coverage | 0.639 / 0.359 |
+| Review rate | 64.3% |
+| Median / p95 page seconds | 839.56 / 2088.19 |
 
 ## Per-page results
 
 | File / page | Expected → predicted | P | R | F1 | Judge | Seconds | Outcome |
 |---|---|---|---|---|---|---|---|
-| Delivery1.webp / 1 | delivery_note → delivery_note | 0.125 | 0.083 | 0.100 | flagged | 739.23 | review |
-| Delivery_note2.png / 1 | delivery_note → delivery_note | 0.125 | 0.091 | 0.105 | unavailable | 702.56 | review |
-| ICR.png / 1 | invoice → invoice | 0.000 | 0.000 | 0.000 | flagged | 564.54 | review |
-| Invoice+purchase.pdf / 1 | invoice → invoice | 0.600 | 0.500 | 0.545 | flagged | 1246.54 | review |
-| Invoice+purchase.pdf / 2 | invoice → invoice | 0.667 | 0.556 | 0.606 | flagged | 920.28 | review |
-| Invoice+purchase.pdf / 3 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | flagged | 482.03 | review |
-| Invoice1.jpg / 1 | invoice → invoice | 0.529 | 0.562 | 0.545 | flagged | 871.63 | review |
-| Invoice2.jpg / 1 | invoice → invoice | 0.071 | 0.100 | 0.083 | flagged | 1287.69 | review |
-| THAI_RECEIPT.jpg / 1 | invoice → invoice | 0.357 | 0.417 | 0.385 | flagged | 1444.71 | review |
-| THAI_bill.jpg / 1 | invoice → invoice | 0.462 | 0.500 | 0.480 | flagged | 959.56 | review |
-| Thai(invoice)+EN(Purchase).pdf / 1 | invoice → invoice | 0.400 | 0.500 | 0.444 | flagged | 563.49 | review |
-| Thai(invoice)+EN(Purchase).pdf / 2 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | flagged | 461.49 | review |
-| purchase_orders1.pdf / 1 | purchase_order → purchase_order | 0.750 | 1.000 | 0.857 | flagged | 471.39 | review |
-| purchase_orders_2.pdf / 1 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | unavailable | 811.37 | review |
+| Delivery1.webp / 1 | delivery_note → delivery_note | 0.111 | 0.083 | 0.095 | skipped | 524.22 | completed |
+| Delivery_note2.png / 1 | delivery_note → delivery_note | 0.375 | 0.273 | 0.316 | flagged | 875.57 | review |
+| Invoice+purchase.pdf / 1 | invoice → invoice | 0.467 | 0.389 | 0.424 | flagged | 1506.90 | review |
+| Invoice+purchase.pdf / 2 | invoice → invoice | 0.714 | 0.556 | 0.625 | flagged | 978.72 | review |
+| Invoice+purchase.pdf / 3 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | skipped | 259.71 | completed |
+| Invoice1.jpg / 1 | invoice → invoice | 0.667 | 0.625 | 0.645 | flagged | 1212.57 | review |
+| Invoice2.jpg / 1 | invoice → invoice | 0.071 | 0.100 | 0.083 | flagged | 1511.74 | review |
+| THAI_RECEIPT.jpg / 1 | invoice → invoice | 0.333 | 0.417 | 0.370 | unavailable | 1170.65 | review |
+| ICR.png / 1 | invoice → invoice | 0.000 | 0.000 | 0.000 | unavailable | 2088.19 | FAILED: Extractor failed: LLM request timed out |
+| THAI_bill.jpg / 1 | invoice → invoice | 0.545 | 0.500 | 0.522 | flagged | 803.54 | review |
+| Thai(invoice)+EN(Purchase).pdf / 1 | invoice → invoice | 0.222 | 0.500 | 0.308 | flagged | 803.35 | review |
+| Thai(invoice)+EN(Purchase).pdf / 2 | purchase_order → purchase_order | 0.750 | 1.000 | 0.857 | skipped | 618.71 | completed |
+| purchase_orders1.pdf / 1 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | skipped | 362.43 | completed |
+| purchase_orders_2.pdf / 1 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | skipped | 444.46 | completed |
 
 ## Breakdown by expected
 
 | Group | Pages | F1 | Median seconds |
 |---|---|---|---|
-| delivery_note | 2 | 0.103 | 720.90 |
-| invoice | 8 | 0.386 | 939.92 |
-| purchase_order | 4 | 0.714 | 476.71 |
+| delivery_note | 2 | 0.206 | 699.90 |
+| invoice | 8 | 0.372 | 1191.61 |
+| purchase_order | 4 | 0.714 | 403.44 |
 
 ## Breakdown by language
 
 | Group | Pages | F1 | Median seconds |
 |---|---|---|---|
-| en | 11 | 0.440 | 739.23 |
-| th | 3 | 0.436 | 959.56 |
+| en | 11 | 0.459 | 875.57 |
+| th | 3 | 0.400 | 803.54 |
 
 ## Breakdown by format
 
 | Group | Pages | F1 | Median seconds |
 |---|---|---|---|
-| .jpg | 4 | 0.373 | 1123.63 |
-| .pdf | 7 | 0.636 | 563.49 |
-| .png | 2 | 0.053 | 633.55 |
-| .webp | 1 | 0.100 | 739.23 |
+| .jpg | 4 | 0.405 | 1191.61 |
+| .pdf | 7 | 0.602 | 618.71 |
+| .png | 2 | 0.158 | 1481.88 |
+| .webp | 1 | 0.095 | 524.22 |
 
 ## Stage timing and provider usage
 
 | Stage | Calls recorded | Total seconds | Retries | Reported tokens |
 |---|---|---|---|---|
-| extractor | 14 | 7135.33 | 0 | 33598 |
-| judge | 14 | 3089.87 | 0 | 19424 |
-| ocr | 14 | 71.13 | 0 | 0 |
-| render | 14 | 12.07 | 0 | 0 |
-| router | 14 | 1203.85 | 0 | 9581 |
-| validator | 14 | 0.09 | 0 | 0 |
+| extractor | 14 | 9484.83 | 1 | 34683 |
+| judge | 8 | 2463.43 | 0 | 15287 |
+| ocr | 14 | 70.10 | 0 | 0 |
+| render | 14 | 12.57 | 0 | 0 |
+| router | 14 | 1117.36 | 0 | 9595 |
+| validator | 13 | 0.40 | 0 | 0 |
 
 Token totals include only usage returned by the provider; failed attempts may have unreported usage. Stage totals are components of page latency, not additional latency.
-Unattributed pipeline time: 14.18s (orchestration/tracing and, in older runs, failed stages without separate timing).
+Unattributed pipeline time: 12.07s (orchestration/tracing and, in older runs, failed stages without separate timing).
 
 ## OCR repeat measurements
 
@@ -99,17 +101,17 @@ Only OCR is repeated; no additional agent calls are made.
 
 | File | First OCR + render seconds | Repeat seconds | Cache hit |
 |---|---|---|---|
-| Delivery1.webp | 3.432 | 0.002728 | True |
-| Delivery_note2.png | 1.900 | 0.001364 | True |
-| ICR.png | 12.283 | 0.008214 | True |
-| Invoice+purchase.pdf | 19.137 | 0.002218 | True |
-| Invoice1.jpg | 5.359 | 0.002366 | True |
-| Invoice2.jpg | 9.427 | 0.001763 | True |
-| THAI_RECEIPT.jpg | 11.795 | 0.003606 | True |
-| THAI_bill.jpg | 6.917 | 0.001562 | True |
-| Thai(invoice)+EN(Purchase).pdf | 8.312 | 0.001260 | True |
-| purchase_orders1.pdf | 2.148 | 0.000942 | True |
-| purchase_orders_2.pdf | 2.491 | 0.000466 | True |
+| Delivery1.webp | 4.096 | 0.000000 | False |
+| Delivery_note2.png | 2.016 | 0.000000 | False |
+| ICR.png | 10.806 | 0.007109 | True |
+| Invoice+purchase.pdf | 17.013 | 0.000000 | False |
+| Invoice1.jpg | 6.170 | 0.000000 | False |
+| Invoice2.jpg | 10.238 | 0.000000 | False |
+| THAI_RECEIPT.jpg | 12.763 | 0.000000 | False |
+| THAI_bill.jpg | 7.666 | 0.001100 | True |
+| Thai(invoice)+EN(Purchase).pdf | 7.973 | 0.001024 | True |
+| purchase_orders1.pdf | 1.893 | 0.000752 | True |
+| purchase_orders_2.pdf | 2.040 | 0.000668 | True |
 
 ## Annotation and scoring limits
 
@@ -139,13 +141,13 @@ Pass bar: pipeline runs on sample inputs and real metrics are reported; final-de
 
 ## Release subset (fixed files from manifest.release_subset)
 
-Generated 2026-09-09T04:04:33.242073+00:00 · **LIVE pipeline**
+Generated 2026-09-10T01:06:56.107887+00:00 · **LIVE pipeline**
 
 ## Run configuration
 
 | Setting | Value |
 |---|---|
-| generated_at | 2026-09-09T04:04:33.242073+00:00 |
+| generated_at | 2026-09-10T01:06:56.107887+00:00 |
 | provider | ollama-local |
 | model | qwen2.5:3b |
 | ocr | tesseract |
@@ -153,13 +155,14 @@ Generated 2026-09-09T04:04:33.242073+00:00 · **LIVE pipeline**
 | dpi | 300 |
 | few_shot | 0 |
 | concurrency | 1 |
-| files | 11 |
+| files | ['Delivery1.webp', 'Delivery_note2.png', 'ICR.png', 'Invoice+purchase.pdf', 'Invoice1.jpg', 'Invoice2.jpg', 'THAI_RECEIPT.jpg', 'THAI_bill.jpg', 'Thai(invoice)+EN(Purchase).pdf', 'purchase_orders1.pdf', 'purchase_orders_2.pdf'] |
 | gold_sha256 | 5dcbf9c0d485427c95cb0a940ebeb59dbc59d29431ecdf13aeeb2073394c3b45 |
-| revision | 7a856e64bde0d6c8795b4d474dcbabc7ba200a87 |
+| revision | 11b8d12df9e8f4c5056f6165dc1d0e405d425beb |
 | working_tree | uncommitted implementation |
-| implementation_sha256 | 9a3b9d1e1a10d8e0a98566531e52caa07c2e3cc69881f0b9c79083669ecae757 |
-| source_hashes | {'Delivery1.webp': '3f6f73f532e6c00a249c9d323dc4107aa30c8b49e2dae039a6c7765716330fd8', 'Delivery_note2.png': '09b12cab8e36e2205e3729eacdbe38e157b213905884a235e80e5572658c89ed', 'ICR.png': 'b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f', 'Invoice+purchase.pdf': 'f99e23a58301ac8b3c6e86e73052e9150c7bde8f3931f9a1b41d2c375e59221f', 'Invoice1.jpg': '69f0ac05640746713f1c346a4a6cdd2d01927ae328bcf34819a67833f99a71ad', 'Invoice2.jpg': 'dedc362a14f4dd64d59b93352ca9f7a51319af9457672f478d60a529a0854354', 'THAI_RECEIPT.jpg': '450b970467019dcd2d4282c667e57e4d752f437f3242a09f782e9f4e807495f1', 'THAI_bill.jpg': '6c554da9a7371fc418e1cf7fa53022169cf682a7b5da4f10b801b35fd4c82402', 'Thai(invoice)+EN(Purchase).pdf': '24b3e6e42b6fda6fa777d692279afd88bf48632015d73dec78946b0d56f1d271', 'purchase_orders1.pdf': '2d2e41d87b116938930e5d32fd734a25b4a48fb6de91d8f9557336582f5d7c61', 'purchase_orders_2.pdf': '7f64dabac88fbcf623b85de6051094bb3411f856b541cb914c5294216261d893'} |
+| implementation_sha256 | c86020ea0677b9c6e32b9230ab515d2d044de207448803bdc5dc174ecf84245f |
+| source_hashes | {'ICR.png': 'b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f', 'THAI_bill.jpg': '6c554da9a7371fc418e1cf7fa53022169cf682a7b5da4f10b801b35fd4c82402', 'Thai(invoice)+EN(Purchase).pdf': '24b3e6e42b6fda6fa777d692279afd88bf48632015d73dec78946b0d56f1d271', 'purchase_orders1.pdf': '2d2e41d87b116938930e5d32fd734a25b4a48fb6de91d8f9557336582f5d7c61', 'purchase_orders_2.pdf': '7f64dabac88fbcf623b85de6051094bb3411f856b541cb914c5294216261d893'} |
 | ocr_model_hashes | {'eng.traineddata': '7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2', 'tha.traineddata': '294227cc2d1292b0acb28d61d4115c88252b96d466ca90b417cf4cf0c67bf07c'} |
+| combined_from | ['eval_rerun', 'eval_rerun2'] |
 | report_scope | fixed release subset section inside this report |
 
 ## End-to-end metrics (all expected pages, including failures)
@@ -168,67 +171,67 @@ Generated 2026-09-09T04:04:33.242073+00:00 · **LIVE pipeline**
 |---|---|
 | Pages returned / expected | 11 / 11 |
 | Successful / failed pages | 11 / 0 |
-| Field macro precision / recall / F1 | 0.486 / 0.504 / **0.491** |
-| Successful-page-only F1 | 0.491 |
-| Routing / language accuracy | 1.000 / 0.727 |
-| Table cell accuracy | 0.312 |
-| Table row / column coverage | 0.640 / 0.338 |
-| Review rate | 100.0% |
-| Median / p95 page seconds | 739.23 / 1444.71 |
+| Field macro precision / recall / F1 | 0.502 / 0.516 / **0.500** |
+| Successful-page-only F1 | 0.500 |
+| Routing / language accuracy | 1.000 / 0.636 |
+| Table cell accuracy | 0.286 |
+| Table row / column coverage | 0.600 / 0.338 |
+| Review rate | 63.6% |
+| Median / p95 page seconds | 803.54 / 1506.90 |
 
 ## Per-page results
 
 | File / page | Expected → predicted | P | R | F1 | Judge | Seconds | Outcome |
 |---|---|---|---|---|---|---|---|
-| Delivery1.webp / 1 | delivery_note → delivery_note | 0.125 | 0.083 | 0.100 | flagged | 739.23 | review |
-| Delivery_note2.png / 1 | delivery_note → delivery_note | 0.125 | 0.091 | 0.105 | unavailable | 702.56 | review |
-| Invoice+purchase.pdf / 1 | invoice → invoice | 0.600 | 0.500 | 0.545 | flagged | 1246.54 | review |
-| Invoice+purchase.pdf / 2 | invoice → invoice | 0.667 | 0.556 | 0.606 | flagged | 920.28 | review |
-| Invoice+purchase.pdf / 3 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | flagged | 482.03 | review |
-| Invoice1.jpg / 1 | invoice → invoice | 0.529 | 0.562 | 0.545 | flagged | 871.63 | review |
-| THAI_RECEIPT.jpg / 1 | invoice → invoice | 0.357 | 0.417 | 0.385 | flagged | 1444.71 | review |
-| THAI_bill.jpg / 1 | invoice → invoice | 0.462 | 0.500 | 0.480 | flagged | 959.56 | review |
-| Thai(invoice)+EN(Purchase).pdf / 1 | invoice → invoice | 0.400 | 0.500 | 0.444 | flagged | 563.49 | review |
-| Thai(invoice)+EN(Purchase).pdf / 2 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | flagged | 461.49 | review |
-| purchase_orders1.pdf / 1 | purchase_order → purchase_order | 0.750 | 1.000 | 0.857 | flagged | 471.39 | review |
+| Delivery1.webp / 1 | delivery_note → delivery_note | 0.111 | 0.083 | 0.095 | skipped | 524.22 | completed |
+| Delivery_note2.png / 1 | delivery_note → delivery_note | 0.375 | 0.273 | 0.316 | flagged | 875.57 | review |
+| Invoice+purchase.pdf / 1 | invoice → invoice | 0.467 | 0.389 | 0.424 | flagged | 1506.90 | review |
+| Invoice+purchase.pdf / 2 | invoice → invoice | 0.714 | 0.556 | 0.625 | flagged | 978.72 | review |
+| Invoice+purchase.pdf / 3 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | skipped | 259.71 | completed |
+| Invoice1.jpg / 1 | invoice → invoice | 0.667 | 0.625 | 0.645 | flagged | 1212.57 | review |
+| THAI_RECEIPT.jpg / 1 | invoice → invoice | 0.333 | 0.417 | 0.370 | unavailable | 1170.65 | review |
+| THAI_bill.jpg / 1 | invoice → invoice | 0.545 | 0.500 | 0.522 | flagged | 803.54 | review |
+| Thai(invoice)+EN(Purchase).pdf / 1 | invoice → invoice | 0.222 | 0.500 | 0.308 | flagged | 803.35 | review |
+| Thai(invoice)+EN(Purchase).pdf / 2 | purchase_order → purchase_order | 0.750 | 1.000 | 0.857 | skipped | 618.71 | completed |
+| purchase_orders1.pdf / 1 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | skipped | 362.43 | completed |
 
 ## Breakdown by expected
 
 | Group | Pages | F1 | Median seconds |
 |---|---|---|---|
-| delivery_note | 2 | 0.103 | 720.90 |
-| invoice | 6 | 0.501 | 939.92 |
-| purchase_order | 3 | 0.730 | 471.39 |
+| delivery_note | 2 | 0.206 | 699.90 |
+| invoice | 6 | 0.482 | 1074.69 |
+| purchase_order | 3 | 0.730 | 362.43 |
 
 ## Breakdown by language
 
 | Group | Pages | F1 | Median seconds |
 |---|---|---|---|
-| en | 8 | 0.512 | 720.90 |
-| th | 3 | 0.436 | 959.56 |
+| en | 8 | 0.537 | 747.14 |
+| th | 3 | 0.400 | 803.54 |
 
 ## Breakdown by format
 
 | Group | Pages | F1 | Median seconds |
 |---|---|---|---|
-| .jpg | 3 | 0.470 | 959.56 |
-| .pdf | 6 | 0.631 | 522.76 |
-| .png | 1 | 0.105 | 702.56 |
-| .webp | 1 | 0.100 | 739.23 |
+| .jpg | 3 | 0.512 | 1170.65 |
+| .pdf | 6 | 0.591 | 711.03 |
+| .png | 1 | 0.316 | 875.57 |
+| .webp | 1 | 0.095 | 524.22 |
 
 ## Stage timing and provider usage
 
 | Stage | Calls recorded | Total seconds | Retries | Reported tokens |
 |---|---|---|---|---|
-| extractor | 11 | 5399.97 | 0 | 25999 |
-| judge | 11 | 2449.09 | 0 | 15431 |
-| ocr | 11 | 51.52 | 0 | 0 |
-| render | 11 | 7.48 | 0 | 0 |
-| router | 11 | 944.05 | 0 | 7644 |
-| validator | 11 | 0.07 | 0 | 0 |
+| extractor | 11 | 6104.80 | 0 | 28836 |
+| judge | 7 | 2062.82 | 0 | 12545 |
+| ocr | 11 | 51.51 | 0 | 0 |
+| render | 11 | 8.08 | 0 | 0 |
+| router | 11 | 878.48 | 0 | 7657 |
+| validator | 11 | 0.35 | 0 | 0 |
 
 Token totals include only usage returned by the provider; failed attempts may have unreported usage. Stage totals are components of page latency, not additional latency.
-Unattributed pipeline time: 10.73s (orchestration/tracing and, in older runs, failed stages without separate timing).
+Unattributed pipeline time: 10.35s (orchestration/tracing and, in older runs, failed stages without separate timing).
 
 ## OCR repeat measurements
 
@@ -236,14 +239,14 @@ Only OCR is repeated; no additional agent calls are made.
 
 | File | First OCR + render seconds | Repeat seconds | Cache hit |
 |---|---|---|---|
-| Delivery1.webp | 3.432 | 0.002728 | True |
-| Delivery_note2.png | 1.900 | 0.001364 | True |
-| Invoice+purchase.pdf | 19.137 | 0.002218 | True |
-| Invoice1.jpg | 5.359 | 0.002366 | True |
-| THAI_RECEIPT.jpg | 11.795 | 0.003606 | True |
-| THAI_bill.jpg | 6.917 | 0.001562 | True |
-| Thai(invoice)+EN(Purchase).pdf | 8.312 | 0.001260 | True |
-| purchase_orders1.pdf | 2.148 | 0.000942 | True |
+| Delivery1.webp | 4.096 | 0.000000 | False |
+| Delivery_note2.png | 2.016 | 0.000000 | False |
+| Invoice+purchase.pdf | 17.013 | 0.000000 | False |
+| Invoice1.jpg | 6.170 | 0.000000 | False |
+| THAI_RECEIPT.jpg | 12.763 | 0.000000 | False |
+| THAI_bill.jpg | 7.666 | 0.001100 | True |
+| Thai(invoice)+EN(Purchase).pdf | 7.973 | 0.001024 | True |
+| purchase_orders1.pdf | 1.893 | 0.000752 | True |
 
 ## Annotation and scoring limits
 
@@ -269,8 +272,3 @@ Only OCR is repeated; no additional agent calls are made.
 
 Pass bar: pipeline runs on sample inputs and real metrics are reported; final-demo accuracy thresholds are not required.
 
-_Run note: `purchase_orders_2.pdf` hit a transient `APIConnectionError` (no LLM
-response, 153s in) during the full run; it was rescored once via
-`run_eval.py --subset purchase_orders_2.pdf` (F1=0.667) and merged into the
-metrics above with the script's own `summarize`/`build_combined_report`
-helpers. Final: 14/14 pages, 0 failed._

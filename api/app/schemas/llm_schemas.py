@@ -22,7 +22,11 @@ class ExtractedFieldEntry(BaseModel):
     name: str
     value: Optional[Union[str, float, int, list, dict]] = None
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)
-    source_span: Optional[str] = None
+    # Required non-empty: span-less LLM output must fail parsing and trigger
+    # the client's retry tiers instead of flowing downstream to a review flag.
+    # (The output contract ExtractedField.source_span stays Optional — the
+    # validator still flags, never drops, span-less fields.)
+    source_span: str = Field(min_length=1)
 
 
 class ExtractionResponseSchema(BaseModel):

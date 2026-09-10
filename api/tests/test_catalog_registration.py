@@ -99,7 +99,7 @@ def test_threshold_env_override(monkeypatch, tmp_path):
 
 def test_invalid_threshold_env_falls_back(monkeypatch):
     monkeypatch.setenv("NEW_FIELD_MIN_CONFIDENCE", "nonsense")
-    assert min_new_field_confidence() == pytest.approx(0.6)
+    assert min_new_field_confidence() == pytest.approx(0.8)
     assert skip_reason("ok_name", "v", 0.9) is None
 
 

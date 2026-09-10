@@ -29,8 +29,31 @@ python scripts/run_eval.py [--mock] [--few-shot 2] [--subset po_01 ...]
 - Side effects contained: DB + audit disabled, field-catalog files
   snapshotted and restored. Exit code always 0; read the summary + report.
 
-## `scripts/time_gateway_modes.py` — gateway probe
+## `scripts/audit_review_causes.py` — review-cause triage (read-only)
 
+Classifies every `validation_errors` entry in `eval_artifacts/predictions.json`
+into buckets (`quoted-span`, `ocr-noise`, `date-format`, `missing-required`,
+`genuine-mismatch`, `judge`, `table-shape`) and writes `docs/review_triage.md`.
+Re-run after each guard/model change — `quoted-span` and `ocr-noise` must
+shrink while `genuine-mismatch` never gets reclassified as clean.
+
+```bash
+.venv/bin/python api/scripts/audit_review_causes.py \
+  --predictions eval_artifacts/predictions.json \
+  --metrics eval_artifacts/metrics.json --output docs/review_triage.md
+```
+
+## `scripts/merge_eval_runs.py` — combine chunked eval runs
+
+The 3h execution cap forces chunked `--subset` runs. Merges two run dirs'
+`predictions.json` + `metrics.partial.json` using `run_eval`'s own
+`summarize`/`build_combined_report` (run B wins on overlap) into `--output`.
+
+```bash
+.venv/bin/python api/scripts/merge_eval_runs.py --a eval_rerun --b eval_rerun2 --output eval_final
+```
+
+## `scripts/time_gateway_modes.py` — gateway probe
 One-off diagnostic proving which output tiers return parseable JSON on the
 current provider/model: strict `json_schema` → `json_object` → plain, plus
 a large-prompt strict probe (production extractor shape, ~45k chars).

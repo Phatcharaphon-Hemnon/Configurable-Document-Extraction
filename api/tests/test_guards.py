@@ -485,7 +485,8 @@ class TestCheckEvidence:
     def test_check_evidence_image_extraction_trusts_source_span(self):
         from app.core.security import check_evidence
 
-        # For image extractions, trust source_span even if it doesn't match document_text
+        # Image extractions no longer bypass verification: with no document
+        # text a valued field is unverifiable and must be flagged.
         result = check_evidence(
             "subtotal_amount",
             500.0,
@@ -493,20 +494,31 @@ class TestCheckEvidence:
             None,  # No document_text for image
             is_image_extraction=True,
         )
-        assert result is None  # Passes - trusted for images
+        assert result is not None
+        assert "hallucination" in result
 
     def test_check_evidence_image_extraction_with_ocr_text(self):
         from app.core.security import check_evidence
 
-        # Even with OCR text, image extractions trust the source_span
+        # With OCR text, image extractions verify spans like any other path.
         result = check_evidence(
             "line_items",
-            [{"name": "Item 1", "price": 100}],
+            "Item 1 - 100 THB",
             "Item 1 - 100 THB",
             "Item 1 - 100 THB",  # OCR text
             is_image_extraction=True,
         )
-        assert result is None  # Passes
+        assert result is None  # Passes — span verified, not trusted blindly
+
+        mismatch = check_evidence(
+            "line_items",
+            "Item 9 - 999 THB",
+            "Item 9 - 999 THB",
+            "Item 1 - 100 THB",  # OCR text
+            is_image_extraction=True,
+        )
+        assert mismatch is not None
+        assert "hallucination" in mismatch
 
     def test_check_evidence_missing_source_span_always_fails(self):
         from app.core.security import check_evidence
@@ -574,16 +586,27 @@ class TestValidatorWithImageExtraction:
                 )
             ]
 
-            # For image extraction, should not flag hallucination
+            # For image extraction without document text, a valued field is
+            # unverifiable and must be flagged (no blind-trust bypass).
             errors, _, _ = validator.validate(
                 doc_type="invoice",
                 fields=fields,
                 document_text=None,  # No document text for image
                 is_image_extraction=True,
             )
-            # Should not have hallucination error
+            # Should have hallucination error
             hallucination_errors = [e for e in errors if "hallucination" in e]
-            assert len(hallucination_errors) == 0
+            assert len(hallucination_errors) == 1
+
+            # With matching OCR text the same extraction verifies cleanly.
+            errors, _, needs_review = validator.validate(
+                doc_type="invoice",
+                fields=fields,
+                document_text="Invoice Total: 100 THB",
+                is_image_extraction=True,
+            )
+            assert [e for e in errors if "hallucination" in e] == []
+            assert needs_review is False
 
     def test_validator_text_extraction_hallucination_error(self):
         import tempfile
