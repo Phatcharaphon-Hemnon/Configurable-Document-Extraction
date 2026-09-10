@@ -150,7 +150,21 @@ def _check_array_rows(field: ExtractedField, document_text: str | None) -> list[
         return []
     errors = []
     for i, row in enumerate(rows):
-        cells = list(row.values()) if isinstance(row, dict) else [row]
+        cells = _row_claimed_values(row)
         if any(not value_in_text(value, document_text) for value in cells if value is not None):
             errors.append(f"{field.name}: array row {i} contains unsupported values (possible hallucination)")
     return errors
+
+
+def _row_claimed_values(row: object) -> list:
+    """Values a legacy array row actually claims about the document.
+
+    Dict keys are schema labels, never document content: `column_N` header
+    keys and flat cell structs (`column`/`value`/`confidence`/`source_span`)
+    must not be verified as values — only the claimed values are checked.
+    """
+    if not isinstance(row, dict):
+        return [row]
+    if set(row) >= {"column", "value"}:
+        return [row.get("value")]
+    return list(row.values())

@@ -61,8 +61,12 @@ them forces invention or permanent review.
   triage flags 294 → 60, quoted-span 139 → 0, missing-required 10 → 0.
 - Follow-up local loop (fail-fast gate + bracket-strip + cell fallbacks):
   **flags 60 → 50, macro F1 0.445, review still 64%**, ICR 2088s → 73s.
-  Remainder = genuine small-model errors for the stronger-model loop
-  (blocked: no cloud key on this host; 7GB RAM rules out local 20B).
+- Array-key loop (`_row_claimed_values`; dict keys never verified as
+  values): **flags 50 → 33, genuine-mismatch 18 → 4, review 64% → 57%
+  (6/14 fully clean, 5 judge-skipped), macro F1 0.445, router 1.000**.
+  Invoice1 went fully clean live. Remainder = genuine small-model errors
+  for the stronger-model loop (blocked: no cloud key on this host; 7GB
+  RAM rules out local 20B).
 
 ## Noted exceptions (stay flagged by design)
 

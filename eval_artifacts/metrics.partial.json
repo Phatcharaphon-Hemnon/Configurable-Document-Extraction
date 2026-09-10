@@ -27,13 +27,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 132.7932270809979,
-      "extractor": 765.9295700989969,
-      "validator": 0.06661795899708522,
-      "judge": 565.8383623069967,
-      "pipeline": 1465.423703044995,
-      "ocr": 6.226844554003037,
-      "render": 0.719729324002401,
+      "router": 120.43450670099992,
+      "extractor": 762.331217232997,
+      "validator": 0.06551127400598489,
+      "judge": 569.5628297680014,
+      "pipeline": 1453.8378242649997,
+      "ocr": 6.12987293900369,
+      "render": 0.728584807999141,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -154,13 +154,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 103.32766481400176,
-      "extractor": 563.4283819530028,
-      "validator": 0.015886508001131006,
-      "judge": 273.4194747100046,
-      "pipeline": 940.6806713240003,
-      "ocr": 5.660437386002741,
-      "render": 0.6951035970050725,
+      "router": 102.89214589400217,
+      "extractor": 567.1967146110037,
+      "validator": 0.013527602997783106,
+      "judge": 271.5077781289947,
+      "pipeline": 942.6126552690039,
+      "ocr": 5.53697714000009,
+      "render": 0.6664506119996076,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -265,12 +265,12 @@
     "returned": true,
     "judge_status": "skipped",
     "timings": {
-      "router": 60.07986608400097,
-      "extractor": 318.3494030990041,
-      "validator": 0.012162436003563926,
-      "pipeline": 379.46853464000014,
-      "ocr": 1.4546329959994182,
-      "render": 0.3502155909955036,
+      "router": 58.76923170899681,
+      "extractor": 313.475400477997,
+      "validator": 0.012630742996407207,
+      "pipeline": 373.479127159997,
+      "ocr": 1.4519733109991648,
+      "render": 0.3913540519934031,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -333,10 +333,10 @@
     "returned": true,
     "judge_status": "unavailable",
     "timings": {
-      "router": 62.481592511998315,
-      "pipeline": 62.64401932399778,
-      "ocr": 8.00807494900073,
-      "render": 2.395281172997784,
+      "router": 64.38288282699796,
+      "pipeline": 64.5552348429992,
+      "ocr": 7.7928482690040255,
+      "render": 2.3950592889959808,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -395,12 +395,12 @@
     "returned": true,
     "judge_status": "skipped",
     "timings": {
-      "router": 69.11053757800255,
-      "extractor": 444.63311578999856,
-      "validator": 0.021040265004558023,
-      "pipeline": 514.6462116630064,
-      "ocr": 3.3290382389968727,
-      "render": 0.30048809900472406,
+      "router": 62.920557678997284,
+      "extractor": 448.949694086994,
+      "validator": 0.010311227000784129,
+      "pipeline": 513.114989583999,
+      "ocr": 3.1290570569981355,
+      "render": 0.29158620400266955,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -510,17 +510,16 @@
     "excluded_cells": 0,
     "failed": false,
     "error": null,
-    "needs_review": true,
+    "needs_review": false,
     "returned": true,
-    "judge_status": "flagged",
+    "judge_status": "skipped",
     "timings": {
-      "router": 96.30253446300048,
-      "extractor": 752.6496820989996,
-      "validator": 0.032444905999000184,
-      "judge": 325.40115589999914,
-      "pipeline": 1175.5214619969993,
-      "ocr": 4.568025477994524,
-      "render": 0.7312677699956112,
+      "router": 100.43142555600207,
+      "extractor": 740.4798709349998,
+      "validator": 0.027412256007664837,
+      "pipeline": 841.738361347001,
+      "ocr": 4.7604056269992725,
+      "render": 0.7499108409974724,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -528,13 +527,6 @@
         "input_tokens": 706,
         "output_tokens": 47,
         "total_tokens": 753,
-        "attempts": 1,
-        "retries": 0
-      },
-      "judge": {
-        "input_tokens": 2142,
-        "output_tokens": 182,
-        "total_tokens": 2324,
         "attempts": 1,
         "retries": 0
       },
@@ -618,13 +610,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 108.38790866400086,
-      "extractor": 930.0015051310038,
-      "validator": 0.034043696003209334,
-      "judge": 383.7279262669981,
-      "pipeline": 1423.072341968007,
-      "ocr": 9.004548693999823,
-      "render": 1.1645258979988284,
+      "router": 107.55635892000282,
+      "extractor": 943.3251480059989,
+      "validator": 0.022026555001502857,
+      "judge": 392.41114302299684,
+      "pipeline": 1443.780247342991,
+      "ocr": 9.67112385800283,
+      "render": 1.2692311069986317,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -737,13 +729,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 74.23750490300154,
-      "extractor": 521.949185685,
-      "validator": 0.017279286999837495,
-      "judge": 281.5941096440001,
-      "pipeline": 879.074507025005,
-      "ocr": 1.326031801996578,
-      "render": 0.223721096997906,
+      "router": 77.2186272359977,
+      "extractor": 526.9652684410103,
+      "validator": 0.01977443299256265,
+      "judge": 287.2338223429979,
+      "pipeline": 892.6636202780064,
+      "ocr": 1.6625319870072417,
+      "render": 0.24971292399277445,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -849,13 +841,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 137.55600351100293,
-      "extractor": 898.0103843199977,
-      "validator": 0.06582865599921206,
-      "judge": 392.2194624600015,
-      "pipeline": 1429.2933746240014,
-      "ocr": 10.536689209999167,
-      "render": 1.583924531005323,
+      "router": 141.5739223540004,
+      "extractor": 903.0479025329987,
+      "validator": 0.042700289995991625,
+      "judge": 408.40747160400497,
+      "pipeline": 1453.5785581689997,
+      "ocr": 10.104580621002242,
+      "render": 1.6250347439927282,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -957,15 +949,15 @@
     "error": null,
     "needs_review": true,
     "returned": true,
-    "judge_status": "unavailable",
+    "judge_status": "flagged",
     "timings": {
-      "router": 88.31574465399899,
-      "extractor": 693.0756629979951,
-      "validator": 0.04522070199891459,
-      "judge": 129.72827583400067,
-      "pipeline": 912.5144990590052,
-      "ocr": 7.786294416997407,
-      "render": 1.141064909999841,
+      "router": 87.01422310899943,
+      "extractor": 664.0809687970032,
+      "validator": 0.026611860012053512,
+      "judge": 292.4752828940109,
+      "pipeline": 1044.4403389679937,
+      "ocr": 6.981601676001446,
+      "render": 1.1903428740042727,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -977,6 +969,9 @@
         "retries": 0
       },
       "judge": {
+        "input_tokens": 1850,
+        "output_tokens": 198,
+        "total_tokens": 2048,
         "attempts": 1,
         "retries": 0
       },
@@ -1033,6 +1028,142 @@
     "format": ".jpg"
   },
   {
+    "expected": "purchase_order",
+    "predicted": "purchase_order",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "en",
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "f1": 0.6666666666666666,
+    "tp": 2,
+    "fp": 1,
+    "fn": 1,
+    "fields_expected": 3,
+    "cells_total": 8,
+    "cells_ok": 7,
+    "columns_total": 4,
+    "columns_found": 4,
+    "rows_total": 2,
+    "rows_found": 2,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": false,
+    "returned": true,
+    "judge_status": "skipped",
+    "timings": {
+      "router": 73.61334180500126,
+      "extractor": 313.37013702299737,
+      "validator": 0.01845811100793071,
+      "pipeline": 387.88519810799335,
+      "ocr": 1.8566983609925956,
+      "render": 0.5177359149965923,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 406,
+        "output_tokens": 58,
+        "total_tokens": 464,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_purchase_order": {
+        "input_tokens": 1027,
+        "output_tokens": 679,
+        "total_tokens": 1706,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [
+      {
+        "field": "buyer_name",
+        "expected": "Paula Parente",
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {
+      "supplier_name": "Paula Parente"
+    },
+    "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
+    "stem": "purchase_orders1.pdf / 1",
+    "filename": "purchase_orders1.pdf",
+    "page_number": 1,
+    "format": ".pdf"
+  },
+  {
+    "expected": "purchase_order",
+    "predicted": "purchase_order",
+    "router_ok": true,
+    "language_ok": false,
+    "language": "en",
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "f1": 0.6666666666666666,
+    "tp": 2,
+    "fp": 1,
+    "fn": 1,
+    "fields_expected": 3,
+    "cells_total": 16,
+    "cells_ok": 14,
+    "columns_total": 4,
+    "columns_found": 4,
+    "rows_total": 4,
+    "rows_found": 4,
+    "extra_rows": 0,
+    "extra_columns": 0,
+    "excluded_cells": 0,
+    "failed": false,
+    "error": null,
+    "needs_review": false,
+    "returned": true,
+    "judge_status": "skipped",
+    "timings": {
+      "router": 52.1308661380026,
+      "extractor": 369.8698929579987,
+      "validator": 0.01888530599535443,
+      "pipeline": 423.3518342519965,
+      "ocr": 1.6275664209970273,
+      "render": 0.47378435799328145,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 446,
+        "output_tokens": 64,
+        "total_tokens": 510,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_purchase_order": {
+        "input_tokens": 1066,
+        "output_tokens": 1028,
+        "total_tokens": 2094,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [
+      {
+        "field": "buyer_name",
+        "expected": "Horst Kloss",
+        "predicted": null
+      }
+    ],
+    "unexpected_fields": {
+      "supplier_name": "Horst Kloss"
+    },
+    "notes": "",
+    "stem": "purchase_orders_2.pdf / 1",
+    "filename": "purchase_orders_2.pdf",
+    "page_number": 1,
+    "format": ".pdf"
+  },
+  {
     "expected": "invoice",
     "predicted": "invoice",
     "router_ok": true,
@@ -1060,13 +1191,13 @@
     "returned": true,
     "judge_status": "flagged",
     "timings": {
-      "router": 107.28198988000076,
-      "extractor": 502.08365906600375,
-      "validator": 0.022064341996156145,
-      "judge": 204.62287010400178,
-      "pipeline": 815.3301869390052,
-      "ocr": 6.259500195003056,
-      "render": 0.5591863809968345,
+      "router": 93.28322180100076,
+      "extractor": 444.47495550000167,
+      "validator": 0.0230528630054323,
+      "judge": 70.9586056489934,
+      "pipeline": 609.3065500749944,
+      "ocr": 5.0943488990014885,
+      "render": 0.5673170459922403,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -1147,12 +1278,12 @@
     "returned": true,
     "judge_status": "skipped",
     "timings": {
-      "router": 62.90559948600276,
-      "extractor": 557.8235810429978,
-      "validator": 0.0077900910036987625,
-      "pipeline": 621.5475300899998,
-      "ocr": 1.9234600069976295,
-      "render": 0.6889768330001971,
+      "router": 24.164123691996792,
+      "extractor": 212.3600587490073,
+      "validator": 0.005058223003288731,
+      "pipeline": 237.74247306300094,
+      "ocr": 1.63585899300233,
+      "render": 0.5487764770077774,
       "ocr_cached": 0.0
     },
     "usage": {
@@ -1179,142 +1310,6 @@
     "stem": "Thai(invoice)+EN(Purchase).pdf / 2",
     "filename": "Thai(invoice)+EN(Purchase).pdf",
     "page_number": 2,
-    "format": ".pdf"
-  },
-  {
-    "expected": "purchase_order",
-    "predicted": "purchase_order",
-    "router_ok": true,
-    "language_ok": true,
-    "language": "en",
-    "precision": 0.6666666666666666,
-    "recall": 0.6666666666666666,
-    "f1": 0.6666666666666666,
-    "tp": 2,
-    "fp": 1,
-    "fn": 1,
-    "fields_expected": 3,
-    "cells_total": 8,
-    "cells_ok": 7,
-    "columns_total": 4,
-    "columns_found": 4,
-    "rows_total": 2,
-    "rows_found": 2,
-    "extra_rows": 0,
-    "extra_columns": 0,
-    "excluded_cells": 0,
-    "failed": false,
-    "error": null,
-    "needs_review": false,
-    "returned": true,
-    "judge_status": "skipped",
-    "timings": {
-      "router": 51.292325894995884,
-      "extractor": 319.1102379310032,
-      "validator": 0.009175569997751154,
-      "pipeline": 371.51237650599796,
-      "ocr": 1.5507689229998505,
-      "render": 0.4284273689991096,
-      "ocr_cached": 0.0
-    },
-    "usage": {
-      "router": {
-        "input_tokens": 406,
-        "output_tokens": 58,
-        "total_tokens": 464,
-        "attempts": 1,
-        "retries": 0
-      },
-      "extractor_purchase_order": {
-        "input_tokens": 1027,
-        "output_tokens": 679,
-        "total_tokens": 1706,
-        "attempts": 1,
-        "retries": 0
-      }
-    },
-    "mismatches": [
-      {
-        "field": "buyer_name",
-        "expected": "Paula Parente",
-        "predicted": null
-      }
-    ],
-    "unexpected_fields": {
-      "supplier_name": "Paula Parente"
-    },
-    "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
-    "stem": "purchase_orders1.pdf / 1",
-    "filename": "purchase_orders1.pdf",
-    "page_number": 1,
-    "format": ".pdf"
-  },
-  {
-    "expected": "purchase_order",
-    "predicted": "purchase_order",
-    "router_ok": true,
-    "language_ok": false,
-    "language": "en",
-    "precision": 0.6666666666666666,
-    "recall": 0.6666666666666666,
-    "f1": 0.6666666666666666,
-    "tp": 2,
-    "fp": 1,
-    "fn": 1,
-    "fields_expected": 3,
-    "cells_total": 16,
-    "cells_ok": 14,
-    "columns_total": 4,
-    "columns_found": 4,
-    "rows_total": 4,
-    "rows_found": 4,
-    "extra_rows": 0,
-    "extra_columns": 0,
-    "excluded_cells": 0,
-    "failed": false,
-    "error": null,
-    "needs_review": false,
-    "returned": true,
-    "judge_status": "skipped",
-    "timings": {
-      "router": 47.09859918500297,
-      "extractor": 383.43955266899866,
-      "validator": 0.020942044000548776,
-      "pipeline": 431.6395203649954,
-      "ocr": 1.468834521001554,
-      "render": 0.4441731159968185,
-      "ocr_cached": 0.0
-    },
-    "usage": {
-      "router": {
-        "input_tokens": 446,
-        "output_tokens": 64,
-        "total_tokens": 510,
-        "attempts": 1,
-        "retries": 0
-      },
-      "extractor_purchase_order": {
-        "input_tokens": 1066,
-        "output_tokens": 1028,
-        "total_tokens": 2094,
-        "attempts": 1,
-        "retries": 0
-      }
-    },
-    "mismatches": [
-      {
-        "field": "buyer_name",
-        "expected": "Horst Kloss",
-        "predicted": null
-      }
-    ],
-    "unexpected_fields": {
-      "supplier_name": "Horst Kloss"
-    },
-    "notes": "",
-    "stem": "purchase_orders_2.pdf / 1",
-    "filename": "purchase_orders_2.pdf",
-    "page_number": 1,
     "format": ".pdf"
   }
 ]

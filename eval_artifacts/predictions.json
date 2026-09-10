@@ -7,15 +7,15 @@
     },
     "documents": [
       {
-        "id": "43f0a44f-9c68-4136-95fe-52d05496c39e",
+        "id": "d2e57411-4f14-479e-a841-a2420d020eb7",
         "doc_type": "invoice",
         "source": {
-          "source_id": "7a8ae6eb-2cff-49ac-a6db-96fa62f81727",
+          "source_id": "2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78",
           "filename": "Invoice+purchase.pdf",
           "page_number": 1,
           "page_count": 3,
-          "preview_url": "/sources/7a8ae6eb-2cff-49ac-a6db-96fa62f81727/pages/1",
-          "download_url": "/sources/7a8ae6eb-2cff-49ac-a6db-96fa62f81727"
+          "preview_url": "/sources/2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78/pages/1",
+          "download_url": "/sources/2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78"
         },
         "ocr_blocks": [
           {
@@ -2091,13 +2091,13 @@
           }
         ],
         "timings": {
-          "router": 132.7932270809979,
-          "extractor": 765.9295700989969,
-          "validator": 0.06661795899708522,
-          "judge": 565.8383623069967,
-          "pipeline": 1465.423703044995,
-          "ocr": 6.226844554003037,
-          "render": 0.719729324002401,
+          "router": 120.43450670099992,
+          "extractor": 762.331217232997,
+          "validator": 0.06551127400598489,
+          "judge": 569.5628297680014,
+          "pipeline": 1453.8378242649997,
+          "ocr": 6.12987293900369,
+          "render": 0.728584807999141,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -2326,19 +2326,19 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T04:42:26.320080",
+        "extracted_at": "2026-09-10T10:32:26.950284",
         "auto_evaluation": null
       },
       {
-        "id": "71c26f6d-b2b1-4e3f-9231-3fd9b058e00d",
+        "id": "eb685124-dd7b-4e5a-ab8c-fd79237ec796",
         "doc_type": "invoice",
         "source": {
-          "source_id": "7a8ae6eb-2cff-49ac-a6db-96fa62f81727",
+          "source_id": "2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78",
           "filename": "Invoice+purchase.pdf",
           "page_number": 2,
           "page_count": 3,
-          "preview_url": "/sources/7a8ae6eb-2cff-49ac-a6db-96fa62f81727/pages/2",
-          "download_url": "/sources/7a8ae6eb-2cff-49ac-a6db-96fa62f81727"
+          "preview_url": "/sources/2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78/pages/2",
+          "download_url": "/sources/2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78"
         },
         "ocr_blocks": [
           {
@@ -3884,13 +3884,13 @@
           }
         ],
         "timings": {
-          "router": 103.32766481400176,
-          "extractor": 563.4283819530028,
-          "validator": 0.015886508001131006,
-          "judge": 273.4194747100046,
-          "pipeline": 940.6806713240003,
-          "ocr": 5.660437386002741,
-          "render": 0.6951035970050725,
+          "router": 102.89214589400217,
+          "extractor": 567.1967146110037,
+          "validator": 0.013527602997783106,
+          "judge": 271.5077781289947,
+          "pipeline": 942.6126552690039,
+          "ocr": 5.53697714000009,
+          "render": 0.6664506119996076,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -4051,19 +4051,19 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T04:58:07.010908",
+        "extracted_at": "2026-09-10T10:48:09.573147",
         "auto_evaluation": null
       },
       {
-        "id": "777bf270-376f-4a34-820e-d8fc66d90c0f",
+        "id": "4b014a92-5103-4ed2-bbc6-82a400bc694c",
         "doc_type": "purchase_order",
         "source": {
-          "source_id": "7a8ae6eb-2cff-49ac-a6db-96fa62f81727",
+          "source_id": "2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78",
           "filename": "Invoice+purchase.pdf",
           "page_number": 3,
           "page_count": 3,
-          "preview_url": "/sources/7a8ae6eb-2cff-49ac-a6db-96fa62f81727/pages/3",
-          "download_url": "/sources/7a8ae6eb-2cff-49ac-a6db-96fa62f81727"
+          "preview_url": "/sources/2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78/pages/3",
+          "download_url": "/sources/2c57e3a4-2f56-43bb-b5c4-6dcaeccfae78"
         },
         "ocr_blocks": [
           {
@@ -4505,12 +4505,12 @@
           }
         ],
         "timings": {
-          "router": 60.07986608400097,
-          "extractor": 318.3494030990041,
-          "validator": 0.012162436003563926,
-          "pipeline": 379.46853464000014,
-          "ocr": 1.4546329959994182,
-          "render": 0.3502155909955036,
+          "router": 58.76923170899681,
+          "extractor": 313.475400477997,
+          "validator": 0.012630742996407207,
+          "pipeline": 373.479127159997,
+          "ocr": 1.4519733109991648,
+          "render": 0.3913540519934031,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -4564,18 +4564,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T05:04:26.481701",
+        "extracted_at": "2026-09-10T10:54:23.054352",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "d31b7fce-c732-4529-9211-3ce6a3786c3c",
+    "job_id": "871ca143-cddf-4dc4-ad32-5d38e598c8ad",
     "file_errors": [],
     "timings": {
-      "processing": 2800.8682727889973,
+      "processing": 2785.020801188002,
       "queue": 0.0
     },
-    "eval_seconds": 2800.878095993001,
+    "eval_seconds": 2785.0368471190013,
     "extra_pages": 0
   },
   "ICR.png": {
@@ -4586,15 +4586,15 @@
     },
     "documents": [
       {
-        "id": "03311965-9313-4e8f-a183-2337528a610c",
+        "id": "6dbc6f68-9096-40c8-bc42-b160b0ffaf85",
         "doc_type": "invoice",
         "source": {
-          "source_id": "43eda143-c444-4e3c-9408-4562fc631e1f",
+          "source_id": "ebb004f4-f2a6-42ab-851d-ce11df4b71b5",
           "filename": "ICR.png",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/43eda143-c444-4e3c-9408-4562fc631e1f/pages/1",
-          "download_url": "/sources/43eda143-c444-4e3c-9408-4562fc631e1f"
+          "preview_url": "/sources/ebb004f4-f2a6-42ab-851d-ce11df4b71b5/pages/1",
+          "download_url": "/sources/ebb004f4-f2a6-42ab-851d-ce11df4b71b5"
         },
         "ocr_blocks": [
           {
@@ -5740,10 +5740,10 @@
         ],
         "tables": [],
         "timings": {
-          "router": 62.481592511998315,
-          "pipeline": 62.64401932399778,
-          "ocr": 8.00807494900073,
-          "render": 2.395281172997784,
+          "router": 64.38288282699796,
+          "pipeline": 64.5552348429992,
+          "ocr": 7.7928482690040255,
+          "render": 2.3950592889959808,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -5770,18 +5770,18 @@
         "failed_stage": "ocr",
         "error_details": null,
         "extraction_source": null,
-        "extracted_at": "2026-09-10T05:05:39.607923",
+        "extracted_at": "2026-09-10T10:55:37.887769",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "1d420074-097b-4a83-932d-7b9f44860e6d",
+    "job_id": "4d4dbb46-4120-4fbc-b5ab-6ccede98ec9b",
     "file_errors": [],
     "timings": {
-      "processing": 73.09851645600429,
+      "processing": 74.80383704699489,
       "queue": 0.0
     },
-    "eval_seconds": 73.1022882860052,
+    "eval_seconds": 74.80799875599769,
     "extra_pages": 0
   },
   "Delivery1.webp": {
@@ -5792,15 +5792,15 @@
     },
     "documents": [
       {
-        "id": "405613f5-2ccc-48ca-b79c-a8469b9775d6",
+        "id": "8a2eb3ad-70ee-41e5-8439-f948954c86b2",
         "doc_type": "delivery_note",
         "source": {
-          "source_id": "66807cc1-8b38-428f-bea1-ed245e90e5cb",
+          "source_id": "d45e7558-23a3-4064-8ed1-b497939cd6f5",
           "filename": "Delivery1.webp",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/66807cc1-8b38-428f-bea1-ed245e90e5cb/pages/1",
-          "download_url": "/sources/66807cc1-8b38-428f-bea1-ed245e90e5cb"
+          "preview_url": "/sources/d45e7558-23a3-4064-8ed1-b497939cd6f5/pages/1",
+          "download_url": "/sources/d45e7558-23a3-4064-8ed1-b497939cd6f5"
         },
         "ocr_blocks": [
           {
@@ -6872,12 +6872,12 @@
           }
         ],
         "timings": {
-          "router": 69.11053757800255,
-          "extractor": 444.63311578999856,
-          "validator": 0.021040265004558023,
-          "pipeline": 514.6462116630064,
-          "ocr": 3.3290382389968727,
-          "render": 0.30048809900472406,
+          "router": 62.920557678997284,
+          "extractor": 448.949694086994,
+          "validator": 0.010311227000784129,
+          "pipeline": 513.114989583999,
+          "ocr": 3.1290570569981355,
+          "render": 0.29158620400266955,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -6973,18 +6973,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T05:14:18.003076",
+        "extracted_at": "2026-09-10T11:04:14.572585",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "a73f15c8-f97e-4a56-a0a6-484fdc46ce46",
+    "job_id": "c111c2ac-6f61-4717-b11e-bb09abf4e163",
     "file_errors": [],
     "timings": {
-      "processing": 518.3852233970028,
+      "processing": 516.67455797,
       "queue": 0.0
     },
-    "eval_seconds": 518.386956205999,
+    "eval_seconds": 516.6762571889994,
     "extra_pages": 0
   },
   "Invoice1.jpg": {
@@ -6995,15 +6995,15 @@
     },
     "documents": [
       {
-        "id": "75d817b9-a573-421e-a8eb-7d1bfe2e1711",
+        "id": "6a3a26fe-ddfb-49f3-994b-c5f7cc0f8e15",
         "doc_type": "invoice",
         "source": {
-          "source_id": "22ad6c70-7fbe-4262-98ba-d187d5190f06",
+          "source_id": "377bb8f9-20db-456c-96bf-b25410c23c48",
           "filename": "Invoice1.jpg",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/22ad6c70-7fbe-4262-98ba-d187d5190f06/pages/1",
-          "download_url": "/sources/22ad6c70-7fbe-4262-98ba-d187d5190f06"
+          "preview_url": "/sources/377bb8f9-20db-456c-96bf-b25410c23c48/pages/1",
+          "download_url": "/sources/377bb8f9-20db-456c-96bf-b25410c23c48"
         },
         "ocr_blocks": [
           {
@@ -8509,13 +8509,12 @@
           }
         ],
         "timings": {
-          "router": 96.30253446300048,
-          "extractor": 752.6496820989996,
-          "validator": 0.032444905999000184,
-          "judge": 325.40115589999914,
-          "pipeline": 1175.5214619969993,
-          "ocr": 4.568025477994524,
-          "render": 0.7312677699956112,
+          "router": 100.43142555600207,
+          "extractor": 740.4798709349998,
+          "validator": 0.027412256007664837,
+          "pipeline": 841.738361347001,
+          "ocr": 4.7604056269992725,
+          "render": 0.7499108409974724,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -8523,13 +8522,6 @@
             "input_tokens": 706,
             "output_tokens": 47,
             "total_tokens": 753,
-            "attempts": 1,
-            "retries": 0
-          },
-          "judge": {
-            "input_tokens": 2142,
-            "output_tokens": 182,
-            "total_tokens": 2324,
             "attempts": 1,
             "retries": 0
           },
@@ -8541,7 +8533,7 @@
             "retries": 0
           }
         },
-        "judge_status": "flagged",
+        "judge_status": "skipped",
         "language": "en",
         "fields": [
           {
@@ -8650,57 +8642,28 @@
             "is_new_field": false
           }
         ],
-        "validation_errors": [
-          "line_items: array row 0 contains unsupported values (possible hallucination)",
-          "line_items: array row 1 contains unsupported values (possible hallucination)",
-          "line_items: array row 2 contains unsupported values (possible hallucination)",
-          "line_items: array row 3 contains unsupported values (possible hallucination)",
-          "line_items: array row 4 contains unsupported values (possible hallucination)",
-          "line_items: array row 5 contains unsupported values (possible hallucination)",
-          "line_items: array row 6 contains unsupported values (possible hallucination)",
-          "line_items: array row 7 contains unsupported values (possible hallucination)"
-        ],
-        "needs_review": true,
+        "validation_errors": [],
+        "needs_review": false,
         "completeness_score": 1.0,
-        "judge": {
-          "score": 0.6,
-          "issues": [
-            {
-              "field": "invoice_date",
-              "message": "The invoice date '13/01/2018' is not found in the source text.",
-              "severity": "error"
-            },
-            {
-              "field": "bill_to_name",
-              "message": "The bill to name 'น' is not found in the source text and is not a valid value.",
-              "severity": "error"
-            },
-            {
-              "field": "line_items",
-              "message": "The line items are not found in the source text and are not a valid value.",
-              "severity": "error"
-            }
-          ],
-          "notes": "The invoice date, bill to name, and line items are not found in the source text and are not valid values."
-        },
+        "judge": null,
         "routing_reason": "The document contains a simplified tax invoice with details such as Dac No., Date, Salesperson, Total Sales, and Total GST.",
         "full_text": "SYARIKAT PERNIAGAAN GIN KEE\n(81109-A)\nNO 290, JALAN AIR PANAS,\nSETAPAK,\n53200, KUALA LUMPUR.\nTEL : 03-40210276\nGST ID : 000750673920\n| | SIMPLIFIED TAX INVOICE | |\nDac No. | : €S00012726 | Date: 13/01/2018\n. | Cashier | ' USER | Time: 15:52:00\nSalesperson | Ref. :\nMem | Oty, S/Price_ Amount Tax _\n1432 | 6 | 2.12 | 12.72 | SR\nGLOVE 1200 (PER PAIR)\nไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว\nTotal Sales (Excluding GST) | 12.00\n:\nDiscount ' | 0.00\nTotal GST : | 0.72\nRounding : | 0.00\nTotal Sales (Inclusive of GST) : | 12.72\nCASH : | 12.72\nChange : | 0.00\nป\nes | น | น 0\nGST SUMMARY\n|\nTax Code | % | Amt(RM) | 7 ละ (8 ด)\nSR | 6 | . 12.00 | 0.72\n}\nTotal : | 12.00 | 0.72 | |\nGOODS SOLD ARE NOT RETURNABLE, THANK YOU y\n5\nก",
         "error": null,
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T05:34:24.836874",
+        "extracted_at": "2026-09-10T11:18:39.261146",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "544d47ab-893c-4d75-a499-85e0f4b6c362",
+    "job_id": "457641be-f6c7-4e4e-b57a-6ccdaf3205ac",
     "file_errors": [],
     "timings": {
-      "processing": 1181.1079794889956,
+      "processing": 847.5326647129987,
       "queue": 0.0
     },
-    "eval_seconds": 1181.1210394309965,
+    "eval_seconds": 847.5480002699915,
     "extra_pages": 0
   },
   "Invoice2.jpg": {
@@ -8711,15 +8674,15 @@
     },
     "documents": [
       {
-        "id": "a8aefe96-9a3d-4930-a499-88ea39e86f40",
+        "id": "fd44776d-9069-4a10-9844-71a022e03987",
         "doc_type": "invoice",
         "source": {
-          "source_id": "4aed2aaa-5e70-442e-8d93-8ae8baf1bd32",
+          "source_id": "5f958afb-fa8f-4fe8-8cff-811419d54674",
           "filename": "Invoice2.jpg",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/4aed2aaa-5e70-442e-8d93-8ae8baf1bd32/pages/1",
-          "download_url": "/sources/4aed2aaa-5e70-442e-8d93-8ae8baf1bd32"
+          "preview_url": "/sources/5f958afb-fa8f-4fe8-8cff-811419d54674/pages/1",
+          "download_url": "/sources/5f958afb-fa8f-4fe8-8cff-811419d54674"
         },
         "ocr_blocks": [
           {
@@ -10633,13 +10596,13 @@
           }
         ],
         "timings": {
-          "router": 108.38790866400086,
-          "extractor": 930.0015051310038,
-          "validator": 0.034043696003209334,
-          "judge": 383.7279262669981,
-          "pipeline": 1423.072341968007,
-          "ocr": 9.004548693999823,
-          "render": 1.1645258979988284,
+          "router": 107.55635892000282,
+          "extractor": 943.3251480059989,
+          "validator": 0.022026555001502857,
+          "judge": 392.41114302299684,
+          "pipeline": 1443.780247342991,
+          "ocr": 9.67112385800283,
+          "render": 1.2692311069986317,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -10795,18 +10758,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T05:58:18.136144",
+        "extracted_at": "2026-09-10T11:42:54.022762",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "855f83aa-568e-4db6-bf4a-0642f39ff4a4",
+    "job_id": "4278b173-4e5f-4268-b212-30de2279001b",
     "file_errors": [],
     "timings": {
-      "processing": 1433.273226022,
+      "processing": 1454.7453169390064,
       "queue": 0.0
     },
-    "eval_seconds": 1433.2767954520023,
+    "eval_seconds": 1454.7488867719949,
     "extra_pages": 0
   },
   "Delivery_note2.png": {
@@ -10817,15 +10780,15 @@
     },
     "documents": [
       {
-        "id": "5a0e0faf-a749-4b89-89e6-633db816ae25",
+        "id": "2e3f73ce-c89a-44de-a24c-5cb9cf29fa03",
         "doc_type": "delivery_note",
         "source": {
-          "source_id": "886d5412-3934-40e5-bf43-8243fc4cca1a",
+          "source_id": "afb20241-6cb7-45b6-9ea6-78e2a7a89a8a",
           "filename": "Delivery_note2.png",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/886d5412-3934-40e5-bf43-8243fc4cca1a/pages/1",
-          "download_url": "/sources/886d5412-3934-40e5-bf43-8243fc4cca1a"
+          "preview_url": "/sources/afb20241-6cb7-45b6-9ea6-78e2a7a89a8a/pages/1",
+          "download_url": "/sources/afb20241-6cb7-45b6-9ea6-78e2a7a89a8a"
         },
         "ocr_blocks": [
           {
@@ -11811,13 +11774,13 @@
           }
         ],
         "timings": {
-          "router": 74.23750490300154,
-          "extractor": 521.949185685,
-          "validator": 0.017279286999837495,
-          "judge": 281.5941096440001,
-          "pipeline": 879.074507025005,
-          "ocr": 1.326031801996578,
-          "render": 0.223721096997906,
+          "router": 77.2186272359977,
+          "extractor": 526.9652684410103,
+          "validator": 0.01977443299256265,
+          "judge": 287.2338223429979,
+          "pipeline": 892.6636202780064,
+          "ocr": 1.6625319870072417,
+          "render": 0.24971292399277445,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -11952,18 +11915,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T06:12:58.787101",
+        "extracted_at": "2026-09-10T11:57:48.626636",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "d46d0f5f-a1ee-43fe-9766-2a4c1920086b",
+    "job_id": "11414d45-3456-4f55-b5f3-530881147fa0",
     "file_errors": [],
     "timings": {
-      "processing": 880.6323512759991,
+      "processing": 894.5855863809993,
       "queue": 0.0
     },
-    "eval_seconds": 880.6351624349991,
+    "eval_seconds": 894.5869659210002,
     "extra_pages": 0
   },
   "THAI_RECEIPT.jpg": {
@@ -11974,15 +11937,15 @@
     },
     "documents": [
       {
-        "id": "797da3fe-0788-4ee1-b4b1-ec02cf2d29d5",
+        "id": "fe9e7655-be6f-409e-a7ff-f3d673889104",
         "doc_type": "invoice",
         "source": {
-          "source_id": "026b1fe8-9c4f-49cc-bcc1-f4a97c6431e7",
+          "source_id": "471d7127-f6d9-4033-b967-d5dd2d9c39a2",
           "filename": "THAI_RECEIPT.jpg",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/026b1fe8-9c4f-49cc-bcc1-f4a97c6431e7/pages/1",
-          "download_url": "/sources/026b1fe8-9c4f-49cc-bcc1-f4a97c6431e7"
+          "preview_url": "/sources/471d7127-f6d9-4033-b967-d5dd2d9c39a2/pages/1",
+          "download_url": "/sources/471d7127-f6d9-4033-b967-d5dd2d9c39a2"
         },
         "ocr_blocks": [
           {
@@ -16088,13 +16051,13 @@
           }
         ],
         "timings": {
-          "router": 137.55600351100293,
-          "extractor": 898.0103843199977,
-          "validator": 0.06582865599921206,
-          "judge": 392.2194624600015,
-          "pipeline": 1429.2933746240014,
-          "ocr": 10.536689209999167,
-          "render": 1.583924531005323,
+          "router": 141.5739223540004,
+          "extractor": 903.0479025329987,
+          "validator": 0.042700289995991625,
+          "judge": 408.40747160400497,
+          "pipeline": 1453.5785581689997,
+          "ocr": 10.104580621002242,
+          "render": 1.6250347439927282,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -16244,13 +16207,7 @@
           "seller_address: source_span not found in document (possible hallucination)",
           "currency: value not supported by source_span (possible hallucination)",
           "tax_amount: value not supported by source_span (possible hallucination)",
-          "paid_amount: value not supported by source_span (possible hallucination)",
-          "line_items: array row 0 contains unsupported values (possible hallucination)",
-          "line_items: array row 1 contains unsupported values (possible hallucination)",
-          "line_items: array row 2 contains unsupported values (possible hallucination)",
-          "line_items: array row 3 contains unsupported values (possible hallucination)",
-          "line_items: array row 4 contains unsupported values (possible hallucination)",
-          "line_items: array row 5 contains unsupported values (possible hallucination)"
+          "paid_amount: value not supported by source_span (possible hallucination)"
         ],
         "needs_review": true,
         "completeness_score": 1.0,
@@ -16276,18 +16233,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T06:37:17.382613",
+        "extracted_at": "2026-09-10T12:22:35.068825",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "ba115dd0-7cdd-4e79-8888-7efd29c51a8d",
+    "job_id": "5739a8b5-5775-4279-9913-58f9cf824a14",
     "file_errors": [],
     "timings": {
-      "processing": 1441.7175889420032,
+      "processing": 1465.6751780699997,
       "queue": 0.0
     },
-    "eval_seconds": 1441.7396084829961,
+    "eval_seconds": 1465.6953391999996,
     "extra_pages": 0
   },
   "THAI_bill.jpg": {
@@ -16298,15 +16255,15 @@
     },
     "documents": [
       {
-        "id": "ea815266-548d-4336-8874-9192478c7958",
+        "id": "c3f28f3e-4298-4c01-88ea-1f1f0c80e220",
         "doc_type": "invoice",
         "source": {
-          "source_id": "e1bd8743-0595-44bf-9303-b87340f0e6c9",
+          "source_id": "a88ad9d8-7958-4020-8010-ecfd0838be5a",
           "filename": "THAI_bill.jpg",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/e1bd8743-0595-44bf-9303-b87340f0e6c9/pages/1",
-          "download_url": "/sources/e1bd8743-0595-44bf-9303-b87340f0e6c9"
+          "preview_url": "/sources/a88ad9d8-7958-4020-8010-ecfd0838be5a/pages/1",
+          "download_url": "/sources/a88ad9d8-7958-4020-8010-ecfd0838be5a"
         },
         "ocr_blocks": [
           {
@@ -18372,13 +18329,13 @@
           }
         ],
         "timings": {
-          "router": 88.31574465399899,
-          "extractor": 693.0756629979951,
-          "validator": 0.04522070199891459,
-          "judge": 129.72827583400067,
-          "pipeline": 912.5144990590052,
-          "ocr": 7.786294416997407,
-          "render": 1.141064909999841,
+          "router": 87.01422310899943,
+          "extractor": 664.0809687970032,
+          "validator": 0.026611860012053512,
+          "judge": 292.4752828940109,
+          "pipeline": 1044.4403389679937,
+          "ocr": 6.981601676001446,
+          "render": 1.1903428740042727,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -18390,6 +18347,9 @@
             "retries": 0
           },
           "judge": {
+            "input_tokens": 1850,
+            "output_tokens": 198,
+            "total_tokens": 2048,
             "attempts": 1,
             "retries": 0
           },
@@ -18401,7 +18361,7 @@
             "retries": 0
           }
         },
-        "judge_status": "unavailable",
+        "judge_status": "flagged",
         "language": "th",
         "fields": [
           {
@@ -18494,32 +18454,44 @@
           "currency: value not supported by source_span (possible hallucination)",
           "subtotal_amount: value not supported by source_span (possible hallucination)",
           "line_items: array row 0 contains unsupported values (possible hallucination)",
-          "line_items: array row 3 contains unsupported values (possible hallucination)",
-          "line_items: array row 4 contains unsupported values (possible hallucination)",
-          "line_items row 1 1: value not supported by source_span (possible hallucination)",
-          "Judge unavailable: LLM API call failed (APIConnectionError)"
+          "line_items row 1 1: value not supported by source_span (possible hallucination)"
         ],
         "needs_review": true,
         "completeness_score": 1.0,
-        "judge": null,
+        "judge": {
+          "score": 0.6,
+          "issues": [
+            {
+              "field": "invoice_date",
+              "message": "The date provided (27/11/2566) does not match the date in the source text (27/11/2566 10:57). The date in the source text is more accurate and should be used.",
+              "severity": "warning"
+            },
+            {
+              "field": "line_items",
+              "message": "The line items provided do not match the actual line items in the source text. The source text includes a different item and a different total amount.",
+              "severity": "error"
+            }
+          ],
+          "notes": "The invoice_date and line_items fields have issues. The invoice_date should be corrected to match the source text, and the line_items should be re-extracted to match the actual content in the source text."
+        },
         "routing_reason": "The document contains a tax invoice with details of a sale, including product names, quantities, and prices.",
         "full_text": "TW 80\nใบเสร็จรับเงิน / ใบกํากับภาษีลฝ่างย่อ\nหจกค. บุญรอดคอลฟฟี\n(ตลาดรัตนบุรี )\nCafe Amazon สาขา 4504\nTAX ID : 0323560000723\nDate: 27/11/2566 10:57\nTax Invoice No.4504RC112566/004044\nCashier:4504014 นวพร\n๑อเค | ชา.\nล\nDI ชาเขียวนม sau ขนาดใหญ่ | 1 | 60.00\n- DI 0% | pees OD,\nTotal Baht) | COO\nNET BAHT | 60.00\nCash:100.00 ม . ทลทยุอ : 40.00\nVATable: | 60.00\nVAT: 7.0096. | 3.93\n«a —\nราคารวมภาษีมูลค่าเฟิมแล้ว\n2 ไหแขญลบคุณทไชบริกา\n0\nPTT Station Free Wifi\nPassword: JYBG8E7D8FK\n(กรุณากรอกอักขระให้ถูกต้อง )\nCafe Amazon... Taste of Nature.",
         "error": null,
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T06:52:38.937636",
+        "extracted_at": "2026-09-10T12:40:07.770489",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "00c2ecfc-ef44-4356-abf2-17deb2a2418c",
+    "job_id": "c7f00138-1208-40d3-8351-34afe0b25009",
     "file_errors": [],
     "timings": {
-      "processing": 921.5203134100011,
+      "processing": 1052.6607977289968,
       "queue": 0.0
     },
-    "eval_seconds": 921.5228024250027,
+    "eval_seconds": 1052.6631979770027,
     "extra_pages": 0
   },
   "Thai(invoice)+EN(Purchase).pdf": {
@@ -18530,15 +18502,15 @@
     },
     "documents": [
       {
-        "id": "11e2a741-9f04-44c3-9a32-e2fd6fe8c364",
+        "id": "c311d644-5c70-4e46-ad1e-7a5a7719aaa8",
         "doc_type": "invoice",
         "source": {
-          "source_id": "2a2ca44c-cc7a-4f02-90ec-14e20d632415",
+          "source_id": "779649c3-33c9-4be0-a49f-c2724736e121",
           "filename": "Thai(invoice)+EN(Purchase).pdf",
           "page_number": 1,
           "page_count": 2,
-          "preview_url": "/sources/2a2ca44c-cc7a-4f02-90ec-14e20d632415/pages/1",
-          "download_url": "/sources/2a2ca44c-cc7a-4f02-90ec-14e20d632415"
+          "preview_url": "/sources/779649c3-33c9-4be0-a49f-c2724736e121/pages/1",
+          "download_url": "/sources/779649c3-33c9-4be0-a49f-c2724736e121"
         },
         "ocr_blocks": [
           {
@@ -21454,13 +21426,13 @@
           }
         ],
         "timings": {
-          "router": 107.28198988000076,
-          "extractor": 502.08365906600375,
-          "validator": 0.022064341996156145,
-          "judge": 204.62287010400178,
-          "pipeline": 815.3301869390052,
-          "ocr": 6.259500195003056,
-          "render": 0.5591863809968345,
+          "router": 93.28322180100076,
+          "extractor": 444.47495550000167,
+          "validator": 0.0230528630054323,
+          "judge": 70.9586056489934,
+          "pipeline": 609.3065500749944,
+          "ocr": 5.0943488990014885,
+          "render": 0.5673170459922403,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -21592,19 +21564,19 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T07:06:23.796795",
+        "extracted_at": "2026-09-10T13:15:58.124750",
         "auto_evaluation": null
       },
       {
-        "id": "b5db7b4c-ac66-4f62-aad8-3f95d46bc426",
+        "id": "ee8128ba-6ce7-4204-83f1-95cdc355b37a",
         "doc_type": "purchase_order",
         "source": {
-          "source_id": "2a2ca44c-cc7a-4f02-90ec-14e20d632415",
+          "source_id": "779649c3-33c9-4be0-a49f-c2724736e121",
           "filename": "Thai(invoice)+EN(Purchase).pdf",
           "page_number": 2,
           "page_count": 2,
-          "preview_url": "/sources/2a2ca44c-cc7a-4f02-90ec-14e20d632415/pages/2",
-          "download_url": "/sources/2a2ca44c-cc7a-4f02-90ec-14e20d632415"
+          "preview_url": "/sources/779649c3-33c9-4be0-a49f-c2724736e121/pages/2",
+          "download_url": "/sources/779649c3-33c9-4be0-a49f-c2724736e121"
         },
         "ocr_blocks": [
           {
@@ -22066,12 +22038,12 @@
           }
         ],
         "timings": {
-          "router": 62.90559948600276,
-          "extractor": 557.8235810429978,
-          "validator": 0.0077900910036987625,
-          "pipeline": 621.5475300899998,
-          "ocr": 1.9234600069976295,
-          "render": 0.6889768330001971,
+          "router": 24.164123691996792,
+          "extractor": 212.3600587490073,
+          "validator": 0.005058223003288731,
+          "pipeline": 237.74247306300094,
+          "ocr": 1.63585899300233,
+          "render": 0.5487764770077774,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -22132,18 +22104,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T07:16:45.347016",
+        "extracted_at": "2026-09-10T13:19:55.877396",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "a8c4f4da-7ada-4be4-b923-803be1583b32",
+    "job_id": "c2668ee7-da37-4736-94a4-b4ff6dc049ee",
     "file_errors": [],
     "timings": {
-      "processing": 1446.380239154998,
+      "processing": 855.1737860010035,
       "queue": 0.0
     },
-    "eval_seconds": 1446.3824099519989,
+    "eval_seconds": 855.1896820910042,
     "extra_pages": 0
   },
   "purchase_orders1.pdf": {
@@ -22154,15 +22126,15 @@
     },
     "documents": [
       {
-        "id": "59e2171a-b90c-4061-96d6-7c5bab3cdbee",
+        "id": "dabe6254-3196-40e9-b647-c2dd480c9838",
         "doc_type": "purchase_order",
         "source": {
-          "source_id": "19bb8349-37b1-4e0c-b2fd-a866374d00d5",
+          "source_id": "1247640c-b3b1-4dcf-854f-5c3387dee13a",
           "filename": "purchase_orders1.pdf",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/19bb8349-37b1-4e0c-b2fd-a866374d00d5/pages/1",
-          "download_url": "/sources/19bb8349-37b1-4e0c-b2fd-a866374d00d5"
+          "preview_url": "/sources/1247640c-b3b1-4dcf-854f-5c3387dee13a/pages/1",
+          "download_url": "/sources/1247640c-b3b1-4dcf-854f-5c3387dee13a"
         },
         "ocr_blocks": [
           {
@@ -22604,12 +22576,12 @@
           }
         ],
         "timings": {
-          "router": 51.292325894995884,
-          "extractor": 319.1102379310032,
-          "validator": 0.009175569997751154,
-          "pipeline": 371.51237650599796,
-          "ocr": 1.5507689229998505,
-          "render": 0.4284273689991096,
+          "router": 73.61334180500126,
+          "extractor": 313.37013702299737,
+          "validator": 0.01845811100793071,
+          "pipeline": 387.88519810799335,
+          "ocr": 1.8566983609925956,
+          "render": 0.5177359149965923,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -22663,18 +22635,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T07:22:58.862055",
+        "extracted_at": "2026-09-10T12:58:06.420780",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "fe38a39e-b927-43ff-aba2-06d80a259a69",
+    "job_id": "3c0ab559-dce1-4003-aa4b-3499710ebe10",
     "file_errors": [],
     "timings": {
-      "processing": 373.4997953429993,
+      "processing": 390.2985202349955,
       "queue": 0.0
     },
-    "eval_seconds": 373.50127653699747,
+    "eval_seconds": 390.29993685899535,
     "extra_pages": 0
   },
   "purchase_orders_2.pdf": {
@@ -22685,15 +22657,15 @@
     },
     "documents": [
       {
-        "id": "facacde2-377c-4cab-8e64-83f33d7c736c",
+        "id": "674b2f6e-ecb4-4fd5-a139-6782f7201a4f",
         "doc_type": "purchase_order",
         "source": {
-          "source_id": "eabc54ee-576d-468d-94ce-6c5928e7fa71",
+          "source_id": "c0e4d0bb-8795-4255-9978-cb65609bc775",
           "filename": "purchase_orders_2.pdf",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/eabc54ee-576d-468d-94ce-6c5928e7fa71/pages/1",
-          "download_url": "/sources/eabc54ee-576d-468d-94ce-6c5928e7fa71"
+          "preview_url": "/sources/c0e4d0bb-8795-4255-9978-cb65609bc775/pages/1",
+          "download_url": "/sources/c0e4d0bb-8795-4255-9978-cb65609bc775"
         },
         "ocr_blocks": [
           {
@@ -23287,12 +23259,12 @@
           }
         ],
         "timings": {
-          "router": 47.09859918500297,
-          "extractor": 383.43955266899866,
-          "validator": 0.020942044000548776,
-          "pipeline": 431.6395203649954,
-          "ocr": 1.468834521001554,
-          "render": 0.4441731159968185,
+          "router": 52.1308661380026,
+          "extractor": 369.8698929579987,
+          "validator": 0.01888530599535443,
+          "pipeline": 423.3518342519965,
+          "ocr": 1.6275664209970273,
+          "render": 0.47378435799328145,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -23346,18 +23318,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-10T07:30:12.429251",
+        "extracted_at": "2026-09-10T13:05:11.892725",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "5647c33b-255a-4b01-a816-661a759fb775",
+    "job_id": "7c0b4561-8d84-46c2-a2ca-294ec31f4f2b",
     "file_errors": [],
     "timings": {
-      "processing": 433.55734370199934,
+      "processing": 425.45892192098836,
       "queue": 0.0
     },
-    "eval_seconds": 433.55822576300125,
+    "eval_seconds": 425.4597814239969,
     "extra_pages": 0
   }
 }

@@ -52,6 +52,25 @@ model, so the stronger-model loop stays queued.
 (3 chunks merged): ICR 2088s → 73s honest error, flags 60 → 50, macro
 F1 0.445, review 64%, router 1.000. Report + artifacts promoted.
 
+## 2026-09-10 — Array-key evidence fix + full re-eval (review 64% → 57%)
+
+**Problem:** `_check_array_rows` verified dict *keys* (`column_1`, flat
+cell-struct keys) as if they were document claims — systematic false
+positives (all 8 Invoice1 rows, parts of THAI/Invoice+purchase rows).
+
+**Changed:**
+- `api/app/agents/validator.py` — `_row_claimed_values`: cell structs
+  check only `value`; `column_N` maps check only vals, never keys.
+  Phantom values absent from the text still flag.
+- Tests: generic-key + flat-struct cases incl. phantom-still-flags.
+
+**Verified:** 341 passed, 2 skipped, ruff clean. Full 14-page local loop
+(4 chunks merged, 1 transient router retry): flags 50 → 33,
+genuine-mismatch 18 → 4, review 64% → 57% (6/14 clean, Invoice1 fully
+clean live), macro F1 0.445, router 1.000. Remainder = genuine
+small-model value errors (invented currencies, mangled dates, dup
+columns) for the stronger-model loop.
+
 ## 2026-09-04 — Langfuse v4 tracing overhaul
 
 **Problem:** tracing was silently dead — the wrapper called

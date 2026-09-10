@@ -113,3 +113,24 @@ def test_validate_end_to_end_receipt_row_clean(tmp_path):
     errors, _, _ = ValidatorAgent(_catalog(tmp_path)).validate(
         doc_type="invoice", fields=fields, document_text=RECEIPT_OCR)
     assert not [e for e in errors if "line_items" in e and "row" in e.lower()], errors
+
+
+def test_generic_column_keys_are_not_verified_as_values(tmp_path):
+    """Invoice1 regression: {"column_1": ...} keys are labels, not claims."""
+    rows = [{f"column_{i}": v for i, v in enumerate(["1432", "6", "2.12", "12.72"], start=1)}]
+    field = _line_item_field(rows, span="1432 6 2.12 12.72")
+    doc = "1432 | 6 | 2.12 | 12.72 | SR"
+    assert _check_array_rows(field, doc) == []
+
+
+def test_flat_cell_struct_checks_only_claimed_value(tmp_path):
+    import json as _json
+
+    ok = [{"column": "Qty", "value": 1, "confidence": 1.0, "source_span": "101870 | 1 |"}]
+    field = ExtractedField(name="line_items", value=_json.dumps(ok), confidence=0.9, source_span="x")
+    assert _check_array_rows(field, "101870 | 1 | 65.00") == []
+
+    phantom = [{"column": "Qty", "value": 165, "confidence": 1.0, "source_span": "101756 | § |"}]
+    field = ExtractedField(name="line_items", value=_json.dumps(phantom), confidence=0.9, source_span="x")
+    problems = _check_array_rows(field, "101756 | § | 16,50 | 17.49")
+    assert len(problems) == 1 and "array row 0" in problems[0]
