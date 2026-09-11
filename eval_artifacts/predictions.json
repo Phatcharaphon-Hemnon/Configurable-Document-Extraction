@@ -4586,15 +4586,15 @@
     },
     "documents": [
       {
-        "id": "9c672cc9-66d3-4cf5-aba3-a35337323bea",
+        "id": "79423279-620f-4afa-b275-a2c38fda7e82",
         "doc_type": "invoice",
         "source": {
-          "source_id": "86bd5c7e-671c-43ef-bc83-cea177b9e827",
+          "source_id": "3db1d5e8-de3c-45c5-ae92-2a2503e67c56",
           "filename": "ICR.png",
           "page_number": 1,
           "page_count": 1,
-          "preview_url": "/sources/86bd5c7e-671c-43ef-bc83-cea177b9e827/pages/1",
-          "download_url": "/sources/86bd5c7e-671c-43ef-bc83-cea177b9e827"
+          "preview_url": "/sources/3db1d5e8-de3c-45c5-ae92-2a2503e67c56/pages/1",
+          "download_url": "/sources/3db1d5e8-de3c-45c5-ae92-2a2503e67c56"
         },
         "ocr_blocks": [],
         "tables": [
@@ -4675,13 +4675,13 @@
           }
         ],
         "timings": {
-          "router": 69.0785484789958,
-          "extractor": 449.6170715210028,
-          "validator": 0.020000114003778435,
-          "judge": 211.36267371299618,
-          "pipeline": 731.4637746160006,
-          "ocr": 17.1158768949972,
-          "render": 2.754670581998653,
+          "router": 62.89174219600682,
+          "extractor": 452.2860463459947,
+          "validator": 0.02354723600728903,
+          "judge": 210.8244668920088,
+          "pipeline": 726.7151885769999,
+          "ocr": 15.332486904997495,
+          "render": 2.3088281089876546,
           "ocr_cached": 0.0
         },
         "usage": {
@@ -4895,18 +4895,18 @@
         "failed_stage": null,
         "error_details": null,
         "extraction_source": "ocr",
-        "extracted_at": "2026-09-11T08:16:27.849276",
+        "extracted_at": "2026-09-11T09:18:43.794659",
         "auto_evaluation": null
       }
     ],
     "error": null,
-    "job_id": "323273e9-ba6e-4b7f-84b6-8085d5b6c1b5",
+    "job_id": "6222da21-d0ff-429e-94c5-dc515f491058",
     "file_errors": [],
     "timings": {
-      "processing": 751.6366803109995,
+      "processing": 744.579440853995,
       "queue": 0.0
     },
-    "eval_seconds": 751.6552451410098,
+    "eval_seconds": 744.5930410000001,
     "extra_pages": 0
   },
   "Delivery1.webp": {

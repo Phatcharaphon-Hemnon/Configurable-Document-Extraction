@@ -1,12 +1,12 @@
 # Eval report — multilingual page extraction
 
-Generated 2026-09-11T08:03:55.037129+00:00 · **LIVE pipeline**
+Generated 2026-09-11T09:06:18.258402+00:00 · **LIVE pipeline**
 
 ## Run configuration
 
 | Setting | Value |
 |---|---|
-| generated_at | 2026-09-11T08:03:55.037129+00:00 |
+| generated_at | 2026-09-11T09:06:18.258402+00:00 |
 | provider | ollama-local |
 | model | qwen2.5:3b |
 | ocr | tesseract |
@@ -16,12 +16,12 @@ Generated 2026-09-11T08:03:55.037129+00:00 · **LIVE pipeline**
 | concurrency | 1 |
 | files | ['Delivery1.webp', 'Delivery_note2.png', 'ICR.png', 'Invoice+purchase.pdf', 'Invoice1.jpg', 'Invoice2.jpg', 'THAI_RECEIPT.jpg', 'THAI_bill.jpg', 'Thai(invoice)+EN(Purchase).pdf', 'purchase_orders1.pdf', 'purchase_orders_2.pdf'] |
 | gold_sha256 | 5dcbf9c0d485427c95cb0a940ebeb59dbc59d29431ecdf13aeeb2073394c3b45 |
-| revision | 87fdddf21db9d9bddb1d53f6b7c93f48610f3b6d |
+| revision | 56a24638bfa65dcc11bbeba964bd573cd7a60bd8 |
 | working_tree | uncommitted implementation |
 | implementation_sha256 | 3b5d13fbc248122e3a14364ae4a651a172090c30fbcde68386104168397c96ca |
 | source_hashes | {'ICR.png': 'b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f'} |
 | ocr_model_hashes | {'eng.traineddata': '7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2', 'tha.traineddata': '294227cc2d1292b0acb28d61d4115c88252b96d466ca90b417cf4cf0c67bf07c'} |
-| combined_from | ['.', 'eval_icr'] |
+| combined_from | ['.', 'eval_icr2'] |
 | report_scope | combined full run across two chunks (3h cap) |
 
 ## End-to-end metrics (all expected pages, including failures)
@@ -36,7 +36,7 @@ Generated 2026-09-11T08:03:55.037129+00:00 · **LIVE pipeline**
 | Table cell accuracy | 0.312 |
 | Table row / column coverage | 0.639 / 0.359 |
 | Review rate | 57.1% |
-| Median / p95 page seconds | 799.29 / 1465.31 |
+| Median / p95 page seconds | 795.80 / 1465.31 |
 
 ## Per-page results
 
@@ -55,7 +55,7 @@ Generated 2026-09-11T08:03:55.037129+00:00 · **LIVE pipeline**
 | purchase_orders_2.pdf / 1 | purchase_order → purchase_order | 0.667 | 0.667 | 0.667 | skipped | 425.45 | completed |
 | Thai(invoice)+EN(Purchase).pdf / 1 | invoice → invoice | 0.222 | 0.500 | 0.308 | flagged | 614.97 | review |
 | Thai(invoice)+EN(Purchase).pdf / 2 | purchase_order → purchase_order | 0.750 | 1.000 | 0.857 | skipped | 239.93 | completed |
-| ICR.png / 1 | invoice → invoice | 0.000 | 0.000 | 0.000 | flagged | 751.33 | review |
+| ICR.png / 1 | invoice → invoice | 0.000 | 0.000 | 0.000 | flagged | 744.36 | review |
 
 ## Breakdown by expected
 
@@ -69,7 +69,7 @@ Generated 2026-09-11T08:03:55.037129+00:00 · **LIVE pipeline**
 
 | Group | Pages | F1 | Median seconds |
 |---|---|---|---|
-| en | 11 | 0.459 | 751.33 |
+| en | 11 | 0.459 | 744.36 |
 | th | 3 | 0.393 | 1052.61 |
 
 ## Breakdown by format
@@ -78,22 +78,22 @@ Generated 2026-09-11T08:03:55.037129+00:00 · **LIVE pipeline**
 |---|---|---|---|
 | .jpg | 4 | 0.400 | 1253.67 |
 | .pdf | 7 | 0.602 | 425.45 |
-| .png | 2 | 0.158 | 822.96 |
+| .png | 2 | 0.158 | 819.47 |
 | .webp | 1 | 0.095 | 516.54 |
 
 ## Stage timing and provider usage
 
 | Stage | Calls recorded | Total seconds | Retries | Reported tokens |
 |---|---|---|---|---|
-| extractor | 14 | 7659.54 | 0 | 36886 |
-| judge | 8 | 2503.92 | 0 | 17429 |
-| ocr | 14 | 76.76 | 0 | 0 |
-| render | 14 | 12.02 | 0 | 0 |
-| router | 14 | 1171.08 | 0 | 9470 |
+| extractor | 14 | 7662.21 | 0 | 36886 |
+| judge | 8 | 2503.38 | 0 | 17429 |
+| ocr | 14 | 74.98 | 0 | 0 |
+| render | 14 | 11.58 | 0 | 0 |
+| router | 14 | 1164.89 | 0 | 9470 |
 | validator | 14 | 0.33 | 0 | 0 |
 
 Token totals include only usage returned by the provider; failed attempts may have unreported usage. Stage totals are components of page latency, not additional latency.
-Unattributed pipeline time: 14.12s (orchestration/tracing and, in older runs, failed stages without separate timing).
+Unattributed pipeline time: 13.43s (orchestration/tracing and, in older runs, failed stages without separate timing).
 
 ## OCR repeat measurements
 
@@ -103,7 +103,7 @@ Only OCR is repeated; no additional agent calls are made.
 |---|---|---|---|
 | Delivery1.webp | 3.421 | 0.000000 | False |
 | Delivery_note2.png | 1.912 | 0.000000 | False |
-| ICR.png | 19.871 | 0.006497 | True |
+| ICR.png | 17.641 | 0.005941 | True |
 | Invoice+purchase.pdf | 14.905 | 0.000000 | False |
 | Invoice1.jpg | 5.510 | 0.000000 | False |
 | Invoice2.jpg | 10.940 | 0.000000 | False |
@@ -141,13 +141,13 @@ Pass bar: pipeline runs on sample inputs and real metrics are reported; final-de
 
 ## Release subset (fixed files from manifest.release_subset)
 
-Generated 2026-09-11T08:03:55.037129+00:00 · **LIVE pipeline**
+Generated 2026-09-11T09:06:18.258402+00:00 · **LIVE pipeline**
 
 ## Run configuration
 
 | Setting | Value |
 |---|---|
-| generated_at | 2026-09-11T08:03:55.037129+00:00 |
+| generated_at | 2026-09-11T09:06:18.258402+00:00 |
 | provider | ollama-local |
 | model | qwen2.5:3b |
 | ocr | tesseract |
@@ -157,12 +157,12 @@ Generated 2026-09-11T08:03:55.037129+00:00 · **LIVE pipeline**
 | concurrency | 1 |
 | files | ['Delivery1.webp', 'Delivery_note2.png', 'ICR.png', 'Invoice+purchase.pdf', 'Invoice1.jpg', 'Invoice2.jpg', 'THAI_RECEIPT.jpg', 'THAI_bill.jpg', 'Thai(invoice)+EN(Purchase).pdf', 'purchase_orders1.pdf', 'purchase_orders_2.pdf'] |
 | gold_sha256 | 5dcbf9c0d485427c95cb0a940ebeb59dbc59d29431ecdf13aeeb2073394c3b45 |
-| revision | 87fdddf21db9d9bddb1d53f6b7c93f48610f3b6d |
+| revision | 56a24638bfa65dcc11bbeba964bd573cd7a60bd8 |
 | working_tree | uncommitted implementation |
 | implementation_sha256 | 3b5d13fbc248122e3a14364ae4a651a172090c30fbcde68386104168397c96ca |
 | source_hashes | {'ICR.png': 'b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f'} |
 | ocr_model_hashes | {'eng.traineddata': '7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2', 'tha.traineddata': '294227cc2d1292b0acb28d61d4115c88252b96d466ca90b417cf4cf0c67bf07c'} |
-| combined_from | ['.', 'eval_icr'] |
+| combined_from | ['.', 'eval_icr2'] |
 | report_scope | fixed release subset section inside this report |
 
 ## End-to-end metrics (all expected pages, including failures)

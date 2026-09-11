@@ -1,7 +1,7 @@
 {
   "config": {
     "mock": false,
-    "generated_at": "2026-09-11T08:03:55.037129+00:00",
+    "generated_at": "2026-09-11T09:06:18.258402+00:00",
     "provider": "ollama-local",
     "model": "qwen2.5:3b",
     "ocr": "tesseract",
@@ -23,7 +23,7 @@
       "purchase_orders_2.pdf"
     ],
     "gold_sha256": "5dcbf9c0d485427c95cb0a940ebeb59dbc59d29431ecdf13aeeb2073394c3b45",
-    "revision": "87fdddf21db9d9bddb1d53f6b7c93f48610f3b6d",
+    "revision": "56a24638bfa65dcc11bbeba964bd573cd7a60bd8",
     "working_tree": "uncommitted implementation",
     "implementation_sha256": "3b5d13fbc248122e3a14364ae4a651a172090c30fbcde68386104168397c96ca",
     "source_hashes": {
@@ -35,13 +35,13 @@
     },
     "warm_ocr": {
       "ICR.png": {
-        "seconds": 0.006497458991361782,
+        "seconds": 0.005940856004599482,
         "cache_hit": true
       }
     },
     "combined_from": [
       ".",
-      "eval_icr"
+      "eval_icr2"
     ],
     "report_scope": "combined full run across two chunks (3h cap)"
   },
@@ -60,7 +60,7 @@
     "table_cell_accuracy": 0.3125,
     "column_coverage": 0.358974358974359,
     "row_coverage": 0.6388888888888888,
-    "median_seconds": 799.2914999539971,
+    "median_seconds": 795.8025907029914,
     "p95_seconds": 1465.3081735339947
   },
   "subset_summary": {
@@ -1361,13 +1361,13 @@
       "returned": true,
       "judge_status": "flagged",
       "timings": {
-        "router": 69.0785484789958,
-        "extractor": 449.6170715210028,
-        "validator": 0.020000114003778435,
-        "judge": 211.36267371299618,
-        "pipeline": 731.4637746160006,
-        "ocr": 17.1158768949972,
-        "render": 2.754670581998653,
+        "router": 62.89174219600682,
+        "extractor": 452.2860463459947,
+        "validator": 0.02354723600728903,
+        "judge": 210.8244668920088,
+        "pipeline": 726.7151885769999,
+        "ocr": 15.332486904997495,
+        "render": 2.3088281089876546,
         "ocr_cached": 0.0
       },
       "usage": {

@@ -1,6 +1,6 @@
 # Review-cause triage — combined re-run (new guard code, qwen2.5:3b, 14 pages)
 
-Source: `eval_final/eval_artifacts/predictions.json`. Total validation/judge flags: **45** across 14 pages, review rate 8/14 (57.1%).
+Source: `eval_artifacts/predictions.json`. Total validation/judge flags: **45** across 14 pages, review rate 8/14 (57.1%).
 
 Baseline (2026-09-09 run, old guard): 294 flags, 14/14 in review. Quoted-span false positives 139 → 0; missing-required 10 → 0. What remains is genuine model error / OCR-hard content for the stronger-model loop.
 
