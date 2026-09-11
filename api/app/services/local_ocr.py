@@ -16,6 +16,7 @@ from uuid import uuid4
 
 from PIL import Image, ImageOps
 
+from app.core.security import is_ocr_text_coherent
 from app.schemas.ocr import OCRBlock, OCRPage
 from app.services.rapidocr_client import RapidOCRClient, RapidOCRError
 
@@ -75,6 +76,7 @@ class LocalOCRClient:
                 self.settings.ocr_languages,
                 self.model_hashes,
                 "layout-v5-digital-rules",
+                "rapid-fallback-v1",
             )
         )
         key = hashlib.sha256(key.encode()).hexdigest()
@@ -129,6 +131,19 @@ class LocalOCRClient:
                             img, remove_rules=is_pdf and bool(doc[index].get_text().strip())
                         )
                         page.text = layout_text(page.blocks)
+                        # Fallback: Tesseract emits script-salad on some scans
+                        # (e.g. Thai traineddata on Latin handwriting). RapidOCR
+                        # covers Latin+digits only, so it is tried ONLY when the
+                        # default text is incoherent — never as a global switch
+                        # (it cannot read Thai). Bounded: OCR takes seconds.
+                        if not is_ocr_text_coherent(page.text):
+                            fallback = await self._rapid_fallback(img)
+                            if fallback is not None:
+                                logger.info(
+                                    "OCR fallback: rapidocr replaced incoherent "
+                                    "tesseract text (%d chars)", len(page.text))
+                                page.text = fallback
+                                page.blocks = []
                     page.seconds = time.perf_counter() - ocr_start
                 except asyncio.CancelledError:
                     raise
@@ -186,6 +201,27 @@ class LocalOCRClient:
             logger.warning("OCR cache write skipped: %s", exc)
         finally:
             temp.unlink(missing_ok=True)
+
+    async def _rapid_fallback(self, img: Image.Image) -> str | None:
+        """One-shot RapidOCR retry for incoherent Tesseract output.
+
+        Returns the RapidOCR text only when it is coherent itself;
+        otherwise None (caller keeps the original text and the pipeline's
+        coherence gate reports it honestly). Never raises.
+        """
+        try:
+            raw = io.BytesIO()
+            img.save(raw, format="PNG")
+            text = await asyncio.wait_for(
+                asyncio.to_thread(self._rapid._ocr_image_bytes, raw.getvalue()),
+                self.settings.ocr_timeout_seconds,
+            )
+        except Exception as exc:  # noqa: BLE001 — fallback must never break OCR
+            logger.warning("OCR fallback failed: %s", exc)
+            return None
+        if text and is_ocr_text_coherent(text):
+            return text
+        return None
 
     async def _tesseract(self, img: Image.Image, *, remove_rules: bool = False) -> list[OCRBlock]:
         if remove_rules:

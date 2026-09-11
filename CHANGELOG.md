@@ -2,6 +2,26 @@
 
 All notable changes to this project, newest first. Deep dives live in `docs/`.
 
+## 2026-09-11 — RapidOCR fallback salvages ICR (no more FAILED pages)
+
+**Problem:** `ICR.png` (handwritten invoice) failed fast after the
+coherence gate — zero fields. Tesseract `eng+tha` renders Latin cursive
+as Thai-char salad (coherence 0.20); the 3B extractor stalls ~2000s on it.
+
+**Changed:**
+- `api/app/services/local_ocr.py` — `_rapid_fallback`: when Tesseract
+  text is incoherent, one bounded RapidOCR attempt (Latin+digits only →
+  fallback-only, never global; Thai pages untouched). ICR → clean print
+  labels + `160` (coherence 0.90), extraction completes, no stall.
+- Tests: `api/tests/test_ocr_fallback.py` (replace incoherent / keep
+  original on incoherent-fallback / never-call on coherent / failure-safe).
+
+**Verified:** 345 passed, 2 skipped, ruff clean. ICR-only re-run merged:
+14/14 scored, 0 failed, macro F1 0.445, review 57%. Honest limit: the
+3B model hallucinates on label-only text (all 12 ICR fields flagged, F1
+still 0) — cursive reading needs a vision-capable reader. See
+`docs/review_zero_plan.md`.
+
 ## 2026-09-10 — Zero-review loop: evidence-guard precision + eval re-runs
 
 **Problem:** 2026-09-09 eval at 100% `needs_review` (294 flags, 14/14 pages).

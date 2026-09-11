@@ -70,11 +70,16 @@ them forces invention or permanent review.
 
 ## Noted exceptions (stay flagged by design)
 
-- `ICR.png` — **fail-fast OCR-coherence gate** (`is_ocr_text_coherent`,
-  threshold 0.35 tuned on the gold set: ICR 0.29, clean pages ≥ 0.42):
-  extractor timeout ×2 (~2000s stalls on trilingual soup) is now an honest
-  `failed_stage: ocr` error in **~63s**, extractor never called. Needs a
-  stronger model or better OCR, not looser guards.
+- `ICR.png` — handwritten invoice. **RapidOCR fallback**
+  (`LocalOCRClient._rapid_fallback`: when Tesseract text is incoherent,
+  one bounded RapidOCR attempt — Latin+digits only, so fallback-only,
+  never global since it cannot read Thai): Tesseract soup (coherence
+  0.20, Thai-salad from `eng+tha` on Latin cursive) → RapidOCR clean
+  print labels + `160` (coherence 0.90). Extraction now completes instead
+  of timing out, but the 3B model hallucinates on label-only text
+  (`10248`, `2023-04-15`, `1000` — all 12 fields flagged, F1 still 0).
+  Reading the cursive date/amounts needs a vision-capable reader or
+  human transcription — nothing left to tune in code.
 - `Invoice2.jpg` — OCR-mangled date (`25/10/2 ด 17`) copied verbatim but
   unparseable; invented `THB` currency.
 - `THAI_RECEIPT.jpg`, `Thai(invoice)+EN(Purchase).pdf p1` — heavy Thai OCR

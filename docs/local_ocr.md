@@ -37,8 +37,22 @@ Judge run on OCR text with the single configured text model
    and Judge (score < 0.7 → `needs_review`).
 7. `extraction_source="ocr"` is set on all OCR'd pages.
 
-### Limitations
+## RapidOCR fallback for incoherent Tesseract output
 
+> Added 2026-09-11 (ICR salvage). `LocalOCRClient._rapid_fallback`.
+
+When the default Tesseract text scores incoherent
+(`is_ocr_text_coherent`, threshold 0.35 — e.g. Thai traineddata
+rendering Latin handwriting as script salad), each page gets one bounded
+RapidOCR attempt; its text replaces the Tesseract text only when coherent
+itself, otherwise the original is kept and the pipeline's coherence gate
+reports it. RapidOCR covers Latin+digits only, so this is strictly a
+fallback — never a global switch (it cannot read Thai, and Thai pages
+keep Tesseract). Failures never raise. Provenance: `ICR.png`
+(Tesseract 0.20 → RapidOCR 0.90, extraction completes instead of
+stalling). Tests: `api/tests/test_ocr_fallback.py`.
+
+### Limitations
 - RapidOCR is an OCR engine, not a vision LLM. Neat handwriting works;
   heavy cursive/scribbles will have low recall and surface as
   `needs_review` instead of hallucinations.

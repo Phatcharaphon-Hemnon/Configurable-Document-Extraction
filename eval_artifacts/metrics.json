@@ -1,7 +1,7 @@
 {
   "config": {
     "mock": false,
-    "generated_at": "2026-09-10T13:05:39.034630+00:00",
+    "generated_at": "2026-09-11T08:03:55.037129+00:00",
     "provider": "ollama-local",
     "model": "qwen2.5:3b",
     "ocr": "tesseract",
@@ -23,44 +23,44 @@
       "purchase_orders_2.pdf"
     ],
     "gold_sha256": "5dcbf9c0d485427c95cb0a940ebeb59dbc59d29431ecdf13aeeb2073394c3b45",
-    "revision": "d9319b1a81ebf847f04e4f77d8160b2e3b275c66",
+    "revision": "87fdddf21db9d9bddb1d53f6b7c93f48610f3b6d",
     "working_tree": "uncommitted implementation",
-    "implementation_sha256": "4133d5b28d6f3c14e4d69cefd610279d1d21e311c25e0927f1a92f8411340305",
+    "implementation_sha256": "3b5d13fbc248122e3a14364ae4a651a172090c30fbcde68386104168397c96ca",
     "source_hashes": {
-      "Thai(invoice)+EN(Purchase).pdf": "24b3e6e42b6fda6fa777d692279afd88bf48632015d73dec78946b0d56f1d271"
+      "ICR.png": "b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f"
     },
     "ocr_model_hashes": {
       "eng.traineddata": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2",
       "tha.traineddata": "294227cc2d1292b0acb28d61d4115c88252b96d466ca90b417cf4cf0c67bf07c"
     },
     "warm_ocr": {
-      "Thai(invoice)+EN(Purchase).pdf": {
-        "seconds": 0.0018334100022912025,
+      "ICR.png": {
+        "seconds": 0.006497458991361782,
         "cache_hit": true
       }
     },
     "combined_from": [
-      "eval_m123",
-      "eval_c4"
+      ".",
+      "eval_icr"
     ],
     "report_scope": "combined full run across two chunks (3h cap)"
   },
   "summary": {
     "n_total": 14,
-    "n_scored": 13,
-    "n_failed": 1,
+    "n_scored": 14,
+    "n_failed": 0,
     "returned": 14,
-    "router_accuracy": 0.9285714285714286,
+    "router_accuracy": 1.0,
     "language_accuracy": 0.6428571428571429,
     "macro_precision": 0.4436224489795918,
     "macro_recall": 0.46015512265512265,
     "macro_f1": 0.44456929657329847,
-    "success_only_f1": 0.47876693477124455,
+    "success_only_f1": 0.4445692965732985,
     "needs_review_rate": 0.5714285714285714,
     "table_cell_accuracy": 0.3125,
     "column_coverage": 0.358974358974359,
     "row_coverage": 0.6388888888888888,
-    "median_seconds": 731.108446917493,
+    "median_seconds": 799.2914999539971,
     "p95_seconds": 1465.3081735339947
   },
   "subset_summary": {
@@ -387,68 +387,6 @@
       "filename": "Invoice+purchase.pdf",
       "page_number": 3,
       "format": ".pdf"
-    },
-    {
-      "expected": "invoice",
-      "predicted": "invoice",
-      "router_ok": false,
-      "language_ok": true,
-      "language": "en",
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1": 0,
-      "tp": 0,
-      "fp": 0,
-      "fn": 2,
-      "fields_expected": 2,
-      "cells_total": 4,
-      "cells_ok": 0,
-      "columns_total": 2,
-      "columns_found": 0,
-      "rows_total": 3,
-      "rows_found": 0,
-      "extra_rows": 0,
-      "extra_columns": 0,
-      "excluded_cells": 2,
-      "failed": true,
-      "error": "OCR text incoherent: too fragmented for reliable extraction (rescan at higher DPI or review manually)",
-      "needs_review": true,
-      "returned": true,
-      "judge_status": "unavailable",
-      "timings": {
-        "router": 64.38288282699796,
-        "pipeline": 64.5552348429992,
-        "ocr": 7.7928482690040255,
-        "render": 2.3950592889959808,
-        "ocr_cached": 0.0
-      },
-      "usage": {
-        "router": {
-          "input_tokens": 528,
-          "output_tokens": 52,
-          "total_tokens": 580,
-          "attempts": 1,
-          "retries": 0
-        }
-      },
-      "mismatches": [
-        {
-          "field": "invoice_date",
-          "expected": "12/7/2014",
-          "predicted": null
-        },
-        {
-          "field": "total_amount",
-          "expected": 305,
-          "predicted": null
-        }
-      ],
-      "unexpected_fields": {},
-      "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
-      "stem": "ICR.png / 1",
-      "filename": "ICR.png",
-      "page_number": 1,
-      "format": ".png"
     },
     {
       "expected": "delivery_note",
@@ -1394,6 +1332,94 @@
       "filename": "Thai(invoice)+EN(Purchase).pdf",
       "page_number": 2,
       "format": ".pdf"
+    },
+    {
+      "expected": "invoice",
+      "predicted": "invoice",
+      "router_ok": true,
+      "language_ok": true,
+      "language": "en",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0,
+      "tp": 0,
+      "fp": 10,
+      "fn": 2,
+      "fields_expected": 2,
+      "cells_total": 4,
+      "cells_ok": 0,
+      "columns_total": 2,
+      "columns_found": 0,
+      "rows_total": 3,
+      "rows_found": 0,
+      "extra_rows": 0,
+      "extra_columns": 2,
+      "excluded_cells": 2,
+      "failed": false,
+      "error": null,
+      "needs_review": true,
+      "returned": true,
+      "judge_status": "flagged",
+      "timings": {
+        "router": 69.0785484789958,
+        "extractor": 449.6170715210028,
+        "validator": 0.020000114003778435,
+        "judge": 211.36267371299618,
+        "pipeline": 731.4637746160006,
+        "ocr": 17.1158768949972,
+        "render": 2.754670581998653,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 413,
+          "output_tokens": 53,
+          "total_tokens": 466,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 1064,
+          "output_tokens": 338,
+          "total_tokens": 1402,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_invoice": {
+          "input_tokens": 1073,
+          "output_tokens": 1125,
+          "total_tokens": 2198,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "mismatches": [
+        {
+          "field": "invoice_date",
+          "expected": "12/7/2014",
+          "predicted": "2023-04-15"
+        },
+        {
+          "field": "total_amount",
+          "expected": 305,
+          "predicted": "1000"
+        }
+      ],
+      "unexpected_fields": {
+        "invoice_number": "10248",
+        "bill_to_address": "Adreg B.T.W.Reg Nr.",
+        "tax_id": "160",
+        "currency": "THB",
+        "subtotal_amount": "1000",
+        "tax_amount": "0",
+        "paid_amount": "1000",
+        "change_amount": "0"
+      },
+      "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
+      "stem": "ICR.png / 1",
+      "filename": "ICR.png",
+      "page_number": 1,
+      "format": ".png"
     }
   ],
   "extra_pages": 0

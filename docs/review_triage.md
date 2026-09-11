@@ -1,6 +1,6 @@
 # Review-cause triage — combined re-run (new guard code, qwen2.5:3b, 14 pages)
 
-Source: `eval_final/eval_artifacts/predictions.json`. Total validation/judge flags: **33** across 14 pages, review rate 8/14 (57.1%).
+Source: `eval_final/eval_artifacts/predictions.json`. Total validation/judge flags: **45** across 14 pages, review rate 8/14 (57.1%).
 
 Baseline (2026-09-09 run, old guard): 294 flags, 14/14 in review. Quoted-span false positives 139 → 0; missing-required 10 → 0. What remains is genuine model error / OCR-hard content for the stronger-model loop.
 
@@ -10,14 +10,14 @@ Baseline (2026-09-09 run, old guard): 294 flags, 14/14 in review. Quoted-span fa
 |---|---|---|---|
 | quoted-span | 0 | LLM wraps span in literal quotes; strict substring fails on correct values | Phase 1 (strip wrapping quotes) |
 | ocr-noise | 5 | tokens overlap ≥0.75 but substring fails (spacing/OCR errors) | Phase 1 (OCR-tolerant match) |
-| date-format | 3 | ISO-normalized value vs printed date; unparseable-date strings | Phase 1 (date-aware compare) + Phase 2 (verbatim span rule) |
+| date-format | 4 | ISO-normalized value vs printed date; unparseable-date strings | Phase 1 (date-aware compare) + Phase 2 (verbatim span rule) |
 | missing-required | 0 | catalog requires genuinely-absent fields | Phase 3 (catalog/gold) |
-| genuine-mismatch | 4 | value tokens absent from doc — real model errors | Phase 2 (prompt/model) |
+| genuine-mismatch | 15 | value tokens absent from doc — real model errors | Phase 2 (prompt/model) |
 | judge | 0 | judge unavailable errors | Phase 1 (judge schema) |
-| judge-score<0.7 | 6 | judge ran and scored below pass | Phase 2 (model) + Phase 4 (re-run) |
+| judge-score<0.7 | 7 | judge ran and scored below pass | Phase 2 (model) + Phase 4 (re-run) |
 | table-shape | 2 | duplicate/missing columns, arithmetic | Phase 1/3 |
 | low-confidence | 0 | confidence < 0.6 | Phase 2 (model) |
-| other | 13 | unclassified | — |
+| other | 12 | unclassified | — |
 
 ## Per-file summary
 
@@ -26,7 +26,7 @@ Baseline (2026-09-09 run, old guard): 294 flags, 14/14 in review. Quoted-span fa
 | Invoice+purchase.pdf p1 | invoice | 3 | genuine-mismatch×1, judge-score<0.7×1, other×2 |
 | Invoice+purchase.pdf p2 | invoice | 2 | judge-score<0.7×1, other×2 |
 | Invoice+purchase.pdf p3 | purchase_order | 0 | — |
-| ICR.png p1 | invoice | 1 | other×1 |
+| ICR.png p1 | invoice | 12 | date-format×1, genuine-mismatch×11, judge-score<0.7×1 |
 | Delivery1.webp p1 | delivery_note | 0 | — |
 | Invoice1.jpg p1 | invoice | 0 | — |
 | Invoice2.jpg p1 | invoice | 2 | date-format×1, genuine-mismatch×1 |
@@ -50,6 +50,7 @@ OCR-noise (false positives):
 - Thai(invoice)+EN(Purchase).pdf p1: invoice_number span='I ๑'
 
 Date-format:
+- ICR.png p1: invoice_date value='2023-04-15' span='2023-04-15'
 - THAI_RECEIPT.jpg p1: invoice_date value='29/12/2558' span='Date: 29/12/2558'
 
 ## Top gold mismatches (model genuinely wrong)

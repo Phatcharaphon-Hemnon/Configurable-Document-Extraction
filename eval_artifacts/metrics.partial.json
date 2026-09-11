@@ -306,68 +306,6 @@
     "format": ".pdf"
   },
   {
-    "expected": "invoice",
-    "predicted": "invoice",
-    "router_ok": false,
-    "language_ok": true,
-    "language": "en",
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1": 0,
-    "tp": 0,
-    "fp": 0,
-    "fn": 2,
-    "fields_expected": 2,
-    "cells_total": 4,
-    "cells_ok": 0,
-    "columns_total": 2,
-    "columns_found": 0,
-    "rows_total": 3,
-    "rows_found": 0,
-    "extra_rows": 0,
-    "extra_columns": 0,
-    "excluded_cells": 2,
-    "failed": true,
-    "error": "OCR text incoherent: too fragmented for reliable extraction (rescan at higher DPI or review manually)",
-    "needs_review": true,
-    "returned": true,
-    "judge_status": "unavailable",
-    "timings": {
-      "router": 64.38288282699796,
-      "pipeline": 64.5552348429992,
-      "ocr": 7.7928482690040255,
-      "render": 2.3950592889959808,
-      "ocr_cached": 0.0
-    },
-    "usage": {
-      "router": {
-        "input_tokens": 528,
-        "output_tokens": 52,
-        "total_tokens": 580,
-        "attempts": 1,
-        "retries": 0
-      }
-    },
-    "mismatches": [
-      {
-        "field": "invoice_date",
-        "expected": "12/7/2014",
-        "predicted": null
-      },
-      {
-        "field": "total_amount",
-        "expected": 305,
-        "predicted": null
-      }
-    ],
-    "unexpected_fields": {},
-    "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
-    "stem": "ICR.png / 1",
-    "filename": "ICR.png",
-    "page_number": 1,
-    "format": ".png"
-  },
-  {
     "expected": "delivery_note",
     "predicted": "delivery_note",
     "router_ok": true,
@@ -1311,5 +1249,93 @@
     "filename": "Thai(invoice)+EN(Purchase).pdf",
     "page_number": 2,
     "format": ".pdf"
+  },
+  {
+    "expected": "invoice",
+    "predicted": "invoice",
+    "router_ok": true,
+    "language_ok": true,
+    "language": "en",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0,
+    "tp": 0,
+    "fp": 10,
+    "fn": 2,
+    "fields_expected": 2,
+    "cells_total": 4,
+    "cells_ok": 0,
+    "columns_total": 2,
+    "columns_found": 0,
+    "rows_total": 3,
+    "rows_found": 0,
+    "extra_rows": 0,
+    "extra_columns": 2,
+    "excluded_cells": 2,
+    "failed": false,
+    "error": null,
+    "needs_review": true,
+    "returned": true,
+    "judge_status": "flagged",
+    "timings": {
+      "router": 69.0785484789958,
+      "extractor": 449.6170715210028,
+      "validator": 0.020000114003778435,
+      "judge": 211.36267371299618,
+      "pipeline": 731.4637746160006,
+      "ocr": 17.1158768949972,
+      "render": 2.754670581998653,
+      "ocr_cached": 0.0
+    },
+    "usage": {
+      "router": {
+        "input_tokens": 413,
+        "output_tokens": 53,
+        "total_tokens": 466,
+        "attempts": 1,
+        "retries": 0
+      },
+      "judge": {
+        "input_tokens": 1064,
+        "output_tokens": 338,
+        "total_tokens": 1402,
+        "attempts": 1,
+        "retries": 0
+      },
+      "extractor_invoice": {
+        "input_tokens": 1073,
+        "output_tokens": 1125,
+        "total_tokens": 2198,
+        "attempts": 1,
+        "retries": 0
+      }
+    },
+    "mismatches": [
+      {
+        "field": "invoice_date",
+        "expected": "12/7/2014",
+        "predicted": "2023-04-15"
+      },
+      {
+        "field": "total_amount",
+        "expected": 305,
+        "predicted": "1000"
+      }
+    ],
+    "unexpected_fields": {
+      "invoice_number": "10248",
+      "bill_to_address": "Adreg B.T.W.Reg Nr.",
+      "tax_id": "160",
+      "currency": "THB",
+      "subtotal_amount": "1000",
+      "tax_amount": "0",
+      "paid_amount": "1000",
+      "change_amount": "0"
+    },
+    "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
+    "stem": "ICR.png / 1",
+    "filename": "ICR.png",
+    "page_number": 1,
+    "format": ".png"
   }
 ]
