@@ -77,9 +77,17 @@ them forces invention or permanent review.
   0.20, Thai-salad from `eng+tha` on Latin cursive) → RapidOCR clean
   print labels + `160` (coherence 0.90). Extraction now completes instead
   of timing out, but the 3B model hallucinates on label-only text
-  (`10248`, `2023-04-15`, `1000` — all 12 fields flagged, F1 still 0).
+  (  `10248`, `2023-04-15`, `1000` — all 12 fields flagged, F1 still 0).
   Reading the cursive date/amounts needs a vision-capable reader or
   human transcription — nothing left to tune in code.
+- TrOCR handwritten OCR was tried and **rejected with evidence**
+  (2026-09-11): installed `trocr-base-handwritten` (torch CPU +
+  transformers 4.48 — v5 cannot load its tokenizer), but both
+  word-box line crops and manual zone crops (date/amounts/total/items
+  regions) returned confident English salad (`Arkansas COVID 19`,
+  `7 June`, `all sort`) — the loopy ruled-background cursive is far
+  outside its training distribution. Uninstalled afterwards (+1.3GB
+  weights removed); do not retry without a different model.
 - `Invoice2.jpg` — OCR-mangled date (`25/10/2 ด 17`) copied verbatim but
   unparseable; invented `THB` currency.
 - `THAI_RECEIPT.jpg`, `Thai(invoice)+EN(Purchase).pdf p1` — heavy Thai OCR

@@ -22,6 +22,8 @@ as Thai-char salad (coherence 0.20); the 3B extractor stalls ~2000s on it.
 still 0) — cursive reading needs a vision-capable reader. See
 `docs/review_zero_plan.md`.
 
+## 2026-09-11 — Cleanup + TrOCR rejected (ICR stays honestly flagged)
+
 ## 2026-09-10 — Zero-review loop: evidence-guard precision + eval re-runs
 
 **Problem:** 2026-09-09 eval at 100% `needs_review` (294 flags, 14/14 pages).
