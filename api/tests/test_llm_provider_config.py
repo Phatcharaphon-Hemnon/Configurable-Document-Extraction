@@ -35,6 +35,7 @@ _VARS = (
     "MOONSHOT_API_KEY",
     "OLLAMA_API_KEY",
     "MISTRAL_API_KEY",
+    "NVIDIA_API_KEY",
     "OPENCLAW_API_KEY",
     "OPENCODE_API_KEY",
 )
@@ -50,6 +51,7 @@ EXPECTED_PROVIDERS: dict[str, tuple[str, str, str | None, float, bool]] = {
     "ollama-cloud": ("https://ollama.com/v1", "OLLAMA_API_KEY", "gpt-oss:20b", 1.0, False),
     "ollama-local": ("http://localhost:11434/v1", "", "gpt-oss:20b", 0.0, False),
     "mistral": ("https://api.mistral.ai/v1", "MISTRAL_API_KEY", "mistral-large-latest", 0.0, False),
+    "nvidia": ("https://integrate.api.nvidia.com/v1", "NVIDIA_API_KEY", "meta/llama-3.3-70b-instruct", 0.0, False),
     "openclaw": ("http://127.0.0.1:18789/v1", "OPENCLAW_API_KEY", "openclaw/default", 0.0, False),
     "opencode": ("https://opencode.ai/zen/v1", "OPENCODE_API_KEY", "gpt-5.4-mini", 0.0, False),
 }

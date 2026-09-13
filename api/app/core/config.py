@@ -51,6 +51,11 @@ LLM_PROVIDERS: dict[str, ProviderProfile] = {
     "ollama-cloud": ProviderProfile("https://ollama.com/v1", "OLLAMA_API_KEY", "gpt-oss:20b", 1.0),
     "ollama-local": ProviderProfile("http://localhost:11434/v1", "", "gpt-oss:20b"),
     "mistral": ProviderProfile("https://api.mistral.ai/v1", "MISTRAL_API_KEY", "mistral-large-latest"),
+    # NVIDIA NIM (build.nvidia.com): OpenAI-compatible chat completions at
+    # integrate.api.nvidia.com; key (nvapi-...) via Get API Key on any model page.
+    "nvidia": ProviderProfile(
+        "https://integrate.api.nvidia.com/v1", "NVIDIA_API_KEY", "meta/llama-3.3-70b-instruct"
+    ),
     # Local OpenClaw gateway (enable gateway.http.endpoints.chatCompletions first).
     "openclaw": ProviderProfile("http://127.0.0.1:18789/v1", "OPENCLAW_API_KEY", "openclaw/default"),
     # OpenCode Zen gateway; literal key "public" serves the free-tier models.

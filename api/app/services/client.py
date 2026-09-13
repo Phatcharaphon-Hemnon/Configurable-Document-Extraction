@@ -232,6 +232,7 @@ _BILLING_URLS = {
     "ollama-cloud": "https://ollama.com/settings",
     "ollama-local": "",
     "mistral": "https://console.mistral.ai",
+    "nvidia": "https://build.nvidia.com",
     "openclaw": "",
     "opencode": "https://opencode.ai/zen",
 }

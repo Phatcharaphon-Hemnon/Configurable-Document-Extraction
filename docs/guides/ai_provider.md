@@ -22,6 +22,7 @@ LLM_MODEL=gpt-oss:20b       # single model for Router + Extractor + Judge
 | `ollama-cloud` | `https://ollama.com/v1` | `LLM_API_KEY` → `OLLAMA_API_KEY` | `gpt-oss:20b` |
 | `ollama-local` | `http://localhost:11434/v1` | not needed | `gpt-oss:20b` |
 | `mistral` | `https://api.mistral.ai/v1` | `LLM_API_KEY` → `MISTRAL_API_KEY` | `mistral-large-latest` |
+| `nvidia` | `https://integrate.api.nvidia.com/v1` | `LLM_API_KEY` → `NVIDIA_API_KEY` | `meta/llama-3.3-70b-instruct` |
 | `openclaw` | `http://127.0.0.1:18789/v1` | `LLM_API_KEY` → `OPENCLAW_API_KEY` (gateway token) | `openclaw/default` |
 | `opencode` | `https://opencode.ai/zen/v1` | `LLM_API_KEY` → `OPENCODE_API_KEY` | `gpt-5.4-mini` |
 
@@ -30,7 +31,7 @@ Get keys at: [OpenAI](https://platform.openai.com/api-keys) ·
 [OpenRouter](https://openrouter.ai/settings/keys) ·
 [DeepSeek](https://platform.deepseek.com) · [Moonshot](https://platform.moonshot.ai/console) ·
 [Ollama](https://ollama.com/settings/keys) · [Mistral](https://console.mistral.ai) ·
-[OpenCode Zen](https://opencode.ai/zen).
+[NVIDIA](https://build.nvidia.com) · [OpenCode Zen](https://opencode.ai/zen).
 
 Never commit `api/.env`. Backend keys must stay out of the frontend and out of
 any `VITE_*` variable.
@@ -86,6 +87,21 @@ stripped before JSON parsing):
 LLM_PROVIDER=ollama-cloud
 LLM_API_KEY=<paste ollama cloud key>
 LLM_MODEL=gpt-oss:20b
+```
+
+**Nvidia (NIM)** — hosted OpenAI-compatible models at
+`https://integrate.api.nvidia.com/v1`. Sign up at
+[build.nvidia.com](https://build.nvidia.com) (no card; free credits for
+evaluation), open any model page and click **Get API Key** (keys look like
+`nvapi-...` and work catalog-wide). Structured-output note: NIM documents
+`guided_json` via `extra_body`, not OpenAI `json_schema` enforcement — the
+client's prompt-embedded schema + single same-tier corrective already cover
+this, so no extra configuration is needed; verify with
+`time_gateway_modes.py` once keyed:
+```bash
+LLM_PROVIDER=nvidia
+LLM_API_KEY=<paste nvapi-... key>
+LLM_MODEL=meta/llama-3.3-70b-instruct   # default; any NIM model ID works
 ```
 
 **OpenClaw (local gateway)** — the gateway's Chat Completions endpoint is

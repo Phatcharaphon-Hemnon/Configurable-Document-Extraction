@@ -16,7 +16,7 @@ everywhere: explicit `LLM_*` env vars win, provider defaults fill the gaps,
 
 ## Constraint: OpenAI-compatible only
 
-All 10 entries speak `POST /chat/completions` with `Authorization: Bearer`.
+All 12 entries speak `POST /chat/completions` with `Authorization: Bearer`.
 That is why **native Claude/Anthropic is excluded**: the Messages API needs
 `x-api-key` / `anthropic-version` headers and a different request body, which
 the shared `AsyncOpenAI` client cannot send. Building a second transport

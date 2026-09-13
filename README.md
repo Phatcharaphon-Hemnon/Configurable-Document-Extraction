@@ -114,7 +114,7 @@ Re-running skips everything already installed. Ctrl+C stops both.
 
 | Variable | Purpose |
 |---|---|
-| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider (11 options, see table below), the only secret, and the single text model for Router + Extractor + Judge. No native Claude entry — reach it via `openrouter`/`opencode`. |
+| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider (12 options, see table below), the only secret, and the single text model for Router + Extractor + Judge. No native Claude entry — reach it via `openrouter`/`opencode`. |
 | `OCR_DPI` | PDF render resolution for local RapidOCR (default `300`). |
 | `SUPPORTED_LANGUAGES` | OCR languages (default `en,th`). |
 | `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Optional per-stage overrides (default: `LLM_MODEL`). |
@@ -145,6 +145,7 @@ the browser bundle (on Vercel, leave "Sensitive" unchecked).
 | `ollama-cloud` | `https://ollama.com/v1` | `OLLAMA_API_KEY` |
 | `ollama-local` | `http://localhost:11434/v1` | — (no key) |
 | `mistral` | `https://api.mistral.ai/v1` | `MISTRAL_API_KEY` |
+| `nvidia` | `https://integrate.api.nvidia.com/v1` | `NVIDIA_API_KEY` (`nvapi-...` from build.nvidia.com) |
 | `openclaw` | `http://127.0.0.1:18789/v1` | `OPENCLAW_API_KEY` (gateway token) |
 | `opencode` | `https://opencode.ai/zen/v1` | `OPENCODE_API_KEY` (`public` = free tier) |
 
