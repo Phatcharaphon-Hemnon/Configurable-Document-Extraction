@@ -1,33 +1,53 @@
-# API scripts — eval, gateway probe, setup
+# API scripts — eval, gateway probe, OCR benchmark
 
-> Last updated: 2026-09-09. Runnables in `api/scripts/` + `scripts/`.
+> Last updated: 2026-09-12. Operator tools in `api/scripts/`.
+> The one-command setup is separate: `./scripts/run_all.sh` (see below).
 > Covered elsewhere: `ingest_kb.py` → `docs/rag_kb.md`,
 > `review_discovered_fields.py` → `docs/catalog_review.md`.
 
 ## What these scripts are in this project
 
 **Scripts** = operator tools: model/provider diagnostics, pipeline scoring,
-and the one-command setup. All run with the repo venv; `api/scripts/*`
-run from `api/` so `.env` and the `app` package resolve.
+and OCR-engine comparison. All run with the repo venv from the repository
+root (e.g. `.venv/bin/python api/scripts/run_eval.py ...`), so `.env` and
+the `app` package resolve. The only setup script is `./scripts/run_all.sh`
+(one-command install + run); everything under `api/scripts/` assumes an
+installed checkout and performs one diagnostic or scoring job.
 
-## `scripts/run_eval.py` — pipeline scoring
+## `api/scripts/run_eval.py` — pipeline scoring
 
-Scores the full pipeline (RapidOCR → Router → Extractor → Validator →
-Judge) against the KB gold subset (default 8 docs: 3 invoice, 3 PO,
-2 delivery notes) and writes a markdown report (default `eval_report.md`).
+Scores the full pipeline (local OCR → Router → Extractor → Validator →
+Judge) against the KB gold set (default: the fixed eight-file release
+subset covering all three document types, Thai/English and mixed PDFs;
+`--all` scores the full 11-file manifest) and writes a markdown report plus
+`eval_artifacts/metrics.json` and `predictions.json` (see
+[Gold-set release evaluation](evaluation.md)).
 
 ```bash
-source ../.venv/bin/activate   # from api/
-python scripts/run_eval.py [--mock] [--few-shot 2] [--subset po_01 ...]
-                           [--concurrency 2] [--output report.md]
+.venv/bin/python api/scripts/run_eval.py --gold-dir api/app/data/knowledge_base/ground_truth --output-dir .
+.venv/bin/python api/scripts/run_eval.py --all --gold-dir api/app/data/knowledge_base/ground_truth --output-dir .
 ```
 
 - Real mode (default): live LLM calls (needs `LLM_API_KEY`); per-item
   failures recorded as `failed_stage`/`error` and counted in the report.
-- `--mock`: deterministic offline smoke (prediction = ground truth minus
-  last key + one bogus field), report labeled MOCK — CI only.
+- `--mock`: deterministic offline smoke, report labeled MOCK — plumbing
+  checks only, never release metrics.
 - Side effects contained: DB + audit disabled, field-catalog files
   snapshotted and restored. Exit code always 0; read the summary + report.
+
+## `api/scripts/benchmark_ocr.py` — OCR-engine comparison
+
+Compares `tesseract` (+fallback), `rapidocr` (PP-OCRv5 TH), and `hybrid`
+(TH→EN + TrOCR) against identical gold references with unchanged LLM
+settings. Reports field accuracy, table-cell accuracy, handwriting
+transcription errors, review rate, CPU page latency, and peak memory —
+see [Thai catalogs + CPU hybrid OCR](thai_catalog_hybrid_ocr.md).
+Keep `hybrid` opt-in; claim no accuracy gains until this reports them.
+
+```bash
+.venv/bin/python api/scripts/benchmark_ocr.py --engines tesseract,rapidocr,hybrid \
+  --gold-dir api/app/data/knowledge_base/ground_truth --output-dir eval_artifacts
+```
 
 ## `scripts/audit_review_causes.py` — review-cause triage (read-only)
 

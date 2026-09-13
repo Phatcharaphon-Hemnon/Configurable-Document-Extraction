@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.node.json && vite build",
     "preview": "vite preview",
-    "test": "node tests/jobQueue.test.mjs",
+    "test": "node --test tests/jobQueue.test.mjs tests/pipelineStage.test.mjs",
     "test:browser": "node tests/browser.mjs test",
     "browser:install": "node tests/browser.mjs install chromium"
   },

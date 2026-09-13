@@ -2,15 +2,61 @@ export type DocType = 'invoice' | 'purchase_order' | 'delivery_note';
 
 export type GroupStatus = 'queued' | 'uploading' | 'processing' | 'done' | 'error';
 
+export type AcceptanceStatus = 'accepted' | 'rejected' | 'unresolved' | 'unevaluated';
+
+export type EvidenceReference = {
+  block_id?: string | null;
+  page_number: number;
+  subspan?: string | null;
+  box?: [number, number, number, number] | null;
+  engine?: string | null;
+  role?: 'label' | 'value' | 'context' | null;
+};
+
 export type ExtractedField = {
   name: string;
   value: string | number | null;
   confidence: number;
   source_span?: string | null;
   is_new_field?: boolean;
+  evidence_refs?: EvidenceReference[];
+  acceptance?: AcceptanceStatus;
 };
 
-export type JudgeIssue = { field: string; message: string; severity: string };
+export type RejectedCandidate = {
+  candidate_id: string;
+  kind: 'field' | 'cell' | 'row' | 'table';
+  location: string;
+  proposed_value?: string | number | null;
+  confidence: number;
+  raw_evidence?: string | null;
+  source_refs?: EvidenceReference[];
+  rejection_reason: string;
+  validation_findings?: string[];
+};
+
+export type StructuredReviewIssue = {
+  category: 'mechanical' | 'unsupported' | 'row_column' | 'type' | 'semantic' | 'ocr_ambiguity';
+  target: string;
+  severity: 'info' | 'warning' | 'error';
+  evidence?: string | null;
+  explanation: string;
+};
+
+export type ResultCacheMetadata = {
+  fingerprint: string;
+  computed_at?: string | null;
+  original_timings?: Record<string, number>;
+  acceptance_policy_version?: string;
+  cache_lookup_ms?: number;
+  hit_type: 'full' | 'partial' | 'miss';
+};
+
+export type JudgeIssue = {
+  field: string; message: string; severity: string;
+  category?: string | null; target?: string | null;
+  evidence?: string | null; explanation?: string | null;
+};
 
 export type JudgeResult = { score: number; issues: JudgeIssue[]; notes: string };
 
@@ -27,10 +73,16 @@ export type ProviderErrorDetails = {
   request_id?: string | null;
 };
 
+export type TableCell = {
+  column: string; value: string | number | null; confidence: number;
+  source_span?: string | null; evidence_refs?: EvidenceReference[];
+  acceptance?: AcceptanceStatus;
+};
+
 export type ExtractedTable = {
   name: string;
   columns: {key: string; label: string}[];
-  rows: {column: string; value: string | number | null; confidence: number; source_span?: string | null}[][];
+  rows: TableCell[][];
 };
 export type SourceReference = {
   source_id: string; filename: string; page_number: number; page_count: number;
@@ -58,6 +110,11 @@ export type ExtractionResult = {
   error_details?: ProviderErrorDetails | null;
   extraction_source?: 'vision' | 'ocr' | 'text' | null;
   auto_evaluation?: EvaluateResponse | null;
+  rejected_candidates?: RejectedCandidate[];
+  review_issues?: StructuredReviewIssue[];
+  acceptance_status?: AcceptanceStatus;
+  acceptance_policy_version?: string;
+  cache_metadata?: ResultCacheMetadata | null;
 };
 
 export type FileUploadMeta = {

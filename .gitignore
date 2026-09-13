@@ -45,6 +45,9 @@ web/vite.config.d.ts
 
 # Runtime documents, OCR installation, and database snapshots
 .local/
+data/extraction.db
+data/extraction.db-wal
+data/extraction.db-shm
 data/sources/
 data/backups/
 data/logs/
@@ -55,3 +58,9 @@ data/logs/
 .cache/
 web/test-results/
 web/playwright-report/
+
+# Analysis tooling trash and intermediate files (retain the current graph,
+# configuration, metadata, and fingerprints: .ua/knowledge-graph.json,
+# .ua/config.json, .ua/meta.json, .ua/fingerprints.json)
+.ua/.trash-*/
+.ua/intermediate/

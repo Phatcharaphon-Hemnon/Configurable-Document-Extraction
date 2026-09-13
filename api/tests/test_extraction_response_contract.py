@@ -53,17 +53,19 @@ async def test_every_mode_has_schema_and_recovers_from_wrong_shape(disable_stric
 
 @pytest.mark.asyncio
 async def test_wrong_shapes_exhaust_formats_as_failure():
-    client, create = make_client([{"score": 0}] * 3)
-    with pytest.raises(ClientError, match="unparseable JSON"):
+    # Classified recovery: one initial + at most one corrective (no blind 3-tier).
+    client, create = make_client([{"score": 0}] * 2)
+    with pytest.raises(ClientError, match=r"wrong_root|LLM output failed"):
         await client.generate_structured(model="test", prompt="Bill#: V001-540338", response_schema=ExtractionResponseSchema)
-    assert create.call_count == 3
+    assert create.call_count == 2
 
 
 @pytest.mark.asyncio
 async def test_image_regeneration_keeps_image_and_task():
-    client, create = make_client([{"score": 0}, {"score": 0}, {"fields": []}])
+    client, create = make_client([{"score": 0}, {"fields": []}])
     await client.generate_structured_with_image(model="test", prompt="Original extraction task", image_bytes=b"image",
                                                image_media_type="image/png", response_schema=ExtractionResponseSchema)
+    assert create.call_count == 2
     for call in create.call_args_list:
         content = call.kwargs["messages"][0]["content"]
         assert any(part["type"] == "image_url" for part in content)

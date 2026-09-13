@@ -292,11 +292,40 @@ class JobRepository:
     def delete_job(self, job_id: UUID) -> bool:
         """Delete a job and its related data."""
         with self.db.connect() as conn:
+            conn.execute("DELETE FROM extraction_pages WHERE job_id = ?", (str(job_id),))
+            conn.execute("DELETE FROM extracted_fields WHERE job_id = ?", (str(job_id),))
+            conn.execute("DELETE FROM judge_results WHERE job_id = ?", (str(job_id),))
             result = conn.execute(
                 "DELETE FROM extraction_jobs WHERE id = ?",
                 (str(job_id),),
             )
             return result.rowcount > 0
+
+    def count_active_jobs(self) -> int:
+        """Jobs that a background worker may still own (queued/processing)."""
+        with self.db.connect() as conn:
+            row = conn.execute(
+                "SELECT COUNT(*) as total FROM extraction_jobs WHERE status IN ('queued', 'processing')"
+            ).fetchone()
+            return int(row["total"]) if row else 0
+
+    def clear_all_jobs(self) -> dict[str, int]:
+        """Delete every job and all related rows. Returns per-table counts.
+
+        Refuses to run while jobs are active — callers must finish or cancel
+        background work first so it cannot recreate rows mid-wipe.
+        """
+        with self.db.connect() as conn:
+            active = conn.execute(
+                "SELECT COUNT(*) as total FROM extraction_jobs WHERE status IN ('queued', 'processing')"
+            ).fetchone()
+            if active and active["total"]:
+                raise ValueError(f"{active['total']} job(s) still active; finish or cancel them first")
+            counts: dict[str, int] = {}
+            for table in ("extracted_fields", "judge_results", "extraction_pages", "extraction_jobs"):
+                counts[table] = conn.execute(f"DELETE FROM {table}").rowcount
+            counts["jobs"] = counts.pop("extraction_jobs")
+            return counts
 
     def get_stats(self) -> dict:
         """Get extraction statistics."""

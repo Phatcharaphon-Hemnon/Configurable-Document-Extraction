@@ -50,19 +50,40 @@ def _image() -> bytes:
     return data.getvalue()
 
 
+def _coherent_blocks(text: str = COHERENT):
+    from app.services.local_ocr import layout_text
+
+    words = text.split()
+    blocks = [OCRBlock(text=w, confidence=0.9, box=(i * 30, 1, 9, 10), engine="rapidocr-th")
+              for i, w in enumerate(words)]
+    return layout_text(blocks), blocks
+
+
 @pytest.mark.asyncio
 async def test_incoherent_tesseract_falls_back_to_rapidocr():
     client = _client()
-    client._rapid._ocr_image_bytes = MagicMock(return_value=COHERENT)
+    fb_text, fb_blocks = _coherent_blocks()
+    client._rapid.ocr_blocks = MagicMock(return_value=(fb_text, fb_blocks))
     texts = await client.aparse_file(_image(), "icr.png")
-    assert texts and "TAX INVOICE" in texts[0]
-    assert client.last_pages[0].blocks == []
+    # layout_text preserves table gaps as " | " separators — check tokens, not raw spacing.
+    assert texts and "TAX" in texts[0] and "INVOICE" in texts[0]
+    # Geometry must be preserved: replacement ships with its own boxes/engine,
+    # never an empty block list (original Tesseract reading stays in provenance).
+    assert client.last_pages[0].blocks, "fallback must preserve geometry"
+    assert all(b.engine == "rapidocr-th" for b in client.last_pages[0].blocks)
+    assert client.last_pages[0].engine == "tesseract+rapidocr-fallback"
 
 
 @pytest.mark.asyncio
 async def test_incoherent_rapid_keeps_original_text():
     client = _client()
-    client._rapid._ocr_image_bytes = MagicMock(return_value="| | | ๑ ๒ ๓ " * 10)
+    # Letter-salad fallback (no usable words): incoherent under the
+    # coherence rule, so the original Tesseract text is kept. Pure
+    # separator/digit strings carry no script signal and are not used here.
+    salad = "โญ ภ ล ท ให ศร เบ อ ไฮ ก ค " * 8
+    salad_blocks = [OCRBlock(text=w, confidence=0.4, box=(i * 30, 1, 9, 10), engine="rapidocr-th")
+                    for i, w in enumerate(salad.split())]
+    client._rapid.ocr_blocks = MagicMock(return_value=(salad, salad_blocks))
     texts = await client.aparse_file(_image(), "icr.png")
     assert texts and "TAXINVOICE" in texts[0]
 
@@ -71,7 +92,7 @@ async def test_incoherent_rapid_keeps_original_text():
 async def test_coherent_tesseract_never_calls_rapidocr():
     client = _client("Purchase Orders 10256 2016-07-15 Paula Parente Products "
                      "Product Quantity Unit Price Perth Pasties Original Frankfurter")
-    client._rapid._ocr_image_bytes = MagicMock(side_effect=AssertionError("must not be called"))
+    client._rapid.ocr_blocks = MagicMock(side_effect=AssertionError("must not be called"))
     texts = await client.aparse_file(_image(), "po.pdf")
     assert "Paula" in texts[0] and "Parente" in texts[0]
 
@@ -79,6 +100,6 @@ async def test_coherent_tesseract_never_calls_rapidocr():
 @pytest.mark.asyncio
 async def test_rapid_failure_keeps_original_text():
     client = _client()
-    client._rapid._ocr_image_bytes = MagicMock(side_effect=RuntimeError("onnx missing"))
+    client._rapid.ocr_blocks = MagicMock(side_effect=RuntimeError("onnx missing"))
     texts = await client.aparse_file(_image(), "icr.png")
     assert texts and "TAXINVOICE" in texts[0]

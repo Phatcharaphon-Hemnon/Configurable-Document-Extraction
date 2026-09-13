@@ -28,7 +28,8 @@ RapidOCR → Router → Extractor → catalog registration → Validator → Jud
   `POST /evaluate` and `run_eval.py`.
 - Helpers: `UploadedFilePart` (raw upload), `_is_image_file` /
   `_image_media_type` (routing to OCR vs vision path), `_agent_usage`
-  (reads `Client.last_usage` for trace generations), `coerce_field_dates`.
+  (reads `Client.last_usage` for trace generations), `_merge_ocr_reviews`
+  (propagates OCR-engine uncertainty into `validation_errors`/`needs_review`).
 - Guards composed here: `AuditLogger`, `TimeoutGuard`, `PIIDetector`,
   `ContentLimits` (`MAX_DOCUMENT_CHARS=50000`, `MAX_PROMPT_CHARS=12000`).
 

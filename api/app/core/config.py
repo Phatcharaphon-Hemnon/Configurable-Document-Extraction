@@ -86,6 +86,16 @@ class Settings:
         # Cache OCR results in memory by file hash (duplicate uploads of the
         # same document skip OCR entirely).
         self.ocr_cache_enabled = os.getenv("OCR_CACHE_ENABLED", "true").lower() == "true"
+        # Persistent completed-result cache (SQLite, no Redis). Fingerprints
+        # every result-affecting input; TTL 7 days; max 128 page entries.
+        # Disabled only via env; force_refresh (per request) bypasses the
+        # result cache while OCR caching stays on.
+        self.result_cache_enabled = os.getenv("RESULT_CACHE_ENABLED", "true").lower() == "true"
+        try:
+            self.result_cache_ttl_seconds = float(os.getenv("RESULT_CACHE_TTL_SECONDS", str(7 * 24 * 3600)))
+        except ValueError:
+            self.result_cache_ttl_seconds = float(7 * 24 * 3600)
+        self.result_cache_max_entries = max(1, int(os.getenv("RESULT_CACHE_MAX_ENTRIES", "128")))
 
         # --- AI provider: one text model for Router + Extractor + Judge ---
         # Three variables control everything — change provider/model by editing
@@ -119,8 +129,8 @@ class Settings:
         except ValueError:
             self.llm_temperature = _temp_default
         # Vision model is LEGACY/optional: the pipeline no longer needs it.
-        # All uploads (images + PDFs) go through local RapidOCR into the
-        # text-only pipeline using the single text model above.
+        # All uploads (images + PDFs) go through the configured local OCR
+        # engine into the text-only pipeline using the single text model above.
         self.vision_model_name = os.getenv("VISION_MODEL_NAME", "")
         self.extraction_max_tokens = int(os.getenv("EXTRACTION_MAX_TOKENS", "8000"))
         self.llm_request_timeout_seconds = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "90"))
@@ -138,18 +148,37 @@ class Settings:
         else:
             self.disable_strict_json_schema = not _profile.strict_json_schema
 
-        # --- Document parsing (local RapidOCR — no API key, no network) ---
+        # --- Document parsing (local OCR — no API key, no network) ---
+        # OCR_ENGINE: "tesseract" (default, eng+tha) | "rapidocr" (PP-OCRv5 TH)
+        #           | "hybrid" (opt-in: PP-OCRv5 TH→EN retry + TrOCR handwriting).
+        # Tesseract stays the default while hybrid is benchmarked.
         # OCR_DPI controls PDF render resolution (150–600, default 300).
         self.ocr_dpi = int(os.getenv("OCR_DPI", "300"))
         self.cache_path = runtime_path(os.getenv("PROJECT_CACHE_DIR", ".cache"))
         self.ocr_cache_path = str(Path(self.cache_path) / "ocr-results")
         self.ocr_cache_max_files = max(1, int(os.getenv("OCR_CACHE_MAX_FILES", "128")))
-        self.ocr_engine = os.getenv("OCR_ENGINE", "tesseract")
+        self.ocr_engine = os.getenv("OCR_ENGINE", "tesseract").strip().lower() or "tesseract"
         self.ocr_languages = os.getenv("OCR_LANGUAGES", "eng+tha")
         local_binary = REPO_ROOT / ".local/ocr/usr/bin/tesseract"
         self.tesseract_cmd = os.getenv("TESSERACT_CMD", str(local_binary) if local_binary.exists() else "tesseract")
         local_models = REPO_ROOT / ".local/ocr/usr/share/tessdata"
         self.tessdata_dir = os.getenv("TESSDATA_DIR", str(local_models) if local_models.exists() else "")
+
+        # --- Hybrid OCR (opt-in; see docs/thai_catalog_hybrid_ocr.md) ---
+        # Selective TrOCR retry for uncertain English line crops only.
+        # Threshold: RapidOCR confidence below this is eligible.
+        # Limit: at most N lowest-confidence eligible regions per page, CPU sequential.
+        try:
+            self.hybrid_trocr_conf_threshold = float(os.getenv("HYBRID_TROCR_CONF_THRESHOLD", "0.80"))
+        except ValueError:
+            self.hybrid_trocr_conf_threshold = 0.80
+        self.hybrid_trocr_max_regions = max(0, int(os.getenv("HYBRID_TROCR_MAX_REGIONS", "10")))
+        self.hybrid_trocr_model = os.getenv(
+            "HYBRID_TROCR_MODEL", "microsoft/trocr-base-handwritten").strip() or "microsoft/trocr-base-handwritten"
+        self.hybrid_trocr_revision = os.getenv(
+            "HYBRID_TROCR_REVISION", "aff187bd81f8d73231cd3ed24b7857fcb10ae00e").strip()
+        # Preprocessing / model fingerprint version (bump when logic changes).
+        self.hybrid_preprocess_version = os.getenv("HYBRID_PREPROCESS_VERSION", "hybrid-v1")
 
         # --- Langfuse (optional; disabled when keys are missing) ---
         self.langfuse_public_key = os.getenv("LANGFUSE_PUBLIC_KEY", "")

@@ -13,6 +13,32 @@
   ],
   "files": [
     {
+      "filename": "3492511_1.pdf",
+      "sha256": "f8fc8b3e28a399d7772f5f9219dbf8b78f84918df847451d030bf1a3955112e2",
+      "pages": [
+        {
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "invoice_number": "44",
+            "bill_to_name": "EMMERTON - LAMBERT",
+            "bill_to_address": "253 KINGS ROAD, CHELSEA, S.W.3"
+          },
+          "tables": [],
+          "excluded_fields": [
+            "invoice_date",
+            "seller_name",
+            "currency",
+            "total_amount",
+            "line_items",
+            "notes"
+          ],
+          "notes": "One-page English HANDWRITTEN invoice, no embedded text (recovery case). Printed: INVOICE, 44, M, BOT. OF. Handwritten addressee in caps is legible: EMMERTON - LAMBERT, 253 KINGS ROAD, CHELSEA, S.W.3. EXCLUDED as uncertain: date reads 26-9 with printed 19 and handwritten 67 (likely 26-9-1967 but format ambiguous); seller line reads Keith Richard(s) (final letter + flourish ambiguous); item amounts are pre-decimal pounds/shillings (e.g. 4 10 -, 4 15 -, 1 10 -, 6 6 -, 3 15 -, 2 -, 10 -, total 19 6) with no currency mark and must not be reinterpreted as decimals; item words Skirt/Shirt and Serge/Satin spellings are handwriting-ambiguous; bottom purple line (Lilac shirt?) and amount are crossed out; signature scrawl is decorative. Score only the three confident fields; everything else is unscored.",
+          "page_number": 1
+        }
+      ]
+    },
+    {
       "filename": "Delivery1.webp",
       "sha256": "3f6f73f532e6c00a249c9d323dc4107aa30c8b49e2dae039a6c7765716330fd8",
       "pages": [

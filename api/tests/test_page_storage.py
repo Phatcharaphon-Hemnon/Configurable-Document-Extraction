@@ -78,7 +78,7 @@ async def test_blank_page_and_mixed_types_keep_page_source_identity(tmp_path):
     class OCR:
         last_pages = []
 
-        async def aparse_file(self, *args):
+        async def aparse_file(self, *args, **kwargs):
             self.last_pages = [
                 OCRPage(text="invoice", preview=buffer.getvalue()),
                 OCRPage(error="blank", preview=buffer.getvalue()),
@@ -138,7 +138,7 @@ async def test_completed_page_is_checkpointed_before_later_page_finishes(tmp_pat
     entered = asyncio.Event()
     release = asyncio.Event()
 
-    async def extract(filename, page_text):
+    async def extract(filename, page_text, **kwargs):
         if page_text == "second":
             entered.set()
             await release.wait()

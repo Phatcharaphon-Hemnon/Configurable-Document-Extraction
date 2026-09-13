@@ -20,6 +20,7 @@ from app.schemas.documents import (
     JudgeResult,
     RoutingDecision,
 )  # noqa: E402
+from app.schemas.ocr import OCRPage  # noqa: E402
 from app.services.extraction_service import DocumentExtractionService, UploadedFilePart  # noqa: E402
 
 
@@ -233,11 +234,17 @@ async def test_incoherent_ocr_fails_fast_before_extractor(tmp_path):
     """ICR-class soup must error in seconds, never burn the ~2000s LLM retry budget."""
     import time
 
-    soup = ("— TAXINVOICE | 86 BELASTINGFAKTUUR | : Bin 2% ๕๕ _ , โญภลทให | ศรเบ | 1 | ๕ "
-            ". | อไฮกค ‘ | ed r SB ั 77 /7 | : ( | NA B.T.W.Reg Nr TOTAAL "
-            "โอหทร | Subtotaal | Terme V.A.T. inclusive | a ea | pea | จอไก " * 3)
+    # Raw OCR-fragment soup (pre-layout style: Thai chars separate, no
+    # column gaps). Scores below the coherence threshold, so the page blocks
+    # before any LLM call.
+    soup = ("— TAXINVOICE : 86 BELASTINGFAKTUUR Bin 2% ๕๕ _ , โญ ภ ล ท ให ศร เบ 1 ๕ "
+            ". อ ไฮ ก ค ‘ ed r SB ั 77 /7 : ( NA B.T.W.Reg Nr ร่ - ี 3-- ี 33@ "
+            "เ [60 SIGE OVC Sard 1 โอ ห ท ร Subtotaal Terme V.A.T. inclusive a "
+            "ea pea จ อ ไก Delete as applicable Skrap waar nie van toepassing nie "
+            "TOTAL ๒ 3 —_— TOTAAL ๑ ๒ ๓ " * 2)
     service = _make_service(tmp_path, _routing(), _extraction(), _judge())
     service.ocr.aparse_file = AsyncMock(return_value=[soup])
+    service.ocr.last_pages = [OCRPage(text=soup)]
     started = time.perf_counter()
     response = await service.extract_group([UploadedFilePart("icr.png", "image/png", b"img")])
     elapsed = time.perf_counter() - started
@@ -245,7 +252,9 @@ async def test_incoherent_ocr_fails_fast_before_extractor(tmp_path):
     assert doc.failed_stage == "ocr"
     assert doc.needs_review is True
     assert "incoherent" in (doc.error or "")
+    assert "higher-DPI" not in (doc.error or "") and "higher DPI" not in (doc.error or "")
     assert elapsed < 120, f"fail-fast guard took {elapsed:.1f}s"
+    service.router.classify.assert_not_called()
     for extractor in service.extractors.values():
         extractor.extract.assert_not_called()
     service.judge.evaluate.assert_not_called()

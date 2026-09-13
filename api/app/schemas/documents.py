@@ -19,10 +19,6 @@ DocType = Literal["invoice", "purchase_order", "delivery_note"]
 DOC_TYPES: tuple[DocType, ...] = ("invoice", "purchase_order", "delivery_note")
 
 
-class DocumentLanguage(str):
-    """ISO-ish language tag detected by the router ('en', 'th', 'other', ...)."""
-
-
 # ---------------------------------------------------------------------------
 # Catalog
 # ---------------------------------------------------------------------------
@@ -35,14 +31,11 @@ class FieldDefinition(BaseModel):
     type: str | None = None  # "string" | "number" | "date" | "array" | ...
     required: bool = False
     source: str = "catalog"  # "catalog" | "ai_discovered"
-
-
-class CatalogReconcileReport(BaseModel):
-    """Result of reconciling AI-discovered field names against the catalog."""
-
-    matched: list[str] = Field(default_factory=list)
-    new_fields: list[str] = Field(default_factory=list)
-    catalog_updated: bool = False
+    # Thai display metadata (opt-in, never used for matching).
+    # label_th: short Thai label; description_th: short Thai description.
+    # Both are display-only — exact-name matching uses `name` only.
+    label_th: str | None = None
+    description_th: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -54,6 +47,8 @@ class ExtractedField(BaseModel):
 
     name: str
     value: str | float | date | None = None
+    # No silent 1.0 default: callers must supply the model's estimate.
+    # Missing confidence is 0.0 and forces review downstream.
     confidence: float = Field(ge=0.0, le=1.0)
     source_span: str | None = Field(
         default=None,
@@ -63,6 +58,8 @@ class ExtractedField(BaseModel):
         default=False,
         description="True when the name was not in the field catalog and has been added to it.",
     )
+    evidence_refs: list[EvidenceReference] = Field(default_factory=list)
+    acceptance: AcceptanceStatus = "unevaluated"
 
 
 class RegistrationOutcome(BaseModel):
@@ -71,22 +68,108 @@ class RegistrationOutcome(BaseModel):
     skipped: list[dict[str, str]] = Field(default_factory=list)
 
 
-class ValidationResult(BaseModel):
-    is_valid: bool
-    completeness_score: float = Field(default=1.0, ge=0.0, le=1.0)
-    issues: list[str] = Field(default_factory=list)
-
-
 class JudgeIssue(BaseModel):
     field: str
     message: str
     severity: str = "warning"
+    # Structured-issue extensions (backward-compatible defaults).
+    # category: mechanical | unsupported | row_column | type | semantic | ocr_ambiguity
+    category: str | None = None
+    # Stable target identifier, e.g. "field:invoice_date" or "cell:line_items/0/unit_price".
+    target: str | None = None
+    # Quoted supporting evidence (page-local source_span or finding text).
+    evidence: str | None = None
+    # Why the claim holds (reconciliation reason preserved for debugging).
+    explanation: str | None = None
 
 
 class JudgeResult(BaseModel):
     score: float = Field(ge=0.0, le=1.0)
     issues: list[JudgeIssue] = Field(default_factory=list)
     notes: str = ""
+
+
+# ---------------------------------------------------------------------------
+# Typed extraction calls, evidence, acceptance, review (page-isolated)
+# ---------------------------------------------------------------------------
+
+# Acceptance-policy version. Bumped whenever acceptance rules change; part of
+# the result-cache fingerprint so policy edits invalidate stale results.
+ACCEPTANCE_POLICY_VERSION = "v1.0.0"
+
+AcceptanceStatus = Literal["accepted", "rejected", "unresolved", "unevaluated"]
+
+
+class EvidenceReference(BaseModel):
+    """Page-local source reference backing one extracted value.
+
+    Resolved in backend code from OCR blocks/spans — never trusted from
+    model-generated coordinates, IDs, or offsets. `block_id` is the stable
+    per-page OCR block identifier (`page-{n}-block-{i}`); `subspan` is the
+    verified contiguous quote inside the block; `box` is the block's stored
+    bounding box (original OCR geometry, not model output).
+    """
+
+    block_id: str | None = None
+    page_number: int = Field(ge=1, default=1)
+    subspan: str | None = None
+    box: tuple[float, float, float, float] | None = None
+    engine: str | None = None
+    # Role of this reference: "label" | "value" | "context". Label evidence
+    # (the printed caption) stays distinguishable from value evidence.
+    role: Literal["label", "value", "context"] | None = None
+
+
+class RejectedCandidate(BaseModel):
+    """A proposed value excluded from accepted data but kept for review."""
+
+    candidate_id: str
+    kind: Literal["field", "cell", "row", "table"] = "field"
+    # Field name or cell location, e.g. "invoice_date" or "line_items/0/unit_price".
+    location: str
+    proposed_value: str | float | None = None
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    raw_evidence: str | None = None
+    source_refs: list[EvidenceReference] = Field(default_factory=list)
+    rejection_reason: str = ""
+    validation_findings: list[str] = Field(default_factory=list)
+
+
+class StructuredReviewIssue(BaseModel):
+    """Deterministic/Judge review finding with a stable target."""
+
+    category: Literal[
+        "mechanical", "unsupported", "row_column", "type", "semantic", "ocr_ambiguity"
+    ] = "unsupported"
+    target: str = ""
+    severity: Literal["info", "warning", "error"] = "warning"
+    evidence: str | None = None
+    explanation: str = ""
+
+
+class ExtractionCallResult(BaseModel):
+    """Typed return for ONE extraction LLM call (one page, one doc type).
+
+    Replaces mutable per-call agent state (`last_tables`). Passed explicitly
+    through local and Temporal orchestration; never shared across pages.
+    """
+
+    doc_type: DocType
+    page_number: int = Field(ge=1, default=1)
+    fields: list[ExtractedField] = Field(default_factory=list)
+    tables: list[ExtractedTable] = Field(default_factory=list)
+    new_field_names: list[str] = Field(default_factory=list)
+
+
+class ResultCacheMetadata(BaseModel):
+    """Provenance for a cache-reused page result."""
+
+    fingerprint: str = ""
+    computed_at: str | None = None
+    original_timings: dict[str, float] = Field(default_factory=dict)
+    acceptance_policy_version: str = ACCEPTANCE_POLICY_VERSION
+    cache_lookup_ms: float = 0.0
+    hit_type: Literal["full", "partial", "miss"] = "miss"
 
 
 class RoutingDecision(BaseModel):
@@ -123,8 +206,12 @@ class TableColumn(BaseModel):
 class TableCell(BaseModel):
     column: str
     value: str | float | None = None
+    # NOTE: default 0.0 (never 1.0) — missing model confidence must not
+    # render as 100%. The UI labels this a model estimate.
     confidence: float = Field(default=0.0, ge=0, le=1)
     source_span: str | None = None
+    evidence_refs: list[EvidenceReference] = Field(default_factory=list)
+    acceptance: AcceptanceStatus = "unevaluated"
 
 
 class ExtractedTable(BaseModel):
@@ -181,6 +268,14 @@ class ExtractionResult(BaseModel):
     )
     extracted_at: datetime = Field(default_factory=datetime.utcnow)
     auto_evaluation: EvaluateResponse | None = None  # noqa: F821 (forward ref resolved below)
+    # --- Accepted-data / review separation (backward-compatible defaults) ---
+    # `fields`/`tables` hold ACCEPTED data only. Rejected candidates live
+    # separately for review/debug and are excluded from normal exports.
+    rejected_candidates: list[RejectedCandidate] = Field(default_factory=list)
+    review_issues: list[StructuredReviewIssue] = Field(default_factory=list)
+    acceptance_status: AcceptanceStatus = "unevaluated"
+    acceptance_policy_version: str = ACCEPTANCE_POLICY_VERSION
+    cache_metadata: ResultCacheMetadata | None = None
 
 
 class FileUploadMeta(BaseModel):
@@ -196,16 +291,6 @@ class FileExtractionResponse(BaseModel):
     job_id: str | None = None
     file_errors: list[str] = Field(default_factory=list)
     timings: dict[str, float] = Field(default_factory=dict)
-
-
-# ---------------------------------------------------------------------------
-# Templates / catalog API
-# ---------------------------------------------------------------------------
-
-class TemplateSchema(BaseModel):
-    doc_type: DocType
-    description: str = ""
-    fields: list[FieldDefinition] = Field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import base64
 import logging
 
 from app.core.config import Settings
@@ -83,7 +82,3 @@ class RouterAgent:
             confidence=parsed.confidence,
             reason=parsed.reason,
         )
-
-
-def image_data_url(image_bytes: bytes, media_type: str) -> str:
-    return f"data:{media_type};base64," + base64.b64encode(image_bytes).decode("ascii")

@@ -37,13 +37,24 @@ export async function fetchApiRoot(): Promise<ApiRoot | null> {
   }
 }
 
-export function extractFiles(files: File[], label: string, signal?: AbortSignal): Promise<JobAcceptedResponse> {
+export function extractFiles(
+  files: File[],
+  label: string,
+  signal?: AbortSignal,
+  opts?: { forceRefresh?: boolean; disableCaches?: boolean },
+): Promise<JobAcceptedResponse> {
   const form = new FormData();
   for (const file of files) {
     form.append('files', file);
   }
+  const params = new URLSearchParams();
+  if (opts?.forceRefresh) params.set('force_refresh', 'true');
+  if (opts?.disableCaches) params.set('disable_caches', 'true');
+  const query = params.toString() ? `?${params.toString()}` : '';
   // 202 Accepted: extraction runs in the background; poll getJobStatus.
-  return requestJson(`${API_BASE_URL}/extract`, { method: 'POST', body: form, signal }, `Extract failed for ${label}`);
+  // force_refresh bypasses the completed-result cache (OCR cache stays on);
+  // disable_caches bypasses both (benchmark/debug).
+  return requestJson(`${API_BASE_URL}/extract${query}`, { method: 'POST', body: form, signal }, `Extract failed for ${label}`);
 }
 
 export function getJobStatus(jobId: string, signal?: AbortSignal): Promise<JobStatusResponse> {

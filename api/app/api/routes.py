@@ -81,7 +81,8 @@ def home() -> dict[str, object]:
         "temporal_enabled": settings.temporal_enabled,
         "extraction_model": settings.extraction_model_name,
         "langfuse_enabled": settings.langfuse_enabled,
-        "endpoints": ["/extract", "/templates", "/extract/batch", "/jobs/{job_id}", "/evaluate"],
+        "endpoints": ["/extract", "/templates", "/extract/batch", "/jobs/{job_id}", "/evaluate",
+                      "/history", "/history/stats"],
     }
 
 
@@ -94,6 +95,8 @@ def health() -> dict[str, str]:
 async def extract_document(
     request: Request,
     files: list[UploadFile] = File(...),
+    force_refresh: bool = False,
+    disable_caches: bool = False,
 ) -> BatchCreateResponse:
     """Upload one or more files (images or PDFs) for async extraction.
 
@@ -101,10 +104,14 @@ async def extract_document(
     - Poll `GET /jobs/{job_id}` until `status` is `completed`/`failed`.
     - Multiple files selected together are treated as pages of one logical upload.
     - A multi-page PDF yields one ExtractionResult per page (multi-document support).
-    - All files are OCR'd locally with RapidOCR, then extracted with the
+    - All files are OCR'd locally with the configured OCR engine
+      (Tesseract default; RapidOCR/hybrid opt-in), then extracted with the
       single text model (no vision model or cloud OCR required).
     - Re-uploading identical bytes while the job runs returns the SAME
       job_id instead of starting a duplicate pipeline (single-flight).
+    - `force_refresh=true` bypasses the completed-result cache (OCR cache
+      stays enabled). `disable_caches=true` (benchmark/debug) bypasses BOTH
+      result and OCR caches.
     """
     client_id = _get_client_id(request)
 
@@ -150,15 +157,19 @@ async def extract_document(
             )
 
         # Single-flight: identical bytes already being processed → reuse it.
+        # Force-refresh / cache-disabled probes always start a new pipeline.
         fingerprint = _content_fingerprint(parts)
-        existing_job_id = _content_to_job.get(fingerprint)
-        if existing_job_id is not None:
-            existing_task = _background_tasks.get(existing_job_id)
-            if existing_task is not None and not existing_task.done():
-                logger.info("Single-flight hit: reusing running job %s", existing_job_id)
-                return BatchCreateResponse(job_id=existing_job_id, status="queued")
+        if not (force_refresh or disable_caches):
+            existing_job_id = _content_to_job.get(fingerprint)
+            if existing_job_id is not None:
+                existing_task = _background_tasks.get(existing_job_id)
+                if existing_task is not None and not existing_task.done():
+                    logger.info("Single-flight hit: reusing running job %s", existing_job_id)
+                    return BatchCreateResponse(job_id=existing_job_id, status="queued")
+                _content_to_job.pop(fingerprint, None)
+                _background_tasks.pop(existing_job_id, None)
+        else:
             _content_to_job.pop(fingerprint, None)
-            _background_tasks.pop(existing_job_id, None)
 
         total_size = sum(len(p.raw_content) for p in parts)
         combined_name = parts[0].filename if len(parts) == 1 else f"{len(parts)} files ({parts[0].filename}, ...)"
@@ -179,7 +190,9 @@ async def extract_document(
             elif task.exception() is not None:
                 logger.error("Background extraction %s raised: %s", _job_id, task.exception())
 
-        task = asyncio.create_task(service.run_job(job.job_id, parts))
+        task = asyncio.create_task(
+            service.run_job(job.job_id, parts, force_refresh=force_refresh, disable_caches=disable_caches)
+        )
         task.add_done_callback(_done)
         _background_tasks[job.job_id] = task
         _content_to_job[fingerprint] = job.job_id
@@ -280,6 +293,26 @@ def get_stats() -> dict[str, object]:
         )
 
     return service.job_store.get_stats()
+
+
+@router.delete("/history", status_code=status.HTTP_200_OK)
+def clear_history() -> dict[str, object]:
+    """Delete ALL history jobs, related results, and stored sources.
+
+    Returns per-kind deleted counts (``{"jobs": N, ...}``). Refuses with
+    409 while jobs are active (queued/processing) — finish or cancel
+    background work first. Ground truth, catalogs, models, settings, and
+    backups are never touched.
+    """
+    if not settings.database_enabled:
+        raise HTTPException(
+            status_code=400,
+            detail="Job history requires database (DATABASE_ENABLED=true)",
+        )
+    try:
+        return {"deleted": service.clear_history()}
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 @router.get("/history/{job_id}")

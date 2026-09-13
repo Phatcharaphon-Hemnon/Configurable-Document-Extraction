@@ -53,11 +53,16 @@ def _make_response(content: str, prompt_tokens: int = 10, completion_tokens: int
 
 @pytest.mark.anyio
 async def test_three_tier_fallback_order():
-    """Verify call order: json_schema (strict) -> json_object -> plain prompt fallback."""
+    """Classified recovery: initial + at most ONE corrective in the same tier.
+
+    Blind json_schema -> json_object -> plain regeneration was replaced
+    (THAI_bill.jpg table-as-root case): parse failures stay on the strongest
+    supported format with validation locations; plain downgrade happens only
+    when structured tiers are explicitly rejected by the provider.
+    """
     client = _make_client()
 
     malformed1 = "malformed json attempt 1"
-    malformed2 = "malformed json attempt 2"
     valid = '{"name": "valid", "value": 100}'
 
     call_count = 0
@@ -69,8 +74,6 @@ async def test_three_tier_fallback_order():
         captured_kwargs.append(kwargs)
         if call_count == 1:
             return _make_response(malformed1)
-        elif call_count == 2:
-            return _make_response(malformed2)
         return _make_response(valid)
 
     client._client.chat.completions.create = mock_create
@@ -81,18 +84,17 @@ async def test_three_tier_fallback_order():
         response_schema=_DummySchema,
     )
 
-    assert call_count == 3
-    assert len(captured_kwargs) == 3
+    # One initial + one corrective (same strongest tier), never a blind plain downgrade.
+    assert call_count == 2
+    assert len(captured_kwargs) == 2
 
     # Call 1: json_schema
     assert captured_kwargs[0]["response_format"]["type"] == "json_schema"
     assert captured_kwargs[0]["response_format"]["json_schema"]["strict"] is True
 
-    # Call 2: json_object
-    assert captured_kwargs[1]["response_format"]["type"] == "json_object"
-
-    # Call 3: plain (no response_format)
-    assert "response_format" not in captured_kwargs[2]
+    # Call 2 (corrective): same tier, with validation guidance, not a tier downgrade.
+    assert captured_kwargs[1]["response_format"]["type"] == "json_schema"
+    assert "response_format" in captured_kwargs[1]
 
     assert result.parsed is not None
     assert result.parsed.name == "valid"

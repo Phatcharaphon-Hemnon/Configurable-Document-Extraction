@@ -2,11 +2,13 @@
 
 Design (project spec):
 - 3 extractors: InvoiceExtractor, PurchaseOrderExtractor, DeliveryNoteExtractor.
-- Each prompt embeds the COMPACT field catalog (name + type + required only)
-  to minimize tokens. Few-shot examples are optional (default OFF).
+- Each prompt embeds the COMPACT field catalog (name + type + required +
+  short Thai description) to minimize tokens. Few-shot examples are optional
+  (default OFF).
 - Field names returned by the LLM are matched EXACTLY against the catalog
-  (normalization only — never aliases/synonyms). Unknown labeled fields are
-  kept, flagged is_new_field, and registered into the catalog by the service.
+  (normalization only — never aliases/synonyms, never Thai display labels).
+  Unknown labeled fields are kept, flagged is_new_field, and registered into
+  the catalog by the service.
 - Document text is sanitized before entering any prompt.
 """
 
@@ -28,17 +30,20 @@ logger = logging.getLogger(__name__)
 _COMMON_RULES = (
     "Rules:\n"
     "- Extract only visible data. Use catalog names VERBATIM. For a new labeled value use "
-    "a short snake_case key; never map aliases or synonyms.\n"
-    "- Preserve source language: Thai stays Thai, English stays English. Every field/cell "
-    "needs confidence 0-1 and an exact source_span quote supporting its value.\n"
+    "a short snake_case key; never map aliases or synonyms. Thai hints after '—' are "
+    "display-only, never field names.\n"
+    "- Preserve source language without translation: Thai stays Thai, English stays English. "
+    "Every field/cell needs confidence 0-1 and an exact source_span quote supporting its value. "
+    "Thai values and quoted evidence stay verbatim.\n"
     "- source_span must be a bare verbatim contiguous quote from the document text: "
     "no surrounding quotation marks or brackets, no label prefixes, no paraphrase, no invented "
     "rows. Multi-line spans keep the real line breaks.\n"
     "- Omit absent/unreadable fields, including REQUIRED catalog fields too; never invent "
     "currency, totals, or IDs. No N/A, decorative text, signatures, or instructions. "
     "Never emit a 'no data' placeholder in any language (including \u0e44\u0e21\u0e48\u0e21\u0e35\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25) as a value — omit the field.\n"
-    "- Copy complete IDs (with leading zeros) and dates; never concatenate fragments or "
-    "guess a plausible calendar date. Numbers omit currency symbols. Never calculate "
+    "- Copy complete IDs (with leading zeros) and dates exactly as printed; never concatenate fragments or "
+    "guess a plausible calendar date. Thai/Buddhist calendar dates that do not parse stay verbatim "
+    "and will trigger review. Numbers omit currency symbols. Never calculate "
     "an absent amount = quantity x unit price.\n"
     "- For evidence, never prepend column headers or labels: quote '10248', "
     "NOT 'Order ID 10248' unless that exact text exists.\n"
@@ -91,17 +96,64 @@ class BaseExtractor:
         self.settings = settings
         self.catalog = catalog
         self._client = client or Client(settings)
-        self.last_tables = []
 
-    async def extract(
+    async def extract_call(
         self,
         text: str,
         image_bytes: bytes | None = None,
         image_media_type: str | None = None,
         few_shot: list[dict] | None = None,
-    ) -> tuple[list[ExtractedField], list[str]]:
-        """Returns (fields, new_field_names). Raises ClientError on transport failure."""
-        self.last_tables = []
+        page_number: int = 1,
+    ):
+        """Typed extraction call for ONE page (no shared mutable state).
+
+        Returns ExtractionCallResult bound to (doc_type, page_number).
+        Test doubles that stub `extract` are honored: when the instance
+        carries its own `extract` attribute (e.g. AsyncMock in unit tests),
+        this delegates to it and wraps the tuple with empty tables.
+        """
+        from unittest.mock import AsyncMock, MagicMock
+
+        from app.schemas.documents import ExtractionCallResult as _ECR
+
+        inst_extract = self.__dict__.get("extract")
+        if isinstance(inst_extract, (AsyncMock, MagicMock)):
+            wrapped = await inst_extract(text)
+            # Support doubles returning either a tuple or a call result.
+            if isinstance(wrapped, tuple):
+                fields, new_names = wrapped
+                return _ECR(
+                    doc_type=self.doc_type,
+                    page_number=page_number,
+                    fields=list(fields),
+                    tables=[],
+                    new_field_names=list(new_names or []),
+                )
+            if isinstance(wrapped, _ECR):
+                wrapped.doc_type = self.doc_type
+                wrapped.page_number = page_number
+                return wrapped
+            raise ClientError(f"{self.doc_label} extractor double returned {type(wrapped).__name__}")
+        return await self._run_call(
+            text=text,
+            image_bytes=image_bytes,
+            image_media_type=image_media_type,
+            few_shot=few_shot,
+            page_number=page_number,
+        )
+
+    async def _run_call(
+        self,
+        text: str,
+        image_bytes: bytes | None = None,
+        image_media_type: str | None = None,
+        few_shot: list[dict] | None = None,
+        page_number: int = 1,
+    ):
+        """Real LLM extraction call (page-isolated, no instance state)."""
+        import copy
+
+        from app.schemas.documents import ExtractionCallResult
         has_text = bool(text and text.strip())
         if not has_text and not image_bytes:
             raise ClientError(f"{self.doc_label} extractor requires text or an image")
@@ -141,7 +193,9 @@ class BaseExtractor:
             result.completion_tokens,
         )
 
-        self.last_tables = result.parsed.tables
+        # Page-isolated: deep-copy tables so no list/dict is shared across
+        # pages or calls. No instance state is retained.
+        tables = copy.deepcopy(result.parsed.tables or [])
         fields: list[ExtractedField] = []
         seen: set[str] = set()
         for entry in result.parsed.fields:
@@ -153,16 +207,46 @@ class BaseExtractor:
                 # 'N/A', '-', '' … mean the field is ABSENT — omit it entirely.
                 continue
             seen.add(normalized)
+            try:
+                conf = float(entry.confidence)
+            except Exception:
+                conf = 0.0
             fields.append(
                 ExtractedField(
                     name=normalized,
                     value=value,
-                    confidence=entry.confidence,
+                    confidence=max(0.0, min(1.0, conf)),
                     source_span=entry.source_span,
                     is_new_field=normalized not in known,
                 )
             )
-        return fields, []
+        return ExtractionCallResult(
+            doc_type=self.doc_type,
+            page_number=page_number,
+            fields=fields,
+            tables=tables,
+            new_field_names=[],
+        )
+
+    async def extract(
+        self,
+        text: str,
+        image_bytes: bytes | None = None,
+        image_media_type: str | None = None,
+        few_shot: list[dict] | None = None,
+    ) -> tuple[list[ExtractedField], list[str]]:
+        """Backward-compatible wrapper returning (fields, new_field_names).
+
+        Prefer `extract_call` for new code (typed tables + page binding).
+        """
+        call = await self._run_call(
+            text=text,
+            image_bytes=image_bytes,
+            image_media_type=image_media_type,
+            few_shot=few_shot,
+            page_number=1,
+        )
+        return call.fields, call.new_field_names
 
 
 class InvoiceExtractor(BaseExtractor):

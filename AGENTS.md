@@ -1,7 +1,7 @@
 # AGENTS.md — Project Memory
 
 > Read this file first. It is the persistent memory for any AI agent (or human)
-> working on this repository. Last updated: 2026-09-09.
+> working on this repository. Last updated: 2026-09-12.
 
 ## What this project is
 
@@ -11,8 +11,10 @@ multi-agent AI pipeline.
 
 - **Fixed 3 document types**: `invoice`, `purchase_order`, `delivery_note`
 - **OCR (local)**: all uploads (images + PDFs) OCR'd on-host with configurable local OCR
-  (`api/app/services/local_ocr.py`; default Tesseract `eng+tha`, RapidOCR optional; PDFs rendered at 300 DPI via
-  PyMuPDF). Single text model only — no vision model required.
+  (`api/app/services/local_ocr.py`; default Tesseract `eng+tha`, RapidOCR/hybrid opt-in; PDFs rendered at 300 DPI via
+  PyMuPDF). Single text model only — no vision model required. Document loading
+  and PDF rendering are shared (`load_page_images`); RapidOCR keeps detection
+  + recognition only.
 - **Multi-document PDFs**: one uploaded PDF may contain several documents
   (e.g. invoice + PO); each PDF page becomes its own extraction result
 - **Agent pipeline**: `Local OCR → Router → Extractor (per doc type) → Validator → Judge`
@@ -63,7 +65,8 @@ multi-agent AI pipeline.
 | `api/app/data/knowledge_base/` | field_catalog/, few_shot/, ground_truth/, documents/ |
 | `web/src/` | api/, components/, hooks/, types/, utils/ |
 | `docs/` | architecture docs & ADRs |
-| `scripts/run_all.sh` | the ONLY script: runs API + Web with one command |
+| `scripts/run_all.sh` | the ONLY setup script: installs + runs API :8000 + Web :5173 |
+| `api/scripts/` | operator tools (NOT setup): `run_eval.py`, `benchmark_ocr.py`, `time_gateway_modes.py`, `audit_review_causes.py`, `merge_eval_runs.py` — see `docs/api_scripts.md` |
 
 ## Environment (api/.env)
 
@@ -106,3 +109,13 @@ cd web && npm run build                                 # typecheck+build
 - Canonical history: root `data/extraction.db`; originals/previews: `data/sources/`.
   `api/data/` is retired; see `docs/page_storage.md`.
 - Gold evaluation: `api/scripts/run_eval.py --all`; see `docs/evaluation.md`.
+- OCR-engine comparison: `api/scripts/benchmark_ocr.py`; see `docs/thai_catalog_hybrid_ocr.md`.
+- History reset 2026-09-12: 482 stale jobs wiped after backup to
+  `data/backups/20260912T031829-pre-history-reset/` (integrity ok).
+  Runtime DB is untracked (fresh installs create an empty schema, no seeding);
+  bulk clear via `DELETE /api/history` (409 while active); see
+  `docs/handwriting_recovery_3492511.md`.
+- Coherence gate: `COHERENCE_THRESHOLD = 0.40` (`app/core/security.py`),
+  assessed before any LLM call in-process and Temporal; handwriting blocks
+  honestly with recovery details preserved.
+- Cleanup record: `docs/refactor_cleanup_2026-09-12.md` (deletion/change inventory).

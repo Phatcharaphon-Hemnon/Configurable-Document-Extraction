@@ -30,7 +30,6 @@ maps OCR text and/or image bytes to exactly one of the 3 fixed doc types.
   `RoutingResponseSchema`, `disable_reasoning=True`, capped at
   `ROUTER_MAX_TOKENS`.
 - Returns `RoutingDecision(doc_type, language, confidence, reason)`.
-- Helper `image_data_url()` builds base64 data-URIs for the vision path.
 
 ## `agents/extractors.py` — Stage 3 extraction (one agent per doc type)
 

@@ -138,6 +138,8 @@ class FieldCatalog:
                     type=entry.get("type"),
                     required=bool(entry.get("required", False)),
                     source=str(entry.get("source", "catalog")),
+                    label_th=entry.get("label_th"),
+                    description_th=entry.get("description_th"),
                 )
             )
 
@@ -223,11 +225,18 @@ class FieldCatalog:
 
     def compact_for_prompt(self, doc_type: DocType) -> str:
         """Compact catalog representation for LLM prompts: one line per field,
-        name + type + required marker only. Minimizes token usage."""
-        lines = [
-            f"{f.name} ({f.type or 'string'}{', required' if f.required else ''})"
-            for f in self.get_fields(doc_type)
-        ]
+        name + type + required marker plus a short Thai description.
+        Minimizes token usage. Thai text is display-only — matching stays
+        exact on the English `name` (never aliases)."""
+        lines = []
+        for f in self.get_fields(doc_type):
+            base = f"{f.name} ({f.type or 'string'}{', required' if f.required else ''})"
+            th = (f.description_th or f.label_th or "").strip()
+            if th:
+                # Keep the English prefix verbatim so parsers/tests matching
+                # "name (type)" keep working; Thai follows as display hint.
+                base += f" — {th}"
+            lines.append(base)
         return "\n".join(lines) if lines else "(catalog empty — extract clearly labeled fields)"
 
 

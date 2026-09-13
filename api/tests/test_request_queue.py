@@ -64,8 +64,11 @@ async def test_persistent_429_never_changes_request(fast_backoff):
 
 @pytest.mark.asyncio
 async def test_retries_and_formats_share_one_budget(fast_backoff):
+    # Transport retries + the single content correction share one 4-attempt
+    # budget (no extra retry layer). Sequence: initial invalid (1 HTTP),
+    # corrective with 2 rate-limit backoffs (2 HTTP) + final invalid (1 HTTP).
     create = AsyncMock(side_effect=[response("invalid"), error(), error(), response("invalid")])
-    with pytest.raises(ClientError, match="budget exhausted"):
+    with pytest.raises(ClientError, match=r"syntax_error|output failed"):
         await generate(client(create))
     assert create.call_count == 4
 

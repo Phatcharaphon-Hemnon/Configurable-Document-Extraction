@@ -2,8 +2,11 @@
 
 `app/services/local_ocr.py` implements the page adapter; Pydantic contracts are in
 `app/schemas/ocr.py`. The default engine is Tesseract with `eng+tha` language data.
-`OCR_ENGINE=rapidocr` retains the previous local engine, whose bundled recognition
-model has limited Thai support. No vision API or external OCR service is used.
+`OCR_ENGINE=rapidocr` selects the upgraded local engine (PP-OCRv5 mobile,
+Thai+English recognition); `OCR_ENGINE=hybrid` adds selective English
+handwriting assistance — see
+[Thai catalogs + CPU hybrid OCR](thai_catalog_hybrid_ocr.md).
+No vision API or external OCR service is used.
 
 Install Tesseract and English/Thai trained data on the deployment host, or supply
 project-local dependencies under `.local/ocr/usr/{bin,lib,share/tessdata}`. This

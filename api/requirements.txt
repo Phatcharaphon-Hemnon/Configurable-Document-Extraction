@@ -6,9 +6,20 @@ python-multipart>=0.0.9
 openai>=1.40
 temporalio>=1.7
 langfuse>=4.0
-# Local OCR (on-host, no API key, no network).
-# NOTE: small ONNX models (~15MB) auto-download on first run, then cached.
-rapidocr_onnxruntime==1.2.3
+# Local OCR (on-host, no API key, no network after first model download).
+# Maintained `rapidocr` package with explicit PP-OCRv5 mobile Det (CH) +
+# TH/EN rec (Thai+English / English) on ONNXRuntime CPU.
+# Tested pin: rapidocr==3.9.2, onnxruntime==1.29.0 (see docs/thai_catalog_hybrid_ocr.md).
+rapidocr==3.9.2
+onnxruntime==1.29.0
+opencv-python>=4.8
+pyclipper>=1.3
+shapely>=2.0
+pyyaml>=6.0
 pymupdf>=1.24
 pillow>=10.0
 numpy>=1.26
+# Hybrid English-handwriting retry (opt-in OCR_ENGINE=hybrid only):
+# heavy CPU deps — install separately, never required for tesseract/rapidocr.
+# Tested pins: transformers==4.55.4, torch==2.8.0 (CPU).
+# pip install transformers==4.55.4 torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu

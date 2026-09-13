@@ -59,6 +59,18 @@ class InMemoryJobStore:
         """In-memory store dies with the process — nothing can be stale."""
         return 0
 
+    def count_active_jobs(self) -> int:
+        return sum(1 for job in self._jobs.values() if job.status in ("queued", "processing"))
+
+    def clear_all_jobs(self) -> dict[str, int]:
+        """Delete every job. Refuses while jobs are active."""
+        active = self.count_active_jobs()
+        if active:
+            raise ValueError(f"{active} job(s) still active; finish or cancel them first")
+        count = len(self._jobs)
+        self._jobs.clear()
+        return {"jobs": count}
+
 
 class SQLiteJobStore:
     """Persistent job store using SQLite database."""
@@ -199,3 +211,11 @@ class SQLiteJobStore:
     def fail_stale_queued(self) -> int:
         """Mark orphaned queued/processing rows as failed."""
         return self.repo.fail_stale_queued_jobs()
+
+    def count_active_jobs(self) -> int:
+        """Jobs that a background worker may still own (queued/processing)."""
+        return self.repo.count_active_jobs()
+
+    def clear_all_jobs(self) -> dict[str, int]:
+        """Delete every job and all related rows. Refuses while active."""
+        return self.repo.clear_all_jobs()

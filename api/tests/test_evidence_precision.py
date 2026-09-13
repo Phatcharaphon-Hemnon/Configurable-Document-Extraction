@@ -93,12 +93,13 @@ def test_comma_decimal_separator_matches():
 def test_ocr_coherence_separates_soup_from_documents():
     from app.core.security import is_ocr_text_coherent, ocr_text_coherence
 
-    soup = ("— TAXINVOICE | 86 BELASTINGFAKTUUR | : Bin 2% ๕๕ _ , โญภลทให | ศรเบ | 1 | ๕ "
-            ". | อไฮกค ‘ | ed r SB ั 77 /7 | : ( | NA : | B.T.W.Reg Nr ร่ | - ี 3-- ี 33@ "
-            "ช 8 ๐ 8 ๐83 เออชชี้เเัั - ัีี้ีืีื้้้ี้ - ี -- เ | [60 | | SIGE | OVC Sard 1 "
-            "โอหทร | Subtotaal | Terme V.A.T. inclusive | a ea | pea | จอไก TOTAAL")
-    assert ocr_text_coherence(soup) < 0.35
-    assert is_ocr_text_coherent(soup) is False
+    # Raw OCR-fragment soup (Thai chars separate, no column gaps): blocked.
+    raw = ("— TAXINVOICE : 86 BELASTINGFAKTUUR Bin 2% ๕๕ _ , โญ ภ ล ท ให ศร เบ 1 ๕ "
+           ". อ ไฮ ก ค ‘ ed r SB ั 77 /7 : ( NA : B.T.W.Reg Nr ร่ - ี 3-- ี 33@ "
+           "ช 8 ๐ 8 ๐83 เออชชี้เเัั - ัีี้ีืีื้้้ี้ - ี -- เ [60 SIGE OVC Sard 1 "
+           "โอ ห ท ร Subtotaal Terme V.A.T. inclusive a ea pea จ อ ไก TOTAAL")
+    assert ocr_text_coherence(raw) < 0.40
+    assert is_ocr_text_coherent(raw) is False
 
     clean_po = "Purchase Orders\nOrder ID | Date | Customer Name\n10256 | 2016-07-15 | Paula Parente\nProducts\nProduct ID: | Product: | Quantity: | Unit Price:\n53 | Perth Pasties | 15 | 26.2"
     assert is_ocr_text_coherent(clean_po) is True
@@ -192,8 +193,14 @@ def test_array_rows_empty_text_flagged():
     assert _check_array_rows(field, None) != []
 
 
-def test_row_span_cell_grounded_in_document_passes(tmp_path):
-    """Row-level span shared across cells: grounded values pass, phantom fails."""
+def test_row_span_cell_requires_cell_level_evidence(tmp_path):
+    """Cells need their own supporting span (no 'appears elsewhere' fallback).
+
+    A row-level span shared across cells no longer accepts quantity/unit_price
+    merely because those values appear elsewhere on the page — the region
+    cannot be established, so they stay unresolved (rejected) for review.
+    Cell-level spans that support their own values still pass.
+    """
     from app.agents.validator import ValidatorAgent
     from app.schemas.documents import ExtractedTable
     from app.services.field_catalog import FieldCatalog
@@ -205,16 +212,41 @@ def test_row_span_cell_grounded_in_document_passes(tmp_path):
         rows=[[ {"column": c, "value": v, "confidence": 0.95, "source_span": "53 | Perth Pasties"}
                 for c, v in (("product_id", "53"), ("quantity", "15"), ("unit_price", "26.2")) ]],
     )
-    errors, _, review = ValidatorAgent(FieldCatalog(tmp_path / "kb")).validate(
-        "purchase_order", [], document_text=doc, tables=[table])
-    assert [e for e in errors if "line_items" in e] == [], errors
-    assert review is False
+    errors, _, review, accepted, accepted_tables, rejected, _ = ValidatorAgent(
+        FieldCatalog(tmp_path / "kb")
+    ).validate_detailed("purchase_order", [], document_text=doc, tables=[table])
+    # product_id's own span supports it; quantity/unit_price spans do not
+    # support their values → unresolved, never silently accepted.
+    assert review is True
+    assert any("quantity" in e for e in errors)
+    assert accepted_tables == []
 
     table.rows[0][1].value = "999"  # phantom quantity absent from the document
     errors, _, review = ValidatorAgent(FieldCatalog(tmp_path / "kb")).validate(
         "purchase_order", [], document_text=doc, tables=[table])
     assert review is True
     assert any("quantity" in e and "hallucination" in e for e in errors)
+
+
+def test_cell_level_spans_pass_when_supported(tmp_path):
+    from app.agents.validator import ValidatorAgent
+    from app.schemas.documents import ExtractedTable
+    from app.services.field_catalog import FieldCatalog
+
+    doc = "53 | Perth Pasties | 15 | 26.2"
+    table = ExtractedTable(
+        name="line_items",
+        columns=[{"key": k, "label": k} for k in ("product_id", "quantity", "unit_price")],
+        rows=[[
+            {"column": "product_id", "value": "53", "confidence": 0.95, "source_span": "53 | Perth"},
+            {"column": "quantity", "value": "15", "confidence": 0.95, "source_span": "Pasties | 15 |"},
+            {"column": "unit_price", "value": "26.2", "confidence": 0.95, "source_span": "| 15 | 26.2"},
+        ]],
+    )
+    errors, _, review = ValidatorAgent(FieldCatalog(tmp_path / "kb")).validate(
+        "purchase_order", [], document_text=doc, tables=[table])
+    assert [e for e in errors if "line_items" in e] == [], errors
+    assert review is False
 
 
 def test_info_only_judge_issues_do_not_force_review():

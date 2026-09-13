@@ -49,3 +49,19 @@ class SourceStorage:
         if page < 1:
             raise FileNotFoundError("Invalid page")
         return self.root / str(source_id) / f"page-{page}.png"
+
+    def clear(self) -> int:
+        """Remove every stored source (originals + previews). Returns dir count."""
+        import shutil
+
+        if not self.root.is_dir():
+            return 0
+        removed = 0
+        for child in self.root.iterdir():
+            if child.is_dir():
+                shutil.rmtree(child, ignore_errors=True)
+                removed += 1
+            elif child.is_file():
+                child.unlink(missing_ok=True)
+                removed += 1
+        return removed

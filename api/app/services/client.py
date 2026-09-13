@@ -75,6 +75,33 @@ class ClientResult:
     prompt_tokens: int | None = None
     completion_tokens: int | None = None
     total_tokens: int | None = None
+    # Classified-recovery provenance (backward-compatible defaults).
+    # `diagnosis` is the final parse diagnosis when recovery ran;
+    # `normalization` records a table-root adaptation (never silent);
+    # `finish_reason` is the provider termination string when available.
+    diagnosis: str | None = None
+    normalization: str | None = None
+    finish_reason: str | None = None
+
+
+# Parse-failure classification for honest recovery (never "invalid JSON" alone).
+# - empty: no content at all
+# - syntax_error: JSON decoding failed (unambiguous wrappers already stripped)
+# - wrong_root: valid JSON but wrong top-level shape (e.g. table as root)
+# - table_root: wrong_root subtype — an unambiguous, complete, valid table
+#   object returned as the root (preservable via explicit normalization)
+# - field_error: right root shape but Pydantic field validation failed
+# - truncated: incomplete JSON with termination metadata at the token limit
+ParseFailureKind = str
+
+
+@dataclass(slots=True)
+class ParseDiagnosis:
+    kind: ParseFailureKind
+    message: str
+    locations: list[str] | None = None
+    raw_length: int = 0
+    truncated: bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -361,12 +388,216 @@ def _pydantic_to_json_schema(model: type[BaseModel]) -> dict[str, Any]:
 def _build_json_prompt_suffix(model: type[BaseModel]) -> str:
     """Compact output contract for every mode, including schema-optional providers."""
     schema = model.model_json_schema()
-    return (
+    base = (
         "\n\nIMPORTANT: You MUST respond with a single valid JSON object that "
         "strictly conforms to the following JSON Schema. Do NOT include any "
         "markdown fences, commentary, or extra text — only the raw JSON object.\n\n"
         f"Schema:\n{json.dumps(schema, ensure_ascii=False, separators=(',', ':'))}"
     )
+    # Extraction contract: one root object with fields+tables. A table object
+    # ({name,columns,rows}) belongs INSIDE "tables" and must never be the root.
+    # Compact structural example (no reference answers; scalar vs cell kept
+    # distinct). Avoids the observed qwen2.5:3b failure that returned a bare
+    # {"name":"line_items","columns":[...]} table as the root response.
+    if model.__name__ == "ExtractionResponseSchema":
+        base += (
+            "\n\nOutput contract: return ONE root object {\"fields\":[...],\"tables\":[...]}. "
+            "Each table object {\"name\",\"columns\":[{\"key\",\"label\"}],"
+            "\"rows\":[[{\"column\",\"value\",\"confidence\",\"source_span\"}]]} "
+            "belongs inside \"tables\" — never as the root response. "
+            "Scalar fields and table cells stay separate; every value needs its "
+            "own verbatim source_span quote. "
+            "Example shape (structure only): "
+            "{\"fields\":[{\"name\":\"...\",\"value\":\"...\",\"confidence\":0.9,"
+            "\"source_span\":\"...\"}],\"tables\":[{\"name\":\"line_items\","
+            "\"columns\":[{\"key\":\"...\",\"label\":\"...\"}],"
+            "\"rows\":[[{\"column\":\"...\",\"value\":\"...\",\"confidence\":0.9,"
+            "\"source_span\":\"...\"}]]}]}"
+        )
+    return base
+
+
+def _strip_local_wrappers(raw_text: str | None) -> str:
+    """Apply only unambiguous formatting wrappers locally (no invention).
+
+    Handles reasoning <think> blocks and a single markdown fence. Returns the
+    stripped text (possibly still invalid). Ambiguous multiple objects and
+    incomplete JSON are NOT repaired here — they are classified for recovery.
+    """
+    if not raw_text or not raw_text.strip():
+        return ""
+    text = _strip_think_blocks(raw_text).strip()
+    if not text:
+        return ""
+    if text.startswith("```"):
+        lines = text.splitlines()
+        inner = "\n".join(line for line in lines[1:] if not line.strip().startswith("```"))
+        text = _strip_think_blocks(inner).strip()
+    return text
+
+
+def _extract_finish_reason(raw_response: Any) -> str | None:
+    """Best-effort finish_reason from a stored raw response (dict or SDK dump)."""
+    try:
+        if isinstance(raw_response, dict):
+            choices = raw_response.get("choices") or []
+            if choices and isinstance(choices[0], dict):
+                msg = choices[0].get("finish_reason") or choices[0].get("finishReason")
+                if isinstance(msg, str) and msg:
+                    return msg
+                # OpenAI SDK dump nests under message? No — finish_reason is sibling.
+                finish = choices[0].get("finish_reason")
+                if isinstance(finish, str):
+                    return finish
+        # MagicMock dumps in tests return {"id": "test"} — no finish reason.
+        return None
+    except Exception:
+        return None
+
+
+def _validation_locations(exc: Exception) -> list[str]:
+    """Concise Pydantic validation locations (e.g. 'fields.0.source_span')."""
+    locs: list[str] = []
+    try:
+        from pydantic import ValidationError
+
+        if isinstance(exc, ValidationError):
+            for err in exc.errors()[:8]:
+                loc = ".".join(str(p) for p in err.get("loc", ()))
+                typ = err.get("type", "")
+                msg = err.get("msg", "")[:120]
+                locs.append(f"{loc} [{typ}]: {msg}" if loc else f"[{typ}]: {msg}")
+    except Exception:
+        pass
+    return locs
+
+
+def _is_complete_table_object(obj: Any) -> bool:
+    """True for an unambiguous, complete, valid table object (no invention)."""
+    if not isinstance(obj, dict):
+        return False
+    if set(obj.keys()) != {"name", "columns", "rows"}:
+        # Allow exactly the table keys; extra/missing keys are not unambiguous.
+        # A root with "fields" is not a table root (handled as field_error).
+        if not {"name", "columns", "rows"} <= set(obj.keys()):
+            return False
+        if "fields" in obj or "tables" in obj:
+            return False
+    try:
+        # Local import to avoid cycles at module load.
+        from app.schemas.documents import ExtractedTable
+
+        ExtractedTable.model_validate(obj)
+        return True
+    except Exception:
+        return False
+
+
+def _classify_parse_failure(
+    schema: type[BaseModel],
+    raw_text: str | None,
+    raw_response: Any = None,
+) -> ParseDiagnosis:
+    """Separate JSON decoding from Pydantic validation with structured output.
+
+    Never invents missing quotes/values/evidence/rows. Incomplete JSON and
+    ambiguous multiple objects are rejected as-is for classified recovery.
+    """
+    raw_len = len(raw_text or "")
+    if not raw_text or not raw_text.strip():
+        return ParseDiagnosis(
+            kind="empty", message="empty output: model returned no content", raw_length=raw_len
+        )
+    text = _strip_local_wrappers(raw_text)
+    if not text:
+        return ParseDiagnosis(
+            kind="empty",
+            message="empty output after stripping unambiguous wrappers",
+            raw_length=raw_len,
+        )
+    # Ambiguous multiple top-level objects: reject, do not pick one silently.
+    # A single {...} with surrounding prose is handled by _try_parse; two
+    # disjoint {...}{...} blocks are ambiguous.
+    try:
+        import json as _json
+
+        decoder = _json.JSONDecoder()
+        first, idx = decoder.raw_decode(text)
+        rest = text[idx:].strip()
+        if rest:
+            # Trailing content beyond one JSON value: only unambiguous when it
+            # is empty/whitespace. Anything else (second object, prose with
+            # braces) is ambiguous — reject without invention.
+            # Exception: a single closing fence remnant already stripped above.
+            return ParseDiagnosis(
+                kind="syntax_error",
+                message=f"ambiguous multiple JSON values or trailing content ({len(rest)} chars after first value); not repaired locally",
+                raw_length=raw_len,
+            )
+        # Exactly one JSON value decoded — validate against the schema.
+        try:
+            schema.model_validate(first)
+            # Should not happen (caller found parse failure), but treat as OK.
+            return ParseDiagnosis(kind="field_error", message="unexpected validation pass", raw_length=raw_len)
+        except Exception as vexc:
+            locs = _validation_locations(vexc)
+            # Table-as-root subtype for the extraction contract.
+            if schema.__name__ == "ExtractionResponseSchema" and _is_complete_table_object(first):
+                return ParseDiagnosis(
+                    kind="table_root",
+                    message="valid JSON table object returned as the root; expected {fields,tables} root",
+                    locations=locs or ["root: table object must be inside tables"],
+                    raw_length=raw_len,
+                )
+            # Wrong top-level shape vs field-level failure.
+            if isinstance(first, dict) and schema.__name__ == "ExtractionResponseSchema":
+                if "fields" not in first:
+                    return ParseDiagnosis(
+                        kind="wrong_root",
+                        message="valid JSON with wrong top-level shape: missing required 'fields' (table as root or unrelated object)",
+                        locations=locs,
+                        raw_length=raw_len,
+                    )
+            return ParseDiagnosis(
+                kind="field_error",
+                message="valid JSON root but field-level schema validation failed",
+                locations=locs,
+                raw_length=raw_len,
+            )
+    except _json.JSONDecodeError as jexc:
+        # Incomplete JSON (truncation) vs genuine syntax error.
+        finish = _extract_finish_reason(raw_response)
+        looks_truncated = False
+        try:
+            open_braces = text.count("{") - text.count("}")
+            open_brackets = text.count("[") - text.count("]")
+            if (open_braces > 0 or open_brackets > 0) and not text.rstrip().endswith(("}", "]", '"')):
+                looks_truncated = True
+        except Exception:
+            pass
+        if finish in ("length", "max_tokens", "truncated") or (looks_truncated and finish is None and raw_len > 500):
+            # Only claim confirmed truncation when provider metadata says so;
+            # otherwise mark as suspected (display "[truncated]" preview marker
+            # alone is never evidence of model truncation).
+            confirmed = finish in ("length", "max_tokens", "truncated")
+            return ParseDiagnosis(
+                kind="truncated" if confirmed else "syntax_error",
+                message=(
+                    f"{'confirmed output truncation' if confirmed else 'possible truncation / JSON syntax error'} "
+                    f"(finish_reason={finish!r}, len={raw_len}, decode error: {jexc.msg} at pos {jexc.pos})"
+                ),
+                raw_length=raw_len,
+                truncated=confirmed,
+            )
+        return ParseDiagnosis(
+            kind="syntax_error",
+            message=f"JSON syntax error: {jexc.msg} at pos {jexc.pos}",
+            raw_length=raw_len,
+        )
+    except Exception as exc:  # noqa: BLE001 — classification never raises.
+        return ParseDiagnosis(
+            kind="syntax_error", message=f"parse classification failed: {exc}", raw_length=raw_len
+        )
 
 
 def _get_setting_str(settings: Settings, name: str, default: str = "") -> str:
@@ -394,7 +625,19 @@ class Client:
 
     Target is chosen by Settings: LLM_PROVIDER selects the base URL
     (openai / ollama-cloud / ollama-local) and LLM_MODEL the model.
+
+    HTTP clients are reused per (endpoint, credentials): AsyncOpenAI holds a
+    connection pool, so sharing avoids per-call socket churn while the SDK
+    owns lifecycle (no explicit close; process exit reclaims). Only the
+    endpoint/model identity enters cache fingerprints — never credentials.
     """
+
+    # Shared transports: (base_url, api_key) -> AsyncOpenAI. In-memory only.
+    _shared_clients: dict[tuple[str, str], Any] = {}
+    # Provider-confirmed unsupported output tiers: (base_url, model, tier).
+    # Recorded ONLY on explicit 400-level "unsupported parameter" responses —
+    # never on malformed model output (which retries the same tier).
+    _unsupported_tiers: set[tuple[str, str, str]] = set()
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -406,12 +649,34 @@ class Client:
         raw_key = _get_setting_str(settings, "llm_api_key")
         api_key = raw_key or "dummy-key"
         base_url = _get_setting_str(settings, "llm_base_url", _DEFAULT_BASE_URL)
-        self._client = AsyncOpenAI(
-            api_key=api_key,
-            base_url=base_url,
-            timeout=self._timeout,
-            max_retries=0,  # one shared generation budget owns retries
-        )
+        self._endpoint = base_url.rstrip("/")
+        if not isinstance(AsyncOpenAI, type):
+            # Test double patched in (patch AsyncOpenAI): never share across
+            # tests — each construction gets the current mock instance.
+            self._client = AsyncOpenAI(
+                api_key=api_key,
+                base_url=base_url,
+                timeout=self._timeout,
+                max_retries=0,
+            )
+            return
+        cache_key = (self._endpoint, api_key, float(self._timeout or 0))
+        client = Client._shared_clients.get(cache_key)
+        if client is None:
+            client = AsyncOpenAI(
+                api_key=api_key,
+                base_url=base_url,
+                timeout=self._timeout,
+                max_retries=0,  # one shared generation budget owns retries
+            )
+            Client._shared_clients[cache_key] = client
+        self._client = client
+
+    def _tier_unsupported(self, model: str, tier: str) -> bool:
+        return (getattr(self, "_endpoint", ""), model, tier) in Client._unsupported_tiers
+
+    def _mark_tier_unsupported(self, model: str, tier: str) -> None:
+        Client._unsupported_tiers.add((getattr(self, "_endpoint", ""), model, tier))
 
     @limited_generation
     async def _chat_with_retry(self, **kwargs: Any):
@@ -480,6 +745,15 @@ class Client:
             if "response_format" in kwargs and _unsupported_parameter(
                 exc, ("response_format", "json_schema", "json_object")
             ):
+                # Remember provider-confirmed unsupported tiers so later calls
+                # skip them without burning a request. Malformed model output
+                # never marks a tier unsupported (it retries the same tier).
+                try:
+                    fmt = kwargs["response_format"]
+                    tier = "json_schema" if isinstance(fmt, dict) and fmt.get("type") == "json_schema" else "json_object"
+                    self._mark_tier_unsupported(str(kwargs.get("model", "")), tier)
+                except Exception:
+                    pass
                 return None
             if isinstance(exc, ClientError):
                 raise
@@ -526,6 +800,95 @@ class Client:
     # generate_structured
     # ------------------------------------------------------------------
 
+    def _strongest_tier(self, model: str) -> str | None:
+        """Strongest supported output tier (None only when both structured tiers rejected)."""
+        if not getattr(self.settings, "disable_strict_json_schema", False) and not self._tier_unsupported(
+            model, "json_schema"
+        ):
+            return "json_schema"
+        if not self._tier_unsupported(model, "json_object"):
+            return "json_object"
+        return None
+
+    def _schema_fingerprint(self, response_schema: type[BaseModel]) -> str:
+        """Short hash of the serialized strict schema (for failure reports)."""
+        try:
+            import hashlib
+
+            canonical = json.dumps(
+                _pydantic_to_json_schema(response_schema), sort_keys=True, ensure_ascii=False, default=str
+            )
+            return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:12]
+        except Exception:
+            return "unknown"
+
+    async def _call_tier(
+        self,
+        tier: str,
+        *,
+        model: str,
+        messages: list[dict[str, Any]],
+        response_schema: type[T],
+        temperature: float,
+        request_summary: dict[str, Any],
+        max_tokens: int | None,
+        disable_reasoning: bool,
+    ):
+        if tier == "json_schema":
+            return await self._call_with_schema(
+                model=model, messages=messages, response_schema=response_schema,
+                temperature=temperature, request_summary=request_summary,
+                max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+            )
+        if tier == "json_object":
+            return await self._call_with_json_object_mode(
+                model=model, messages=messages, temperature=temperature,
+                request_summary=request_summary, max_tokens=max_tokens,
+                disable_reasoning=disable_reasoning,
+            )
+        return await self._call_plain(
+            model=model, messages=messages, temperature=temperature,
+            request_summary=request_summary, max_tokens=max_tokens,
+            disable_reasoning=disable_reasoning,
+        )
+
+    def _classified_error(
+        self,
+        *,
+        response_schema: type[T],
+        model: str,
+        tier: str | None,
+        raw_text: str | None,
+        raw_response: Any,
+        diagnosis: ParseDiagnosis | None,
+        prompt_tokens: int | None,
+        completion_tokens: int | None,
+        total_tokens: int | None,
+        elapsed: float,
+        max_tokens: int | None,
+        request_summary: dict[str, Any],
+        attempts_made: int,
+    ) -> ClientError:
+        finish = _extract_finish_reason(raw_response)
+        raw_len = len(raw_text or "")
+        kind = diagnosis.kind if diagnosis else "unknown"
+        locs = "; ".join(diagnosis.locations or []) if diagnosis and diagnosis.locations else ""
+        detail = diagnosis.message if diagnosis else "no diagnosis"
+        # Distinguish display-only preview truncation from model truncation:
+        # the "[truncated, N chars]" marker below is display-only.
+        preview = _truncate(raw_text or "(empty response)", 300)
+        msg = (
+            f"LLM output failed ({kind}) for schema {response_schema.__name__} "
+            f"(model={model}, format={tier or 'none'}, schema_fp={self._schema_fingerprint(response_schema)}, "
+            f"max_tokens={max_tokens}, finish_reason={finish!r}, len={raw_len}, "
+            f"tokens={prompt_tokens}/{completion_tokens}/{total_tokens}, "
+            f"elapsed={elapsed:.1f}s, model_calls={attempts_made}). "
+            f"{detail}"
+            + (f" Validation: {locs}" if locs else "")
+            + f" Raw response preview: {preview} (display-only truncation; full len={raw_len})"
+        )
+        return ClientError(msg, request_summary=request_summary, raw_response=raw_text)
+
     @limited_generation
     async def generate_structured(
         self,
@@ -537,7 +900,18 @@ class Client:
         max_tokens: int | None = None,
         disable_reasoning: bool = False,
     ) -> ClientResult:
-        """Call the model and parse the response into *response_schema*."""
+        """Call the model and parse the response into *response_schema*.
+
+        Classified recovery (no blind regeneration): one initial generation in
+        the strongest supported format, then at most ONE corrective generation
+        for parse/schema failures within the shared HTTP budget. Transport
+        retries share the same budget via _chat_with_retry but are separate
+        from content correction. Plain-text downgrade happens only when both
+        structured tiers are explicitly unsupported — never because schema
+        validation failed.
+        """
+        import time as _time
+
         temperature = _resolve_temperature(self.settings, temperature)
         request_summary: dict[str, Any] = {
             "model": model,
@@ -548,99 +922,192 @@ class Client:
         }
 
         messages = [{"role": "user", "content": prompt + _build_json_prompt_suffix(response_schema)}]
-
-        # --- Attempt 1: response_format with json_schema ---
-        if not getattr(self.settings, "disable_strict_json_schema", False):
-            logger.info(
-                "Attempt 1 (schema): model=%s schema=%s disable_reasoning=%s",
-                model, response_schema.__name__, disable_reasoning,
-            )
-            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_schema(
-                model=model,
-                messages=messages,
-                response_schema=response_schema,
-                temperature=temperature,
-                request_summary=request_summary,
-                max_tokens=max_tokens,
-                disable_reasoning=disable_reasoning,
-            )
-            parsed = self._try_parse(response_schema, raw_text)
-        else:
-            logger.info(
-                "Skipping Attempt 1 (schema) due to DISABLE_STRICT_JSON_SCHEMA=true for model=%s schema=%s",
-                model, response_schema.__name__,
-            )
-            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = None, None, None, None, None
-            parsed = None
-
-        # --- Attempt 2: response_format with json_object ---
-        if parsed is None:
-            logger.info(
-                "Attempt 2 (json_object): model=%s schema=%s",
-                model, response_schema.__name__,
-            )
-            logger.warning(
-                "LLM retry (json_object) triggered for schema=%s — attempt 1 returned invalid JSON",
-                response_schema.__name__,
-            )
-            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_json_object_mode(
-                model=model,
-                messages=messages,
-                temperature=temperature,
-                request_summary=request_summary,
-                max_tokens=max_tokens,
-                disable_reasoning=disable_reasoning,
-            )
-            parsed = self._try_parse(response_schema, raw_text)
-
-        # --- Attempt 3: prompt-level JSON fallback ---
-        if parsed is None:
-            logger.info(
-                "Attempt 3 (plain prompt fallback): model=%s schema=%s",
-                model, response_schema.__name__,
-            )
-            logger.warning(
-                "LLM retry (plain) triggered for schema=%s — attempt 2 returned invalid JSON",
-                response_schema.__name__,
-            )
-            fallback_messages = [*messages, {
-                "role": "user",
-                "content": "The previous response failed schema validation. Repeat the original task "
-                           "using only the original source data. Return only JSON matching the supplied Schema.",
-            }]
-            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_plain(
-                model=model,
-                messages=fallback_messages,
-                temperature=temperature,
-                request_summary=request_summary,
-                max_tokens=max_tokens,
-                disable_reasoning=disable_reasoning,
-            )
-            parsed = self._try_parse(response_schema, raw_text)
-
-        if parsed is None:
-            raise ClientError(
-                f"LLM returned unparseable JSON for schema {response_schema.__name__}. "
-                f"Raw response preview: {_truncate(raw_text or '(empty response)', 300)}",
-                request_summary=request_summary,
-                raw_response=raw_text,
-            )
-
-        logger.debug(
-            "LLM generate_structured OK schema=%s model=%s",
-            response_schema.__name__,
-            model,
+        endpoint = getattr(self, "_endpoint", "")
+        logger.info(
+            "LLM structured start job=%s stage=%s endpoint=%s model=%s schema=%s schema_fp=%s format=%s max_tokens=%s temp=%s",
+            job_context.get(), stage_context.get(), endpoint, model, response_schema.__name__,
+            self._schema_fingerprint(response_schema),
+            self._strongest_tier(model), max_tokens, temperature,
         )
 
-        self._record_usage(prompt_tokens, completion_tokens, total_tokens)
-        return ClientResult(
-            parsed=parsed,
-            raw_text=raw_text,
-            raw_response=raw_response,
-            request_summary=request_summary,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            total_tokens=total_tokens,
+        # --- Attempt 1: strongest supported tier ---
+        tier = self._strongest_tier(model)
+        if tier is None:
+            # Both structured tiers explicitly rejected by the provider.
+            logger.info(
+                "No structured tier supported for model=%s (json_schema + json_object rejected); using plain once",
+                model,
+            )
+            tier = "plain"
+        elif tier == "json_schema" and getattr(self.settings, "disable_strict_json_schema", False):
+            logger.info("DISABLE_STRICT_JSON_SCHEMA=true — starting at json_object for model=%s", model)
+        else:
+            logger.info("Attempt 1 (%s): model=%s schema=%s", tier, model, response_schema.__name__)
+
+        t0 = _time.perf_counter()
+        raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_tier(
+            tier, model=model, messages=messages, response_schema=response_schema,
+            temperature=temperature, request_summary=request_summary,
+            max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+        )
+        elapsed1 = _time.perf_counter() - t0
+        attempts_made = 1
+        # Provider explicitly rejected the tier (returned None): try the next
+        # supported tier once WITHOUT counting it as a content-correction retry.
+        # Malformed model output never marks a tier unsupported (handled in
+        # _request_mode) and never triggers a tier downgrade here.
+        if raw_text is None and raw_response is None:
+            logger.warning(
+                "LLM tier %s explicitly unsupported for model=%s (provider rejection); trying next tier once",
+                tier, model,
+            )
+            fallback = "json_object" if tier == "json_schema" else "plain"
+            if fallback == "json_object" and self._tier_unsupported(model, "json_object"):
+                fallback = "plain"
+            if fallback != tier:
+                tier = fallback
+                logger.info("Attempt 1b (%s): model=%s schema=%s (after explicit rejection)", tier, model, response_schema.__name__)
+                t0 = _time.perf_counter()
+                raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_tier(
+                    tier, model=model, messages=messages, response_schema=response_schema,
+                    temperature=temperature, request_summary=request_summary,
+                    max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+                )
+                elapsed1 = _time.perf_counter() - t0
+            else:
+                elapsed1 = 0.0
+
+        parsed, diagnosis = self._try_parse_detailed(response_schema, raw_text, raw_response)
+        finish = _extract_finish_reason(raw_response)
+        logger.info(
+            "LLM attempt 1 done job=%s stage=%s tier=%s len=%s finish=%r tokens=%s/%s/%s elapsed=%.1fs parsed=%s kind=%s",
+            job_context.get(), stage_context.get(), tier,
+            len(raw_text or "") if raw_text else 0, finish,
+            prompt_tokens, completion_tokens, total_tokens, elapsed1,
+            parsed is not None, diagnosis.kind if diagnosis else "ok",
+        )
+        if parsed is not None:
+            self._record_usage(prompt_tokens, completion_tokens, total_tokens)
+            return ClientResult(
+                parsed=parsed, raw_text=raw_text, raw_response=raw_response,
+                request_summary=request_summary, prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens, total_tokens=total_tokens,
+                diagnosis="ok", finish_reason=finish,
+            )
+
+        # --- Classified recovery: at most ONE corrective generation ---
+        assert diagnosis is not None
+        if diagnosis.kind == "truncated" and diagnosis.truncated:
+            # Confirmed token-limit truncation: do NOT blindly retry the same
+            # oversized request or accept the partial response. Report honestly
+            # with output size, limits, and termination metadata for the caller
+            # to compact/split by source regions (see task §5).
+            logger.error(
+                "LLM confirmed truncation job=%s stage=%s schema=%s len=%d max_tokens=%s finish=%r tokens=%s/%s elapsed=%.1fs",
+                job_context.get(), stage_context.get(), response_schema.__name__,
+                len(raw_text or ""), max_tokens, finish, prompt_tokens, completion_tokens, elapsed1,
+            )
+            raise self._classified_error(
+                response_schema=response_schema, model=model, tier=tier, raw_text=raw_text,
+                raw_response=raw_response, diagnosis=diagnosis, prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens, total_tokens=total_tokens,
+                elapsed=elapsed1, max_tokens=max_tokens, request_summary=request_summary,
+                attempts_made=attempts_made,
+            )
+
+        # Table-as-root: preserve the unambiguous table, record normalization,
+        # and use the single corrective budget for a targeted scalar recovery.
+        # Never silently claim scalar extraction completed via fields=[].
+        table_adapted = None
+        normalization_note = None
+        if diagnosis.kind == "table_root":
+            table_adapted = self.adapt_table_root(raw_text)
+            if table_adapted is not None:
+                normalization_note = (
+                    "normalized table-as-root to {fields:[], tables:[table]}; "
+                    "scalar extraction incomplete (fields=[] is not a success claim; "
+                    "coverage/needs_review will flag missing scalars)"
+                )
+                logger.warning(
+                    "LLM table-as-root job=%s stage=%s schema=%s — %s",
+                    job_context.get(), stage_context.get(), response_schema.__name__, normalization_note,
+                )
+
+        # One corrective generation in the STRONGEST supported format (never an
+        # automatic plain downgrade for schema failures). Includes concise
+        # validation locations + required structure + original source evidence;
+        # the previous answer is treated as untrusted data (not included).
+        locs = "; ".join((diagnosis.locations or [])[:5]) if diagnosis.locations else diagnosis.message[:300]
+        corrective_instruction = (
+            "The previous response failed validation and is UNTRUSTED — do not copy it. "
+            f"Validation: {locs}. "
+            "Return ONE root JSON object matching the Schema above "
+        )
+        if response_schema.__name__ == "ExtractionResponseSchema":
+            corrective_instruction += (
+                'with {\"fields\":[...],\"tables\":[...]} — a table object belongs inside '
+                '\"tables\", never as the root. '
+            )
+        corrective_instruction += (
+            "Use only the original source data from the first message. "
+            "Return only raw JSON, no fences or commentary."
+        )
+        corrective_messages = [*messages, {"role": "user", "content": corrective_instruction}]
+        logger.warning(
+            "LLM corrective (1 allowed) job=%s stage=%s schema=%s kind=%s tier=%s — %s",
+            job_context.get(), stage_context.get(), response_schema.__name__,
+            diagnosis.kind, tier, locs[:300],
+        )
+        t1 = _time.perf_counter()
+        c_raw, c_resp, c_pt, c_ct, c_tt = await self._call_tier(
+            tier, model=model, messages=corrective_messages, response_schema=response_schema,
+            temperature=temperature, request_summary=request_summary,
+            max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+        )
+        elapsed2 = _time.perf_counter() - t1
+        attempts_made += 1
+        c_parsed, c_diag = self._try_parse_detailed(response_schema, c_raw, c_resp)
+        c_finish = _extract_finish_reason(c_resp)
+        logger.info(
+            "LLM corrective done job=%s stage=%s tier=%s len=%s finish=%r tokens=%s/%s elapsed=%.1fs parsed=%s kind=%s total_calls=%d",
+            job_context.get(), stage_context.get(), tier,
+            len(c_raw or "") if c_raw else 0, c_finish, c_pt, c_ct, elapsed2,
+            c_parsed is not None, c_diag.kind if c_diag else "ok", attempts_made,
+        )
+        if c_parsed is not None:
+            # Preserve valid data without treating partial recovery as complete
+            # success: downstream coverage/acceptance still judges completeness.
+            self._record_usage(c_pt, c_ct, c_tt)
+            return ClientResult(
+                parsed=c_parsed, raw_text=c_raw, raw_response=c_resp,
+                request_summary=request_summary, prompt_tokens=c_pt,
+                completion_tokens=c_ct, total_tokens=c_tt,
+                diagnosis=f"corrective-{diagnosis.kind}", normalization=normalization_note,
+                finish_reason=c_finish,
+            )
+        # Corrective failed: if we preserved an unambiguous table, return it
+        # explicitly as partial (fields=[] incomplete) rather than inventing
+        # scalars or forcing another regeneration. Otherwise raise honestly.
+        if table_adapted is not None:
+            logger.warning(
+                "LLM corrective failed job=%s stage=%s — returning preserved table-as-root partial "
+                "(fields=[] incomplete, needs_review downstream); corrective kind=%s",
+                job_context.get(), stage_context.get(), c_diag.kind if c_diag else "unknown",
+            )
+            self._record_usage(c_pt, c_ct, c_tt)
+            return ClientResult(
+                parsed=table_adapted, raw_text=raw_text, raw_response=raw_response,
+                request_summary=request_summary, prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens, total_tokens=total_tokens,
+                diagnosis=f"table_root-partial({c_diag.kind if c_diag else 'failed'})",
+                normalization=normalization_note, finish_reason=finish,
+            )
+        raise self._classified_error(
+            response_schema=response_schema, model=model, tier=tier, raw_text=c_raw or raw_text,
+            raw_response=c_resp or raw_response, diagnosis=c_diag or diagnosis,
+            prompt_tokens=c_pt or prompt_tokens, completion_tokens=c_ct or completion_tokens,
+            total_tokens=c_tt or total_tokens, elapsed=elapsed1 + elapsed2,
+            max_tokens=max_tokens, request_summary=request_summary, attempts_made=attempts_made,
         )
 
     # ------------------------------------------------------------------
@@ -690,99 +1157,126 @@ class Client:
             }
         ]
 
-        # --- Attempt 1: response_format with json_schema ---
-        if not getattr(self.settings, "disable_strict_json_schema", False):
+        # Classified recovery (vision legacy path): strongest tier once, then at
+        # most ONE corrective. Logs distinguish skipped tiers from failed ones.
+        import time as _vtime
+
+        tier = self._strongest_tier(model)
+        attempt1_ran = False
+        if tier is None:
             logger.info(
-                "Attempt 1 (schema+vision): model=%s schema=%s image_size=%d disable_reasoning=%s",
-                model, response_schema.__name__, len(image_bytes), disable_reasoning,
+                "No structured tier supported for model=%s (vision); using plain once", model
             )
-            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_schema(
-                model=model,
-                messages=messages,
-                response_schema=response_schema,
-                temperature=temperature,
-                request_summary=request_summary,
-                max_tokens=max_tokens,
-                disable_reasoning=disable_reasoning,
-            )
-            parsed = self._try_parse(response_schema, raw_text)
+            tier = "plain"
         else:
             logger.info(
-                "Skipping Attempt 1 (schema+vision) due to DISABLE_STRICT_JSON_SCHEMA=true for model=%s schema=%s",
-                model, response_schema.__name__,
+                "Attempt 1 (%s+vision): model=%s schema=%s image_size=%d",
+                tier, model, response_schema.__name__, len(image_bytes),
             )
-            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = None, None, None, None, None
-            parsed = None
-
-        # --- Attempt 2: response_format with json_object ---
-        if parsed is None:
-            logger.info(
-                "Attempt 2 (json_object+vision): model=%s schema=%s image_size=%d",
-                model, response_schema.__name__, len(image_bytes),
-            )
-            logger.warning(
-                "OpenAI vision retry (json_object) triggered for schema=%s — attempt 1 returned invalid JSON",
-                response_schema.__name__,
-            )
-            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_with_json_object_mode(
-                model=model,
-                messages=messages,
-                temperature=temperature,
-                request_summary=request_summary,
-                max_tokens=max_tokens,
-                disable_reasoning=disable_reasoning,
-            )
-            parsed = self._try_parse(response_schema, raw_text)
-
-        # --- Attempt 3: prompt-level JSON fallback ---
-        if parsed is None:
-            logger.info(
-                "Attempt 3 (plain prompt fallback+vision): model=%s schema=%s",
-                model, response_schema.__name__,
-            )
-            logger.warning(
-                "OpenAI vision retry (plain) triggered for schema=%s — attempt 2 returned invalid JSON",
-                response_schema.__name__,
-            )
-            fallback_messages = [*messages, {
-                "role": "user",
-                "content": "The previous response failed schema validation. Repeat the original task "
-                           "using only the original source data. Return only JSON matching the supplied Schema.",
-            }]
-            raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_plain(
-                model=model,
-                messages=fallback_messages,
-                temperature=temperature,
-                request_summary=request_summary,
-                max_tokens=max_tokens,
-                disable_reasoning=disable_reasoning,
-            )
-            parsed = self._try_parse(response_schema, raw_text)
-
-        if parsed is None:
-            raise ClientError(
-                f"LLM returned unparseable JSON for schema {response_schema.__name__} "
-                f"(vision) [image_size_bytes={len(image_bytes)}, image_media_type={image_media_type}]. "
-                f"Raw response preview: {_truncate(raw_text or '(empty response)', 300)}",
-                request_summary=request_summary,
-                raw_response=raw_text,
-            )
-
-        logger.debug(
-            "LLM generate_structured_with_image OK schema=%s model=%s",
-            response_schema.__name__,
-            model,
+        t0 = _vtime.perf_counter()
+        raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_tier(
+            tier, model=model, messages=messages, response_schema=response_schema,
+            temperature=temperature, request_summary=request_summary,
+            max_tokens=max_tokens, disable_reasoning=disable_reasoning,
         )
+        elapsed1 = _vtime.perf_counter() - t0
+        attempt1_ran = not (raw_text is None and raw_response is None)
+        if not attempt1_ran:
+            logger.warning(
+                "LLM tier %s+vision explicitly unsupported for model=%s; trying next tier once (not a content failure)",
+                tier, model,
+            )
+            fallback = "json_object" if tier == "json_schema" else "plain"
+            if fallback == "json_object" and self._tier_unsupported(model, "json_object"):
+                fallback = "plain"
+            if fallback != tier:
+                tier = fallback
+                t0 = _vtime.perf_counter()
+                raw_text, raw_response, prompt_tokens, completion_tokens, total_tokens = await self._call_tier(
+                    tier, model=model, messages=messages, response_schema=response_schema,
+                    temperature=temperature, request_summary=request_summary,
+                    max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+                )
+                elapsed1 = _vtime.perf_counter() - t0
+                attempt1_ran = not (raw_text is None and raw_response is None)
 
-        self._record_usage(prompt_tokens, completion_tokens, total_tokens)
-        return ClientResult(
-            parsed=parsed,
-            raw_text=raw_text,
-            raw_response=raw_response,
-            request_summary=request_summary,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            total_tokens=total_tokens,
+        parsed, diagnosis = self._try_parse_detailed(response_schema, raw_text, raw_response)
+        if parsed is not None:
+            self._record_usage(prompt_tokens, completion_tokens, total_tokens)
+            return ClientResult(
+                parsed=parsed, raw_text=raw_text, raw_response=raw_response,
+                request_summary=request_summary, prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens, total_tokens=total_tokens,
+                diagnosis="ok", finish_reason=_extract_finish_reason(raw_response),
+            )
+        assert diagnosis is not None
+        if diagnosis.truncated:
+            raise self._classified_error(
+                response_schema=response_schema, model=model, tier=tier, raw_text=raw_text,
+                raw_response=raw_response, diagnosis=diagnosis, prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens, total_tokens=total_tokens,
+                elapsed=elapsed1, max_tokens=max_tokens, request_summary=request_summary,
+                attempts_made=1,
+            )
+        table_adapted = self.adapt_table_root(raw_text) if diagnosis.kind == "table_root" else None
+        normalization_note = (
+            "normalized table-as-root to {fields:[], tables:[table]}; scalar incomplete"
+            if table_adapted is not None else None
+        )
+        locs = "; ".join((diagnosis.locations or [])[:5]) if diagnosis.locations else diagnosis.message[:300]
+        # Only log "returned invalid" when attempt 1 actually generated output.
+        if attempt1_ran:
+            logger.warning(
+                "LLM vision corrective (1 allowed) schema=%s kind=%s tier=%s — %s",
+                response_schema.__name__, diagnosis.kind, tier, locs[:300],
+            )
+        else:
+            logger.info(
+                "LLM vision corrective after skipped tier schema=%s kind=%s tier=%s",
+                response_schema.__name__, diagnosis.kind, tier,
+            )
+        corrective_messages = [*messages, {
+            "role": "user",
+            "content": (
+                "The previous response failed validation and is UNTRUSTED — do not copy it. "
+                f"Validation: {locs}. Return ONE root JSON object matching the Schema; "
+                "a table object belongs inside \"tables\", never as the root. "
+                "Use only the original source data. Return only raw JSON."
+            ),
+        }]
+        t1 = _vtime.perf_counter()
+        c_raw, c_resp, c_pt, c_ct, c_tt = await self._call_tier(
+            tier, model=model, messages=corrective_messages, response_schema=response_schema,
+            temperature=temperature, request_summary=request_summary,
+            max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+        )
+        elapsed2 = _vtime.perf_counter() - t1
+        c_parsed, c_diag = self._try_parse_detailed(response_schema, c_raw, c_resp)
+        if c_parsed is not None:
+            self._record_usage(c_pt, c_ct, c_tt)
+            return ClientResult(
+                parsed=c_parsed, raw_text=c_raw, raw_response=c_resp,
+                request_summary=request_summary, prompt_tokens=c_pt,
+                completion_tokens=c_ct, total_tokens=c_tt,
+                diagnosis=f"corrective-{diagnosis.kind}", normalization=normalization_note,
+                finish_reason=_extract_finish_reason(c_resp),
+            )
+        if table_adapted is not None:
+            self._record_usage(c_pt, c_ct, c_tt)
+            return ClientResult(
+                parsed=table_adapted, raw_text=raw_text, raw_response=raw_response,
+                request_summary=request_summary, prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens, total_tokens=total_tokens,
+                diagnosis=f"table_root-partial({c_diag.kind if c_diag else 'failed'})",
+                normalization=normalization_note,
+                finish_reason=_extract_finish_reason(raw_response),
+            )
+        raise self._classified_error(
+            response_schema=response_schema, model=model, tier=tier, raw_text=c_raw or raw_text,
+            raw_response=c_resp or raw_response, diagnosis=c_diag or diagnosis,
+            prompt_tokens=c_pt or prompt_tokens, completion_tokens=c_ct or completion_tokens,
+            total_tokens=c_tt or total_tokens, elapsed=elapsed1 + elapsed2,
+            max_tokens=max_tokens, request_summary=request_summary, attempts_made=2,
         )
 
     # ------------------------------------------------------------------
@@ -946,30 +1440,98 @@ class Client:
 
     @staticmethod
     def _try_parse(schema: type[T], raw_text: str | None) -> T | None:
-        """Try to parse *raw_text* as JSON into *schema*. Returns None on failure."""
+        """Try to parse *raw_text* as JSON into *schema*. Returns None on failure.
+
+        Handles only unambiguous formatting wrappers locally (think blocks,
+        a single markdown fence, surrounding prose with one JSON object).
+        Ambiguous multiple objects and incomplete JSON are NOT repaired —
+        see _try_parse_detailed for classification.
+        """
+        parsed, _ = Client._try_parse_detailed(schema, raw_text)
+        return parsed
+
+    @staticmethod
+    def _try_parse_detailed(
+        schema: type[T], raw_text: str | None, raw_response: Any = None
+    ) -> tuple[T | None, ParseDiagnosis | None]:
+        """Parse with structured diagnostics (JSON vs schema failures separated)."""
         if not raw_text or not raw_text.strip():
-            return None
-        text = _strip_think_blocks(raw_text).strip()
-        if not text:
-            return None
-        # Strip markdown fences if the model wrapped the JSON.
-        if text.startswith("```"):
-            lines = text.splitlines()
-            inner = "\n".join(
-                line for line in lines[1:]
-                if not line.strip().startswith("```")
+            return None, ParseDiagnosis(
+                kind="empty", message="empty output", raw_length=len(raw_text or "")
             )
-            text = _strip_think_blocks(inner).strip()
+        text = _strip_local_wrappers(raw_text)
+        if not text:
+            return None, ParseDiagnosis(
+                kind="empty",
+                message="empty output after stripping unambiguous wrappers",
+                raw_length=len(raw_text or ""),
+            )
         try:
-            return schema.model_validate_json(text)
+            parsed = schema.model_validate_json(text)
+            return parsed, None
         except Exception:
             pass
-        # Try extracting the first {...} block in case there's surrounding prose.
+        # Single surrounding-prose wrapper: exactly one {...} block. Multiple
+        # disjoint objects are ambiguous — reject without picking one.
         start = text.find("{")
         end = text.rfind("}")
         if start != -1 and end != -1 and end > start:
+            candidate = text[start : end + 1]
+            # Reject when a second top-level object follows the first (e.g.
+            # "}{" with non-whitespace between balanced braces).
             try:
-                return schema.model_validate_json(text[start : end + 1])
+                import json as _json
+
+                decoder = _json.JSONDecoder()
+                _, idx = decoder.raw_decode(candidate)
+                if not candidate[idx:].strip():
+                    try:
+                        parsed = schema.model_validate_json(candidate)
+                        return parsed, None
+                    except Exception:
+                        pass
             except Exception:
                 pass
-        return None
+        diagnosis = _classify_parse_failure(schema, raw_text, raw_response)
+        return None, diagnosis
+
+    @staticmethod
+    def adapt_table_root(raw_text: str | None) -> Any | None:
+        """Return an ExtractionResponseSchema for an unambiguous table-as-root.
+
+        Requires a complete, valid table object (name/columns/rows validating
+        as ExtractedTable). Returns None otherwise — never invents quotes,
+        values, evidence, or rows. Callers must record the normalization and
+        retain incomplete status for missing scalars (coverage/needs_review).
+        """
+        if not raw_text or not raw_text.strip():
+            return None
+        text = _strip_local_wrappers(raw_text)
+        if not text:
+            return None
+        try:
+            import json as _json
+
+            obj = _json.loads(text)
+        except Exception:
+            # Prose-wrapped single object (unambiguous only).
+            try:
+                start = text.find("{")
+                end = text.rfind("}")
+                if start == -1 or end <= start:
+                    return None
+                import json as _json2
+
+                obj = _json2.loads(text[start : end + 1])
+            except Exception:
+                return None
+        if not _is_complete_table_object(obj):
+            return None
+        try:
+            from app.schemas.documents import ExtractedTable
+            from app.schemas.llm_schemas import ExtractionResponseSchema
+
+            table = ExtractedTable.model_validate(obj)
+            return ExtractionResponseSchema(fields=[], tables=[table])
+        except Exception:
+            return None

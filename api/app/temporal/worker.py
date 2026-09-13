@@ -18,6 +18,7 @@ from app.temporal.activities import (
     extract_activity,
     judge_activity,
     parse_activity,
+    parse_detailed_activity,
     process_page_activity,
     validate_activity,
 )
@@ -35,6 +36,7 @@ async def main() -> None:
         max_concurrent_activities=1,
         activities=[
             parse_activity,
+            parse_detailed_activity,
             process_page_activity,
             classify_activity,
             extract_activity,

@@ -1,7 +1,7 @@
 # Gold-set release evaluation
 
 Gold files and `manifest.json` live in `api/app/data/knowledge_base/ground_truth`.
-The manifest describes 11 files / 14 pages, their SHA-256 hashes, page types,
+The manifest describes 12 files / 15 pages, their SHA-256 hashes, page types,
 languages, scalar answers, printed table columns, cells and ambiguity exclusions.
 Annotations were transcribed visually by the assistant before predictions and need
 independent human adjudication. They are never fed into the extraction prompts.
@@ -43,3 +43,9 @@ Final-demo accuracy thresholds, polished UI, a full security audit and a prompt
 version registry are not required for this release. Release notes list agents
 and actual RAG sources. CI uploads checked-in reports; it does not silently replace
 live metrics with a mock run.
+
+To compare OCR engines instead of scoring the pipeline once, use the
+companion operator tool `api/scripts/benchmark_ocr.py` (same gold
+references, unchanged LLM settings; see
+[API scripts](api_scripts.md) and
+[Thai catalogs + CPU hybrid OCR](thai_catalog_hybrid_ocr.md)).

@@ -40,6 +40,14 @@ class JudgeIssueEntry(BaseModel):
     field: str
     message: str
     severity: Literal["info", "warning", "error"] = "warning"
+    # Structured-issue extensions (optional for backward compat; the Judge
+    # prompt requires them, but older models may omit them).
+    category: Literal[
+        "mechanical", "unsupported", "row_column", "type", "semantic", "ocr_ambiguity"
+    ] | None = None
+    target: str | None = None
+    evidence: str | None = None
+    explanation: str | None = None
 
 
 class JudgeResponseSchema(BaseModel):

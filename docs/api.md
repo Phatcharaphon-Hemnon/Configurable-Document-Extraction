@@ -24,6 +24,8 @@ single-flight dedup.
   (`{prediction, ground_truth, doc_type}` → precision/recall/F1).
 - `GET /history`, `GET /history/stats`, `GET /history/{job_id}`,
   `DELETE /history/{job_id}` — 400 unless `DATABASE_ENABLED=true`.
+- `DELETE /history` — bulk clear, returns per-kind deleted counts; 409
+  while jobs are queued/processing.
 - Client identity for throttling: `_get_client_id()` (request IP).
 
 ## `main.py` — app wiring

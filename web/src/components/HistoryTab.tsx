@@ -29,11 +29,11 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 // button) instead of spinning forever.
 const FETCH_TIMEOUT_MS = 15000;
 
-async function fetchWithTimeout(url: string): Promise<Response> {
+async function fetchWithTimeout(url: string, init?: RequestInit): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    return await fetch(url, { signal: controller.signal });
+    return await fetch(url, { ...init, signal: controller.signal });
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') {
       throw new Error('The server is taking too long to respond — is the backend running?');
@@ -52,6 +52,8 @@ export function HistoryTab() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [clearing, setClearing] = useState(false);
+  const [clearError, setClearError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const limit = 20;
@@ -112,6 +114,28 @@ export function HistoryTab() {
       }
     } catch {
       // Ignore error
+    }
+  };
+
+  const clearHistory = async () => {
+    if (!confirm('Delete ALL history jobs and their stored originals and previews? This cannot be undone.')) return;
+    setClearing(true);
+    setClearError(null);
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/history`, { method: 'DELETE' });
+      if (!res.ok) {
+        const detail = await res.json().catch(() => null);
+        throw new Error(detail?.detail || `Clear failed (${res.status})`);
+      }
+      setSelected(null);
+      setSelectedPage(0);
+      setPage(0);
+      fetchHistory();
+      fetchStats();
+    } catch (err) {
+      setClearError(err instanceof Error ? err.message : 'Could not clear history');
+    } finally {
+      setClearing(false);
     }
   };
 
@@ -176,6 +200,22 @@ export function HistoryTab() {
       )}
 
       {/* Jobs Table */}
+      <div className="history-toolbar">
+        <button
+          className="button-secondary"
+          disabled={clearing || (jobs.length === 0 && total === 0)}
+          onClick={() => void clearHistory()}
+          title="Delete all history jobs and stored sources"
+        >
+          {clearing ? 'Clearing…' : 'Clear history'}
+        </button>
+      </div>
+      {clearError && (
+        <div className="history-error">
+          <p>Error: {clearError}</p>
+          <button onClick={() => { setClearError(null); fetchHistory(); fetchStats(); }}>Retry</button>
+        </div>
+      )}
       <div className="history-table-container">
         <table className="history-table">
           <thead>

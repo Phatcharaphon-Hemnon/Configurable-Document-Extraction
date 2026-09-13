@@ -90,27 +90,48 @@ def collapse_ocr_spacing(text: str) -> str:
     return re.sub(r"(?<=\d)\s+(?=\d)", "", text)
 
 
-def ocr_text_coherence(text: str) -> float:
-    """Fraction of whitespace tokens with >= 3 alphanumeric chars.
+# Coherence gate threshold, validated 2026-09-12 on real Tesseract output:
+# genuine noise scores 0.33 (ICR soup) and 0.35 (handwritten-invoice salad);
+# clean pages score 0.46–0.72 (Thai receipts, invoices, delivery notes, POs).
+COHERENCE_THRESHOLD = 0.40
 
-    Coherent OCR (any language — `\\w` is Unicode-aware, so Thai script
-    counts) scores ~0.4-0.7. Degenerate scans (single chars, pipes,
-    script-salad fragments like the ICR trilingual soup) score ~0.3.
+
+def _is_layout_separator(token: str) -> bool:
+    """True for layout-only tokens (table pipes, rules, brackets).
+
+    These carry no script signal: the layout stage inserts ``" | "`` column
+    separators and Tesseract reports ruling fragments as ``|`` blocks.
     """
-    tokens = re.findall(r"\S+", text)
-    if not tokens:
-        return 0.0
-    wordlike = sum(1 for t in tokens if sum(1 for c in t if c.isalnum()) >= 3)
+    return not any(c.isalnum() for c in token)
+
+
+def ocr_text_coherence(text: str) -> float:
+    """Fraction of content tokens with >= 3 alphanumeric chars.
+
+    Layout-only separators (``|``, ``—``, brackets) are ignored and short
+    numeric table cells (``44``, ``700``) dilute but never alone condemn:
+    a page with no letter-bearing token scores 1.0 (nothing textual to
+    judge; per-field evidence checks still apply downstream). Coherent OCR
+    (any language — ``\\w`` is Unicode-aware, so Thai script counts)
+    scores ~0.46-1.0 on the measured gold pages.
+    """
+    tokens = [t for t in re.findall(r"\S+", text) if not _is_layout_separator(t)]
+    words = [t for t in tokens if any(c.isalpha() for c in t)]
+    if not words:
+        return 1.0
+    wordlike = sum(1 for t in words if sum(1 for c in t if c.isalnum()) >= 3)
     return wordlike / len(tokens)
 
 
 def is_ocr_text_coherent(text: str | None, *, min_tokens: int = 20,
-                         threshold: float = 0.35) -> bool:
+                         threshold: float = COHERENCE_THRESHOLD) -> bool:
     """False only for long-enough texts that are mostly OCR noise.
 
     Short texts (headers, tiny receipts) are exempt — there is too little
-    signal to judge. Tuned against the 14-page gold set: the ICR soup
-    scores 0.29, every clean page scores >= 0.42.
+    signal to judge. Validated: the ICR soup (0.33) and the handwritten-
+    invoice salad (0.35) stay below the threshold while clean tables and
+    gold samples (0.46+) pass (see `test_coherence_rules` in
+    `api/tests/test_security.py`).
     """
     if not text:
         return True  # empty text has its own evidence flag downstream
