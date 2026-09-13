@@ -3,7 +3,7 @@
 > Last updated: 2026-09-09. The four pipeline stages in `api/app/agents/`.
 > Transport is `services/client.py` (`Client`); contracts are
 > `schemas/llm_schemas.py`. The Judge agent is documented separately in
-> `docs/judge_review.md`.
+> `docs/reference/judge_review.md`.
 
 ## What an agent is in this project
 
@@ -49,7 +49,7 @@ maps OCR text and/or image bytes to exactly one of the 3 fixed doc types.
   `str | float | date | None` (bool→str, numbers→float, list/dict→JSON
   string); names normalized, placeholders/duplicates dropped,
   `is_new_field` set for names outside the known set (registered into the
-  catalog JSON by the service — see `docs/catalog_review.md`).
+  catalog JSON by the service — see `docs/reference/catalog_review.md`).
 
 ## `agents/validator.py` — Stage 4 deterministic gate
 
@@ -74,7 +74,7 @@ Checks, in order:
 `agents/judge.py::JudgeAgent.evaluate()` → `JudgeResult(score, issues,
 notes)`; skipped entirely for clean extractions
 (`JUDGE_SKIP_WHEN_CLEAN`, pass bar `JUDGE_PASS_SCORE=0.7`). Full detail:
-`docs/judge_review.md`.
+`docs/reference/judge_review.md`.
 
 ## Verify
 

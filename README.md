@@ -94,7 +94,7 @@ Re-running skips everything already installed. Ctrl+C stops both.
    LLM_API_KEY=<paste key from https://ollama.com/settings/keys>  # required; never commit
    LLM_MODEL=gpt-oss:20b
    ```
-   Key sources for all providers: `docs/ai_provider.md`. `LLM_MODEL`
+   Key sources for all providers: `docs/guides/ai_provider.md`. `LLM_MODEL`
    accepts **any** model ID of the active provider (registry defaults are
    just fallbacks).
 3. **Watch the three gotchas:** `deepseek` fails at startup without an
@@ -150,7 +150,7 @@ the browser bundle (on Vercel, leave "Sensitive" unchecked).
 
 `LLM_API_KEY` falls back to the provider's native key var when set; either
 one works. `LLM_BASE_URL` overrides the table (e.g. Kimi China region
-`https://api.moonshot.cn/v1`). Full per-provider setup: `docs/ai_provider.md`.
+`https://api.moonshot.cn/v1`). Full per-provider setup: `docs/guides/ai_provider.md`.
 
 ## API contract
 
@@ -214,12 +214,12 @@ proxies `/api` to `http://127.0.0.1:8000` automatically.
 ## Documentation
 
 - `CHANGELOG.md` — what changed, newest first
-- `docs/architecture.md` — pipeline, security model, token strategy
-- `docs/backend.md` — module map + API + KB layout
-- `docs/frontend.md` — component structure + behaviour
-- `docs/local_ocr.md` — local RapidOCR pipeline notes
-- `docs/langfuse_tracing.md` — Langfuse v4 trace design + audit
-- `docs/async_jobs.md` — async upload/poll job flow
+- `docs/reference/architecture.md` — pipeline, security model, token strategy
+- `docs/reference/backend.md` — module map + API + KB layout
+- `docs/reference/frontend.md` — component structure + behaviour
+- `docs/guides/local_ocr.md` — local RapidOCR pipeline notes
+- `docs/guides/langfuse_tracing.md` — Langfuse v4 trace design + audit
+- `docs/reference/async_jobs.md` — async upload/poll job flow
 - `docs/adr/` — architecture decision records
 - `AGENTS.md` — persistent memory for AI coding agents
 
@@ -227,7 +227,7 @@ proxies `/api` to `http://127.0.0.1:8000` automatically.
 
 All PDF pages retain their results and source previews, including mixed document types
 and languages. Tables use their printed columns. History opens saved results without
-starting a new extraction. See [page storage](docs/page_storage.md),
-[multilingual OCR setup](docs/multilingual_ocr.md), [table contracts](docs/dynamic_tables.md)
-and [evaluation instructions](docs/evaluation.md). Runtime history is now at
+starting a new extraction. See [page storage](docs/reference/page_storage.md),
+[multilingual OCR setup](docs/guides/multilingual_ocr.md), [table contracts](docs/reference/dynamic_tables.md)
+and [evaluation instructions](docs/guides/evaluation.md). Runtime history is now at
 `data/extraction.db`; local Tesseract English/Thai dependencies must be available.

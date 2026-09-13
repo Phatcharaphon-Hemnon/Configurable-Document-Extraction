@@ -37,10 +37,10 @@ knowledge graph preserved; no API or DB migration).
 
 ## Docs
 
-- `docs/local_ocr.md`, `docs/multilingual_ocr.md`: corrected pre-upgrade claims (RapidOCR is now PP-OCRv5 Thai+English, not Latin-only Thai-blind); fixed files table, config, test-deps package name, and model-pointer staleness.
-- `docs/api_scripts.md`: fixed `run_eval.py` path (`api/scripts/`) and flags to match `--help`; corrected subset description; added `benchmark_ocr.py`; drew the line between `./scripts/run_all.sh` (only setup script) and `api/scripts/*` operator tools.
-- `docs/evaluation.md`: linked the benchmark companion tool.
-- `docs/agents.md`, `docs/services.md`: dropped dead-helper mentions; services now documents `_merge_ocr_reviews`.
+- `docs/guides/local_ocr.md`, `docs/guides/multilingual_ocr.md`: corrected pre-upgrade claims (RapidOCR is now PP-OCRv5 Thai+English, not Latin-only Thai-blind); fixed files table, config, test-deps package name, and model-pointer staleness.
+- `docs/guides/api_scripts.md`: fixed `run_eval.py` path (`api/scripts/`) and flags to match `--help`; corrected subset description; added `benchmark_ocr.py`; drew the line between `./scripts/run_all.sh` (only setup script) and `api/scripts/*` operator tools.
+- `docs/guides/evaluation.md`: linked the benchmark companion tool.
+- `docs/reference/agents.md`, `docs/reference/services.md`: dropped dead-helper mentions; services now documents `_merge_ocr_reviews`.
 - ADRs (`docs/adr/`) and `hallucination_audit_2026-09-06.md` / `hallucination_fixes_2026-09-06.md` untouched as historical records.
 
 ## Validation

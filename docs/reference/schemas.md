@@ -2,8 +2,8 @@
 
 > Last updated: 2026-09-09. Strict Pydantic contracts in
 > `api/app/schemas/llm_schemas.py` — the shapes the LLM must return.
-> API/result shapes: `docs/extraction_response_contract.md`; request
-> budgets: `docs/llm_request_queue.md`.
+> API/result shapes: `docs/reference/extraction_response_contract.md`; request
+> budgets: `docs/reference/llm_request_queue.md`.
 
 ## What schemas are in this project
 

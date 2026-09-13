@@ -1,8 +1,8 @@
 # Hallucination Fixes — 2026-09-06
 
-> Follow-up to `docs/hallucination_audit_2026-09-06.md` (10 issues, read-only
+> Follow-up to `docs/reports/hallucination_audit_2026-09-06.md` (10 issues, read-only
 > audit). 9 fixed, 1 deferred. Machine-readable manifest:
-> `docs/hallucination_fixes_manifest_2026-09-06.json`. Last updated: 2026-09-06.
+> `docs/reports/hallucination_fixes_manifest_2026-09-06.json`. Last updated: 2026-09-06.
 
 ## 1. Summary
 

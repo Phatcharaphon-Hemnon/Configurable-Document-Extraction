@@ -1,5 +1,5 @@
-"""Cancellable local Thai/English OCR with page geometry. See docs/multilingual_ocr.md
-and docs/thai_catalog_hybrid_ocr.md (opt-in hybrid)."""
+"""Cancellable local Thai/English OCR with page geometry. See docs/guides/multilingual_ocr.md
+and docs/guides/thai_catalog_hybrid_ocr.md (opt-in hybrid)."""
 
 from __future__ import annotations
 

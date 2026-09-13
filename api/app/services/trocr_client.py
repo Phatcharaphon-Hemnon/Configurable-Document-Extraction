@@ -15,7 +15,7 @@ Checkpoint documentation: HuggingFace ``microsoft/trocr-base-handwritten``
 (TrOCR base, fine-tuned on IAM handwriting; ViT encoder + RoBERTa decoder).
 Pinned revision via ``HYBRID_TROCR_REVISION`` (default
 ``aff187bd81f8d73231cd3ed24b7857fcb10ae00e``). See
-``docs/thai_catalog_hybrid_ocr.md`` for provisioning/offline use.
+``docs/guides/thai_catalog_hybrid_ocr.md`` for provisioning/offline use.
 
 Tested pins: ``transformers==4.55.4``, ``torch==2.8.0`` (CPU), ``pillow>=10``.
 Install for hybrid only::
@@ -70,7 +70,7 @@ class TrOCRClient:
             except ImportError as exc:
                 self._load_error = (
                     "transformers/torch not installed for TrOCR retry. Install with: "
-                    "pip install transformers torch pillow (see docs/thai_catalog_hybrid_ocr.md)"
+                    "pip install transformers torch pillow (see docs/guides/thai_catalog_hybrid_ocr.md)"
                 )
                 raise TrOCRError(self._load_error) from exc
             try:

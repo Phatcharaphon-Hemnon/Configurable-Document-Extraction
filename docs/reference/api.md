@@ -2,7 +2,7 @@
 
 > Last updated: 2026-09-09. HTTP surface in `api/app/api/routes.py` (+
 > `api/app/main.py`), served under the `/api` prefix. Flow details:
-> `docs/async_jobs.md`; result shape: `docs/extraction_response_contract.md`.
+> `docs/reference/async_jobs.md`; result shape: `docs/reference/extraction_response_contract.md`.
 
 ## What the API layer is in this project
 

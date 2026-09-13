@@ -1,7 +1,7 @@
 # Zero-review loop — evidence-guard precision + eval re-runs
 
-> Last updated: 2026-09-10. Companion to `docs/review_triage.md` (numbers)
-> and `docs/hallucination_fixes_2026-09-06.md` (the audit this implements).
+> Last updated: 2026-09-10. Companion to `docs/reports/review_triage.md` (numbers)
+> and `docs/reports/hallucination_fixes_2026-09-06.md` (the audit this implements).
 > Covers `api/scripts/audit_review_causes.py` and
 > `api/scripts/merge_eval_runs.py`.
 

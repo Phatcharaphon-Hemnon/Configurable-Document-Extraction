@@ -1,8 +1,8 @@
 # Frontend helpers — API client, hooks, utils
 
 > Last updated: 2026-09-09. Non-component frontend tools in `web/src/`.
-> Components/layout/behaviour: `docs/frontend.md`. Backend contracts they
-> mirror: `docs/extraction_response_contract.md`.
+> Components/layout/behaviour: `docs/reference/frontend.md`. Backend contracts they
+> mirror: `docs/reference/extraction_response_contract.md`.
 
 ## What frontend helpers are in this project
 

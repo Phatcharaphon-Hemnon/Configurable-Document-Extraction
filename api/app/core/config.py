@@ -35,7 +35,7 @@ class ProviderProfile:
 # Native Anthropic/Claude is deliberately absent: its Messages API uses
 # different auth headers and request bodies, so it cannot run on the
 # shared client — use the openrouter/opencode gateway entries instead.
-# See docs/llm_providers.md for the full per-provider setup matrix.
+# See docs/guides/llm_providers.md for the full per-provider setup matrix.
 LLM_PROVIDERS: dict[str, ProviderProfile] = {
     "openai": ProviderProfile("https://api.openai.com/v1", "OPENAI_API_KEY", "gpt-5.4-mini"),
     "xai": ProviderProfile("https://api.x.ai/v1", "XAI_API_KEY", "grok-4"),
@@ -99,7 +99,7 @@ class Settings:
 
         # --- AI provider: one text model for Router + Extractor + Judge ---
         # Three variables control everything — change provider/model by editing
-        # LLM_PROVIDER / LLM_API_KEY / LLM_MODEL only (see docs/ai_provider.md
+        # LLM_PROVIDER / LLM_API_KEY / LLM_MODEL only (see docs/guides/ai_provider.md
         # for the per-provider setup matrix).
         self.llm_provider = (os.getenv("LLM_PROVIDER", "ollama-cloud").strip().lower() or "ollama-cloud")
         try:
@@ -116,7 +116,7 @@ class Settings:
         if not self.llm_model:
             raise ValueError(
                 f"LLM_MODEL is required when LLM_PROVIDER={self.llm_provider!r} "
-                "(this provider ships no default model; see docs/ai_provider.md)."
+                "(this provider ships no default model; see docs/guides/ai_provider.md)."
             )
         self.router_model_name = os.getenv("ROUTER_MODEL_NAME", "").strip() or self.llm_model
         self.judge_model_name = os.getenv("JUDGE_MODEL_NAME", "").strip() or self.llm_model
@@ -164,7 +164,7 @@ class Settings:
         local_models = REPO_ROOT / ".local/ocr/usr/share/tessdata"
         self.tessdata_dir = os.getenv("TESSDATA_DIR", str(local_models) if local_models.exists() else "")
 
-        # --- Hybrid OCR (opt-in; see docs/thai_catalog_hybrid_ocr.md) ---
+        # --- Hybrid OCR (opt-in; see docs/guides/thai_catalog_hybrid_ocr.md) ---
         # Selective TrOCR retry for uncertain English line crops only.
         # Threshold: RapidOCR confidence below this is eligible.
         # Limit: at most N lowest-confidence eligible regions per page, CPU sequential.

@@ -3,7 +3,7 @@
 > Last updated: 2026-09-09 (branch `provider/ollama-cloud`). Generic,
 > provider-agnostic LLM transport: `LLM_PROVIDER` selects the endpoint
 > (openai / ollama-cloud / ollama-local), `LLM_MODEL` the model
-> (`gpt-oss:20b` on this branch). See `docs/ai_provider.md`.
+> (`gpt-oss:20b` on this branch). See `docs/guides/ai_provider.md`.
 
 ## What it is
 

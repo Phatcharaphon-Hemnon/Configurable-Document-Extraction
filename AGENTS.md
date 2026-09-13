@@ -64,9 +64,9 @@ multi-agent AI pipeline.
 | `api/app/temporal/` | Temporal workflow + activities + worker |
 | `api/app/data/knowledge_base/` | field_catalog/, few_shot/, ground_truth/, documents/ |
 | `web/src/` | api/, components/, hooks/, types/, utils/ |
-| `docs/` | architecture docs & ADRs |
+| `docs/` | guides/ (setup) · reference/ (contracts) · reports/ (dated audits) · adr/ · tech-stack/ |
 | `scripts/run_all.sh` | the ONLY setup script: installs + runs API :8000 + Web :5173 |
-| `api/scripts/` | operator tools (NOT setup): `run_eval.py`, `benchmark_ocr.py`, `time_gateway_modes.py`, `audit_review_causes.py`, `merge_eval_runs.py` — see `docs/api_scripts.md` |
+| `api/scripts/` | operator tools (NOT setup): `run_eval.py`, `benchmark_ocr.py`, `time_gateway_modes.py`, `audit_review_causes.py`, `merge_eval_runs.py` — see `docs/guides/api_scripts.md` |
 
 ## Environment (api/.env)
 
@@ -77,9 +77,9 @@ required), `kimi`, `ollama-cloud`, `ollama-local`, `mistral`, `openclaw`
 (local gateway), `opencode` (Zen gateway). No native Claude entry (Messages
 API is not OpenAI-compatible) — reach it via `openrouter`/`opencode`.
 Default: Ollama Cloud (`https://ollama.com/v1`), model `gpt-oss:20b`
-(text-only, used for Router + Extractor + Judge). See `docs/ai_provider.md`.
+(text-only, used for Router + Extractor + Judge). See `docs/guides/ai_provider.md`.
 Parsing: local Tesseract Thai/English by default (`OCR_ENGINE`, `OCR_LANGUAGES`,
-`OCR_DPI`; see `docs/multilingual_ocr.md`).
+`OCR_DPI`; see `docs/guides/multilingual_ocr.md`).
 Monitoring: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST`
 (all optional — Langfuse disabled when missing).
 See `api/.env.example` for the full list.
@@ -102,20 +102,20 @@ cd web && npm run build                                 # typecheck+build
   root `ruff.toml`.
 - Ollama Free: `LLM_MAX_CONCURRENT_REQUESTS=1`. Jobs queue before OCR; pages
   run sequentially. Provider retries share a four-attempt budget across formats.
-  See `docs/llm_request_queue.md`. Use one API process per account.
+  See `docs/reference/llm_request_queue.md`. Use one API process per account.
 - Temporal worker is optional: `TEMPORAL_ENABLED=false` (default) keeps the
   in-process pipeline; set true + run `python -m app.temporal.worker` from `api/` to use it.
 
 - Canonical history: root `data/extraction.db`; originals/previews: `data/sources/`.
-  `api/data/` is retired; see `docs/page_storage.md`.
-- Gold evaluation: `api/scripts/run_eval.py --all`; see `docs/evaluation.md`.
-- OCR-engine comparison: `api/scripts/benchmark_ocr.py`; see `docs/thai_catalog_hybrid_ocr.md`.
+  `api/data/` is retired; see `docs/reference/page_storage.md`.
+- Gold evaluation: `api/scripts/run_eval.py --all`; see `docs/guides/evaluation.md`.
+- OCR-engine comparison: `api/scripts/benchmark_ocr.py`; see `docs/guides/thai_catalog_hybrid_ocr.md`.
 - History reset 2026-09-12: 482 stale jobs wiped after backup to
   `data/backups/20260912T031829-pre-history-reset/` (integrity ok).
   Runtime DB is untracked (fresh installs create an empty schema, no seeding);
   bulk clear via `DELETE /api/history` (409 while active); see
-  `docs/handwriting_recovery_3492511.md`.
+  `docs/reports/handwriting_recovery_3492511.md`.
 - Coherence gate: `COHERENCE_THRESHOLD = 0.40` (`app/core/security.py`),
   assessed before any LLM call in-process and Temporal; handwriting blocks
   honestly with recovery details preserved.
-- Cleanup record: `docs/refactor_cleanup_2026-09-12.md` (deletion/change inventory).
+- Cleanup record: `docs/reports/refactor_cleanup_2026-09-12.md` (deletion/change inventory).

@@ -21,7 +21,7 @@ Usage:
     python api/scripts/audit_review_causes.py \
         --predictions eval_artifacts/predictions.json \
         --metrics eval_artifacts/metrics.json \
-        --output docs/review_triage.md
+        --output docs/reports/review_triage.md
 """
 
 from __future__ import annotations
@@ -88,7 +88,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--predictions", default="eval_artifacts/predictions.json")
     ap.add_argument("--metrics", default="eval_artifacts/metrics.json")
-    ap.add_argument("--output", default="docs/review_triage.md")
+    ap.add_argument("--output", default="docs/reports/review_triage.md")
     args = ap.parse_args()
 
     preds = json.loads(Path(args.predictions).read_text(encoding="utf-8"))

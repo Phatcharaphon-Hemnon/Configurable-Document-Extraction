@@ -2,8 +2,8 @@
 
 > Last updated: 2026-09-12. Operator tools in `api/scripts/`.
 > The one-command setup is separate: `./scripts/run_all.sh` (see below).
-> Covered elsewhere: `ingest_kb.py` → `docs/rag_kb.md`,
-> `review_discovered_fields.py` → `docs/catalog_review.md`.
+> Covered elsewhere: `ingest_kb.py` → `docs/reference/rag_kb.md`,
+> `review_discovered_fields.py` → `docs/reference/catalog_review.md`.
 
 ## What these scripts are in this project
 
@@ -53,14 +53,14 @@ Keep `hybrid` opt-in; claim no accuracy gains until this reports them.
 
 Classifies every `validation_errors` entry in `eval_artifacts/predictions.json`
 into buckets (`quoted-span`, `ocr-noise`, `date-format`, `missing-required`,
-`genuine-mismatch`, `judge`, `table-shape`) and writes `docs/review_triage.md`.
+`genuine-mismatch`, `judge`, `table-shape`) and writes `docs/reports/review_triage.md`.
 Re-run after each guard/model change — `quoted-span` and `ocr-noise` must
 shrink while `genuine-mismatch` never gets reclassified as clean.
 
 ```bash
 .venv/bin/python api/scripts/audit_review_causes.py \
   --predictions eval_artifacts/predictions.json \
-  --metrics eval_artifacts/metrics.json --output docs/review_triage.md
+  --metrics eval_artifacts/metrics.json --output docs/reports/review_triage.md
 ```
 
 ## `scripts/merge_eval_runs.py` — combine chunked eval runs

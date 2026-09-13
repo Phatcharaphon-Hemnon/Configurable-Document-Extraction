@@ -1,7 +1,7 @@
 # Database — SQLite job persistence
 
 > Last updated: 2026-09-09. SQLite layer in `api/app/database/` behind the
-> async-jobs flow (`docs/async_jobs.md`). Enabled with `DATABASE_ENABLED`
+> async-jobs flow (`docs/reference/async_jobs.md`). Enabled with `DATABASE_ENABLED`
 > (default `true`), file at `DATABASE_PATH` (default
 > `data/extraction.db`). Disabled → in-memory store (history lost on restart).
 

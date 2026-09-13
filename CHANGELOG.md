@@ -20,14 +20,14 @@ as Thai-char salad (coherence 0.20); the 3B extractor stalls ~2000s on it.
 14/14 scored, 0 failed, macro F1 0.445, review 57%. Honest limit: the
 3B model hallucinates on label-only text (all 12 ICR fields flagged, F1
 still 0) — cursive reading needs a vision-capable reader. See
-`docs/review_zero_plan.md`.
+`docs/reports/review_zero_plan.md`.
 
 ## 2026-09-11 — Cleanup + TrOCR rejected (ICR stays honestly flagged)
 
 ## 2026-09-10 — Zero-review loop: evidence-guard precision + eval re-runs
 
 **Problem:** 2026-09-09 eval at 100% `needs_review` (294 flags, 14/14 pages).
-Triage (`docs/review_triage.md`) showed mostly validator false positives:
+Triage (`docs/reports/review_triage.md`) showed mostly validator false positives:
 quoted/bracketed spans (139), OCR-spacing/date-format mismatches, plus
 `required` flags for fields no gold PO/DN prints.
 
@@ -51,7 +51,7 @@ quoted/bracketed spans (139), OCR-spacing/date-format mismatches, plus
 **Verified:** 337 passed, 2 skipped, ruff clean. Live `qwen2.5:3b` loop
 (2 chunks merged): review 100% → 64% (5/14 clean, 4 judge-skipped),
 macro F1 0.439 → 0.446, router 1.000. Remainder = genuine small-model
-errors for the stronger-model loop. See `docs/review_zero_plan.md`.
+errors for the stronger-model loop. See `docs/reports/review_zero_plan.md`.
 
 ## 2026-09-10 — ICR fail-fast OCR-coherence gate + full local re-eval
 
@@ -115,7 +115,7 @@ https://langfuse.com/docs/observability/best-practices):
   into separate traces (use root-handle nesting); un-ended spans are never
   exported (all return paths end the root).
 - `api/requirements.txt`: `langfuse>=4.0`. `api/tests/test_langfuse_tracing.py`:
-  7 new tests. See `docs/langfuse_tracing.md`.
+  7 new tests. See `docs/guides/langfuse_tracing.md`.
 
 **Verified:** live extraction → fetched trace back from Langfuse → single
 nested tree with models, usage, scores, I/O all present.
@@ -152,7 +152,7 @@ extraction runs as a background task; the client polls `GET /jobs/{job_id}`:
   Retry gated while `uploading`.
 - `web/src/types/extraction.ts` — `JobAcceptedResponse`, `JobStatusResponse`.
 - `web/src/components/HistoryTab.tsx` — 15s fetch timeouts → error UI.
-- `docs/async_jobs.md` — full design + verification notes.
+- `docs/reference/async_jobs.md` — full design + verification notes.
 
 **Verified:** 148 backend tests pass, frontend build clean, live: 202 in
 0.1s → poll completes with full documents; re-upload returns same id.
@@ -169,7 +169,7 @@ ON): same-tier timeout retry in `sut_genai_client.py`; `LLM_REQUEST_TIMEOUT_SECO
 90→45, `EXTRACTION_MAX_TOKENS` 8000→3000; wired dead `JUDGE_SKIP_WHEN_CLEAN`
 config; `TimeoutGuard.track()` now really enforces (was warn-only) with limits
 router 100 / extractor 150 / judge 100; Python floor 3.10→3.11
-(`scripts/run_all.sh`, `README.md`). See `docs/timeout_recovery.md`.
+(`scripts/run_all.sh`, `README.md`). See `docs/reference/timeout_recovery.md`.
 
 ## 2026-09-04 — Catalog review helper + discovery fix
 
@@ -177,13 +177,13 @@ router 100 / extractor 150 / judge 100; Python floor 3.10→3.11
 `ai_discovered` fields with `LONG>30`/`DIGITS`/`GENERIC`/`NEAR-DUP` flags) +
 3 tests; strengthened the extractor prompt's new-field rule after a live test
 proved the LLM silently dropped a clearly labeled value (`Loyalty Earned`
-now registers as `loyalty_earned`). See `docs/catalog_review.md`.
+now registers as `loyalty_earned`). See `docs/reference/catalog_review.md`.
 
 ## 2026-09-04 — LlamaParse fully removed
 
 Deleted `api/app/services/llamaparse_client.py` and every reference
 (config, `.env.example`, CI env, `run_all.sh` warning, skill doc); rewrote
-`docs/paddleocr_migration.md` as `docs/local_ocr.md` (current-state doc).
+`docs/paddleocr_migration.md` as `docs/guides/local_ocr.md` (current-state doc).
 
 ## 2026-09-04 — Local OCR on RapidOCR (Python 3.14)
 

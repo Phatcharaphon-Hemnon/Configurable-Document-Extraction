@@ -1,8 +1,8 @@
-# LLM Provider Registry (`docs/llm_providers.md`)
+# LLM Provider Registry (`docs/guides/llm_providers.md`)
 
 > Design record for the multi-provider support in `api/app/core/config.py`
 > (`ProviderProfile` / `LLM_PROVIDERS`) and `api/app/services/client.py`
-> (`_BILLING_URLS`). User-facing setup lives in `docs/ai_provider.md`.
+> (`_BILLING_URLS`). User-facing setup lives in `docs/guides/ai_provider.md`.
 
 ## Why a registry
 
@@ -44,7 +44,7 @@ the shared `AsyncOpenAI` client cannot send. Building a second transport
    grouping: clouds, gateways, local).
 2. Append its billing URL in `client.py::_BILLING_URLS` (`""` when none).
 3. Add the preset block in `api/.env.example` + a row/section in
-   `docs/ai_provider.md`.
+   `docs/guides/ai_provider.md`.
 4. Extend `api/tests/test_llm_provider_config.py::EXPECTED_PROVIDERS`.
 5. Run `ruff check api/`, `pytest api/tests/ -q`, and
    `api/scripts/time_gateway_modes.py` with a real key.

@@ -105,7 +105,7 @@ fi
 # normally requires one (ollama-local ignores LLM_API_KEY by design).
 effective_key="$(grep -E '^LLM_API_KEY=' "$ROOT/api/.env" | head -n1 | cut -d= -f2- | tr -d '[:space:]')"
 if [ -z "$effective_key" ] && [ "${effective_provider:-}" != "ollama-local" ] && [ "${effective_provider:-}" != "openclaw" ]; then
-    warn "LLM_API_KEY in api/.env is empty — set it for provider '${effective_provider:-unknown}' (see README + docs/ai_provider.md)."
+    warn "LLM_API_KEY in api/.env is empty — set it for provider '${effective_provider:-unknown}' (see README + docs/guides/ai_provider.md)."
 fi
 
 # ---------------------------------------------------------------------------

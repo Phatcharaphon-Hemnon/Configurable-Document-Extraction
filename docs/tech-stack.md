@@ -75,9 +75,9 @@ flowchart LR
     WEB[React 19 + Vite<br/>:5173] <--/api--> API[FastAPI<br/>:8000]
 ```
 
-* **Backend modules:** see `docs/backend.md` (+ `docs/services.md`, `docs/api.md`, `docs/async_jobs.md`, `docs/database.md`).
-* **Frontend modules:** see `docs/frontend.md` (+ `docs/frontend_helpers.md`).
-* **LLM / providers / errors:** see `docs/ai_provider.md`, `docs/provider_errors.md`, `docs/llm_request_queue.md`.
+* **Backend modules:** see `docs/reference/backend.md` (+ `docs/reference/services.md`, `docs/reference/api.md`, `docs/reference/async_jobs.md`, `docs/reference/database.md`).
+* **Frontend modules:** see `docs/reference/frontend.md` (+ `docs/reference/frontend_helpers.md`).
+* **LLM / providers / errors:** see `docs/guides/ai_provider.md`, `docs/reference/provider_errors.md`, `docs/reference/llm_request_queue.md`.
 * **Full tools reference:** [`docs/tech-stack/tools.md`](tech-stack/tools.md).
 * **Security:** `sanitize_document_text` redacts instruction patterns/role tags + length-caps; `check_evidence` requires ≥75% token overlap or substring; provider messages are redacted so keys never reach UI/DB.
 * **Tokens:** compact catalog (name+type+required per line), 12k char text cap, `ROUTER_TEXT_CHARS=2000`, `ROUTER_MAX_TOKENS=400`, `EXTRACTION_MAX_TOKENS=3000`, `JUDGE_SKIP_WHEN_CLEAN=true`.

@@ -46,7 +46,7 @@ normalization — never aliases or synonyms.
 - `FieldCatalog`: mtime-cached reads, `lookup()` / `known_names()`,
   `compact_for_prompt()` (name + type + required, one line each),
   atomic `add_fields()` (`source: ai_discovered`). Curating discovered
-  fields: `docs/catalog_review.md`.
+  fields: `docs/reference/catalog_review.md`.
 
 ## `services/field_matching.py` — value comparison
 

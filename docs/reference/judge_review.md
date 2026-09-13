@@ -11,7 +11,7 @@ The pipeline flags problems in two independent stages:
 1. **Validator** (deterministic): every value needs a `source_span` found in
    the OCR text. Long spans (> 3 tokens) pass with ≥ 0.75 token overlap;
    `line_items` cells are checked per-cell with numeric magnitude matching
-   (see `docs/line_items_evidence.md`).
+   (see `docs/reference/line_items_evidence.md`).
 2. **Judge** (LLM, `api/app/agents/judge.py`): runs whenever the extraction
    is not clean (any validation error, incomplete, low confidence, or
    non-verbatim numeric span) and returns `score` + per-field `issues`.

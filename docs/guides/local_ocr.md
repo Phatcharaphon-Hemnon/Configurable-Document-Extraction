@@ -19,7 +19,7 @@ handwriting-assisted pipeline see
 
 The downstream pipeline is unchanged: Router → Extractor → Validator →
 Judge run on OCR text with the single configured text model
-(see `docs/ai_provider.md` for the provider/model matrix). Field catalog, validation rules,
+(see `docs/guides/ai_provider.md` for the provider/model matrix). Field catalog, validation rules,
 `source_span` evidence, and hallucination guards all behave as before.
 
 ## How it works (`api/app/services/rapidocr_client.py`)
@@ -94,7 +94,7 @@ are documented in [Thai catalogs + CPU hybrid OCR](thai_catalog_hybrid_ocr.md).
 
 ## Testing
 
-See [README Development](../README.md#development) for the standard
+See [README Development(../../README.md#development) for the standard
 lint/test commands, then:
 
 ```bash

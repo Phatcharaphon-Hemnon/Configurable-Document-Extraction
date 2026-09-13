@@ -41,7 +41,7 @@ Quality notes
 
 Provenance: ``rapidocr==3.9.2`` (tested), ONNXRuntime CPU. Models hosted on
 ModelScope, auto-downloaded on first use then cached. See
-``docs/thai_catalog_hybrid_ocr.md`` for provisioning/offline use.
+``docs/guides/thai_catalog_hybrid_ocr.md`` for provisioning/offline use.
 """
 
 from __future__ import annotations
@@ -57,7 +57,7 @@ from typing import Any, Literal
 
 logger = logging.getLogger(__name__)
 
-# Tested dependency pin (see docs/thai_catalog_hybrid_ocr.md + requirements).
+# Tested dependency pin (see docs/guides/thai_catalog_hybrid_ocr.md + requirements).
 RAPIDOCR_PINNED_VERSION = "3.9.2"
 RAPIDOCR_DET_SPEC = "PP-OCRv5/mobile/det/ch/onnxruntime"
 RAPIDOCR_REC_TH_SPEC = "PP-OCRv5/mobile/rec/th/onnxruntime"
@@ -134,7 +134,7 @@ class RapidOCRClient:
             raise RapidOCRError(
                 "rapidocr is not installed. Install it with: "
                 f"pip install rapidocr=={RAPIDOCR_PINNED_VERSION} onnxruntime pymupdf pillow numpy "
-                "(see docs/thai_catalog_hybrid_ocr.md)"
+                "(see docs/guides/thai_catalog_hybrid_ocr.md)"
             ) from exc
         return {
             "RapidOCR": RapidOCR,
