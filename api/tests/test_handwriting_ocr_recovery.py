@@ -161,9 +161,11 @@ def test_policy_changes_invalidate_caches():
 
     src = inspect.getsource(LocalOCRClient.aparse_file)
     assert "coherence" in src.lower()
-    # Result fingerprint includes coherence + recovery versions.
+    # Result fingerprint includes coherence + recovery versions (the config
+    # dict is shared by page fingerprints and manifest keys, so check both).
     from app.services.result_cache import ResultCache
 
     src2 = inspect.getsource(ResultCache.fingerprint_page)
-    assert "coherence_threshold" in src2
-    assert "client_recovery" in src2
+    src3 = inspect.getsource(ResultCache.config_fingerprint_dict)
+    assert "coherence_threshold" in src2 + src3
+    assert "client_recovery" in src2 + src3

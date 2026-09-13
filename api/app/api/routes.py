@@ -21,7 +21,7 @@ from app.schemas.documents import (
     EvaluateRequest,
     EvaluateResponse,
 )
-from app.services.extraction_service import DocumentExtractionService, UploadedFilePart
+from app.services.extraction_service import DocumentExtractionService, UploadedFilePart, parse_doc_type
 
 logger = logging.getLogger(__name__)
 
@@ -63,8 +63,9 @@ _background_tasks: dict[UUID, asyncio.Task] = {}
 _content_to_job: dict[str, UUID] = {}
 
 
-def _content_fingerprint(parts: list[UploadedFilePart]) -> str:
+def _content_fingerprint(parts: list[UploadedFilePart], doc_type: str | None = None) -> str:
     digest = hashlib.sha256()
+    digest.update((doc_type or "").encode("utf-8", "ignore"))
     for part in parts:
         digest.update(part.filename.encode("utf-8", "ignore"))
         digest.update(part.raw_content)
@@ -107,6 +108,7 @@ async def extract_document(
     files: list[UploadFile] = File(...),
     force_refresh: bool = False,
     disable_caches: bool = False,
+    doc_type: str | None = None,
 ) -> BatchCreateResponse:
     """Upload one or more files (images or PDFs) for async extraction.
 
@@ -122,6 +124,10 @@ async def extract_document(
     - `force_refresh=true` bypasses the completed-result cache (OCR cache
       stays enabled). `disable_caches=true` (benchmark/debug) bypasses BOTH
       result and OCR caches.
+    - `doc_type=invoice|purchase_order|delivery_note` optionally fixes the
+      document type for every page, bypassing Router classification (one
+      fewer LLM call). Extraction validation still runs; omit for automatic
+      classification.
     """
     client_id = _get_client_id(request)
 
@@ -168,7 +174,12 @@ async def extract_document(
 
         # Single-flight: identical bytes already being processed → reuse it.
         # Force-refresh / cache-disabled probes always start a new pipeline.
-        fingerprint = _content_fingerprint(parts)
+        # An explicit doc_type changes routing, so it joins the key.
+        try:
+            selected_type = parse_doc_type(doc_type)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        fingerprint = _content_fingerprint(parts, selected_type)
         if not (force_refresh or disable_caches):
             existing_job_id = _content_to_job.get(fingerprint)
             if existing_job_id is not None:
@@ -201,7 +212,8 @@ async def extract_document(
                 logger.error("Background extraction %s raised: %s", _job_id, task.exception())
 
         task = asyncio.create_task(
-            service.run_job(job.job_id, parts, force_refresh=force_refresh, disable_caches=disable_caches)
+            service.run_job(job.job_id, parts, force_refresh=force_refresh,
+                            disable_caches=disable_caches, doc_type=selected_type)
         )
         task.add_done_callback(_done)
         _background_tasks[job.job_id] = task

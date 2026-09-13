@@ -51,6 +51,17 @@ CREATE TABLE IF NOT EXISTS result_cache (
     meta TEXT NOT NULL DEFAULT '{}'
 );
 CREATE INDEX IF NOT EXISTS idx_result_cache_expires ON result_cache(expires_at);
+-- Preliminary manifest: (file identity + page count + full config) pointing
+-- at ordered full page fingerprints. Lets a repeated upload resolve completed
+-- results BEFORE expensive OCR/rendering (the full fingerprint needs OCR
+-- text). Same TTL/clearing as entries; stale refs resolve as misses.
+CREATE TABLE IF NOT EXISTS result_manifest (
+    manifest_key TEXT PRIMARY KEY,
+    computed_at REAL NOT NULL,
+    expires_at REAL NOT NULL,
+    payload TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_result_manifest_expires ON result_manifest(expires_at);
 """
 
 # Version pins for every result-affecting layer. Bump when the corresponding
@@ -145,38 +156,33 @@ class ResultCache:
     # Fingerprint
     # ------------------------------------------------------------------
 
-    def fingerprint_page(
-        self,
-        *,
-        file_bytes: bytes,
-        filename: str,
-        page_number: int,
-        page_text: str,
-        ocr_engine: str,
-        ocr_languages: str,
-        ocr_dpi: int,
-        ocr_model_hashes: dict,
-        hybrid_fingerprint: dict,
-    ) -> str:
+    def config_fingerprint_dict(self) -> dict:
+        """Every result-affecting input EXCEPT file/page identity and OCR text.
+
+        The manifest key embeds this whole dict, so OCR/model/prompt/catalog/
+        schema/policy invalidation applies to manifest lookup without any
+        weakening. No credentials are included (endpoint URL and model names
+        only — identical to the existing page fingerprint).
+        """
         s = self.settings
         catalog_hash = catalog_fingerprint(getattr(s, "_catalog_ref", None) or self._catalog())
         try:
             from app.core.security import COHERENCE_THRESHOLD as _coh_thr
         except Exception:
             _coh_thr = 0.40
-        core = {
+        return {
             "v": 3,
-            "file_sha": _sha256(file_bytes),
-            "filename": Path(filename or "").name,
-            "page_number": page_number,
-            "page_text_sha": _sha256((page_text or "").encode("utf-8")),
             "ocr": {
-                "engine": ocr_engine,
-                "languages": ocr_languages,
-                "dpi": ocr_dpi,
-                "models": ocr_model_hashes or {},
-                "hybrid": hybrid_fingerprint or {},
-                # OCR/recovery policy changes invalidate relevant caches.
+                "engine": getattr(s, "ocr_engine", ""),
+                "languages": getattr(s, "ocr_languages", ""),
+                "dpi": int(getattr(s, "ocr_dpi", 300)),
+                # Per-call OCR model provenance lives only in the full page
+                # fingerprint (supplied by the caller at OCR time). The
+                # manifest conservatively omits it: a model change still
+                # resolves entries, but each entry's own fingerprint (with
+                # the OCR-text hash) decides the hit.
+                "models": {},
+                "hybrid": {},
                 "coherence_threshold": float(_coh_thr),
             },
             "provider": {
@@ -202,6 +208,162 @@ class ResultCache:
                 "acceptance": self._acceptance_version(),
                 "catalog_sha": catalog_hash,
             },
+        }
+
+    def manifest_key(self, *, file_bytes: bytes, filename: str, page_count: int) -> str:
+        """Validated preliminary key: file identity + page count + full config.
+
+        Never weakens invalidation: any config/model/prompt/catalog change
+        yields a different key (miss), and each pointed-to full fingerprint
+        still embeds the OCR-text hash, verified on use.
+        """
+        core = {
+            "kind": "manifest",
+            "file_sha": _sha256(file_bytes),
+            "filename": Path(filename or "").name,
+            "page_count": int(page_count),
+            "config": self.config_fingerprint_dict(),
+        }
+        return _hash_json(core)
+
+    def manifest_get(self, manifest_key: str):
+        """Return ({page_number: fingerprint}, {page_number: page_text}, meta).
+
+        Page texts restore `full_text` on fast-path hits so a cached repeat
+        is content-identical to a fresh run (OCR text display keeps working
+        without re-running OCR). Miss/corrupt/expired → (None, None, reason).
+        """
+        if not self.enabled:
+            return None, None, {"reason": "disabled"}
+        try:
+            conn = self._connect()
+            try:
+                row = conn.execute(
+                    "SELECT payload, computed_at, expires_at FROM result_manifest WHERE manifest_key=?",
+                    (manifest_key,),
+                ).fetchone()
+            finally:
+                conn.close()
+        except Exception as exc:
+            return None, None, {"reason": f"lookup failed: {exc}"}
+        if row is None:
+            return None, None, {"reason": "miss"}
+        now = time.time()
+        if float(row["expires_at"]) <= now:
+            self._remove_manifest(manifest_key)
+            return None, None, {"reason": "expired"}
+        try:
+            payload = json.loads(row["payload"])
+            pages = payload.get("pages")
+            if not isinstance(pages, dict) or not pages:
+                raise ValueError("empty page map")
+            clean = {int(k): v for k, v in pages.items() if v}
+            if not clean:
+                raise ValueError("empty page map")
+            raw_texts = payload.get("texts") or {}
+            texts = {int(k): v for k, v in raw_texts.items() if isinstance(v, str)}
+            meta = {"computed_at": row["computed_at"], "page_count": payload.get("page_count")}
+            return clean, texts, meta
+        except Exception as exc:
+            self._remove_manifest(manifest_key)
+            logger.warning("Result manifest corrupt entry removed: %s", exc)
+            return None, None, {"reason": f"corrupt: {exc}"}
+
+    def manifest_put(
+        self,
+        manifest_key: str,
+        page_number: int,
+        fingerprint: str,
+        page_count: int,
+        page_text: str | None = None,
+    ) -> bool:
+        """Accumulate one page fingerprint into the manifest (read-modify-write)."""
+        if not self.enabled:
+            return False
+        try:
+            conn = self._connect()
+            try:
+                with conn:
+                    row = conn.execute(
+                        "SELECT payload FROM result_manifest WHERE manifest_key=?",
+                        (manifest_key,),
+                    ).fetchone()
+                    pages: dict[str, str] = {}
+                    texts: dict[str, str] = {}
+                    if row is not None:
+                        try:
+                            stored = json.loads(row["payload"])
+                            pages = dict(stored.get("pages") or {})
+                            texts = {k: v for k, v in (stored.get("texts") or {}).items()
+                                     if isinstance(v, str)}
+                        except Exception:
+                            pages, texts = {}, {}
+                    pages[str(int(page_number))] = fingerprint
+                    if isinstance(page_text, str) and page_text:
+                        texts[str(int(page_number))] = page_text
+                    now = time.time()
+                    conn.execute(
+                        "INSERT OR REPLACE INTO result_manifest (manifest_key, computed_at, expires_at, payload)"
+                        " VALUES (?, ?, ?, ?)",
+                        (manifest_key, now, now + self.ttl_seconds,
+                         json.dumps({"page_count": int(page_count), "pages": pages,
+                                     "texts": texts},
+                                    ensure_ascii=False, default=str)),
+                    )
+            finally:
+                conn.close()
+            return True
+        except Exception as exc:
+            logger.warning("Result manifest write skipped: %s", exc)
+            return False
+
+    def _remove_manifest(self, manifest_key: str) -> None:
+        try:
+            conn = self._connect()
+            try:
+                with conn:
+                    conn.execute("DELETE FROM result_manifest WHERE manifest_key=?", (manifest_key,))
+            finally:
+                conn.close()
+        except Exception:
+            pass
+
+    def fingerprint_page(
+        self,
+        *,
+        file_bytes: bytes,
+        filename: str,
+        page_number: int,
+        page_text: str,
+        ocr_engine: str,
+        ocr_languages: str,
+        ocr_dpi: int,
+        ocr_model_hashes: dict,
+        hybrid_fingerprint: dict,
+    ) -> str:
+        try:
+            from app.core.security import COHERENCE_THRESHOLD as _coh_thr
+        except Exception:
+            _coh_thr = 0.40
+        config = self.config_fingerprint_dict()
+        # Caller-supplied per-call OCR provenance refines the settings-level
+        # config (manifest lookup conservatively omits it; the full
+        # fingerprint enforces it).
+        try:
+            config["ocr"]["models"] = ocr_model_hashes or {}
+            config["ocr"]["hybrid"] = hybrid_fingerprint or {}
+            config["ocr"]["engine"] = ocr_engine
+            config["ocr"]["languages"] = ocr_languages
+            config["ocr"]["dpi"] = int(ocr_dpi)
+            config["ocr"]["coherence_threshold"] = float(_coh_thr)
+        except Exception:
+            pass
+        core = {
+            **config,
+            "file_sha": _sha256(file_bytes),
+            "filename": Path(filename or "").name,
+            "page_number": page_number,
+            "page_text_sha": _sha256((page_text or "").encode("utf-8")),
         }
         return _hash_json(core)
 
@@ -333,12 +495,16 @@ class ResultCache:
             pass
 
     def clear(self) -> int:
+        # Entries AND manifests are wiped together so cleared History can
+        # never resurrect through the fast path.
         try:
             conn = self._connect()
             try:
                 with conn:
                     cur = conn.execute("DELETE FROM result_cache")
-                    return cur.rowcount
+                    deleted = cur.rowcount
+                    conn.execute("DELETE FROM result_manifest")
+                    return deleted
             finally:
                 conn.close()
         except Exception:
@@ -349,7 +515,9 @@ class ResultCache:
             conn = self._connect()
             try:
                 n = conn.execute("SELECT COUNT(*) AS n FROM result_cache").fetchone()["n"]
-                return {"entries": int(n), "path": str(self.path), "enabled": self.enabled}
+                m = conn.execute("SELECT COUNT(*) AS n FROM result_manifest").fetchone()["n"]
+                return {"entries": int(n), "manifests": int(m),
+                        "path": str(self.path), "enabled": self.enabled}
             finally:
                 conn.close()
         except Exception as exc:

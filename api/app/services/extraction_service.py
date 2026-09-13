@@ -215,6 +215,86 @@ class UploadedFilePart:
         self.raw_content = raw_content
 
 
+_VALID_DOC_TYPES = ("invoice", "purchase_order", "delivery_note")
+
+
+def parse_doc_type(value: str | None) -> str | None:
+    """Validate an explicit user-selected document type.
+
+    Returns the normalized type, or None when the caller wants automatic
+    Router classification. Raises ValueError for unknown types (surfaced as
+    HTTP 400 by the API layer).
+    """
+    if value is None:
+        return None
+    normalized = str(value).strip().lower()
+    if normalized not in _VALID_DOC_TYPES:
+        raise ValueError(
+            f"Unknown doc_type={value!r} — expected one of: {list(_VALID_DOC_TYPES)} "
+            "(or omit it for automatic classification)"
+        )
+    return normalized
+
+
+def _count_pages(data: bytes, filename: str | None) -> int | None:
+    """Cheap page count without OCR (None when undecodable).
+
+    PDFs report the container page count via PyMuPDF (no rendering);
+    images report TIFF frame counts, otherwise a single page.
+    """
+    try:
+        from app.services.local_ocr import is_pdf_document
+
+        if is_pdf_document(data, filename):
+            import pymupdf
+
+            doc = pymupdf.open(stream=data, filetype="pdf")
+            try:
+                return len(doc) or None
+            finally:
+                doc.close()
+        import io as _io
+
+        from PIL import Image as _Image
+
+        img = _Image.open(_io.BytesIO(data))
+        try:
+            count = getattr(img, "n_frames", 1) if img.format == "TIFF" else 1
+            return int(count) or None
+        finally:
+            try:
+                img.close()
+            except Exception:
+                pass
+    except Exception:
+        return None
+    return None
+
+
+def _render_previews(data: bytes, filename: str | None, dpi: int) -> list[bytes] | None:
+    """Render-only page previews (no OCR, no models) for cache fast-path hits.
+
+    Mirrors the OCR path's preview bytes (thumbnail PNG) so a fast-path
+    submission carries the same preview/download references as a normal one.
+    Returns None when the file cannot be rendered.
+    """
+    try:
+        import io as _io
+
+        from app.services.local_ocr import load_page_images
+
+        previews: list[bytes] = []
+        for loaded in load_page_images(data, filename, dpi):
+            thumb = loaded.image.copy()
+            thumb.thumbnail((1500, 2000))
+            buffer = _io.BytesIO()
+            thumb.save(buffer, format="PNG")
+            previews.append(buffer.getvalue())
+        return previews or None
+    except Exception:
+        return None
+
+
 class DocumentExtractionService:
     def __init__(self, settings: Settings, job_store: InMemoryJobStore | None = None) -> None:
         self.settings = settings
@@ -338,6 +418,7 @@ class DocumentExtractionService:
         job_id: UUID | None = None,
         force_refresh: bool = False,
         disable_caches: bool = False,
+        doc_type: str | None = None,
     ) -> FileExtractionResponse:
         """Multi-file/page extraction with persistent result caching.
 
@@ -345,7 +426,10 @@ class DocumentExtractionService:
           stays enabled).
         - `disable_caches=True` (benchmark/debug) bypasses BOTH result and
           OCR caches.
+        - `doc_type` optionally fixes the document type for every page,
+          bypassing Router classification (extraction validation still runs).
         """
+        doc_type = parse_doc_type(doc_type)
         total_size = sum(len(p.raw_content) for p in parts)
         combined_name = parts[0].filename if len(parts) == 1 else f"{len(parts)} files ({parts[0].filename}, ...)"
         request_meta = FileUploadMeta(
@@ -505,6 +589,7 @@ class DocumentExtractionService:
                                 page_number=page_index,
                                 blocks=list(getattr(ocr_page, "blocks", None) or []),
                                 ocr_uncertain=ocr_uncertain_page,
+                                doc_type=doc_type,
                             )
                     except asyncio.CancelledError:
                         raise
@@ -522,6 +607,19 @@ class DocumentExtractionService:
                                 "filename": part.filename,
                                 "page_number": page_index,
                             })
+                            # Accumulate the preliminary manifest so a repeat
+                            # upload can resolve without OCR (fast path).
+                            try:
+                                manifest_key = self.result_cache.manifest_key(
+                                    file_bytes=part.raw_content,
+                                    filename=part.filename,
+                                    page_count=len(parsed),
+                                )
+                                self.result_cache.manifest_put(
+                                    manifest_key, page_index, fingerprint, len(parsed),
+                                    page_text=page_text)
+                            except Exception:
+                                pass
                         except Exception:
                             pass
                     document.source = source
@@ -646,6 +744,7 @@ class DocumentExtractionService:
         page_number: int = 1,
         blocks: list | None = None,
         ocr_uncertain: bool = False,
+        doc_type: str | None = None,
     ) -> ExtractionResult:
         trace = self.tracer.start_trace(
             "extract-document",
@@ -724,52 +823,69 @@ class DocumentExtractionService:
                 )
 
         # --- 1. Router (text-only; page_text comes from local OCR) ---
+        # An explicit user-selected type bypasses classification (one fewer
+        # LLM call) WITHOUT bypassing extraction validation downstream.
         router_gen = trace.generation(
             "classify-document",
             model=self.settings.router_model_name,
             input_data={"filename": filename, "text_excerpt": (page_text or "")[:1000]},
         )
-        try:
-            async with self.timeout_guard.track("router"):
-                routing = await self.router.classify(
-                    filename=filename,
-                    text_hint=sanitize_document_text(page_text) or None,
-                )
-            router_gen.end(
-                output={"doc_type": routing.doc_type, "confidence": routing.confidence,
-                        "reason": routing.reason},
-                usage=_agent_usage(self.router),
-            )
-        except Exception as exc:
-            details = _provider_error_details(
-                exc,
-                stage="router",
-                model=self.settings.router_model_name,
-                provider=self.settings.llm_provider,
+        explicit_type = parse_doc_type(doc_type)
+        if explicit_type is not None:
+            from app.schemas.documents import RoutingDecision as _RoutingDecision
+
+            routing = _RoutingDecision(
+                doc_type=explicit_type, language=None, confidence=1.0,
+                reason="explicit user selection (classification bypassed)",
             )
             router_gen.end(
-                output={"error": str(exc), "provider": details.model_dump() if details else None},
-                level="ERROR",
-                status_message=str(exc)[:500],
+                output={"doc_type": routing.doc_type, "confidence": 1.0,
+                        "reason": routing.reason, "bypassed": True},
+                usage=None,
             )
-            trace.end(level="ERROR")
-            self.tracer.flush()
-            if details is not None:
-                logger.error(
-                    "Router provider error model=%s status=%s code=%s request_id=%s message=%.2000s",
-                    details.model, details.status, details.code,
-                    details.request_id, details.message or "",
+            logger.info("Router bypassed: explicit doc_type=%s", routing.doc_type)
+        else:
+            try:
+                async with self.timeout_guard.track("router"):
+                    routing = await self.router.classify(
+                        filename=filename,
+                        text_hint=sanitize_document_text(page_text) or None,
+                    )
+                router_gen.end(
+                    output={"doc_type": routing.doc_type, "confidence": routing.confidence,
+                            "reason": routing.reason},
+                    usage=_agent_usage(self.router),
                 )
-            return ExtractionResult(
-                doc_type="invoice",  # placeholder; overwritten below by schema-safe error path
-                fields=[],
-                validation_errors=[f"Router failed: {exc}"],
-                needs_review=True,
-                completeness_score=0.0,
-                error=f"Router failed: {exc}",
-                failed_stage="router",
-                error_details=details,
-            )
+            except Exception as exc:
+                details = _provider_error_details(
+                    exc,
+                    stage="router",
+                    model=self.settings.router_model_name,
+                    provider=self.settings.llm_provider,
+                )
+                router_gen.end(
+                    output={"error": str(exc), "provider": details.model_dump() if details else None},
+                    level="ERROR",
+                    status_message=str(exc)[:500],
+                )
+                trace.end(level="ERROR")
+                self.tracer.flush()
+                if details is not None:
+                    logger.error(
+                        "Router provider error model=%s status=%s code=%s request_id=%s message=%.2000s",
+                        details.model, details.status, details.code,
+                        details.request_id, details.message or "",
+                    )
+                return ExtractionResult(
+                    doc_type="invoice",  # placeholder; overwritten below by schema-safe error path
+                    fields=[],
+                    validation_errors=[f"Router failed: {exc}"],
+                    needs_review=True,
+                    completeness_score=0.0,
+                    error=f"Router failed: {exc}",
+                    failed_stage="router",
+                    error_details=details,
+                )
 
         # --- 2. Extractor (per doc type) ---
         few_shot: list[dict] | None = None
@@ -1149,6 +1265,7 @@ class DocumentExtractionService:
         parts: list[UploadedFilePart],
         force_refresh: bool = False,
         disable_caches: bool = False,
+        doc_type: str | None = None,
     ) -> None:
         """Background-task entry point: run extraction for an existing job.
 
@@ -1160,6 +1277,28 @@ class DocumentExtractionService:
         token = job_context.set(str(job_id))
         queue_token = queue_wait.set(0)
         try:
+            # Fast path BEFORE the processing-job lock: a repeated completed
+            # upload must not wait behind a slow job or redo OCR/LLM work.
+            # Full hits return here; anything else falls through to the
+            # normal locked path (per-page cache hits still skip LLM rework
+            # there). Touches no shared mutable extraction state.
+            _fast_cache = getattr(self, "result_cache", None)
+            if (
+                _fast_cache is not None
+                and _fast_cache.enabled_and_ready
+                and not force_refresh
+                and not disable_caches
+            ):
+                try:
+                    fast = await self._try_fast_path(job_id, parts)
+                except asyncio.CancelledError:
+                    raise
+                except Exception as exc:
+                    logger.warning("Fast-path lookup skipped for job %s: %s", job_id, exc)
+                    fast = None
+                if fast is not None:
+                    queue_wait.set(0.0)
+                    return
             async with self._job_lock:
                 self.job_store.mark_processing(job_id)
                 logger.info("Job %s processing", job_id)
@@ -1170,6 +1309,7 @@ class DocumentExtractionService:
                         job_id=job_id,
                         force_refresh=force_refresh,
                         disable_caches=disable_caches,
+                        doc_type=doc_type,
                     )
                 except TypeError:
                     # Test doubles that stub extract_group(parts, job_id).
@@ -1189,4 +1329,131 @@ class DocumentExtractionService:
         finally:
             job_context.reset(token)
             queue_wait.reset(queue_token)
+
+    async def _try_fast_path(
+        self,
+        job_id: UUID,
+        parts: list[UploadedFilePart],
+    ):
+        """Serve a fully-cached repeat upload without the lock, OCR, or LLM.
+
+        Returns the completed FileExtractionResponse on a FULL hit (job row
+        marked completed), else None. Any miss/corruption/ambiguity falls
+        through to the normal path — never a partial result presented as
+        complete. Creates a normal new submission: fresh IDs, saved sources,
+        rendered previews, current download references. Original computation
+        timestamps stay in cache_metadata; current latency is reported
+        separately in timings.
+        """
+        from uuid import uuid4
+
+        from app.schemas.documents import ResultCacheMetadata
+
+        cache = getattr(self, "result_cache", None)
+        if cache is None or not cache.enabled_and_ready:
+            return None
+        started = time.perf_counter()
+        # 1. Manifest lookup per file (file identity + page count + FULL
+        #    config fingerprint — no invalidation is weakened to make this
+        #    easier; a config/model/prompt/catalog change is a miss).
+        planned: list[tuple[UploadedFilePart, int, dict[int, str], dict[int, str]]] = []
+        for part in parts:
+            page_count = _count_pages(part.raw_content, part.filename)
+            if not page_count:
+                return None
+            key = cache.manifest_key(
+                file_bytes=part.raw_content, filename=part.filename, page_count=page_count,
+            )
+            pages, texts, _meta = cache.manifest_get(key)
+            if not pages or sorted(pages) != list(range(1, page_count + 1)):
+                return None
+            planned.append((part, page_count, pages, texts))
+        # 2. Resolve every full page fingerprint (corrupt/expired/evicted
+        #    entries are misses that fall through to the normal path).
+        resolved: list[tuple[UploadedFilePart, int, int, str, str | None, object]] = []
+        lookup_ms = 0.0
+        for part, page_count, pages, texts in planned:
+            for page_number in range(1, page_count + 1):
+                fingerprint = pages[page_number]
+                _t0 = time.perf_counter()
+                try:
+                    hit, meta = cache.get(fingerprint)
+                finally:
+                    lookup_ms += (time.perf_counter() - _t0) * 1000
+                if hit is None:
+                    return None
+                resolved.append((part, page_count, page_number, fingerprint,
+                                 texts.get(page_number), (hit, meta)))
+        # 3. Full hit: mark processing (so History-clear refuses mid-serve),
+        #    save sources, render previews (no OCR/models), remap references.
+        self.job_store.mark_processing(job_id)
+        total_size = sum(len(p.raw_content) for p in parts)
+        combined_name = parts[0].filename if len(parts) == 1 else f"{len(parts)} files ({parts[0].filename}, ...)"
+        request_meta = FileUploadMeta(
+            filename=combined_name,
+            content_type=parts[0].content_type if len(parts) == 1 else None,
+            size_bytes=total_size,
+        )
+        job_id_str = str(job_id)
+        documents = []
+        render_ms = 0.0
+        for part, page_count, page_number, fingerprint, page_text, (hit, meta) in resolved:
+            documents.append((part, page_count, page_number, fingerprint, page_text, hit, meta))
+        # Save each source once, render its previews once.
+        source_ids: dict[int, object] = {}
+        rendered: dict[int, list[bytes]] = {}
+        for part, page_count, _page_number, _fp, _pt, _hit, _meta in documents:
+            if id(part) in source_ids:
+                continue
+            source_ids[id(part)] = self.sources.save(part.filename, part.raw_content, part.content_type)
+            _t0 = time.perf_counter()
+            previews = _render_previews(part.raw_content, part.filename, self.settings.ocr_dpi)
+            render_ms += (time.perf_counter() - _t0) * 1000
+            if not previews or len(previews) != page_count:
+                # No previews, no fast path: previews/download references are
+                # part of a normal submission — fall through instead of
+                # serving a degraded result.
+                return None
+            rendered[id(part)] = previews
+        final_docs = []
+        for part, page_count, page_number, fingerprint, page_text, hit, meta in documents:
+            source = self.sources.reference(
+                source_ids[id(part)], page_number, page_count, rendered[id(part)][page_number - 1],
+            )
+            doc = hit.model_copy(update={
+                "id": uuid4(),
+                "source": source,
+                "ocr_blocks": [],
+                "full_text": page_text,
+                "timings": {},
+                "usage": {},
+                "cache_metadata": ResultCacheMetadata(
+                    fingerprint=fingerprint,
+                    computed_at=(meta or {}).get("computed_at_iso"),
+                    original_timings=dict((meta or {}).get("original_timings", {}) or {}),
+                    acceptance_policy_version=(meta or {}).get("acceptance_policy", "v1.0.0"),
+                    cache_lookup_ms=lookup_ms,
+                    hit_type="full",
+                ),
+            })
+            final_docs.append(doc)
+        elapsed = time.perf_counter() - started
+        response = FileExtractionResponse(
+            request=request_meta, documents=final_docs, job_id=job_id_str,
+            file_errors=[],
+            timings={"processing": elapsed, "queue": 0.0,
+                     "result_cache_hits": float(len(final_docs)),
+                     "result_cache_misses": 0.0,
+                     "result_cache_lookup_ms": lookup_ms,
+                     "result_cache_render_ms": render_ms,
+                     "fast_path": 1.0},
+        )
+        progress = {"completed_pages": len(final_docs), "total_pages": len(final_docs), "stage": "completed"}
+        self.job_store.set_progress(job_id, progress)
+        self.job_store.save_result(job_id, response.model_dump(mode="json"))
+        logger.info(
+            "Result cache fast-path full hit: job=%s pages=%d elapsed=%.2fs lookup_ms=%.1f render_ms=%.1f",
+            job_id, len(final_docs), elapsed, lookup_ms, render_ms,
+        )
+        return response
 
