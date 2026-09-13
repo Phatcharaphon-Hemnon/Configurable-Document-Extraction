@@ -1,5 +1,14 @@
 # Configurable Document Extraction
 
+> **Deployment mode (this branch `main`): CLOUD/API-key.**
+> Intended: `LLM_PROVIDER=ollama-cloud`, `LLM_MODEL=gpt-oss:20b` (key required;
+> OCR on CPU, provider concurrency 1). The tracked template leaves
+> `LLM_API_KEY` empty — paste a real key into the ignored `api/.env`
+> (or provider-native key var). Switching branches never rewrites `api/.env`;
+> if `run_all.sh` reports an intended/effective mismatch, edit `api/.env` or
+> use a separate worktree/checkout per deployment. Local Ollama deployment
+> lives on `chore/eval-3b-combined-report`.
+
 Extract structured data from scanned or photographed business documents
 (invoices, purchase orders, delivery notes) with a multi-agent AI pipeline —
 local OCR for printed text and handwriting, strict JSON output,
@@ -75,19 +84,14 @@ Re-running skips everything already installed. Ctrl+C stops both.
 ### Backend: `api/.env`
 
 1. **Create it.** `./scripts/run_all.sh` creates `api/.env` from
-   `api/.env.example` automatically (and warns if `LLM_API_KEY` is empty).
-   Manual alternative: `cp api/.env.example api/.env`. Never commit this
+   `api/.env.example` automatically (and warns when `LLM_API_KEY` is empty
+   for this key-requiring provider). Manual alternative:
+   `cp api/.env.example api/.env`, then paste the key. Never commit this
    file — it holds live secrets and is git-ignored.
-2. **Edit the 3 lines** that control the whole pipeline:
-   ```bash
-   LLM_PROVIDER=opencode
-   LLM_API_KEY=public       # free-tier key; paste a real key to unlock everything
-   LLM_MODEL=mimo-v2.5-free # any model ID of the active provider
-   ```
-   A standard cloud setup looks the same, e.g.:
+2. **Edit the 3 lines** that control the whole pipeline (cloud defaults):
    ```bash
    LLM_PROVIDER=ollama-cloud
-   LLM_API_KEY=<paste key from https://ollama.com/settings/keys>
+   LLM_API_KEY=<paste key from https://ollama.com/settings/keys>  # required; never commit
    LLM_MODEL=gpt-oss:20b
    ```
    Key sources for all providers: `docs/ai_provider.md`. `LLM_MODEL`
