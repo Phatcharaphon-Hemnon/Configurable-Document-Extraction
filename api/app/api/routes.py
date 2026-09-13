@@ -73,13 +73,23 @@ def _content_fingerprint(parts: list[UploadedFilePart]) -> str:
 
 @router.get("/")
 def home() -> dict[str, object]:
+    # Effective deployment identity (no credentials): provider/model/endpoint
+    # plus OCR engine and concurrency so operators can verify the active
+    # deployment mode without revealing secrets. Intended per-branch values
+    # live in api/.env.example; a mismatch with these effective values means
+    # the ignored api/.env still points at the other deployment (see README).
     return {
         "name": settings.app_name,
         "status": "ok",
         "doc_types": ["invoice", "purchase_order", "delivery_note"],
         "frontend_origins": settings.frontend_origin_list,
         "temporal_enabled": settings.temporal_enabled,
+        "llm_provider": settings.llm_provider,
+        "llm_model": settings.llm_model,
+        "llm_base_url": settings.llm_base_url,
         "extraction_model": settings.extraction_model_name,
+        "ocr_engine": settings.ocr_engine,
+        "llm_max_concurrent_requests": settings.llm_max_concurrent_requests,
         "langfuse_enabled": settings.langfuse_enabled,
         "endpoints": ["/extract", "/templates", "/extract/batch", "/jobs/{job_id}", "/evaluate",
                       "/history", "/history/stats"],
