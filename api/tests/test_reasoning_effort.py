@@ -132,10 +132,33 @@ async def test_env_override_gated_by_exact_allowlist(memories, monkeypatch):
     assert "reasoning_effort" not in seen
 
     # Empty allowlist: env value ignored everywhere (gating mechanism).
-    monkeypatch.setattr(client_mod, "REASONING_EFFORT_ALLOWLIST", frozenset())
+    monkeypatch.setattr(client_mod, "REASONING_EFFORT_ALLOWLIST", {})
     seen.clear()
     await client.generate_structured(model=MODEL, prompt="p", response_schema=_S)
     assert "reasoning_effort" not in seen
+
+
+@pytest.mark.asyncio
+async def test_explicit_unlisted_level_clamped_for_known_pair(memories, caplog):
+    """A known pair with an unlisted level (e.g. "none" on GPT-OSS) is never
+    sent: known-unsupported values resolve to inactive with a warning."""
+    import logging
+
+    client = Client(_settings())
+    seen: dict = {}
+
+    async def mock_create(**kwargs):
+        seen.update(kwargs)
+        return _resp('{"name": "ok", "value": 1}')
+
+    client._client.chat.completions.create = mock_create
+    with caplog.at_level(logging.WARNING, logger="app.services.client"):
+        result = await client.generate_structured(
+            model=MODEL, prompt="p", response_schema=_S, reasoning_effort="none")
+    assert "reasoning_effort" not in seen
+    assert "extra_body" not in seen  # clamped to inactive: nothing sent
+    assert result.reasoning_effort is None
+    assert any("not established" in r.message for r in caplog.records)
 
 
 class _UnsupportedParam(Exception):

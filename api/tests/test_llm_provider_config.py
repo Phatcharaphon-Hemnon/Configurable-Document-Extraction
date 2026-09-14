@@ -39,6 +39,7 @@ _VARS = (
     "OPENCLAW_API_KEY",
     "OPENCODE_API_KEY",
     "XKIRO_API_KEY",
+    "GROQ_API_KEY",
 )
 
 # provider -> (base_url, native_key_var, default_model or None, temperature, strict_disabled_by_default)
@@ -56,6 +57,7 @@ EXPECTED_PROVIDERS: dict[str, tuple[str, str, str | None, float, bool]] = {
     "openclaw": ("http://127.0.0.1:18789/v1", "OPENCLAW_API_KEY", "openclaw/default", 0.0, False),
     "opencode": ("https://opencode.ai/zen/v1", "OPENCODE_API_KEY", "gpt-5.4-mini", 0.0, False),
     "xkiro": ("https://api.xkiro.com/v1", "XKIRO_API_KEY", None, 0.0, False),
+    "groq": ("https://api.groq.com/openai/v1", "GROQ_API_KEY", "openai/gpt-oss-20b", 0.6, False),
 }
 
 

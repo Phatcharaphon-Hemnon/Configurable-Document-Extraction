@@ -19,6 +19,7 @@ LLM_MODEL=gpt-oss:20b       # single model for Router + Extractor + Judge
 | `openrouter` | `https://openrouter.ai/api/v1` | `LLM_API_KEY` → `OPENROUTER_API_KEY` | `openrouter/auto` |
 | `deepseek` | `https://api.deepseek.com` | `LLM_API_KEY` → `DEEPSEEK_API_KEY` | **none — `LLM_MODEL` required** |
 | `kimi` | `https://api.moonshot.ai/v1` | `LLM_API_KEY` → `MOONSHOT_API_KEY` | `kimi-k2.6` |
+| `groq` | `https://api.groq.com/openai/v1` | `LLM_API_KEY` → `GROQ_API_KEY` | `openai/gpt-oss-20b` |
 | `ollama-cloud` | `https://ollama.com/v1` | `LLM_API_KEY` → `OLLAMA_API_KEY` | `gpt-oss:20b` |
 | `ollama-local` | `http://localhost:11434/v1` | not needed | `gpt-oss:20b` |
 | `mistral` | `https://api.mistral.ai/v1` | `LLM_API_KEY` → `MISTRAL_API_KEY` | `mistral-large-latest` |
@@ -33,7 +34,8 @@ Get keys at: [OpenAI](https://platform.openai.com/api-keys) ·
 [DeepSeek](https://platform.deepseek.com) · [Moonshot](https://platform.moonshot.ai/console) ·
 [Ollama](https://ollama.com/settings/keys) · [Mistral](https://console.mistral.ai) ·
 [NVIDIA](https://build.nvidia.com) · [OpenCode Zen](https://opencode.ai/zen) ·
-[xKiro dashboard](https://xkiro.com/dashboard/api/keys).
+[xKiro dashboard](https://xkiro.com/dashboard/api/keys) ·
+[Groq console](https://console.groq.com/keys).
 
 Never commit `api/.env`. Backend keys must stay out of the frontend and out of
 any `VITE_*` variable.
@@ -80,6 +82,37 @@ LLM_PROVIDER=kimi
 LLM_API_KEY=<paste MOONSHOT_API_KEY>
 # LLM_BASE_URL=https://api.moonshot.cn/v1   # China region only
 ```
+
+**Groq (LPU inference)** — OpenAI-compatible at
+`https://api.groq.com/openai/v1`; key from the
+[console](https://console.groq.com/keys) (`GROQ_API_KEY`). All claims below
+are **documented 2026-09-14, not live-verified**:
+```bash
+LLM_PROVIDER=groq
+LLM_API_KEY=<paste GROQ_API_KEY>
+LLM_MODEL=openai/gpt-oss-20b   # default; strict json_schema documented for
+                                # gpt-oss-20b/120b — temperature defaults 0.6
+```
+- Strict `response_format: json_schema` is documented for
+  `openai/gpt-oss-20b`, `openai/gpt-oss-120b`, `qwen/qwen3.8-27b` (others:
+  JSON-object mode) —
+  [structured outputs](https://console.groq.com/docs/structured-outputs).
+- Free limits for `openai/gpt-oss-20b`: 30 RPM / 1K RPD / 8K TPM / 200K
+  TPD. Extractor prompts plus `EXTRACTION_MAX_TOKENS` plus reasoning
+  tokens (billed as output) can approach 8K TPM — 429s back off and retry
+  automatically; watch `x-ratelimit-*` headers —
+  [rate limits](https://console.groq.com/docs/rate-limits).
+- `reasoning_effort` low/medium/high is documented for GPT-OSS (`none`
+  is NOT valid there — only Qwen 3.6/3.8 document `none`); an accepted
+  request does not prove reasoning changed —
+  [reasoning](https://console.groq.com/docs/reasoning).
+- Retention (stated policy, not verified): no inference retention by
+  default; up to 30-day reliability/abuse logs with opt-out and ZDR in
+  Data Controls; US GCP buckets —
+  [your data](https://console.groq.com/docs/your-data).
+- Legacy `openai`-label + `LLM_BASE_URL=https://api.groq.com/openai/v1`
+  configs keep working and resolve identically (capability resolution uses
+  the effective endpoint/model).
 
 **Ollama Cloud (default)** — `gpt-oss:20b` reasons (Harmony format, cannot be
 disabled) and needs temperature `1.0`, both automatic (`LLM_TEMPERATURE`

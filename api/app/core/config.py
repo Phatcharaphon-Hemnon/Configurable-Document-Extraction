@@ -62,6 +62,11 @@ LLM_PROVIDERS: dict[str, ProviderProfile] = {
     ),
     # Local OpenClaw gateway (enable gateway.http.endpoints.chatCompletions first).
     "openclaw": ProviderProfile("http://127.0.0.1:18789/v1", "OPENCLAW_API_KEY", "openclaw/default"),
+    # Groq (LPU inference). Documented 2026-09-14, not live-verified as a
+    # native row: strict json_schema + free limits documented for
+    # openai/gpt-oss-20b (see docs/reference/provider_compatibility.md);
+    # temperature 0.6 per Groq's gpt-oss guidance.
+    "groq": ProviderProfile("https://api.groq.com/openai/v1", "GROQ_API_KEY", "openai/gpt-oss-20b", 0.6),
     # OpenCode Zen gateway; literal key "public" serves the free-tier models.
     "opencode": ProviderProfile("https://opencode.ai/zen/v1", "OPENCODE_API_KEY", "gpt-5.4-mini"),
     # xKiro gateway (one key, many vendor/model IDs). No default model by

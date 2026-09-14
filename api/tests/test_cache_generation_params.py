@@ -34,7 +34,27 @@ _FP_KW = dict(
 )
 
 
-def _base_settings(tmp_path: Path) -> Settings:
+def _base_settings(tmp_path: Path, monkeypatch) -> Settings:
+    # Pin every fingerprinted generation input: the developer api/.env (or
+    # CI env) must not leak into the base, or variants stop differing.
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("LLM_BASE_URL", "https://test.example/v1")
+    monkeypatch.setenv("LLM_MODEL", "test-model")
+    monkeypatch.delenv("ROUTER_MODEL_NAME", raising=False)
+    monkeypatch.delenv("EXTRACTION_MODEL_NAME", raising=False)
+    monkeypatch.delenv("JUDGE_MODEL_NAME", raising=False)
+    monkeypatch.setenv("LLM_TEMPERATURE", "0.0")
+    monkeypatch.setenv("EXTRACTION_MAX_TOKENS", "3000")
+    monkeypatch.setenv("ROUTER_MAX_TOKENS", "400")
+    monkeypatch.setenv("ROUTER_TEXT_CHARS", "2000")
+    monkeypatch.setenv("DISABLE_STRICT_JSON_SCHEMA", "false")
+    monkeypatch.setenv("FEW_SHOT_EXAMPLES_PER_DOC_TYPE", "0")
+    monkeypatch.setenv("LLM_REASONING_EFFORT", "")
+    monkeypatch.setenv("JUDGE_SKIP_WHEN_CLEAN", "true")
+    monkeypatch.setenv("JUDGE_SKIP_CONFIDENCE", "0.85")
+    monkeypatch.setenv("OCR_ENGINE", "tesseract")
+    monkeypatch.setenv("OCR_LANGUAGES", "eng+tha")
+    monkeypatch.setenv("OCR_DPI", "300")
     s = Settings()
     s.database_enabled = False
     s.source_storage_path = str(tmp_path / "sources")
@@ -89,8 +109,8 @@ def _variant(base: Settings, attr: str, value) -> Settings:
 
 
 @pytest.mark.parametrize("label,attr,value,fp_kw", _VARIANTS)
-def test_setting_change_misses_page_and_manifest(tmp_path, label, attr, value, fp_kw):
-    base = _base_settings(tmp_path)
+def test_setting_change_misses_page_and_manifest(tmp_path, monkeypatch, label, attr, value, fp_kw):
+    base = _base_settings(tmp_path, monkeypatch)
     cache = ResultCache(base)
     fp = cache.fingerprint_page(**_FP_KW)
     assert cache.put(fp, _page_result(), meta={"probe": label})
@@ -118,8 +138,8 @@ def test_setting_change_misses_page_and_manifest(tmp_path, label, attr, value, f
     assert pages2 is None, label
 
 
-def test_identical_settings_hit_page_and_manifest(tmp_path):
-    base = _base_settings(tmp_path)
+def test_identical_settings_hit_page_and_manifest(tmp_path, monkeypatch):
+    base = _base_settings(tmp_path, monkeypatch)
     cache = ResultCache(base)
     fp = cache.fingerprint_page(**_FP_KW)
     assert cache.put(fp, _page_result())

@@ -114,7 +114,7 @@ Re-running skips everything already installed. Ctrl+C stops both.
 
 | Variable | Purpose |
 |---|---|
-| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider (13 options, see table below), the only secret, and the single text model for Router + Extractor + Judge. No native Claude entry — reach it via `openrouter`/`opencode`/`xkiro`. |
+| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider (14 options, see table below), the only secret, and the single text model for Router + Extractor + Judge. No native Claude entry — reach it via `openrouter`/`opencode`/`xkiro`. |
 | `OCR_DPI` | PDF render resolution for local RapidOCR (default `300`). |
 | `SUPPORTED_LANGUAGES` | OCR languages (default `en,th`). |
 | `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Optional per-stage overrides (default: `LLM_MODEL`). |
@@ -142,6 +142,7 @@ the browser bundle (on Vercel, leave "Sensitive" unchecked).
 | `openrouter` | `https://openrouter.ai/api/v1` | `OPENROUTER_API_KEY` |
 | `deepseek` | `https://api.deepseek.com` | `DEEPSEEK_API_KEY` |
 | `kimi` | `https://api.moonshot.ai/v1` | `MOONSHOT_API_KEY` |
+| `groq` | `https://api.groq.com/openai/v1` | `GROQ_API_KEY` |
 | `ollama-cloud` | `https://ollama.com/v1` | `OLLAMA_API_KEY` |
 | `ollama-local` | `http://localhost:11434/v1` | — (no key) |
 | `mistral` | `https://api.mistral.ai/v1` | `MISTRAL_API_KEY` |
