@@ -25,6 +25,10 @@ from openai import APITimeoutError, AsyncOpenAI
 from pydantic import BaseModel
 
 from app.core.config import Settings
+from app.services.provider_capabilities import (
+    build_chat_kwargs,
+    resolve_capabilities,
+)
 from app.services.request_control import (
     job_context,
     limited_generation,
@@ -86,20 +90,29 @@ class ClientResult:
     # this call; "low"/"medium"/"high" = sent; "" = removed after an explicit
     # unsupported-parameter rejection).
     reasoning_effort: str | None = None
+    # Output tier actually used for the returned payload ("json_schema" /
+    # "json_object" / "plain"), recorded separately from configured policy.
+    output_mode: str | None = None
 
 
-# Exact (endpoint, model) pairs verified by live probe to accept the
-# documented `reasoning_effort` chat-completions parameter. Deliberately NOT
-# a substring match: a pair is added here only after a bounded diagnostic
-# confirms acceptance AND measures the effect on the verified pair.
+# Exact (endpoint, model) pairs verified to accept the documented
+# `reasoning_effort` chat-completions parameter, mapped to their allowed
+# levels. Deliberately NOT a substring match: a pair is added here only
+# after a bounded diagnostic confirms acceptance AND measures the effect.
+# Levels matter: e.g. Groq documents low/medium/high for GPT-OSS but NOT
+# "none", so "none" must never be allowlisted there.
 #
 # Verified 2026-09-14 (docs/reports/nvidia_extractor_timeout_2026-09-14.md):
 # ("https://integrate.api.nvidia.com/v1", "openai/gpt-oss-20b") accepted
-# reasoning_effort="low" with no 400 and no fallback removal. The env default
-# is still "" (feature inactive) — this entry only permits explicit opt-in.
-REASONING_EFFORT_ALLOWLIST: frozenset[tuple[str, str]] = frozenset({
-    ("https://integrate.api.nvidia.com/v1", "openai/gpt-oss-20b"),
-})
+# reasoning_effort="low" with no 400 and no fallback removal.
+# Verified 2026-09-14 (docs/reference/provider_compatibility.md): Groq
+# documents reasoning low/medium/high (but NOT "none") for
+# openai/gpt-oss-20b — documented, not live-verified. The env default is
+# still "" (feature inactive) — entries only permit explicit opt-in.
+REASONING_EFFORT_ALLOWLIST: dict[tuple[str, str], tuple[str, ...]] = {
+    ("https://integrate.api.nvidia.com/v1", "openai/gpt-oss-20b"): ("low", "medium", "high"),
+    ("https://api.groq.com/openai/v1", "openai/gpt-oss-20b"): ("low", "medium", "high"),
+}
 
 
 # Parse-failure classification for honest recovery (never "invalid JSON" alone).
@@ -658,6 +671,46 @@ class Client:
     # Recorded ONLY on explicit 400-level "unsupported parameter" responses —
     # never on malformed model output (which retries the same tier).
     _unsupported_tiers: set[tuple[str, str, str]] = set()
+    # Bounded learned-capability memory (timestamps guard both stores below).
+    # Expired entries are discarded (re-probed); overflow evicts oldest-first.
+    _CAPABILITY_MEMORY_MAX_ENTRIES = 512
+    _CAPABILITY_MEMORY_TTL_SECONDS = 24 * 3600
+    _capability_memory_ts: dict[tuple, float] = {}
+
+    @classmethod
+    def _remember_capability(cls, key: tuple) -> None:
+        """Stamp one learned finding, evicting oldest-first past capacity."""
+        import time as _time
+
+        now = _time.monotonic()
+        cls._capability_memory_ts[key] = now
+        while len(cls._capability_memory_ts) > cls._CAPABILITY_MEMORY_MAX_ENTRIES:
+            oldest = min(cls._capability_memory_ts, key=cls._capability_memory_ts.get)  # type: ignore[arg-type]
+            cls._capability_memory_ts.pop(oldest, None)
+            cls._unsupported_tiers.discard(oldest)  # type: ignore[arg-type]
+            cls._reasoning_unsupported.discard(oldest)  # type: ignore[arg-type]
+
+    @classmethod
+    def _recall_capability(cls, key: tuple) -> bool:
+        """True for a fresh learned finding; expired entries are discarded."""
+        import time as _time
+
+        ts = cls._capability_memory_ts.get(key)
+        if ts is None:
+            return False
+        if _time.monotonic() - ts > cls._CAPABILITY_MEMORY_TTL_SECONDS:
+            cls._capability_memory_ts.pop(key, None)
+            cls._unsupported_tiers.discard(key)  # type: ignore[arg-type]
+            cls._reasoning_unsupported.discard(key)  # type: ignore[arg-type]
+            return False
+        return True
+
+    @classmethod
+    def reset_capability_memory(cls) -> None:
+        """Forget all learned tier/parameter findings (tests, endpoint moves)."""
+        cls._unsupported_tiers.clear()
+        cls._reasoning_unsupported.clear()
+        cls._capability_memory_ts.clear()
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -693,10 +746,13 @@ class Client:
         self._client = client
 
     def _tier_unsupported(self, model: str, tier: str) -> bool:
-        return (getattr(self, "_endpoint", ""), model, tier) in Client._unsupported_tiers
+        key = (getattr(self, "_endpoint", ""), model, tier)
+        return key in Client._unsupported_tiers and Client._recall_capability(key)
 
     def _mark_tier_unsupported(self, model: str, tier: str) -> None:
-        Client._unsupported_tiers.add((getattr(self, "_endpoint", ""), model, tier))
+        key = (getattr(self, "_endpoint", ""), model, tier)
+        Client._unsupported_tiers.add(key)
+        Client._remember_capability(key)
 
     # Reasoning-parameter rejections, remembered separately from output-format
     # tiers: only an explicit unsupported-parameter response removes the
@@ -706,31 +762,46 @@ class Client:
     def _resolve_reasoning_effort(self, model: str, explicit: str | None = None) -> str:
         """Effective reasoning_effort for this call ("" = feature inactive).
 
-        An explicit method-level value (diagnostics) takes responsibility
-        itself; the `LLM_REASONING_EFFORT` env default applies only to exact
-        (endpoint, model) pairs in REASONING_EFFORT_ALLOWLIST. Everything
-        else returns "" — current behavior, byte-identical requests.
+        Levels come from the exact-pair allowlist: env/explicit values are
+        honored only when listed for this (endpoint, model). A known pair
+        with an unlisted level (e.g. "none" on GPT-OSS) resolves to "" with
+        a warning — known-unsupported values are never sent. Unknown pairs
+        keep diagnostic freedom (explicit valid values pass through), and
+        everything else returns "" — current behavior, byte-identical.
 
-        Limitation: "none" is a per-model off-switch, not a universal one,
-        and an accepted request does NOT prove reasoning was disabled —
-        some providers silently adjust unsupported levels instead of
-        rejecting them. Verify effect via output tokens + latency, never via
-        acceptance alone.
+        Limitation: an accepted request does NOT prove reasoning was
+        disabled — some providers silently adjust unsupported levels instead
+        of rejecting them. Verify effect via output tokens + latency, never
+        via acceptance alone.
         """
-        if isinstance(explicit, str) and explicit.strip().lower() in ("low", "medium", "high", "none"):
-            return explicit.strip().lower()
+        pair = (getattr(self, "_endpoint", ""), model)
+        levels = REASONING_EFFORT_ALLOWLIST.get(pair, ())
+        if isinstance(explicit, str):
+            wanted = explicit.strip().lower()
+            if wanted in levels:
+                return wanted
+            if levels:
+                logger.warning(
+                    "LLM reasoning level %r not established for model=%s — omitting (known levels: %s)",
+                    explicit, model, ",".join(levels),
+                )
+                return ""
+            if wanted in ("low", "medium", "high", "none"):
+                return wanted
+            return ""
         env = str(getattr(self.settings, "llm_reasoning_effort", "") or "").strip().lower()
-        if env in ("low", "medium", "high", "none") and (
-            getattr(self, "_endpoint", ""), model
-        ) in REASONING_EFFORT_ALLOWLIST:
+        if env in levels:
             return env
         return ""
 
     def _reasoning_rejected(self, model: str) -> bool:
-        return (getattr(self, "_endpoint", ""), model) in Client._reasoning_unsupported
+        key = (getattr(self, "_endpoint", ""), model)
+        return key in Client._reasoning_unsupported and Client._recall_capability(key)
 
     def _mark_reasoning_rejected(self, model: str) -> None:
-        Client._reasoning_unsupported.add((getattr(self, "_endpoint", ""), model))
+        key = (getattr(self, "_endpoint", ""), model)
+        Client._reasoning_unsupported.add(key)
+        Client._remember_capability(key)
 
     def _effective_reasoning_after_fallback(self, model: str, requested: str) -> str | None:
         """Requested setting minus an explicit rejection (None = inactive)."""
@@ -1074,12 +1145,16 @@ class Client:
 
         messages = [{"role": "user", "content": prompt + _build_json_prompt_suffix(response_schema)}]
         endpoint = getattr(self, "_endpoint", "")
+        profile = resolve_capabilities(
+            endpoint=endpoint, model=model,
+            provider_label=str(getattr(self.settings, "llm_provider", "") or ""),
+        )
         logger.info(
-            "LLM structured start job=%s stage=%s endpoint=%s model=%s schema=%s schema_fp=%s format=%s max_tokens=%s temp=%s reasoning_effort=%s",
+            "LLM structured start job=%s stage=%s endpoint=%s model=%s schema=%s schema_fp=%s format=%s max_tokens=%s temp=%s reasoning_effort=%s caps=%s",
             job_context.get(), stage_context.get(), endpoint, model, response_schema.__name__,
             self._schema_fingerprint(response_schema),
             self._strongest_tier(model), max_tokens, temperature,
-            reasoning_effort or "none",
+            reasoning_effort or "none", profile.source,
         )
 
         # --- Attempt 1: strongest supported tier ---
@@ -1154,6 +1229,7 @@ class Client:
                 completion_tokens=completion_tokens, total_tokens=total_tokens,
                 diagnosis="ok", finish_reason=finish,
                 reasoning_effort=self._effective_reasoning_after_fallback(model, reasoning_effort),
+                output_mode=tier,
             )
 
         # --- Classified recovery: at most ONE corrective generation ---
@@ -1247,6 +1323,7 @@ class Client:
                 diagnosis=f"corrective-{diagnosis.kind}", normalization=normalization_note,
                 finish_reason=c_finish,
                 reasoning_effort=self._effective_reasoning_after_fallback(model, reasoning_effort),
+                output_mode=tier,
             )
         # Corrective failed: if we preserved an unambiguous table, return it
         # explicitly as partial (fields=[] incomplete) rather than inventing
@@ -1265,6 +1342,7 @@ class Client:
                 diagnosis=f"table_root-partial({c_diag.kind if c_diag else 'failed'})",
                 normalization=normalization_note, finish_reason=finish,
                 reasoning_effort=self._effective_reasoning_after_fallback(model, reasoning_effort),
+                output_mode=tier,
             )
         raise self._classified_error(
             response_schema=response_schema, model=model, tier=tier, raw_text=c_raw or raw_text,
@@ -1372,6 +1450,7 @@ class Client:
                 request_summary=request_summary, prompt_tokens=prompt_tokens,
                 completion_tokens=completion_tokens, total_tokens=total_tokens,
                 diagnosis="ok", finish_reason=_extract_finish_reason(raw_response),
+                output_mode=tier,
             )
         assert diagnosis is not None
         if diagnosis.truncated:
@@ -1424,6 +1503,7 @@ class Client:
                 completion_tokens=c_ct, total_tokens=c_tt,
                 diagnosis=f"corrective-{diagnosis.kind}", normalization=normalization_note,
                 finish_reason=_extract_finish_reason(c_resp),
+                output_mode=tier,
             )
         if table_adapted is not None:
             self._record_usage(c_pt, c_ct, c_tt)
@@ -1434,6 +1514,7 @@ class Client:
                 diagnosis=f"table_root-partial({c_diag.kind if c_diag else 'failed'})",
                 normalization=normalization_note,
                 finish_reason=_extract_finish_reason(raw_response),
+                output_mode=tier,
             )
         raise self._classified_error(
             response_schema=response_schema, model=model, tier=tier, raw_text=c_raw or raw_text,
@@ -1487,6 +1568,7 @@ class Client:
             prompt_tokens=prompt_tokens,
             completion_tokens=completion_tokens,
             total_tokens=total_tokens,
+            output_mode="plain",
         )
 
     # ------------------------------------------------------------------
@@ -1515,20 +1597,19 @@ class Client:
                 "schema": json_schema_dict,
             },
         }
-        kwargs: dict[str, Any] = {
-            "model": model,
-            "messages": messages,
-            "temperature": temperature,
-            "response_format": response_format,
-        }
-        if max_tokens is not None:
-            kwargs["max_tokens"] = max_tokens
-        if reasoning_effort and not self._reasoning_rejected(model):
-            # Documented reasoning control replaces the undocumented
-            # extra_body flag (never send both).
-            kwargs["reasoning_effort"] = reasoning_effort
-        elif disable_reasoning:
-            kwargs["extra_body"] = {"reasoning": {"enabled": False}}
+        profile = resolve_capabilities(
+            endpoint=getattr(self, "_endpoint", ""),
+            model=model,
+            provider_label=str(getattr(self.settings, "llm_provider", "") or ""),
+        )
+        kwargs = build_chat_kwargs(
+            model=model, messages=messages, temperature=temperature,
+            token_param=profile.token_param, max_tokens=max_tokens,
+            response_format=response_format,
+            reasoning_effort=reasoning_effort if not self._reasoning_rejected(model) else "",
+            disable_reasoning=disable_reasoning,
+            omit_extra_body_reasoning=profile.omit_extra_body_reasoning,
+        )
         resp = await self._request_mode(kwargs, request_summary)
         if resp is None:
             return None, None, None, None, None
@@ -1554,20 +1635,19 @@ class Client:
     ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Try calling with response_format={"type": "json_object"} enforcement."""
         response_format: dict[str, Any] = {"type": "json_object"}
-        kwargs: dict[str, Any] = {
-            "model": model,
-            "messages": messages,
-            "temperature": temperature,
-            "response_format": response_format,
-        }
-        if max_tokens is not None:
-            kwargs["max_tokens"] = max_tokens
-        if reasoning_effort and not self._reasoning_rejected(model):
-            # Documented reasoning control replaces the undocumented
-            # extra_body flag (never send both).
-            kwargs["reasoning_effort"] = reasoning_effort
-        elif disable_reasoning:
-            kwargs["extra_body"] = {"reasoning": {"enabled": False}}
+        profile = resolve_capabilities(
+            endpoint=getattr(self, "_endpoint", ""),
+            model=model,
+            provider_label=str(getattr(self.settings, "llm_provider", "") or ""),
+        )
+        kwargs = build_chat_kwargs(
+            model=model, messages=messages, temperature=temperature,
+            token_param=profile.token_param, max_tokens=max_tokens,
+            response_format=response_format,
+            reasoning_effort=reasoning_effort if not self._reasoning_rejected(model) else "",
+            disable_reasoning=disable_reasoning,
+            omit_extra_body_reasoning=profile.omit_extra_body_reasoning,
+        )
         resp = await self._request_mode(kwargs, request_summary)
         if resp is None:
             return None, None, None, None, None
@@ -1592,19 +1672,19 @@ class Client:
         reasoning_effort: str = "",
     ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Plain chat completion call (no response_format param)."""
-        kwargs: dict[str, Any] = {
-            "model": model,
-            "messages": messages,
-            "temperature": temperature,
-        }
-        if max_tokens is not None:
-            kwargs["max_tokens"] = max_tokens
-        if reasoning_effort and not self._reasoning_rejected(model):
-            # Documented reasoning control replaces the undocumented
-            # extra_body flag (never send both).
-            kwargs["reasoning_effort"] = reasoning_effort
-        elif disable_reasoning:
-            kwargs["extra_body"] = {"reasoning": {"enabled": False}}
+        profile = resolve_capabilities(
+            endpoint=getattr(self, "_endpoint", ""),
+            model=model,
+            provider_label=str(getattr(self.settings, "llm_provider", "") or ""),
+        )
+        kwargs = build_chat_kwargs(
+            model=model, messages=messages, temperature=temperature,
+            token_param=profile.token_param, max_tokens=max_tokens,
+            response_format=None,
+            reasoning_effort=reasoning_effort if not self._reasoning_rejected(model) else "",
+            disable_reasoning=disable_reasoning,
+            omit_extra_body_reasoning=profile.omit_extra_body_reasoning,
+        )
         resp = await self._request_mode(kwargs, request_summary)
         if resp is None:
             return None, None, None, None, None

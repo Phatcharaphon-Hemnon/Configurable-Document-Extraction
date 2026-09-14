@@ -207,6 +207,7 @@ class ResultCache:
             "versions": {
                 "prompts": PROMPT_VERSION,
                 "client_recovery": CLIENT_RECOVERY_VERSION,
+                "compat_policy": self._compat_version(),
                 "extractor": EXTRACTOR_VERSION,
                 "validator": VALIDATOR_VERSION,
                 "judge": JUDGE_VERSION,
@@ -390,6 +391,15 @@ class ResultCache:
             return ACCEPTANCE_POLICY_VERSION
         except Exception:
             return "v1.0.0"
+
+    @staticmethod
+    def _compat_version() -> str:
+        try:
+            from app.services.provider_capabilities import COMPAT_POLICY_VERSION
+
+            return COMPAT_POLICY_VERSION
+        except Exception:
+            return "compat-v0"
 
     # ------------------------------------------------------------------
     # Get / put
