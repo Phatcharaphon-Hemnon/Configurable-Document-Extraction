@@ -17,7 +17,6 @@ import os
 import shutil
 import sys
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -33,7 +32,6 @@ from app.schemas.llm_schemas import (  # noqa: E402
 )
 from app.services.client import ClientResult  # noqa: E402
 from app.services.extraction_service import DocumentExtractionService  # noqa: E402
-from app.services.field_catalog import register_discovered_fields  # noqa: E402
 
 _FIX = Path(__file__).resolve().parent / "fixtures" / "replay"
 
