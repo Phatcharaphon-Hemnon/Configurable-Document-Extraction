@@ -1,0 +1,21 @@
+{"fields": [
+  {"name": "invoice_number", "value": "INV-REPLAY-100", "confidence": 0.97, "source_span": "TAX INVOICE No: INV-REPLAY-100"},
+  {"name": "invoice_date", "value": "2026-08-01", "confidence": 0.95, "source_span": "Date: 2026-08-01"},
+  {"name": "seller_name", "value": "ACME REPLAY CO.", "confidence": 0.92, "source_span": "Seller: ACME REPLAY CO."},
+  {"name": "total_amount", "value": 40.66, "confidence": 0.94, "source_span": "Total: 40.66"},
+  {"name": "subtotal_amount", "value": 38.0, "confidence": 0.93, "source_span": "Subtotal: 38.00"},
+  {"name": "tax_amount", "value": 2.66, "confidence": 0.93, "source_span": "VAT 7%: 2.66"}
+],
+ "tables": [
+  {"name": "line_items", "columns": [{"key": "item", "label": "Item"}, {"key": "qty", "label": "Qty"}, {"key": "price", "label": "Price"}, {"key": "amount", "label": "Amount"}],
+   "rows": [
+    [{"column": "item", "value": "WIDGET-X", "confidence": 0.9, "source_span": "WIDGET-X"},
+     {"column": "qty", "value": 3, "confidence": 0.9, "source_span": "WIDGET-X 3 10.00 30.00"},
+     {"column": "price", "value": 10.0, "confidence": 0.9, "source_span": "WIDGET-X 3 10.00 30.00"},
+     {"column": "amount", "value": 30.0, "confidence": 0.9, "source_span": "WIDGET-X 3 10.00 30.00"}],
+    [{"column": "item", "value": "GADGET-Y", "confidence": 0.9, "source_span": "GADGET-Y"},
+     {"column": "qty", "value": 2, "confidence": 0.9, "source_span": "GADGET-Y 2 4.00 8.00"},
+     {"column": "price", "value": 4.0, "confidence": 0.9, "source_span": "GADGET-Y 2 4.00 8.00"},
+     {"column": "amount", "value": 8.0, "confidence": 0.9, "source_span": "GADGET-Y 2 4.00 8.00"}]
+   ]}
+ ]}
