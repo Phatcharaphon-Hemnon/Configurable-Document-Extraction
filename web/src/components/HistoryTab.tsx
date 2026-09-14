@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ExtractionTab } from './ExtractionTab';
-import type { DocumentGroup } from '../types/extraction';
+import { downloadOriginal, extractFiles, pollJobStatus } from '../api/client';
+import type { DocumentGroup, ExtractionResult } from '../types/extraction';
 
 type Job = {
   id: string;
@@ -54,6 +55,8 @@ export function HistoryTab() {
   const [error, setError] = useState<string | null>(null);
   const [clearing, setClearing] = useState(false);
   const [clearError, setClearError] = useState<string | null>(null);
+  const [retrying, setRetrying] = useState(false);
+  const [retryError, setRetryError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const limit = 20;
@@ -102,6 +105,60 @@ export function HistoryTab() {
       setSelectedPage(0);
     } catch (err) { setError(err instanceof Error ? err.message : 'Could not open history'); }
     finally { setOpening(false); }
+  };
+
+  // True History retry: download the stored original(s) and resubmit through
+  // POST /extract with the selected cache flags, then poll the new job.
+  // Retrying a multipage PDF processes the entire original: all of its pages
+  // share one source_id, so grouping by download_url downloads it once and
+  // resubmitting it reprocesses every page. Shows an actionable error when
+  // the original is unavailable (cleared history / pruned sources).
+  const retrySelected = async (opts?: { forceRefresh?: boolean; disableCaches?: boolean }) => {
+    if (!selected || retrying) return;
+    setRetrying(true);
+    setRetryError(null);
+    try {
+      const docs: ExtractionResult[] = selected.response?.documents ?? [];
+      const byOriginal = new Map<string, { filename: string; downloadUrl: string }>();
+      for (const d of docs) {
+        const src = d.source;
+        if (src?.download_url && src?.filename && !byOriginal.has(src.download_url)) {
+          byOriginal.set(src.download_url, { filename: src.filename, downloadUrl: src.download_url });
+        }
+      }
+      if (byOriginal.size === 0) {
+        throw new Error(
+          'No stored original is available for this job (it may predate source storage or its sources were cleared). Re-upload the file to retry extraction.',
+        );
+      }
+      const files: File[] = [];
+      for (const { filename, downloadUrl } of byOriginal.values()) {
+        files.push(await downloadOriginal(downloadUrl, filename));
+      }
+      const label = files.length === 1 ? files[0].name : `${files.length} files (${files[0].name}, ...)`;
+      const accepted = await extractFiles(files, label, undefined, opts);
+      const job = await pollJobStatus(accepted.job_id, {});
+      if (job.status === 'failed' || !job.result) {
+        throw new Error(job.error || 'Retry extraction failed.');
+      }
+      setSelected({
+        id: crypto.randomUUID(),
+        label: `${selected.label} (retry)`,
+        files,
+        jobId: accepted.job_id,
+        readOnly: true,
+        status: 'done',
+        response: job.result,
+        progress: job.progress,
+      });
+      setSelectedPage(0);
+      fetchHistory();
+      fetchStats();
+    } catch (err) {
+      setRetryError(err instanceof Error ? err.message : 'Could not retry from stored original');
+    } finally {
+      setRetrying(false);
+    }
   };
 
   const deleteJob = async (jobId: string) => {
@@ -170,8 +227,15 @@ export function HistoryTab() {
     const doc = selected.response?.documents[selectedPage] ?? null;
     return <div className="history-tab">
       <button className="button-secondary" onClick={() => setSelected(null)}>Back to history</button>
+      {retryError && (
+        <div className="history-error" style={{ marginTop: '8px' }}>
+          <p>Retry failed: {retryError}</p>
+          <button onClick={() => setRetryError(null)}>Dismiss</button>
+        </div>
+      )}
+      {retrying && <p className="box-text">Retrying from stored original… downloading, resubmitting, and polling the new job.</p>}
       <ExtractionTab group={selected} doc={doc} docIndex={selectedPage} onSelectDoc={setSelectedPage}
-        onRetry={() => setSelected(null)} combinedFields={doc?.fields.map(field => [field.name, field]) ?? []} />
+        onRetry={(_id, opts) => void retrySelected(opts)} combinedFields={doc?.fields.map(field => [field.name, field]) ?? []} />
     </div>;
   }
 
@@ -243,7 +307,10 @@ export function HistoryTab() {
                     </button>
                   </td>
                   <td>
-                    <span className="doc-type-badge">{job.doc_type || '-'}</span>
+                    {/* API enum is unchanged; jobs without a routed type (OCR/Router
+                        failures) display as Unclassified instead of '-' or a
+                        misleading placeholder. */}
+                    <span className="doc-type-badge">{job.doc_type ? job.doc_type.replace(/_/g, ' ') : 'Unclassified'}</span>
                   </td>
                   <td>
                     <span className="source-badge">{job.extraction_source || '-'}</span>

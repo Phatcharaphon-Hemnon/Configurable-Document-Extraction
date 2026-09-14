@@ -38,6 +38,17 @@ export function getFailedStageLabel(doc: ExtractionResult | null): string | null
   return labels[doc.failed_stage] ?? doc.failed_stage;
 }
 
+// Display label for the document type. The API enum stays fixed
+// (invoice|purchase_order|delivery_note) — OCR/Router failures carry the
+// "invoice" placeholder because no routing ran, so the UI shows
+// "Unclassified" instead of a misleading "INVOICE" badge. All other stages
+// show the routed type.
+export function getDisplayDocType(doc: ExtractionResult | null): string {
+  if (!doc) return 'Unclassified';
+  if (doc.failed_stage === 'ocr' || doc.failed_stage === 'router') return 'Unclassified';
+  return (doc.doc_type ?? '').replace(/_/g, ' ') || 'Unclassified';
+}
+
 export type ResultKind = 'technical_failure' | 'unreadable_source' | 'partial' | 'completed';
 
 export function getResultKind(doc: ExtractionResult | null): ResultKind {

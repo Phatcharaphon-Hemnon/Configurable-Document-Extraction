@@ -179,7 +179,7 @@ async def test_four_jobs_fifo_and_cancel_queued():
     jobs = [service.job_store.create() for _ in range(4)]
     order = []
 
-    async def extract(parts, job_id):
+    async def extract(parts, job_id, **kwargs):
         order.append(job_id)
         entered.set()
         await release.wait()
@@ -208,7 +208,7 @@ async def test_queued_job_starts_after_first_fails():
     jobs = [service.job_store.create() for _ in range(2)]
     order = []
 
-    async def extract(parts, job_id):
+    async def extract(parts, job_id, **kwargs):
         order.append(job_id)
         if job_id == jobs[0].job_id:
             raise RuntimeError("boom")
@@ -271,7 +271,7 @@ async def test_queue_wait_does_not_consume_stage_deadline():
     guard = TimeoutGuard(StageTimeoutConfig(extractor_seconds=0.01))
     job = service.job_store.create()
 
-    async def extract(parts, job_id):
+    async def extract(parts, job_id, **kwargs):
         async with guard.track("extractor"):
             service.job_store.save_result(job_id, {"documents": [{}]})
 

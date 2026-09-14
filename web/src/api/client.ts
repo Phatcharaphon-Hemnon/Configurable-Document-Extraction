@@ -89,3 +89,25 @@ export function evaluateExtraction(payload: EvaluatePayload): Promise<EvaluateRe
 export function sourceUrl(path?: string | null): string | undefined {
   return path ? `${API_BASE_URL.replace(/\/$/, '')}${path}` : undefined;
 }
+
+// Download a stored original for History retry. Throws an actionable error
+// when the backend no longer has the bytes (history cleared, sources pruned,
+// or DB reset) so the UI can tell the user to re-upload instead of spinning.
+export async function downloadOriginal(downloadPath: string, filename: string): Promise<File> {
+  const url = sourceUrl(downloadPath);
+  if (!url) throw new Error(`Original unavailable for ${filename} — re-upload the file to retry.`);
+  const res = await fetch(url);
+  if (res.status === 404) {
+    throw new Error(
+      `Original file for ${filename} is no longer stored (history was cleared or sources were removed). Re-upload the file to retry extraction.`,
+    );
+  }
+  if (!res.ok) {
+    throw new Error(`Could not download original for ${filename} (HTTP ${res.status}). Re-upload the file to retry.`);
+  }
+  const blob = await res.blob();
+  if (blob.size === 0) {
+    throw new Error(`Downloaded original for ${filename} is empty — re-upload the file to retry.`);
+  }
+  return new File([blob], filename, { type: blob.type || 'application/octet-stream' });
+}

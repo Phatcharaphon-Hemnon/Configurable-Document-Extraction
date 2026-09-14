@@ -174,13 +174,13 @@ class LocalOCRClient:
             "rapid_pin": "3.9.2",
         }
 
-    async def aparse_file(
-        self, data: bytes, filename: str | None = None, use_cache: bool | None = None,
-    ) -> list[str]:
-        """OCR every page. `use_cache=False` bypasses memory + disk OCR caches
-        (benchmark/debug); None follows settings.ocr_cache_enabled."""
-        self.last_pages = []
-        cache_on = self.settings.ocr_cache_enabled if use_cache is None else bool(use_cache)
+    def _ocr_cache_key(self, data: bytes) -> str:
+        """Whole-file OCR cache key (settings + model bytes + policy).
+
+        Shared by ``aparse_file`` and ``aparse_pages`` so both paths hit the
+        same memory/disk entries. Never includes document text (it is the
+        cached value, not the key) or credentials.
+        """
         key = hashlib.sha256(data).hexdigest() + repr(
             (
                 self.dpi,
@@ -195,141 +195,178 @@ class LocalOCRClient:
                 f"coherence-{COHERENCE_THRESHOLD:.2f}",
             )
         )
-        key = hashlib.sha256(key.encode()).hexdigest()
+        return hashlib.sha256(key.encode()).hexdigest()
+
+    async def aparse_file(
+        self, data: bytes, filename: str | None = None, use_cache: bool | None = None,
+    ) -> list[str]:
+        """OCR every page. `use_cache=False` bypasses memory + disk OCR caches
+        (benchmark/debug); None follows settings.ocr_cache_enabled.
+
+        Collecting wrapper over ``aparse_pages`` (kept for backward
+        compatibility — new code should stream pages so extraction starts
+        before later pages finish OCR)."""
+        return [page.text async for page in self.aparse_pages(data, filename, use_cache)]
+
+    async def aparse_pages(
+        self, data: bytes, filename: str | None = None, use_cache: bool | None = None,
+    ):
+        """Yield one OCRPage per page, in document order, as each finishes OCR.
+
+        Whole-file memory/disk cache semantics match ``aparse_file``: a cached
+        file yields immediately with zero OCR work. ``self.last_pages`` grows
+        incrementally (backward-compatible for readers after full consumption;
+        new code must use the yielded pages, not shared mutable state).
+        Rendering happens up front via the shared ``load_page_images``; the
+        per-page OCR (the slow part) streams, so page 1 can flow into
+        extraction while later pages are still being recognized.
+        """
+        self.last_pages = []
+        cache_on = self.settings.ocr_cache_enabled if use_cache is None else bool(use_cache)
+        key = self._ocr_cache_key(data)
         if cache_on and key not in self._cache:
             self._load_disk_cache(key)
         if cache_on and key in self._cache:
-            self.last_pages = [
-                p.model_copy(update={"cached": True, "seconds": 0, "render_seconds": 0}) for p in self._cache[key]
-            ]
-            return [p.text for p in self.last_pages]
+            for cached in self._cache[key]:
+                page = cached.model_copy(update={"cached": True, "seconds": 0, "render_seconds": 0})
+                self.last_pages.append(page)
+                yield page
+            return
         loaded = load_page_images(data, filename, self.dpi)
         for loaded_page in loaded:
-            img = loaded_page.image
-            is_pdf = loaded_page.is_pdf
-            page = OCRPage()
+            page = await self._ocr_loaded_page(loaded_page)
             self.last_pages.append(page)
-            started = time.perf_counter()
-            try:
-                preview = img.copy()
-                preview.thumbnail((1500, 2000))
-                buffer = io.BytesIO()
-                preview.save(buffer, format="PNG")
-                page.preview = buffer.getvalue()
-                page.render_seconds = time.perf_counter() - started
-                ocr_start = time.perf_counter()
-                engine_name = (self.settings.ocr_engine or "tesseract").strip().lower()
-                if engine_name == "rapidocr":
-                    raw = io.BytesIO()
-                    img.save(raw, format="PNG")
-                    text, blocks = await asyncio.wait_for(
-                        asyncio.to_thread(self._rapid.ocr_blocks, raw.getvalue()),
-                        self.settings.ocr_timeout_seconds,
-                    )
-                    page.text = text
-                    page.blocks = blocks
-                    page.engine = "rapidocr"
-                    page.engines_used = ["rapidocr-th"]
-                    try:
-                        page.model_revisions = self._rapid.model_revisions()
-                    except Exception:
-                        page.model_revisions = {}
-                    if text.strip() and not is_ocr_text_coherent(text):
-                        page.review_reasons.append(
-                            "OCR text incoherent (coherence "
-                            f"{ocr_text_coherence(text):.2f} < {COHERENCE_THRESHOLD:.2f}): likely "
-                            "handwriting or a degraded scan; no recovery applies to "
-                            "single-engine output"
-                        )
-                elif engine_name == "hybrid":
-                    raw = io.BytesIO()
-                    img.save(raw, format="PNG")
-                    blocks, engines_used, review_reasons, revisions = await asyncio.wait_for(
-                        asyncio.to_thread(self._hybrid_page, raw.getvalue()),
-                        self.settings.ocr_timeout_seconds,
-                    )
-                    page.blocks = blocks
-                    page.text = layout_text(blocks)
-                    page.engine = "hybrid"
-                    page.engines_used = engines_used
-                    page.model_revisions = revisions
-                    page.review_reasons = review_reasons
-                    if page.text.strip() and not is_ocr_text_coherent(page.text):
-                        page.review_reasons.append(
-                            "OCR text incoherent (coherence "
-                            f"{ocr_text_coherence(page.text):.2f} < {COHERENCE_THRESHOLD:.2f}) "
-                            "after hybrid recovery: handwriting could not be read reliably"
-                        )
-                else:
-                    page.blocks = await self._tesseract(
-                        img, remove_rules=is_pdf and loaded_page.has_native_text
-                    )
-                    page.text = layout_text(page.blocks)
-                    page.engine = "tesseract"
-                    page.engines_used = ["tesseract"]
-                    # Fallback: Tesseract emits script-salad on some scans
-                    # (e.g. Thai traineddata on Latin handwriting). Upgraded
-                    # RapidOCR (PP-OCRv5 TH: Thai+English) is tried ONLY when
-                    # the default text scores incoherent — never as a global
-                    # switch. Bounded: OCR takes seconds.
-                    if page.text.strip() and not is_ocr_text_coherent(page.text):
-                        orig_coh = ocr_text_coherence(page.text)
-                        orig_blocks = list(page.blocks)
-                        logger.info(
-                            "OCR primary tesseract incoherent (coherence %.2f < %.2f, "
-                            "%d blocks, %d chars, langs=%s): attempting RapidOCR-TH fallback",
-                            orig_coh, COHERENCE_THRESHOLD, len(orig_blocks),
-                            len(page.text), self.settings.ocr_languages,
-                        )
-                        fallback, fallback_blocks, detail = await self._rapid_fallback(img)
-                        if fallback is not None:
-                            fb_coh = ocr_text_coherence(fallback)
-                            logger.info(
-                                "OCR fallback: rapidocr-th replaced incoherent "
-                                "tesseract text (%d chars, coh %.2f) with %d chars "
-                                "(coh %.2f, %d blocks with geometry preserved)",
-                                len(page.text), orig_coh, len(fallback), fb_coh,
-                                len(fallback_blocks),
-                            )
-                            # Preserve geometry: fallback blocks carry their own
-                            # boxes/engine/provenance (never []); the original
-                            # Tesseract reading stays distinguishable via the
-                            # review trail + engines_used (not silently dropped).
-                            page.text = fallback
-                            page.blocks = list(fallback_blocks)
-                            page.engine = "tesseract+rapidocr-fallback"
-                            page.engines_used = ["tesseract", "rapidocr-th"]
-                            page.review_reasons.append(
-                                f"OCR recovery: tesseract incoherent ({orig_coh:.2f}) "
-                                f"replaced by rapidocr-th ({fb_coh:.2f}); original "
-                                f"{len(orig_blocks)} Tesseract regions preserved in engines_used"
-                            )
-                            try:
-                                page.model_revisions = {
-                                    **page.model_revisions,
-                                    **self._rapid.model_revisions(),
-                                }
-                            except Exception:
-                                pass
-                        else:
-                            page.review_reasons.append(
-                                "OCR text incoherent (coherence "
-                                f"{orig_coh:.2f} < {COHERENCE_THRESHOLD:.2f}): "
-                                "likely handwriting or a degraded scan; RapidOCR recovery "
-                                f"{detail}"
-                            )
-                page.seconds = time.perf_counter() - ocr_start
-            except asyncio.CancelledError:
-                raise
-            except Exception as exc:
-                page.error = f"OCR failed: {exc}"
-                page.seconds = time.perf_counter() - started
+            yield page
         if cache_on and all(not p.error for p in self.last_pages):
             if len(self._cache) >= 32:
                 self._cache.pop(next(iter(self._cache)))
             self._cache[key] = [p.model_copy(deep=True) for p in self.last_pages]
             self._save_disk_cache(key)
-        return [p.text for p in self.last_pages]
+
+    async def _ocr_loaded_page(self, loaded_page: LoadedPage) -> OCRPage:
+        """OCR a single rendered page (no cache, no shared mutable state).
+
+        Single implementation behind both ``aparse_file`` and ``aparse_pages``.
+        """
+        img = loaded_page.image
+        is_pdf = loaded_page.is_pdf
+        page = OCRPage()
+        started = time.perf_counter()
+        try:
+            preview = img.copy()
+            preview.thumbnail((1500, 2000))
+            buffer = io.BytesIO()
+            preview.save(buffer, format="PNG")
+            page.preview = buffer.getvalue()
+            page.render_seconds = time.perf_counter() - started
+            ocr_start = time.perf_counter()
+            engine_name = (self.settings.ocr_engine or "tesseract").strip().lower()
+            if engine_name == "rapidocr":
+                raw = io.BytesIO()
+                img.save(raw, format="PNG")
+                text, blocks = await asyncio.wait_for(
+                    asyncio.to_thread(self._rapid.ocr_blocks, raw.getvalue()),
+                    self.settings.ocr_timeout_seconds,
+                )
+                page.text = text
+                page.blocks = blocks
+                page.engine = "rapidocr"
+                page.engines_used = ["rapidocr-th"]
+                try:
+                    page.model_revisions = self._rapid.model_revisions()
+                except Exception:
+                    page.model_revisions = {}
+                if text.strip() and not is_ocr_text_coherent(text):
+                    page.review_reasons.append(
+                        "OCR text incoherent (coherence "
+                        f"{ocr_text_coherence(text):.2f} < {COHERENCE_THRESHOLD:.2f}): likely "
+                        "handwriting or a degraded scan; no recovery applies to "
+                        "single-engine output"
+                    )
+            elif engine_name == "hybrid":
+                raw = io.BytesIO()
+                img.save(raw, format="PNG")
+                blocks, engines_used, review_reasons, revisions = await asyncio.wait_for(
+                    asyncio.to_thread(self._hybrid_page, raw.getvalue()),
+                    self.settings.ocr_timeout_seconds,
+                )
+                page.blocks = blocks
+                page.text = layout_text(blocks)
+                page.engine = "hybrid"
+                page.engines_used = engines_used
+                page.model_revisions = revisions
+                page.review_reasons = review_reasons
+                if page.text.strip() and not is_ocr_text_coherent(page.text):
+                    page.review_reasons.append(
+                        "OCR text incoherent (coherence "
+                        f"{ocr_text_coherence(page.text):.2f} < {COHERENCE_THRESHOLD:.2f}) "
+                        "after hybrid recovery: handwriting could not be read reliably"
+                    )
+            else:
+                page.blocks = await self._tesseract(
+                    img, remove_rules=is_pdf and loaded_page.has_native_text
+                )
+                page.text = layout_text(page.blocks)
+                page.engine = "tesseract"
+                page.engines_used = ["tesseract"]
+                # Fallback: Tesseract emits script-salad on some scans
+                # (e.g. Thai traineddata on Latin handwriting). Upgraded
+                # RapidOCR (PP-OCRv5 TH: Thai+English) is tried ONLY when
+                # the default text scores incoherent — never as a global
+                # switch. Bounded: OCR takes seconds.
+                if page.text.strip() and not is_ocr_text_coherent(page.text):
+                    orig_coh = ocr_text_coherence(page.text)
+                    orig_blocks = list(page.blocks)
+                    logger.info(
+                        "OCR primary tesseract incoherent (coherence %.2f < %.2f, "
+                        "%d blocks, %d chars, langs=%s): attempting RapidOCR-TH fallback",
+                        orig_coh, COHERENCE_THRESHOLD, len(orig_blocks),
+                        len(page.text), self.settings.ocr_languages,
+                    )
+                    fallback, fallback_blocks, detail = await self._rapid_fallback(img)
+                    if fallback is not None:
+                        fb_coh = ocr_text_coherence(fallback)
+                        logger.info(
+                            "OCR fallback: rapidocr-th replaced incoherent "
+                            "tesseract text (%d chars, coh %.2f) with %d chars "
+                            "(coh %.2f, %d blocks with geometry preserved)",
+                            len(page.text), orig_coh, len(fallback), fb_coh,
+                            len(fallback_blocks),
+                        )
+                        # Preserve geometry: fallback blocks carry their own
+                        # boxes/engine/provenance (never []); the original
+                        # Tesseract reading stays distinguishable via the
+                        # review trail + engines_used (not silently dropped).
+                        page.text = fallback
+                        page.blocks = list(fallback_blocks)
+                        page.engine = "tesseract+rapidocr-fallback"
+                        page.engines_used = ["tesseract", "rapidocr-th"]
+                        page.review_reasons.append(
+                            f"OCR recovery: tesseract incoherent ({orig_coh:.2f}) "
+                            f"replaced by rapidocr-th ({fb_coh:.2f}); original "
+                            f"{len(orig_blocks)} Tesseract regions preserved in engines_used"
+                        )
+                        try:
+                            page.model_revisions = {
+                                **page.model_revisions,
+                                **self._rapid.model_revisions(),
+                            }
+                        except Exception:
+                            pass
+                    else:
+                        page.review_reasons.append(
+                            "OCR text incoherent (coherence "
+                            f"{orig_coh:.2f} < {COHERENCE_THRESHOLD:.2f}): "
+                            "likely handwriting or a degraded scan; RapidOCR recovery "
+                            f"{detail}"
+                        )
+            page.seconds = time.perf_counter() - ocr_start
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:
+            page.error = f"OCR failed: {exc}"
+            page.seconds = time.perf_counter() - started
+        return page
 
     def _load_disk_cache(self, key: str) -> None:
         import base64
