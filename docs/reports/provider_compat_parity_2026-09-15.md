@@ -63,8 +63,8 @@ No unresolved behavioral divergence. Cloud/local distinction preserved
 ## 5. Checks run (isolated storage; real History/catalogs untouched)
 
 - `ruff check api/`: clean in all three trees.
-- Backend `pytest`: **503 passed, 2 skipped** in wt-main and wt-chore
-  (perf: 502 + replay fix + parity-doc = same set; rerun post-edit below).
+- Backend `pytest`: **503 passed, 2 skipped** in wt-main, wt-chore, and
+  the perf tree (final reruns after every edit).
 - New: `test_provider_compat.py` (13: profiles, builder, native/legacy
   Groq parity, memory bounds/expiry/reset, output_mode, fingerprint
   version), `test_replay_parity.py` (fixtures + normalized dump).
