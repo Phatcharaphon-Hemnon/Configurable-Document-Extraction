@@ -189,3 +189,35 @@ Audit of the current tree (not history) found the three suspected issues
   the affected branch only. Shared commits (`716b0f4`, `edcef74`) revert
   identically on both branches if ever needed. No pushes have been made, so
   no remote rollback is required.
+
+## 9. Resync 2026-09-15 (compat refactor + fast-path port + replay parity)
+
+Worktrees built from each branch's own head (`/tmp/opencode/wt-main` @
+`f7a48f9`, `/tmp/opencode/wt-chore` @ `3a7f1a2`); divergence was 5 main-only
+/ 4 chore-only commits, neither side an ancestor. Ported by cherry-pick
+(`-x`, no merges, no rebases, no force):
+
+- `chore` first received main's `07e868d` (fast path — shared core logic it
+  lacked), then both branches received the identical shared stack:
+  latency/streaming/judge/reasoning/xkiro checkpoint, provider-compat
+  profiles + Groq row, log-ignore hygiene, replay harness + lint fix.
+- The NVIDIA provider commits (`f7a48f9` vs `3a7f1a2`) are byte-identical
+  content (parallel commits); no conflict source.
+- Deployment values preserved per side through every pick: `chore` kept
+  `ollama-local`/`qwen2.5:3b`, `main` kept `ollama-cloud`/`gpt-oss:20b`
+  (verified by diff after each pick).
+- Final `git diff --name-only main chore` lists exactly `README.md` +
+  `api/.env.example` (deployment values only) — the parity invariant holds.
+
+Verification (isolated storage; History/catalogs untouched):
+`ruff` clean + backend **503 passed, 2 skipped** in both worktrees; web
+10/10 + build ok in both (node_modules symlinked from the main checkout,
+then removed; Playwright browsers absent → browser-driven UI checks
+blocked, unit + build green). Deterministic replay
+(`api/tests/test_replay_parity.py` + fixtures, `REPLAY_DUMP`): normalized
+outputs **byte-identical across perf/main/chore trees** (accepted fields +
+evidence, 1 table / 8 cells, completeness 1.0, no review). Local keyless
+startup resolves (`ollama-local`, empty key, loopback URL); cloud defaults
+intact. Live provider/browser checks remain blocked (no live calls
+authorized). No pushes made — see the implementation report for the review
+summary.
