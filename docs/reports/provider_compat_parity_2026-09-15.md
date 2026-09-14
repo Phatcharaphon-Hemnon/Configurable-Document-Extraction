@@ -96,10 +96,13 @@ revert checkpoint (restores `f7a48f9` tree). Worktrees removable with
 
 ## 7. Review summary (push approval requested, not executed)
 
-perf holds 6 focused commits (`aca6e83`, `b543f71`, `3de1203`,
-`8bea0b8`, `f9ecc9b`, `5603e48`); wt-main and wt-chore hold the
-equivalent cherry-picked stacks on their own ancestry. `git status`
-clean everywhere except ignored runtime files (`data/`, `api/logs/`).
+Exact new-commit counts (verified via `git rev-list --count`): **8** on
+`main` (`6b211bf`, `1d8b105`, `e60ac1a`, `920da4e`, `a852ae4`,
+`5eb688a`, `3a9f814`, `0b8d0c2`), **9** on `chore/eval-3b-combined-report`
+(leading `20d3b36` fast-path port plus the equivalent 8), **7** on
+`perf/latency-opt-20260914` (`aca6e83`, `b543f71`, `3de1203`,
+`8bea0b8`, `f9ecc9b`, `5603e48`, `10d86b3`). `git status` clean
+everywhere except ignored runtime files (`data/`, `api/logs/`).
 To publish: `git push origin main` from wt-main and
 `git push origin chore/eval-3b-combined-report` from wt-chore —
 normal pushes, remotes currently stale and fast-forwardable.
