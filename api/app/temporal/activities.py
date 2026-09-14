@@ -52,13 +52,10 @@ async def parse_detailed_activity(filename: str, raw_content: bytes) -> list[dic
     ``process_page_activity`` (or ``extract_group`` for the page-workflow).
     """
     client = _ocr_client()
-    texts = await client.aparse_file(raw_content, filename)
-    pages = getattr(client, "last_pages", [])
     out: list[dict[str, Any]] = []
-    for index, text in enumerate(texts):
-        page = pages[index] if index < len(pages) else None
+    async for page in client.aparse_pages(raw_content, filename):
         out.append({
-            "text": text,
+            "text": page.text,
             "review_reasons": list(getattr(page, "review_reasons", None) or []),
             "engines_used": list(getattr(page, "engines_used", None) or []),
             "engine": getattr(page, "engine", "") or "",
@@ -84,7 +81,7 @@ async def extract_activity(
     filename: str, page_text: str, doc_type: str, page_number: int = 1,
 ) -> dict[str, Any]:
     """Typed extraction call (page-isolated, no shared extractor state)."""
-    from unittest.mock import AsyncMock
+    from unittest.mock import AsyncMock, MagicMock
 
     from app.agents.extractors import build_extractors
     from app.schemas.documents import ExtractionCallResult
@@ -92,24 +89,19 @@ async def extract_activity(
     extractors = build_extractors(_settings(), _catalog())
     ext = extractors[doc_type]
     call = None
-    extract_call = getattr(ext, "extract_call", None)
-    # Real extractors (and AsyncMock doubles) are awaitable; plain MagicMock
-    # test doubles that only stub `extract` fall back to the tuple path.
-    if isinstance(extract_call, AsyncMock) or (
-        extract_call is not None
-        and not type(extract_call).__name__ == "MagicMock"
-        and callable(extract_call)
-    ):
-        try:
-            call = await extract_call(text=page_text or "", page_number=page_number)
-        except TypeError:
-            call = None
-    if call is None:
+    # Test doubles that stub only `extract` (instance-dict MagicMock/AsyncMock)
+    # take the tuple path explicitly. Real extractors always go through
+    # extract_call with no broad TypeError fallback, so an internal bug fails
+    # honestly instead of silently downgrading the extraction.
+    inst_extract = ext.__dict__.get("extract")
+    if isinstance(inst_extract, (AsyncMock, MagicMock)):
         fields, _new = await ext.extract(text=page_text or "")
         call = ExtractionCallResult(
             doc_type=doc_type, page_number=page_number,
             fields=list(fields), tables=[], new_field_names=[],
         )
+    else:
+        call = await ext.extract_call(text=page_text or "", page_number=page_number)
     fields = register_discovered_fields(_catalog(), doc_type, call.fields, document_text=page_text).fields
     return {
         "doc_type": doc_type,

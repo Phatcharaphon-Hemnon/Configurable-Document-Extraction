@@ -349,6 +349,24 @@ class DocumentExtractionService:
                 ocr_seconds=settings.ocr_timeout_seconds,
             )
         )
+        # Startup guard: a request timeout above a stage limit cancels before
+        # the timeout retry can run (observed 200s-Router vs 1000s-request).
+        try:
+            from app.core.config import validate_timeout_config
+
+            for warning in validate_timeout_config(settings):
+                logger.warning("Startup timeout config: %s", warning)
+            logger.info(
+                "Timeout budget request=%.0fs router=%.0fs extractor=%.0fs judge=%.0fs concurrency=%d model=%s",
+                settings.llm_request_timeout_seconds,
+                settings.router_timeout_seconds,
+                settings.extractor_timeout_seconds,
+                settings.judge_timeout_seconds,
+                settings.llm_max_concurrent_requests,
+                settings.llm_model,
+            )
+        except Exception:
+            pass
         self.pii_detector = PIIDetector(
             redact_pii=settings.pii_redact_in_logs
         )
@@ -412,6 +430,44 @@ class DocumentExtractionService:
     # Multi-file / multi-page extraction
     # ------------------------------------------------------------------
 
+    async def _stream_ocr_pages(self, part: UploadedFilePart, ocr_use_cache: bool | None):
+        """Yield ``(page_index, ocr_page)`` in document order as OCR completes.
+
+        Real OCR clients stream via ``LocalOCRClient.aparse_pages`` so page 1
+        can be extracted, checkpointed, and polled before later pages finish
+        recognizing. Doubles exposing only ``aparse_file`` (plus optional
+        ``last_pages``) fall back to the collecting path wrapped in typed
+        per-page records. Whole-file OCR failures propagate for the caller to
+        record as file errors; per-page failures arrive as ``ocr_page.error``.
+        """
+        from app.services.local_ocr import LocalOCRClient
+
+        ocr = self.ocr
+        # Stream only on an unstubbed real client. Any instance-level
+        # `aparse_file` override (AsyncMock/side_effect doubles in tests) is
+        # honored via the collecting fallback so stubs keep working.
+        if isinstance(ocr, LocalOCRClient) and "aparse_file" not in ocr.__dict__:
+            page_index = 0
+            async for ocr_page in ocr.aparse_pages(
+                part.raw_content, part.filename, use_cache=ocr_use_cache,
+            ):
+                page_index += 1
+                yield page_index, ocr_page
+            return
+        parsed = await ocr.aparse_file(
+            part.raw_content, part.filename, use_cache=ocr_use_cache,
+        )
+        details = getattr(ocr, "last_pages", [])
+        if not isinstance(details, list) or len(details) != len(parsed):
+            details = [OCRPage(text=text) for text in parsed]
+        for page_index, (page_text, ocr_page) in enumerate(zip(parsed, details), 1):
+            if not getattr(ocr_page, "text", None):
+                try:
+                    ocr_page.text = page_text
+                except Exception:
+                    pass
+            yield page_index, ocr_page
+
     async def extract_group(
         self,
         parts: list[UploadedFilePart],
@@ -457,6 +513,7 @@ class DocumentExtractionService:
         cache_hits = 0
         cache_misses = 0
         cache_lookup_ms = 0.0
+        first_page_elapsed: float | None = None
         cache_on = bool(
             self.result_cache is not None
             and self.result_cache.enabled_and_ready
@@ -468,90 +525,188 @@ class DocumentExtractionService:
             for part in parts:
                 source_id = self.sources.save(part.filename, part.raw_content, part.content_type)
                 self.job_store.set_progress(job.job_id, progress)
+                # Cheap page count up front (no OCR) so progress shows the full
+                # scope before page 1 finishes; None when undecodable (then the
+                # total grows as pages stream in).
+                expected_pages = _count_pages(part.raw_content, part.filename)
+                count_known = bool(expected_pages)
+                if count_known:
+                    progress["total_pages"] += int(expected_pages)
+                    self.job_store.set_progress(job.job_id, progress)
+                pages_seen = 0
                 try:
-                    parsed = await self.ocr.aparse_file(
-                        part.raw_content, part.filename, use_cache=ocr_use_cache,
-                    )
-                except Exception as exc:
-                    file_errors.append(f"{part.filename}: Failed to OCR: {exc}")
-                    continue
-                details = getattr(self.ocr, "last_pages", [])
-                if not isinstance(details, list) or len(details) != len(parsed):
-                    details = [OCRPage(text=text) for text in parsed]
-                progress["total_pages"] += len(parsed)
-                for page_index, (page_text, ocr_page) in enumerate(zip(parsed, details), 1):
-                    source = self.sources.reference(source_id, page_index, len(parsed), ocr_page.preview)
-                    # Stable per-page block IDs before any evidence resolution.
-                    try:
-                        from app.services.evidence import assign_block_ids
-
-                        assign_block_ids(list(getattr(ocr_page, "blocks", None) or []), page_index)
-                    except Exception:
-                        pass
-                    ocr_uncertain_page = bool(
-                        getattr(ocr_page, "review_reasons", None)
-                        or any(getattr(b, "review_reason", None) for b in (getattr(ocr_page, "blocks", None) or []))
-                    )
-
-                    # --- Persistent result cache (checked BEFORE provider queue).
-                    fingerprint = ""
-                    cached_hit = None
-                    cached_meta: dict = {}
-                    lookup_ms = 0.0
-                    if cache_on and not (getattr(ocr_page, "error", None) or not (page_text or "").strip()):
+                    async for page_index, ocr_page in self._stream_ocr_pages(part, ocr_use_cache):
+                        pages_seen += 1
+                        if not count_known:
+                            progress["total_pages"] += 1
+                        page_text = getattr(ocr_page, "text", None) or ""
+                        page_total = int(expected_pages or 0) or page_index
+                        source = self.sources.reference(source_id, page_index, page_total, ocr_page.preview)
+                        # Stable per-page block IDs before any evidence resolution.
                         try:
-                            _t0 = time.perf_counter()
-                            fingerprint = self.result_cache.fingerprint_page(
-                                file_bytes=part.raw_content,
-                                filename=part.filename,
-                                page_number=page_index,
-                                page_text=page_text,
-                                ocr_engine=getattr(ocr_page, "engine", "") or "",
-                                ocr_languages=self.settings.ocr_languages,
-                                ocr_dpi=self.settings.ocr_dpi,
-                                ocr_model_hashes=getattr(self.ocr, "model_hashes", {}) or {},
-                                hybrid_fingerprint=self.ocr._hybrid_fingerprint(),
-                            )
-                            cached_hit, cached_meta = self.result_cache.get(fingerprint)
-                            lookup_ms = (time.perf_counter() - _t0) * 1000
-                            cache_lookup_ms += lookup_ms
-                        except Exception as exc:
-                            logger.warning("Result cache lookup skipped: %s", exc)
-                            cached_hit, cached_meta = None, {}
-                    if cached_hit is not None:
-                        from uuid import uuid4
+                            from app.services.evidence import assign_block_ids
 
-                        from app.schemas.documents import ResultCacheMetadata
-
-                        cache_hits += 1
-                        document = cached_hit.model_copy(
-                            update={
-                                "id": uuid4(),
-                                "source": source,
-                                "ocr_blocks": list(getattr(ocr_page, "blocks", None) or []),
-                                "full_text": page_text,
-                                "cache_metadata": ResultCacheMetadata(
-                                    fingerprint=fingerprint,
-                                    computed_at=cached_meta.get("computed_at_iso"),
-                                    original_timings=dict(cached_meta.get("original_timings", {}) or {}),
-                                    acceptance_policy_version=cached_meta.get(
-                                        "acceptance_policy", "v1.0.0",
-                                    ),
-                                    cache_lookup_ms=lookup_ms,
-                                    hit_type="full",
-                                ),
-                            }
-                        )
-                        try:
-                            document.timings.update(
-                                ocr=ocr_page.seconds,
-                                render=ocr_page.render_seconds,
-                                ocr_cached=float(getattr(ocr_page, "cached", False)),
-                                result_cache_hit=1.0,
-                                result_cache_lookup_ms=lookup_ms,
-                            )
+                            assign_block_ids(list(getattr(ocr_page, "blocks", None) or []), page_index)
                         except Exception:
                             pass
+                        ocr_uncertain_page = bool(
+                            getattr(ocr_page, "review_reasons", None)
+                            or any(getattr(b, "review_reason", None) for b in (getattr(ocr_page, "blocks", None) or []))
+                        )
+
+                        # --- Persistent result cache (checked BEFORE provider queue).
+                        fingerprint = ""
+                        cached_hit = None
+                        cached_meta: dict = {}
+                        lookup_ms = 0.0
+                        if cache_on and not (getattr(ocr_page, "error", None) or not (page_text or "").strip()):
+                            try:
+                                _t0 = time.perf_counter()
+                                fingerprint = self.result_cache.fingerprint_page(
+                                    file_bytes=part.raw_content,
+                                    filename=part.filename,
+                                    page_number=page_index,
+                                    page_text=page_text,
+                                    ocr_engine=getattr(ocr_page, "engine", "") or "",
+                                    ocr_languages=self.settings.ocr_languages,
+                                    ocr_dpi=self.settings.ocr_dpi,
+                                    ocr_model_hashes=getattr(self.ocr, "model_hashes", {}) or {},
+                                    hybrid_fingerprint=self.ocr._hybrid_fingerprint(),
+                                )
+                                cached_hit, cached_meta = self.result_cache.get(fingerprint)
+                                lookup_ms = (time.perf_counter() - _t0) * 1000
+                                cache_lookup_ms += lookup_ms
+                            except Exception as exc:
+                                logger.warning("Result cache lookup skipped: %s", exc)
+                                cached_hit, cached_meta = None, {}
+                        if cached_hit is not None:
+                            from uuid import uuid4
+
+                            from app.schemas.documents import ResultCacheMetadata
+
+                            cache_hits += 1
+                            document = cached_hit.model_copy(
+                                update={
+                                    "id": uuid4(),
+                                    "source": source,
+                                    "ocr_blocks": list(getattr(ocr_page, "blocks", None) or []),
+                                    "full_text": page_text,
+                                    "cache_metadata": ResultCacheMetadata(
+                                        fingerprint=fingerprint,
+                                        computed_at=cached_meta.get("computed_at_iso"),
+                                        original_timings=dict(cached_meta.get("original_timings", {}) or {}),
+                                        acceptance_policy_version=cached_meta.get(
+                                            "acceptance_policy", "v1.0.0",
+                                        ),
+                                        cache_lookup_ms=lookup_ms,
+                                        hit_type="full",
+                                    ),
+                                }
+                            )
+                            try:
+                                document.timings.update(
+                                    ocr=ocr_page.seconds,
+                                    render=ocr_page.render_seconds,
+                                    ocr_cached=float(getattr(ocr_page, "cached", False)),
+                                    result_cache_hit=1.0,
+                                    result_cache_lookup_ms=lookup_ms,
+                                )
+                            except Exception:
+                                pass
+                            try:
+                                document = _merge_ocr_reviews(document, ocr_page)
+                            except Exception:
+                                pass
+                            documents.append(document)
+                            self.job_store.save_result(job.job_id, FileExtractionResponse(
+                                request=request_meta, documents=documents, job_id=job_id_str,
+                                file_errors=file_errors).model_dump(mode="json"), status="processing")
+                            progress["completed_pages"] += 1
+                            self.job_store.set_progress(job.job_id, progress)
+                            if first_page_elapsed is None:
+                                first_page_elapsed = time.perf_counter() - started
+                            continue
+
+                        cache_misses += 1
+
+                        def notify_stage(stage):
+                            progress["stage"] = stage
+                            self.job_store.set_progress(job.job_id, progress)
+                        stage_token = stage_notifier.set(notify_stage)
+                        try:
+                            if ocr_page.error or not page_text.strip():
+                                message = ocr_page.error or "No readable text on this page"
+                                document = ExtractionResult(doc_type="invoice", fields=[], needs_review=True,
+                                    completeness_score=0, error=message, failed_stage="ocr", validation_errors=[message])
+                            elif self.settings.temporal_enabled:
+                                from app.temporal.client import get_temporal_client
+                                client = await get_temporal_client()
+                                raw = await client.execute_workflow("ExtractPageWorkflow", args=[part.filename, page_text],
+                                    id=f"{job.job_id}-page-{len(documents) + 1}", task_queue=self.settings.temporal_task_queue)
+                                document = ExtractionResult.model_validate(raw)
+                            else:
+                                document = await self._extract_one_page(
+                                    filename=part.filename,
+                                    page_text=page_text,
+                                    ocr_notes=list(getattr(ocr_page, "review_reasons", None) or []),
+                                    page_number=page_index,
+                                    blocks=list(getattr(ocr_page, "blocks", None) or []),
+                                    ocr_uncertain=ocr_uncertain_page,
+                                    doc_type=doc_type,
+                                )
+                        except asyncio.CancelledError:
+                            raise
+                        except Exception as exc:
+                            document = ExtractionResult(doc_type="invoice", fields=[], needs_review=True,
+                                completeness_score=0, error=f"Page pipeline failed: {exc}", validation_errors=[str(exc)])
+                        finally:
+                            stage_notifier.reset(stage_token)
+                        # Store completed pages (valid partial results cache even
+                        # when sibling pages fail; the submission as a whole is
+                        # never presented as complete from a partial hit).
+                        if cache_on and fingerprint:
+                            try:
+                                self.result_cache.put(fingerprint, document, meta={
+                                    "filename": part.filename,
+                                    "page_number": page_index,
+                                })
+                                # Accumulate the preliminary manifest so a repeat
+                                # upload can resolve without OCR (fast path).
+                                # Manifest needs the same page count the fast path
+                                # looks up; skip it when the count is unknown.
+                                try:
+                                    if expected_pages:
+                                        manifest_key = self.result_cache.manifest_key(
+                                            file_bytes=part.raw_content,
+                                            filename=part.filename,
+                                            page_count=int(expected_pages),
+                                        )
+                                        self.result_cache.manifest_put(
+                                            manifest_key, page_index, fingerprint, int(expected_pages),
+                                            page_text=page_text)
+                                except Exception:
+                                    pass
+                            except Exception:
+                                pass
+                        document.source = source
+                        document.ocr_blocks = ocr_page.blocks
+                        document.full_text = page_text
+                        document.timings.update(ocr=ocr_page.seconds, render=ocr_page.render_seconds,
+                                                ocr_cached=float(ocr_page.cached))
+                        # Engine provenance (backward-compatible: timings flags only;
+                        # full detail stays in ocr_blocks[].engine + alternatives).
+                        try:
+                            engine = getattr(ocr_page, "engine", "") or ""
+                            engines_used = list(getattr(ocr_page, "engines_used", None) or [])
+                            if engine:
+                                document.timings[f"ocr_engine_{engine}"] = 1.0
+                                for used in engines_used:
+                                    if used and used != engine:
+                                        document.timings[f"ocr_engine_{used}"] = 1.0
+                        except Exception:
+                            pass
+                        # OCR uncertainty → validation_errors/needs_review (both
+                        # in-process and Temporal paths — merge happens here).
                         try:
                             document = _merge_ocr_reviews(document, ocr_page)
                         except Exception:
@@ -562,95 +717,17 @@ class DocumentExtractionService:
                             file_errors=file_errors).model_dump(mode="json"), status="processing")
                         progress["completed_pages"] += 1
                         self.job_store.set_progress(job.job_id, progress)
+                        if first_page_elapsed is None:
+                            first_page_elapsed = time.perf_counter() - started
+                except Exception as exc:
+                    # A failure before the first page streamed is an OCR/file
+                    # failure for this part (later pages keep prior behavior:
+                    # per-page errors become error documents, unexpected bugs
+                    # abort honestly instead of masquerading as OCR issues).
+                    if pages_seen == 0:
+                        file_errors.append(f"{part.filename}: Failed to OCR: {exc}")
                         continue
-
-                    cache_misses += 1
-
-                    def notify_stage(stage):
-                        progress["stage"] = stage
-                        self.job_store.set_progress(job.job_id, progress)
-                    stage_token = stage_notifier.set(notify_stage)
-                    try:
-                        if ocr_page.error or not page_text.strip():
-                            message = ocr_page.error or "No readable text on this page"
-                            document = ExtractionResult(doc_type="invoice", fields=[], needs_review=True,
-                                completeness_score=0, error=message, failed_stage="ocr", validation_errors=[message])
-                        elif self.settings.temporal_enabled:
-                            from app.temporal.client import get_temporal_client
-                            client = await get_temporal_client()
-                            raw = await client.execute_workflow("ExtractPageWorkflow", args=[part.filename, page_text],
-                                id=f"{job.job_id}-page-{len(documents) + 1}", task_queue=self.settings.temporal_task_queue)
-                            document = ExtractionResult.model_validate(raw)
-                        else:
-                            document = await self._extract_one_page(
-                                filename=part.filename,
-                                page_text=page_text,
-                                ocr_notes=list(getattr(ocr_page, "review_reasons", None) or []),
-                                page_number=page_index,
-                                blocks=list(getattr(ocr_page, "blocks", None) or []),
-                                ocr_uncertain=ocr_uncertain_page,
-                                doc_type=doc_type,
-                            )
-                    except asyncio.CancelledError:
-                        raise
-                    except Exception as exc:
-                        document = ExtractionResult(doc_type="invoice", fields=[], needs_review=True,
-                            completeness_score=0, error=f"Page pipeline failed: {exc}", validation_errors=[str(exc)])
-                    finally:
-                        stage_notifier.reset(stage_token)
-                    # Store completed pages (valid partial results cache even
-                    # when sibling pages fail; the submission as a whole is
-                    # never presented as complete from a partial hit).
-                    if cache_on and fingerprint:
-                        try:
-                            self.result_cache.put(fingerprint, document, meta={
-                                "filename": part.filename,
-                                "page_number": page_index,
-                            })
-                            # Accumulate the preliminary manifest so a repeat
-                            # upload can resolve without OCR (fast path).
-                            try:
-                                manifest_key = self.result_cache.manifest_key(
-                                    file_bytes=part.raw_content,
-                                    filename=part.filename,
-                                    page_count=len(parsed),
-                                )
-                                self.result_cache.manifest_put(
-                                    manifest_key, page_index, fingerprint, len(parsed),
-                                    page_text=page_text)
-                            except Exception:
-                                pass
-                        except Exception:
-                            pass
-                    document.source = source
-                    document.ocr_blocks = ocr_page.blocks
-                    document.full_text = page_text
-                    document.timings.update(ocr=ocr_page.seconds, render=ocr_page.render_seconds,
-                                            ocr_cached=float(ocr_page.cached))
-                    # Engine provenance (backward-compatible: timings flags only;
-                    # full detail stays in ocr_blocks[].engine + alternatives).
-                    try:
-                        engine = getattr(ocr_page, "engine", "") or ""
-                        engines_used = list(getattr(ocr_page, "engines_used", None) or [])
-                        if engine:
-                            document.timings[f"ocr_engine_{engine}"] = 1.0
-                            for used in engines_used:
-                                if used and used != engine:
-                                    document.timings[f"ocr_engine_{used}"] = 1.0
-                    except Exception:
-                        pass
-                    # OCR uncertainty → validation_errors/needs_review (both
-                    # in-process and Temporal paths — merge happens here).
-                    try:
-                        document = _merge_ocr_reviews(document, ocr_page)
-                    except Exception:
-                        pass
-                    documents.append(document)
-                    self.job_store.save_result(job.job_id, FileExtractionResponse(
-                        request=request_meta, documents=documents, job_id=job_id_str,
-                        file_errors=file_errors).model_dump(mode="json"), status="processing")
-                    progress["completed_pages"] += 1
-                    self.job_store.set_progress(job.job_id, progress)
+                    raise
             # Full-hit (all pages cached) / partial-hit / miss, derived from
             # per-page counts. Lookup/remap latency reported separately from
             # original computation timings (preserved in cache_metadata).
@@ -671,7 +748,8 @@ class DocumentExtractionService:
                 file_errors=file_errors, error="; ".join(file_errors) if not documents else None,
                 timings={"processing": time.perf_counter() - started, "queue": queue_wait.get(),
                          "result_cache_hits": float(cache_hits), "result_cache_misses": float(cache_misses),
-                         "result_cache_lookup_ms": cache_lookup_ms})
+                         "result_cache_lookup_ms": cache_lookup_ms,
+                         **({"time_to_first_page": first_page_elapsed} if first_page_elapsed is not None else {})})
             if not documents and not response.error:
                 response.error = "No readable pages found"
             progress["stage"] = "completed" if documents else "failed"
@@ -1303,17 +1381,16 @@ class DocumentExtractionService:
                 self.job_store.mark_processing(job_id)
                 logger.info("Job %s processing", job_id)
                 queue_wait.set(time.perf_counter() - queued_at)
-                try:
-                    await self.extract_group(
-                        parts,
-                        job_id=job_id,
-                        force_refresh=force_refresh,
-                        disable_caches=disable_caches,
-                        doc_type=doc_type,
-                    )
-                except TypeError:
-                    # Test doubles that stub extract_group(parts, job_id).
-                    await self.extract_group(parts, job_id)
+                # No broad fallback here: an internal TypeError must fail
+                # honestly (persisted below), never silently duplicate the
+                # whole job with a second extraction run.
+                await self.extract_group(
+                    parts,
+                    job_id=job_id,
+                    force_refresh=force_refresh,
+                    disable_caches=disable_caches,
+                    doc_type=doc_type,
+                )
                 job = self.job_store.get(job_id)
                 logger.info("Job %s %s", job_id, job.status if job else "unknown")
         except asyncio.CancelledError:

@@ -74,8 +74,9 @@ AI provider: 3 vars (`LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL`).
 Providers (registry `LLM_PROVIDERS` in `api/app/core/config.py`): `openai`,
 `xai`, `gemini`, `openrouter`, `deepseek` (no default model — `LLM_MODEL`
 required), `kimi`, `ollama-cloud`, `ollama-local`, `mistral`, `openclaw`
-(local gateway), `opencode` (Zen gateway). No native Claude entry (Messages
-API is not OpenAI-compatible) — reach it via `openrouter`/`opencode`.
+(local gateway), `opencode` (Zen gateway), `xkiro` (gateway, no default
+model — `LLM_MODEL` required). No native Claude entry (Messages
+API is not OpenAI-compatible) — reach it via `openrouter`/`opencode`/`xkiro`.
 Default: Ollama Cloud (`https://ollama.com/v1`), model `gpt-oss:20b`
 (text-only, used for Router + Extractor + Judge). See `docs/guides/ai_provider.md`.
 Parsing: local Tesseract Thai/English by default (`OCR_ENGINE`, `OCR_LANGUAGES`,

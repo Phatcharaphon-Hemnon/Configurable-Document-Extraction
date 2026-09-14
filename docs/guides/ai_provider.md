@@ -25,13 +25,15 @@ LLM_MODEL=gpt-oss:20b       # single model for Router + Extractor + Judge
 | `nvidia` | `https://integrate.api.nvidia.com/v1` | `LLM_API_KEY` → `NVIDIA_API_KEY` | `meta/llama-3.3-70b-instruct` |
 | `openclaw` | `http://127.0.0.1:18789/v1` | `LLM_API_KEY` → `OPENCLAW_API_KEY` (gateway token) | `openclaw/default` |
 | `opencode` | `https://opencode.ai/zen/v1` | `LLM_API_KEY` → `OPENCODE_API_KEY` | `gpt-5.4-mini` |
+| `xkiro` | `https://api.xkiro.com/v1` | `LLM_API_KEY` → `XKIRO_API_KEY` | **none — `LLM_MODEL` required** |
 
 Get keys at: [OpenAI](https://platform.openai.com/api-keys) ·
 [xAI](https://console.x.ai) · [Google AI Studio](https://aistudio.google.com) ·
 [OpenRouter](https://openrouter.ai/settings/keys) ·
 [DeepSeek](https://platform.deepseek.com) · [Moonshot](https://platform.moonshot.ai/console) ·
 [Ollama](https://ollama.com/settings/keys) · [Mistral](https://console.mistral.ai) ·
-[NVIDIA](https://build.nvidia.com) · [OpenCode Zen](https://opencode.ai/zen).
+[NVIDIA](https://build.nvidia.com) · [OpenCode Zen](https://opencode.ai/zen) ·
+[xKiro dashboard](https://xkiro.com/dashboard/api/keys).
 
 Never commit `api/.env`. Backend keys must stay out of the frontend and out of
 any `VITE_*` variable.
@@ -101,8 +103,14 @@ this, so no extra configuration is needed; verify with
 ```bash
 LLM_PROVIDER=nvidia
 LLM_API_KEY=<paste nvapi-... key>
-LLM_MODEL=meta/llama-3.3-70b-instruct   # default; any NIM model ID works
+LLM_MODEL=meta/llama-3.2-11b-vision-instruct   # default; any NIM model ID works
 ```
+Note (2026-09-14): `meta/llama-3.3-70b-instruct` returned `410 Gone`
+(EOL 2026-08-26) and was replaced as the default — see
+`docs/reports/router_timeout_nvidia_2026-09-14.md` for measurements.
+Timeouts: `LLM_REQUEST_TIMEOUT_SECONDS=45`, `ROUTER/JUDGE=100`,
+`EXTRACTOR=150` (one retry fits inside the stage; shorter limits bound
+failures without accelerating generation).
 
 **OpenClaw (local gateway)** — the gateway's Chat Completions endpoint is
 **disabled by default**; enable it first
@@ -120,9 +128,52 @@ LLM_PROVIDER=opencode
 LLM_API_KEY=public   # or paste OPENCODE_API_KEY
 ```
 
+**xKiro (gateway)** — one key for 57+ vendor-prefixed models
+(`openai/...`, `anthropic/...`, ...). All claims below are
+**documented 2026-09-14, not live-verified** (offline implementation; no
+probe has run against this endpoint yet):
+```bash
+LLM_PROVIDER=xkiro
+LLM_API_KEY=<paste key from https://xkiro.com/dashboard/api/keys>
+LLM_MODEL=<verified vendor/model ID>   # REQUIRED: no default ships (bare names 404 upstream)
+```
+- Model IDs always carry the vendor prefix (`openai/gpt-5.6-sol`, never
+  `gpt-5.6-sol`); the live catalog (`GET /v1/models`, incl. per-model
+  `access_tier` and `reasoning_efforts`) is the source of truth —
+  [models](https://docs.xkiro.com/models/),
+  [tiers](https://docs.xkiro.com/models/tiers/).
+- Free-tier models work on every plan within a daily token allowance;
+  paid/premium need plan balance or wallet top-up (403 `permission_denied`
+  otherwise) — [pricing](https://docs.xkiro.com/guides/pricing/).
+- `response_format` is enforced on most models but **silently ignored** on
+  DeepSeek/Qwen (prompt hint instead) and `openai/gpt-5.6-*`, `gpt-5.5`,
+  `gpt-5.4*`, Claude (no error) — the client's prompt-embedded schema +
+  Pydantic validation + same-tier corrective already cover this, and strict
+  mode stays on until a probe proves otherwise —
+  [structured output](https://docs.xkiro.com/guides/structured-output/).
+- Reasoning is per-model: omitting the parameter does **not** disable it
+  (many models default ON, billed as output tokens); `none` is the documented
+  explicit-off value but support is per-model, and an accepted request does
+  **not** prove reasoning stopped (unsupported levels are silently adjusted).
+  `LLM_REASONING_EFFORT` accepts `low/medium/high/none`, defaulting to
+  current behavior — [reasoning](https://docs.xkiro.com/guides/reasoning/).
+- Blocking (non-streaming) requests are cut off at 95s per the quickstart —
+  the 45s default request timeout stays safely under it; never run the 120s
+  diagnostic pattern against xKiro — [quickstart](https://docs.xkiro.com/guides/quickstart/).
+- Retention (stated policy, not verified): xKiro states zero content
+  retention (metadata only for billing/operations); prompts are still
+  forwarded to the upstream model provider, whose own retention policy
+  applies — [privacy §2/§4](https://xkiro.com/privacy). Do not send
+  documents you would not send to that upstream provider directly.
+- Errors follow the OpenAI shape; retry 429/500/502/503, never blindly retry
+  400/401/403/404/402 — [errors](https://docs.xkiro.com/api/errors/). Note:
+  this client's transport retries 429/503 only; 500/502 surface immediately
+  (compatibility limitation, not measured xKiro behavior).
+
 **Claude** — no native entry: the Anthropic Messages API is not
 OpenAI-compatible (different auth headers + body). Reach Claude through
-`openrouter` (e.g. `LLM_MODEL=anthropic/claude-sonnet-4`) or `opencode`.
+`openrouter` (e.g. `LLM_MODEL=anthropic/claude-sonnet-4`), `opencode`, or
+`xkiro`.
 
 ## Optional overrides
 
@@ -132,6 +183,9 @@ ROUTER_MODEL_NAME=        # default: LLM_MODEL (same for EXTRACTION/JUDGE)
 EXTRACTION_MODEL_NAME=
 JUDGE_MODEL_NAME=
 LLM_TEMPERATURE=          # default: 1.0 on ollama-cloud, 0.0 elsewhere
+LLM_REASONING_EFFORT=       # default: unset (current behavior); low/medium/high/none
+                            # applies only to exact verified (endpoint, model) pairs;
+                            # "none" is per-model, accepted ≠ disabled
 DISABLE_STRICT_JSON_SCHEMA=  # default: true on deepseek, false elsewhere;
                              # set true/false to force either way
 ```

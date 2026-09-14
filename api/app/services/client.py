@@ -82,6 +82,24 @@ class ClientResult:
     diagnosis: str | None = None
     normalization: str | None = None
     finish_reason: str | None = None
+    # Effective reasoning control after fallback (None = feature inactive for
+    # this call; "low"/"medium"/"high" = sent; "" = removed after an explicit
+    # unsupported-parameter rejection).
+    reasoning_effort: str | None = None
+
+
+# Exact (endpoint, model) pairs verified by live probe to accept the
+# documented `reasoning_effort` chat-completions parameter. Deliberately NOT
+# a substring match: a pair is added here only after a bounded diagnostic
+# confirms acceptance AND measures the effect on the verified pair.
+#
+# Verified 2026-09-14 (docs/reports/nvidia_extractor_timeout_2026-09-14.md):
+# ("https://integrate.api.nvidia.com/v1", "openai/gpt-oss-20b") accepted
+# reasoning_effort="low" with no 400 and no fallback removal. The env default
+# is still "" (feature inactive) — this entry only permits explicit opt-in.
+REASONING_EFFORT_ALLOWLIST: frozenset[tuple[str, str]] = frozenset({
+    ("https://integrate.api.nvidia.com/v1", "openai/gpt-oss-20b"),
+})
 
 
 # Parse-failure classification for honest recovery (never "invalid JSON" alone).
@@ -235,6 +253,7 @@ _BILLING_URLS = {
     "nvidia": "https://build.nvidia.com",
     "openclaw": "",
     "opencode": "https://opencode.ai/zen",
+    "xkiro": "https://xkiro.com/dashboard",
 }
 _PAYMENT_MARKERS = (
     "insufficient_quota",
@@ -679,33 +698,105 @@ class Client:
     def _mark_tier_unsupported(self, model: str, tier: str) -> None:
         Client._unsupported_tiers.add((getattr(self, "_endpoint", ""), model, tier))
 
+    # Reasoning-parameter rejections, remembered separately from output-format
+    # tiers: only an explicit unsupported-parameter response removes the
+    # documented `reasoning_effort` parameter, never an output-format change.
+    _reasoning_unsupported: set[tuple[str, str]] = set()
+
+    def _resolve_reasoning_effort(self, model: str, explicit: str | None = None) -> str:
+        """Effective reasoning_effort for this call ("" = feature inactive).
+
+        An explicit method-level value (diagnostics) takes responsibility
+        itself; the `LLM_REASONING_EFFORT` env default applies only to exact
+        (endpoint, model) pairs in REASONING_EFFORT_ALLOWLIST. Everything
+        else returns "" — current behavior, byte-identical requests.
+
+        Limitation: "none" is a per-model off-switch, not a universal one,
+        and an accepted request does NOT prove reasoning was disabled —
+        some providers silently adjust unsupported levels instead of
+        rejecting them. Verify effect via output tokens + latency, never via
+        acceptance alone.
+        """
+        if isinstance(explicit, str) and explicit.strip().lower() in ("low", "medium", "high", "none"):
+            return explicit.strip().lower()
+        env = str(getattr(self.settings, "llm_reasoning_effort", "") or "").strip().lower()
+        if env in ("low", "medium", "high", "none") and (
+            getattr(self, "_endpoint", ""), model
+        ) in REASONING_EFFORT_ALLOWLIST:
+            return env
+        return ""
+
+    def _reasoning_rejected(self, model: str) -> bool:
+        return (getattr(self, "_endpoint", ""), model) in Client._reasoning_unsupported
+
+    def _mark_reasoning_rejected(self, model: str) -> None:
+        Client._reasoning_unsupported.add((getattr(self, "_endpoint", ""), model))
+
+    def _effective_reasoning_after_fallback(self, model: str, requested: str) -> str | None:
+        """Requested setting minus an explicit rejection (None = inactive)."""
+        if not requested:
+            return None
+        if self._reasoning_rejected(model):
+            return ""
+        return requested
+
     @limited_generation
     async def _chat_with_retry(self, **kwargs: Any):
-        """Retry transient failures within the generation's shared HTTP budget."""
+        """Retry transient failures within the generation's shared HTTP budget.
+
+        Logs model, attempt number, request duration, and timeout category
+        only — never document content or credentials (kwargs bodies stay
+        out of logs; provider details are redacted).
+        """
         budget = request_budget.get()
         assert budget is not None
+        # Model identity for logs only (never credentials or prompt bodies).
+        model_name = str(kwargs.get("model", "")) or "unknown"
         started = asyncio.get_running_loop().time()
         while budget.attempts < RATE_LIMIT_MAX_RETRIES:
             budget.attempts += 1
             self.last_attempts = budget.attempts
+            attempt_started = asyncio.get_running_loop().time()
             logger.info(
-                "LLM request job=%s stage=%s attempt=%d/%d elapsed=%.1fs",
-                job_context.get(), stage_context.get(), budget.attempts,
+                "LLM request job=%s stage=%s model=%s attempt=%d/%d elapsed=%.1fs timeout=%.0fs",
+                job_context.get(), stage_context.get(), model_name, budget.attempts,
                 RATE_LIMIT_MAX_RETRIES, asyncio.get_running_loop().time() - started,
+                self._timeout,
             )
             try:
-                return await asyncio.wait_for(
+                response = await asyncio.wait_for(
                     self._client.chat.completions.create(**kwargs), timeout=self._timeout,
                 )
+                duration = asyncio.get_running_loop().time() - attempt_started
+                logger.info(
+                    "LLM response job=%s stage=%s model=%s attempt=%d duration=%.1fs",
+                    job_context.get(), stage_context.get(), model_name,
+                    budget.attempts, duration,
+                )
+                return response
             except Exception as exc:
+                duration = asyncio.get_running_loop().time() - attempt_started
                 if _is_payment_error(exc):
+                    logger.error(
+                        "LLM payment error job=%s stage=%s model=%s attempt=%d duration=%.1fs category=payment details=%s",
+                        job_context.get(), stage_context.get(), model_name,
+                        budget.attempts, duration, extract_provider_error(exc),
+                    )
                     raise
                 if isinstance(exc, (asyncio.TimeoutError, APITimeoutError)):
+                    timeout_category = "timeout"
                     if budget.timeout_retries >= TIMEOUT_MAX_RETRIES:
+                        logger.warning(
+                            "LLM timeout exhausted job=%s stage=%s model=%s attempt=%d duration=%.1fs category=%s timeout_retries=%d",
+                            job_context.get(), stage_context.get(), model_name,
+                            budget.attempts, duration, timeout_category,
+                            budget.timeout_retries,
+                        )
                         raise asyncio.TimeoutError() from exc
                     budget.timeout_retries += 1
                     delay = TIMEOUT_RETRY_BACKOFF_SECONDS
                 elif _is_rate_limit_error(exc):
+                    timeout_category = "rate_limit"
                     delay = RATE_LIMIT_BACKOFF_SECONDS * 2 ** (budget.attempts - 1)
                     delay += random.uniform(0, 0.5)
                     retry_after = _retry_after_seconds(exc)
@@ -714,14 +805,25 @@ class Client:
                 else:
                     raise
                 if budget.attempts >= RATE_LIMIT_MAX_RETRIES:
+                    logger.warning(
+                        "LLM budget exhausted job=%s stage=%s model=%s attempt=%d duration=%.1fs category=%s",
+                        job_context.get(), stage_context.get(), model_name,
+                        budget.attempts, duration, timeout_category,
+                    )
                     raise
                 deadline = stage_deadline.get()
                 if deadline is not None and asyncio.get_running_loop().time() + delay >= deadline:
+                    logger.warning(
+                        "LLM retry skipped job=%s stage=%s model=%s attempt=%d duration=%.1fs category=%s reason=stage_deadline delay=%.1fs",
+                        job_context.get(), stage_context.get(), model_name,
+                        budget.attempts, duration, timeout_category, delay,
+                    )
                     raise ClientError("Provider retry delay exceeds remaining stage deadline") from exc
                 logger.warning(
-                    "LLM retry job=%s stage=%s attempt=%d/%d reason=%s delay=%.1fs details=%s",
-                    job_context.get(), stage_context.get(), budget.attempts,
-                    RATE_LIMIT_MAX_RETRIES, type(exc).__name__, delay,
+                    "LLM retry job=%s stage=%s model=%s attempt=%d/%d duration=%.1fs category=%s reason=%s delay=%.1fs details=%s",
+                    job_context.get(), stage_context.get(), model_name, budget.attempts,
+                    RATE_LIMIT_MAX_RETRIES, duration, timeout_category,
+                    type(exc).__name__, delay,
                     extract_provider_error(exc),
                 )
                 await asyncio.sleep(delay)
@@ -729,9 +831,24 @@ class Client:
 
     async def _request_mode(self, kwargs: dict[str, Any], request_summary: dict[str, Any]):
         """Only explicit parameter incompatibility permits changing a request."""
+        import time as _time
+
+        _mode_started = _time.perf_counter()
         try:
             return await self._chat_with_retry(**kwargs)
         except (asyncio.TimeoutError, APITimeoutError) as exc:
+            # Final timeout surface: log duration/attempt/model/category only.
+            # request_summary (prompt bodies) and credentials stay out of logs.
+            try:
+                _budget = request_budget.get()
+                _attempts = _budget.attempts if _budget is not None else 0
+            except Exception:
+                _attempts = 0
+            logger.warning(
+                "LLM request timed out job=%s stage=%s model=%s attempts=%d duration=%.1fs category=timeout timeout=%.0fs",
+                job_context.get(), stage_context.get(), str(kwargs.get("model", "")),
+                _attempts, _time.perf_counter() - _mode_started, self._timeout,
+            )
             raise ClientError(
                 "LLM request timed out",
                 request_summary=request_summary,
@@ -739,6 +856,25 @@ class Client:
             ) from exc
         except Exception as exc:
             self._fail_fast_if_payment_error(exc, request_summary)
+            if "reasoning_effort" in kwargs and _unsupported_parameter(
+                exc, ("reasoning_effort", "reasoning")
+            ):
+                # Explicit parameter rejection ONLY: drop the documented
+                # reasoning parameter within the same HTTP budget. The output
+                # format tier is untouched (no downgrade); the rejection is
+                # remembered so later calls skip the parameter without burning
+                # an attempt. Effective setting after fallback: none.
+                try:
+                    self._mark_reasoning_rejected(str(kwargs.get("model", "")))
+                except Exception:
+                    pass
+                logger.warning(
+                    "LLM reasoning_effort rejected job=%s stage=%s model=%s "
+                    "— param removed, format unchanged, effective=none",
+                    job_context.get(), stage_context.get(), str(kwargs.get("model", "")),
+                )
+                kwargs = {key: value for key, value in kwargs.items() if key != "reasoning_effort"}
+                return await self._request_mode(kwargs, request_summary)
             if "extra_body" in kwargs and _unsupported_parameter(exc, ("reasoning", "extra_body")):
                 # Retry only an explicitly rejected optional parameter.
                 kwargs = {key: value for key, value in kwargs.items() if key != "extra_body"}
@@ -834,23 +970,27 @@ class Client:
         request_summary: dict[str, Any],
         max_tokens: int | None,
         disable_reasoning: bool,
+        reasoning_effort: str = "",
     ):
         if tier == "json_schema":
             return await self._call_with_schema(
                 model=model, messages=messages, response_schema=response_schema,
                 temperature=temperature, request_summary=request_summary,
                 max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+                reasoning_effort=reasoning_effort,
             )
         if tier == "json_object":
             return await self._call_with_json_object_mode(
                 model=model, messages=messages, temperature=temperature,
                 request_summary=request_summary, max_tokens=max_tokens,
                 disable_reasoning=disable_reasoning,
+                reasoning_effort=reasoning_effort,
             )
         return await self._call_plain(
             model=model, messages=messages, temperature=temperature,
             request_summary=request_summary, max_tokens=max_tokens,
             disable_reasoning=disable_reasoning,
+            reasoning_effort=reasoning_effort,
         )
 
     def _classified_error(
@@ -900,6 +1040,7 @@ class Client:
         temperature: float | None = None,
         max_tokens: int | None = None,
         disable_reasoning: bool = False,
+        reasoning_effort: str | None = None,
     ) -> ClientResult:
         """Call the model and parse the response into *response_schema*.
 
@@ -910,25 +1051,35 @@ class Client:
         from content correction. Plain-text downgrade happens only when both
         structured tiers are explicitly unsupported — never because schema
         validation failed.
+
+        `reasoning_effort` ("low"/"medium"/"high"/"none", default None) is an
+        explicit per-call override for endpoints with a documented parameter;
+        otherwise the `LLM_REASONING_EFFORT` env default applies solely to
+        exact (endpoint, model) pairs in REASONING_EFFORT_ALLOWLIST. The
+        effective setting after fallback is recorded on the returned
+        ClientResult (None = feature inactive).
         """
         import time as _time
 
         temperature = _resolve_temperature(self.settings, temperature)
+        reasoning_effort = self._resolve_reasoning_effort(model, explicit=reasoning_effort)
         request_summary: dict[str, Any] = {
             "model": model,
             "prompt": _truncate(prompt),
             "response_schema": response_schema.__name__,
             "temperature": temperature,
             "disable_reasoning": disable_reasoning,
+            "reasoning_effort": reasoning_effort or None,
         }
 
         messages = [{"role": "user", "content": prompt + _build_json_prompt_suffix(response_schema)}]
         endpoint = getattr(self, "_endpoint", "")
         logger.info(
-            "LLM structured start job=%s stage=%s endpoint=%s model=%s schema=%s schema_fp=%s format=%s max_tokens=%s temp=%s",
+            "LLM structured start job=%s stage=%s endpoint=%s model=%s schema=%s schema_fp=%s format=%s max_tokens=%s temp=%s reasoning_effort=%s",
             job_context.get(), stage_context.get(), endpoint, model, response_schema.__name__,
             self._schema_fingerprint(response_schema),
             self._strongest_tier(model), max_tokens, temperature,
+            reasoning_effort or "none",
         )
 
         # --- Attempt 1: strongest supported tier ---
@@ -950,6 +1101,7 @@ class Client:
             tier, model=model, messages=messages, response_schema=response_schema,
             temperature=temperature, request_summary=request_summary,
             max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+            reasoning_effort=reasoning_effort,
         )
         elapsed1 = _time.perf_counter() - t0
         attempts_made = 1
@@ -973,6 +1125,7 @@ class Client:
                     tier, model=model, messages=messages, response_schema=response_schema,
                     temperature=temperature, request_summary=request_summary,
                     max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+                    reasoning_effort=reasoning_effort,
                 )
                 elapsed1 = _time.perf_counter() - t0
             else:
@@ -987,6 +1140,12 @@ class Client:
             prompt_tokens, completion_tokens, total_tokens, elapsed1,
             parsed is not None, diagnosis.kind if diagnosis else "ok",
         )
+        if reasoning_effort:
+            logger.info(
+                "LLM reasoning effective job=%s stage=%s model=%s requested=%s effective=%s",
+                job_context.get(), stage_context.get(), model, reasoning_effort,
+                self._effective_reasoning_after_fallback(model, reasoning_effort) or "none",
+            )
         if parsed is not None:
             self._record_usage(prompt_tokens, completion_tokens, total_tokens)
             return ClientResult(
@@ -994,6 +1153,7 @@ class Client:
                 request_summary=request_summary, prompt_tokens=prompt_tokens,
                 completion_tokens=completion_tokens, total_tokens=total_tokens,
                 diagnosis="ok", finish_reason=finish,
+                reasoning_effort=self._effective_reasoning_after_fallback(model, reasoning_effort),
             )
 
         # --- Classified recovery: at most ONE corrective generation ---
@@ -1064,6 +1224,7 @@ class Client:
             tier, model=model, messages=corrective_messages, response_schema=response_schema,
             temperature=temperature, request_summary=request_summary,
             max_tokens=max_tokens, disable_reasoning=disable_reasoning,
+            reasoning_effort=reasoning_effort,
         )
         elapsed2 = _time.perf_counter() - t1
         attempts_made += 1
@@ -1085,6 +1246,7 @@ class Client:
                 completion_tokens=c_ct, total_tokens=c_tt,
                 diagnosis=f"corrective-{diagnosis.kind}", normalization=normalization_note,
                 finish_reason=c_finish,
+                reasoning_effort=self._effective_reasoning_after_fallback(model, reasoning_effort),
             )
         # Corrective failed: if we preserved an unambiguous table, return it
         # explicitly as partial (fields=[] incomplete) rather than inventing
@@ -1102,6 +1264,7 @@ class Client:
                 completion_tokens=completion_tokens, total_tokens=total_tokens,
                 diagnosis=f"table_root-partial({c_diag.kind if c_diag else 'failed'})",
                 normalization=normalization_note, finish_reason=finish,
+                reasoning_effort=self._effective_reasoning_after_fallback(model, reasoning_effort),
             )
         raise self._classified_error(
             response_schema=response_schema, model=model, tier=tier, raw_text=c_raw or raw_text,
@@ -1340,6 +1503,7 @@ class Client:
         request_summary: dict[str, Any],
         max_tokens: int | None = None,
         disable_reasoning: bool = False,
+        reasoning_effort: str = "",
     ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Try calling with response_format json_schema enforcement."""
         json_schema_dict = _pydantic_to_json_schema(response_schema)
@@ -1359,7 +1523,11 @@ class Client:
         }
         if max_tokens is not None:
             kwargs["max_tokens"] = max_tokens
-        if disable_reasoning:
+        if reasoning_effort and not self._reasoning_rejected(model):
+            # Documented reasoning control replaces the undocumented
+            # extra_body flag (never send both).
+            kwargs["reasoning_effort"] = reasoning_effort
+        elif disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
         resp = await self._request_mode(kwargs, request_summary)
         if resp is None:
@@ -1382,6 +1550,7 @@ class Client:
         request_summary: dict[str, Any],
         max_tokens: int | None = None,
         disable_reasoning: bool = False,
+        reasoning_effort: str = "",
     ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Try calling with response_format={"type": "json_object"} enforcement."""
         response_format: dict[str, Any] = {"type": "json_object"}
@@ -1393,7 +1562,11 @@ class Client:
         }
         if max_tokens is not None:
             kwargs["max_tokens"] = max_tokens
-        if disable_reasoning:
+        if reasoning_effort and not self._reasoning_rejected(model):
+            # Documented reasoning control replaces the undocumented
+            # extra_body flag (never send both).
+            kwargs["reasoning_effort"] = reasoning_effort
+        elif disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
         resp = await self._request_mode(kwargs, request_summary)
         if resp is None:
@@ -1416,6 +1589,7 @@ class Client:
         request_summary: dict[str, Any],
         max_tokens: int | None = None,
         disable_reasoning: bool = False,
+        reasoning_effort: str = "",
     ) -> tuple[str | None, Any, int | None, int | None, int | None]:
         """Plain chat completion call (no response_format param)."""
         kwargs: dict[str, Any] = {
@@ -1425,7 +1599,11 @@ class Client:
         }
         if max_tokens is not None:
             kwargs["max_tokens"] = max_tokens
-        if disable_reasoning:
+        if reasoning_effort and not self._reasoning_rejected(model):
+            # Documented reasoning control replaces the undocumented
+            # extra_body flag (never send both).
+            kwargs["reasoning_effort"] = reasoning_effort
+        elif disable_reasoning:
             kwargs["extra_body"] = {"reasoning": {"enabled": False}}
         resp = await self._request_mode(kwargs, request_summary)
         if resp is None:

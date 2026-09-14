@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { sourceUrl } from '../api/client';
 import { PipelineStepper } from './PipelineStepper';
 import { AlertTriangleIcon, CheckCircleIcon } from './icons';
-import { JUDGE_PASS_SCORE, formatFieldValue, getFailedStageLabel, getPipelineStage, getResultKind } from '../utils/pipeline';
+import { JUDGE_PASS_SCORE, formatFieldValue, getDisplayDocType, getFailedStageLabel, getPipelineStage, getResultKind } from '../utils/pipeline';
 import type { CombinedField, DocumentGroup, ExtractionResult, ProviderErrorDetails } from '../types/extraction';
 
 interface ExtractionTabProps {
@@ -189,14 +189,14 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
             <button key={d.id} className={idx === docIndex ? 'active' : ''} onClick={() => onSelectDoc(idx)}>
               Page {idx + 1}
               <span>{d.source ? `${d.source.filename} · Page ${d.source.page_number}/${d.source.page_count}` : `Page ${idx + 1}`} · {d.language || "?"} · {d.error ? "failed" : d.needs_review ? "review" : "done"}</span>
-              <span className="page-tab-type">{d.doc_type.replace(/_/g, ' ')}</span>
+              <span className="page-tab-type">{getDisplayDocType(d)}</span>
             </button>
           ))}
         </div>
       )}
 
       <div className="doc-meta-row">
-        <span className={`doc-type-badge ${doc?.doc_type ?? ''}`}>{doc?.doc_type.replace(/_/g, ' ') ?? '—'}</span>
+        <span className={`doc-type-badge ${doc?.doc_type ?? ''}`}>{doc ? getDisplayDocType(doc) : '—'}</span>
         {doc?.language && <span className="meta-chip">{doc.language}</span>}
         {/* Stepper = stages executed, NOT data correctness. Data status is separate below. */}
         <div className="doc-meta-stepper" title="Pipeline stages executed (not data correctness)">

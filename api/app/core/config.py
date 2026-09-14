@@ -53,13 +53,22 @@ LLM_PROVIDERS: dict[str, ProviderProfile] = {
     "mistral": ProviderProfile("https://api.mistral.ai/v1", "MISTRAL_API_KEY", "mistral-large-latest"),
     # NVIDIA NIM (build.nvidia.com): OpenAI-compatible chat completions at
     # integrate.api.nvidia.com; key (nvapi-...) via Get API Key on any model page.
+    # NOTE (2026-09-14): meta/llama-3.3-70b-instruct returned 410 Gone
+    # (EOL 2026-08-26) — default is the measured-fastest working NVIDIA text
+    # model (Router 4/4 correct at ~2s vs 90b-vision 92s timeouts; see
+    # docs/reports/router_timeout_nvidia_2026-09-14.md). Override with LLM_MODEL.
     "nvidia": ProviderProfile(
-        "https://integrate.api.nvidia.com/v1", "NVIDIA_API_KEY", "meta/llama-3.3-70b-instruct"
+        "https://integrate.api.nvidia.com/v1", "NVIDIA_API_KEY", "meta/llama-3.2-11b-vision-instruct"
     ),
     # Local OpenClaw gateway (enable gateway.http.endpoints.chatCompletions first).
     "openclaw": ProviderProfile("http://127.0.0.1:18789/v1", "OPENCLAW_API_KEY", "openclaw/default"),
     # OpenCode Zen gateway; literal key "public" serves the free-tier models.
     "opencode": ProviderProfile("https://opencode.ai/zen/v1", "OPENCODE_API_KEY", "gpt-5.4-mini"),
+    # xKiro gateway (one key, many vendor/model IDs). No default model by
+    # design: pick a verified model ID explicitly (bare names 404 upstream),
+    # so a missing value can never be mistaken for a recommendation.
+    # Documented 2026-09-14, not live-verified; see docs/guides/ai_provider.md.
+    "xkiro": ProviderProfile("https://api.xkiro.com/v1", "XKIRO_API_KEY", ""),
 }
 
 
@@ -133,12 +142,27 @@ class Settings:
             self.llm_temperature = float(os.getenv("LLM_TEMPERATURE", "") or _temp_default)
         except ValueError:
             self.llm_temperature = _temp_default
+        # Reasoning-effort override for reasoning models on endpoints with a
+        # documented `reasoning_effort` parameter (e.g. NVIDIA NIM gpt-oss,
+        # xKiro per-model levels). Default "" preserves current behavior
+        # exactly (undocumented extra_body flag only). "none" is xKiro's
+        # documented explicit-off value, but support is per-model and an
+        # accepted request does NOT prove reasoning was disabled (unsupported
+        # levels are silently adjusted per xKiro docs). Applies solely to
+        # exact (endpoint, model) pairs in the client's verified allowlist —
+        # other providers/models always keep current behavior.
+        _eff = os.getenv("LLM_REASONING_EFFORT", "").strip().lower()
+        self.llm_reasoning_effort = _eff if _eff in ("low", "medium", "high", "none") else ""
         # Vision model is LEGACY/optional: the pipeline no longer needs it.
         # All uploads (images + PDFs) go through the configured local OCR
         # engine into the text-only pipeline using the single text model above.
         self.vision_model_name = os.getenv("VISION_MODEL_NAME", "")
         self.extraction_max_tokens = int(os.getenv("EXTRACTION_MAX_TOKENS", "8000"))
-        self.llm_request_timeout_seconds = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "90"))
+        # Single-request timeout (45s): healthy calls finish in ~2-20s, so a
+        # 45s stall gets one same-tier retry (45 + 2s backoff + 45 ≈ 92s)
+        # inside the 100s Router/Judge limits. Shorter limits bound failures;
+        # they do not accelerate model generation.
+        self.llm_request_timeout_seconds = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "45"))
         self.llm_max_concurrent_requests = int(os.getenv("LLM_MAX_CONCURRENT_REQUESTS", "1"))
         if self.llm_max_concurrent_requests < 1:
             raise ValueError("LLM_MAX_CONCURRENT_REQUESTS must be at least 1")
@@ -206,8 +230,11 @@ class Settings:
 
         # Timeout configuration (seconds).
         # Stage limits sit ABOVE the worst single LLM call (request timeout +
-        # one same-tier retry ≈ 92s): healthy and recovering calls pass, while
-        # a fully stalled stage fails fast instead of hanging for minutes.
+        # one same-tier retry ≈ 92s at the 45s default): healthy and recovering
+        # calls pass, while a fully stalled stage fails fast instead of hanging
+        # for minutes. Shorter limits bound failures; they do not accelerate
+        # model generation. A request timeout above a stage limit leaves no
+        # room for the timeout retry — startup warns (see validate_timeout_config).
         self.router_timeout_seconds = float(os.getenv("ROUTER_TIMEOUT_SECONDS", "100"))
         self.extractor_timeout_seconds = float(os.getenv("EXTRACTOR_TIMEOUT_SECONDS", "150"))
         self.judge_timeout_seconds = float(os.getenv("JUDGE_TIMEOUT_SECONDS", "100"))
@@ -255,6 +282,44 @@ class Settings:
     @property
     def langfuse_enabled(self) -> bool:
         return bool(self.langfuse_public_key and self.langfuse_secret_key)
+
+
+def validate_timeout_config(settings: Settings) -> list[str]:
+    """Warn when the request timeout leaves no room for a timeout retry.
+
+    One timeout retry costs ~ (request + 2s backoff + request). When the
+    request timeout exceeds (or nearly fills) a stage limit, the stage
+    cancels before the retry can run — the observed 200s-Router vs 1000s-
+    request failure. Returns warning strings (callers log them at startup).
+    No document content or credentials are included.
+    """
+    import logging as _logging
+
+    warnings: list[str] = []
+    request_timeout = float(getattr(settings, "llm_request_timeout_seconds", 45) or 45)
+    stages = {
+        "router": float(getattr(settings, "router_timeout_seconds", 100) or 100),
+        "extractor": float(getattr(settings, "extractor_timeout_seconds", 150) or 150),
+        "judge": float(getattr(settings, "judge_timeout_seconds", 100) or 100),
+    }
+    # One retry needs ~2x request + 2s backoff inside the stage limit.
+    retry_floor = 2 * request_timeout + 2.0
+    for stage, limit in stages.items():
+        if request_timeout > limit:
+            warnings.append(
+                f"LLM_REQUEST_TIMEOUT_SECONDS={request_timeout:g}s exceeds "
+                f"{stage.upper()}_TIMEOUT_SECONDS={limit:g}s — the stage cancels "
+                "before a timeout retry can run"
+            )
+        elif retry_floor > limit:
+            warnings.append(
+                f"LLM_REQUEST_TIMEOUT_SECONDS={request_timeout:g}s leaves no room for "
+                f"one timeout retry in {stage} limit {limit:g}s "
+                f"(needs ~{retry_floor:g}s); single attempts still run"
+            )
+    for warning in warnings:
+        _logging.getLogger(__name__).warning(warning)
+    return warnings
 
 
 @lru_cache

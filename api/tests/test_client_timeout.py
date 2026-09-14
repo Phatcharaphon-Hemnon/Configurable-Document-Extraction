@@ -117,3 +117,76 @@ async def test_generate_text_raises_on_timeout():
                 model="test-model",
                 prompt="hello",
             )
+
+
+@pytest.mark.anyio
+async def test_timeout_logs_model_duration_category_without_content(caplog):
+    """Timeout logs carry model/attempt/duration/category, never prompt bodies."""
+    import logging
+
+    settings = _fast_settings()
+    with patch("app.services.client.AsyncOpenAI") as MockClient:
+        mock_instance = MockClient.return_value
+        mock_instance.chat.completions.create = AsyncMock(side_effect=_hang_forever)
+        client = Client(settings)
+        with caplog.at_level(logging.INFO, logger="app.services.client"):
+            with pytest.raises(ClientError, match="timed out"):
+                await client.generate_structured(
+                    model="secret-model-xyz",
+                    prompt="PRIVATE document content that must never appear in logs",
+                    response_schema=_DummySchema,
+                )
+    messages = " ".join(r.getMessage() for r in caplog.records)
+    assert "secret-model-xyz" in messages
+    assert "attempt=" in messages or "attempts=" in messages
+    assert "duration=" in messages
+    assert "category=timeout" in messages
+    assert "PRIVATE document content" not in messages
+
+
+@pytest.mark.anyio
+async def test_cancellation_releases_request_slot():
+    """Cancelling a stalled generation frees the semaphore for the next call."""
+    import asyncio
+    from types import SimpleNamespace
+
+    from app.services.client import Client as _Client
+
+    entered = asyncio.Event()
+    release = asyncio.Event()
+
+    async def hanging(**kwargs):
+        entered.set()
+        await release.wait()
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content='{"value":"ok"}'))],
+            usage=None,
+        )
+
+    settings = _fast_settings()
+    settings.llm_base_url = "https://test-slot/v1"
+    settings.llm_max_concurrent_requests = 1
+    with patch("app.services.client.AsyncOpenAI") as MockClient:
+        mock_instance = MockClient.return_value
+        mock_instance.chat.completions.create = hanging
+        client = _Client(settings)
+        task = asyncio.create_task(
+            client.generate_structured(
+                model="m", prompt="p", response_schema=_DummySchema,
+            )
+        )
+        await entered.wait()
+        task.cancel()
+        try:
+            await task
+        except (asyncio.CancelledError, ClientError):
+            pass
+        release.set()
+        # Slot must be free: a fresh generation completes without deadlock.
+        result = await asyncio.wait_for(
+            client.generate_structured(
+                model="m", prompt="p", response_schema=_DummySchema,
+            ),
+            timeout=5,
+        )
+        assert result.parsed is not None or result is not None

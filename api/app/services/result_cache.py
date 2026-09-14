@@ -68,12 +68,16 @@ CREATE INDEX IF NOT EXISTS idx_result_manifest_expires ON result_manifest(expire
 # code changes so fingerprints invalidate deterministically.
 EXTRACTOR_VERSION = "extractor-v2-typed"
 VALIDATOR_VERSION = "validator-v2-acceptance"
-JUDGE_VERSION = "judge-v2-structured"
+JUDGE_VERSION = "judge-v3-canonical"
 # v3: extraction output contract now requires ONE root {fields,tables} with an
 # explicit table-inside-tables rule + compact structural example (fixes the
 # qwen2.5:3b table-as-root failure); client uses classified recovery with at
 # most one corrective generation (no blind json_object+plain regeneration).
-PROMPT_VERSION = "prompts-v3-classified"
+# v4: judge input contract consolidated to ONE canonical record list
+# (id | value | source_span) — the repeated prediction/provenance/identifier
+# triple is gone. Same output contract (score/issues/notes), so saved results
+# still load; fingerprints change so old entries resolve as misses.
+PROMPT_VERSION = "prompts-v4-canonical-judge"
 # Client recovery policy (classified parse kinds, table-root normalization,
 # truncation handling). Bumped with the prompt contract — both invalidate.
 CLIENT_RECOVERY_VERSION = "client-recovery-v2-classified"
@@ -196,6 +200,7 @@ class ResultCache:
                 "router_text_chars": getattr(s, "router_text_chars", 0),
                 "strict_schema": not bool(getattr(s, "disable_strict_json_schema", False)),
                 "few_shot": int(getattr(s, "few_shot_examples_per_doc_type", 0)),
+                "reasoning_effort": str(getattr(s, "llm_reasoning_effort", "") or ""),
                 "judge_skip": bool(getattr(s, "judge_skip_when_clean", True)),
                 "judge_skip_conf": float(getattr(s, "judge_skip_confidence", 0.85)),
             },

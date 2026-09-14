@@ -154,12 +154,13 @@ async def test_recovery_preserves_page_isolation_and_provenance():
 def test_policy_changes_invalidate_caches():
     from app.services.result_cache import CLIENT_RECOVERY_VERSION, PROMPT_VERSION
 
-    assert PROMPT_VERSION.startswith("prompts-v3")
+    assert PROMPT_VERSION.startswith("prompts-v4")
     assert CLIENT_RECOVERY_VERSION.startswith("client-recovery-v2")
     # OCR cache key includes the coherence threshold.
     import inspect
 
-    src = inspect.getsource(LocalOCRClient.aparse_file)
+    src = inspect.getsource(LocalOCRClient.aparse_pages) + inspect.getsource(
+        LocalOCRClient._ocr_cache_key)
     assert "coherence" in src.lower()
     # Result fingerprint includes coherence + recovery versions (the config
     # dict is shared by page fingerprints and manifest keys, so check both).

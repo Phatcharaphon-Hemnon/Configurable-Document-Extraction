@@ -38,6 +38,7 @@ _VARS = (
     "NVIDIA_API_KEY",
     "OPENCLAW_API_KEY",
     "OPENCODE_API_KEY",
+    "XKIRO_API_KEY",
 )
 
 # provider -> (base_url, native_key_var, default_model or None, temperature, strict_disabled_by_default)
@@ -51,10 +52,17 @@ EXPECTED_PROVIDERS: dict[str, tuple[str, str, str | None, float, bool]] = {
     "ollama-cloud": ("https://ollama.com/v1", "OLLAMA_API_KEY", "gpt-oss:20b", 1.0, False),
     "ollama-local": ("http://localhost:11434/v1", "", "gpt-oss:20b", 0.0, False),
     "mistral": ("https://api.mistral.ai/v1", "MISTRAL_API_KEY", "mistral-large-latest", 0.0, False),
-    "nvidia": ("https://integrate.api.nvidia.com/v1", "NVIDIA_API_KEY", "meta/llama-3.3-70b-instruct", 0.0, False),
+    "nvidia": ("https://integrate.api.nvidia.com/v1", "NVIDIA_API_KEY", "meta/llama-3.2-11b-vision-instruct", 0.0, False),
     "openclaw": ("http://127.0.0.1:18789/v1", "OPENCLAW_API_KEY", "openclaw/default", 0.0, False),
     "opencode": ("https://opencode.ai/zen/v1", "OPENCODE_API_KEY", "gpt-5.4-mini", 0.0, False),
+    "xkiro": ("https://api.xkiro.com/v1", "XKIRO_API_KEY", None, 0.0, False),
 }
+
+
+def test_registry_count_derived_from_table():
+    # Counts always derive from the registry — never hardcode totals anywhere.
+    assert len(LLM_PROVIDERS) == len(EXPECTED_PROVIDERS)
+    assert set(LLM_PROVIDERS) == set(EXPECTED_PROVIDERS)
 
 
 @pytest.fixture
@@ -164,6 +172,24 @@ def test_deepseek_explicit_model_ok(clean_env):
     clean_env.setenv("LLM_PROVIDER", "deepseek")
     clean_env.setenv("LLM_MODEL", "deepseek-v4-flash")
     assert Settings().llm_model == "deepseek-v4-flash"
+
+
+def test_xkiro_requires_model(clean_env):
+    # No suitable default verified (offline) — inventing one would mistake a
+    # guess for a recommendation. Same fail-fast pattern as deepseek.
+    clean_env.setenv("LLM_PROVIDER", "xkiro")
+    with pytest.raises(ValueError, match="LLM_MODEL is required"):
+        Settings()
+
+
+def test_xkiro_explicit_model_ok(clean_env):
+    clean_env.setenv("LLM_PROVIDER", "xkiro")
+    clean_env.setenv("LLM_MODEL", "openai/gpt-5.4-mini")
+    settings = Settings()
+    assert settings.llm_base_url == "https://api.xkiro.com/v1"
+    assert settings.llm_model == "openai/gpt-5.4-mini"
+    assert settings.llm_temperature == 0.0
+    assert settings.disable_strict_json_schema is False
 
 
 def test_strict_env_override_wins_over_provider_default(clean_env):

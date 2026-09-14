@@ -12,7 +12,7 @@
 | Contracts | `Pydantic >=2.7` | API + internal types (`app/schemas/`) |
 | Config / Upload | `python-dotenv >=1.0`, `python-multipart >=0.0.9` | Env-driven `Settings`, multipart uploads |
 | LLM transport | `openai >=1.40` (OpenAI-compatible) | Gateway calls, 3-tier structured output |
-| LLM providers | 11 `LLM_PROVIDERS` entries | Model backends behind 3 env vars |
+| LLM providers | 13 `LLM_PROVIDERS` entries | Model backends behind 3 env vars |
 | LLM model | Single text model (`LLM_MODEL`) | Router + Extractor + Judge |
 | OCR (local) | `rapidocr_onnxruntime==1.2.3`, `pymupdf>=1.24`, `pillow>=10.0`, `numpy>=1.26` | On-host text extraction |
 | Persistence | stdlib `sqlite3` | Jobs, fields, judge results, error details |
@@ -65,9 +65,10 @@ Probe any provider/model with `api/scripts/time_gateway_modes.py`
 `openai`, `xai`, `gemini`, `openrouter`, `deepseek` (ships no default
 model — `LLM_MODEL` required; starts at the `json_object` tier), `kimi`,
 `ollama-cloud` (default, `gpt-oss:20b` @ temperature 1.0), `ollama-local`,
-`mistral`, `openclaw` (local gateway), `opencode` (Zen gateway). No native
+`mistral`, `openclaw` (local gateway), `opencode` (Zen gateway), `xkiro`
+(gateway, ships no default model — `LLM_MODEL` required). No native
 Claude entry (Messages API isn't OpenAI-compatible) — use
-`openrouter`/`opencode`. Full matrix in `docs/guides/ai_provider.md`
+`openrouter`/`opencode`/`xkiro`. Full matrix in `docs/guides/ai_provider.md`
 (+ `docs/guides/llm_providers.md`, `docs/reference/openai_gpt.md`).
 
 ### Local OCR — `api/app/services/rapidocr_client.py`
