@@ -59,6 +59,9 @@ data/logs/
 web/test-results/
 web/playwright-report/
 
+# Backend per-run logs (uvicorn restarts append here; not source)
+api/logs/
+
 # Analysis tooling trash and intermediate files (retain the current graph,
 # configuration, metadata, and fingerprints: .ua/knowledge-graph.json,
 # .ua/config.json, .ua/meta.json, .ua/fingerprints.json)
