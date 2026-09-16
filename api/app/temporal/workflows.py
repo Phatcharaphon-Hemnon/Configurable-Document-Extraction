@@ -13,15 +13,9 @@ from temporalio.common import RetryPolicy
 
 with workflow.unsafe.imports_passed_through():
     from app.schemas.documents import FileUploadMeta
-    from app.temporal.activities import (
-        classify_activity,
-        extract_activity,
-        judge_activity,
-        parse_activity,
-        validate_activity,
-    )
+    from app.temporal.activities import parse_detailed_activity, process_page_activity
 
-_RETRY = RetryPolicy(maximum_attempts=3, initial_interval=2)
+_RETRY = RetryPolicy(maximum_attempts=1)
 
 
 def _timeout(seconds: int) -> timedelta:
@@ -37,37 +31,25 @@ class ExtractDocumentWorkflow:
         raw_content: bytes,
         content_type: str | None = None,
     ) -> dict[str, Any]:
-        page_texts: list[str] = await workflow.execute_activity(
-            parse_activity,
+        # Detailed parse keeps hybrid OCR uncertainty (review reasons) with
+        # the text; only the selected text enters extraction.
+        pages: list[Any] = await workflow.execute_activity(
+            parse_detailed_activity,
             args=[filename, raw_content],
             start_to_close_timeout=_timeout(300),
             retry_policy=_RETRY,
         )
 
         results: list[dict[str, Any]] = []
-        for page_text in page_texts or [""]:
-            doc = await workflow.execute_activity(
-                classify_activity,
-                args=[filename, page_text],
-                start_to_close_timeout=_timeout(180),
-                retry_policy=_RETRY,
-            )
-            extracted = await workflow.execute_activity(
-                extract_activity,
-                args=[filename, page_text, doc["doc_type"]],
-                start_to_close_timeout=_timeout(300),
-                retry_policy=_RETRY,
-            )
-            validated = await workflow.execute_activity(
-                validate_activity,
-                args=[extracted, page_text],
-                start_to_close_timeout=_timeout(120),
-                retry_policy=_RETRY,
-            )
+        for page in pages or [{"text": "", "review_reasons": []}]:
+            if isinstance(page, str):  # backward compat with old parse_activity
+                page_text, reviews = page, []
+            else:
+                page_text, reviews = page.get("text", ""), page.get("review_reasons", [])
             judged = await workflow.execute_activity(
-                judge_activity,
-                args=[validated, page_text],
-                start_to_close_timeout=_timeout(300),
+                process_page_activity,
+                args=[filename, page_text, reviews],
+                start_to_close_timeout=_timeout(600),
                 retry_policy=_RETRY,
             )
             results.append(judged)
@@ -76,3 +58,17 @@ class ExtractDocumentWorkflow:
             "request": FileUploadMeta(filename=filename, content_type=content_type).model_dump(mode="json"),
             "documents": results,
         }
+
+
+@workflow.defn
+class ExtractPageWorkflow:
+    @workflow.run
+    async def run(
+        self, filename: str, page_text: str, ocr_review_reasons: list[str] | None = None,
+    ) -> dict[str, Any]:
+        # Provider retries belong to the shared four-attempt client budget.
+        # Do not multiply LLM attempts with activity retries.
+        # ocr_review_reasons is optional (extract_group merges reviews itself,
+        # so the production path passes nothing here).
+        return await workflow.execute_activity(process_page_activity, args=[filename, page_text, ocr_review_reasons or []],
+            start_to_close_timeout=_timeout(600), retry_policy=RetryPolicy(maximum_attempts=1))

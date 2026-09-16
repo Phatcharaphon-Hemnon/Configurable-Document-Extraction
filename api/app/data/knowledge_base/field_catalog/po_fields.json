@@ -2,23 +2,107 @@
   "doc_type": "po",
   "description": "Purchase order",
   "fields": [
-    {"name": "po_number",       "type": "string",  "required": true,  "validation_rule": "Non-empty alphanumeric identifier",
-     "alternative_names": ["po_no", "po_id", "purchase_order_number", "order_number", "order_no"]},
-    {"name": "order_date",      "type": "date",    "required": true,  "validation_rule": "Date in any recognisable format",
-     "alternative_names": ["po_date", "issue_date", "date", "purchase_date"]},
-    {"name": "supplier_name",   "type": "string",  "required": true,  "validation_rule": "Non-empty string",
-     "alternative_names": ["vendor_name", "seller_name", "merchant_name", "from_name"]},
-    {"name": "supplier_address","type": "string",  "required": false, "validation_rule": "Non-empty string"},
-    {"name": "buyer_name",      "type": "string",  "required": false, "validation_rule": "Non-empty string",
-     "alternative_names": ["ship_to", "bill_to", "to_name", "customer_name", "purchaser_name"]},
-    {"name": "buyer_address",   "type": "string",  "required": false, "validation_rule": "Non-empty string"},
-    {"name": "delivery_date",   "type": "date",    "required": false, "validation_rule": "Date in any recognisable format"},
-    {"name": "total_amount",    "type": "number",  "required": true,  "validation_rule": "Positive numeric value",
-     "alternative_names": ["grand_total", "total", "order_total", "net_total"]},
-    {"name": "currency",        "type": "string",  "required": true,  "validation_rule": "ISO 4217 code or symbol"},
-    {"name": "payment_terms",   "type": "string",  "required": false, "validation_rule": "Non-empty string",
-     "alternative_names": ["terms", "pay_terms", "net_terms"]},
-    {"name": "line_items",      "type": "array",   "required": false, "validation_rule": "Array of objects with description, quantity, unit_price, total"},
-    {"name": "notes",           "type": "string",  "required": false, "validation_rule": "Non-empty string"}
+    {
+      "name": "po_number",
+      "type": "string",
+      "required": true,
+      "validation_rule": "Non-empty alphanumeric identifier",
+      "label_th": "เลขที่ใบสั่งซื้อ",
+      "description_th": "เลขเอกสารใบสั่งซื้อ",
+      "alternative_names": ["po_no", "po_id", "purchase_order_number", "order_number", "order_no"]
+    },
+    {
+      "name": "order_date",
+      "type": "date",
+      "required": true,
+      "validation_rule": "Date in any recognisable format",
+      "label_th": "วันที่สั่งซื้อ",
+      "description_th": "วันที่ออกใบสั่งซื้อ",
+      "alternative_names": ["po_date", "issue_date", "date", "purchase_date"]
+    },
+    {
+      "name": "supplier_name",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string when printed; never invent (these POs print the buyer, not the supplier)",
+      "label_th": "ชื่อผู้จำหน่าย",
+      "description_th": "ชื่อผู้ขายตามใบสั่งซื้อ",
+      "alternative_names": ["vendor_name", "seller_name", "merchant_name", "from_name"]
+    },
+    {
+      "name": "supplier_address",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "ที่อยู่ผู้จำหน่าย",
+      "description_th": "ที่อยู่ผู้ขาย"
+    },
+    {
+      "name": "buyer_name",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "ชื่อผู้ซื้อ",
+      "description_th": "ชื่อผู้สั่งซื้อ",
+      "alternative_names": ["ship_to", "bill_to", "to_name", "customer_name", "purchaser_name"]
+    },
+    {
+      "name": "buyer_address",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "ที่อยู่ผู้ซื้อ",
+      "description_th": "ที่อยู่ผู้สั่งซื้อ"
+    },
+    {
+      "name": "delivery_date",
+      "type": "date",
+      "required": false,
+      "validation_rule": "Date in any recognisable format",
+      "label_th": "วันกำหนดส่ง",
+      "description_th": "วันที่กำหนดส่งมอบ"
+    },
+    {
+      "name": "total_amount",
+      "type": "number",
+      "required": false,
+      "validation_rule": "Positive numeric value when printed; never invent",
+      "label_th": "ยอดรวมทั้งสิ้น",
+      "description_th": "ยอดเงินรวมใบสั่งซื้อ",
+      "alternative_names": ["grand_total", "total", "order_total", "net_total"]
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false,
+      "validation_rule": "ISO 4217 code or symbol when printed; never invent",
+      "label_th": "สกุลเงิน",
+      "description_th": "รหัสสกุลเงิน เช่น THB"
+    },
+    {
+      "name": "payment_terms",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "เงื่อนไขชำระเงิน",
+      "description_th": "ข้อตกลงการชำระเงิน",
+      "alternative_names": ["terms", "pay_terms", "net_terms"]
+    },
+    {
+      "name": "line_items",
+      "type": "array",
+      "required": false,
+      "validation_rule": "Array of objects with description, quantity, unit_price, total",
+      "label_th": "รายการสินค้า",
+      "description_th": "ตารางรายการที่สั่งซื้อ"
+    },
+    {
+      "name": "notes",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "หมายเหตุ",
+      "description_th": "ข้อความหมายเหตุเพิ่มเติม"
+    }
   ]
 }

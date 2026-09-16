@@ -64,8 +64,11 @@ async def test_persistent_429_never_changes_request(fast_backoff):
 
 @pytest.mark.asyncio
 async def test_retries_and_formats_share_one_budget(fast_backoff):
+    # Transport retries + the single content correction share one 4-attempt
+    # budget (no extra retry layer). Sequence: initial invalid (1 HTTP),
+    # corrective with 2 rate-limit backoffs (2 HTTP) + final invalid (1 HTTP).
     create = AsyncMock(side_effect=[response("invalid"), error(), error(), response("invalid")])
-    with pytest.raises(ClientError, match="budget exhausted"):
+    with pytest.raises(ClientError, match=r"syntax_error|output failed"):
         await generate(client(create))
     assert create.call_count == 4
 
@@ -176,7 +179,7 @@ async def test_four_jobs_fifo_and_cancel_queued():
     jobs = [service.job_store.create() for _ in range(4)]
     order = []
 
-    async def extract(parts, job_id):
+    async def extract(parts, job_id, **kwargs):
         order.append(job_id)
         entered.set()
         await release.wait()
@@ -196,6 +199,28 @@ async def test_four_jobs_fifo_and_cancel_queued():
     assert all(jobs[index].status == "completed" for index in (0, 2, 3))
 
 
+@pytest.mark.asyncio
+async def test_queued_job_starts_after_first_fails():
+    """A queued second upload must still run after the first job fails."""
+    service = DocumentExtractionService.__new__(DocumentExtractionService)
+    service.job_store = InMemoryJobStore()
+    service._job_lock = asyncio.Lock()
+    jobs = [service.job_store.create() for _ in range(2)]
+    order = []
+
+    async def extract(parts, job_id, **kwargs):
+        order.append(job_id)
+        if job_id == jobs[0].job_id:
+            raise RuntimeError("boom")
+        service.job_store.save_result(job_id, {"documents": [{}]})
+
+    service.extract_group = extract
+    await asyncio.gather(*(service.run_job(job.job_id, []) for job in jobs))
+    assert order == [jobs[0].job_id, jobs[1].job_id]
+    assert jobs[0].status == "failed"
+    assert jobs[1].status == "completed"
+
+
 def test_restart_cleans_processing_and_queued(tmp_path):
     store = SQLiteJobStore(str(tmp_path / "queue.db"))
     jobs = [store.create() for _ in range(3)]
@@ -213,7 +238,8 @@ def test_retry_after_date_and_invalid_values():
 
 @pytest.mark.asyncio
 async def test_pages_are_sequential_and_ordered():
-    service = DocumentExtractionService.__new__(DocumentExtractionService)
+    from app.core.config import Settings
+    service = DocumentExtractionService(Settings())
     service.job_store = InMemoryJobStore()
     service.ocr = SimpleNamespace(aparse_file=AsyncMock(return_value=["page1", "page2", "page3"]))
     order = []
@@ -245,7 +271,7 @@ async def test_queue_wait_does_not_consume_stage_deadline():
     guard = TimeoutGuard(StageTimeoutConfig(extractor_seconds=0.01))
     job = service.job_store.create()
 
-    async def extract(parts, job_id):
+    async def extract(parts, job_id, **kwargs):
         async with guard.track("extractor"):
             service.job_store.save_result(job_id, {"documents": [{}]})
 

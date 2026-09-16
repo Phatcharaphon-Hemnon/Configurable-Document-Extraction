@@ -7,6 +7,8 @@
       "type": "string",
       "required": true,
       "validation_rule": "Non-empty alphanumeric identifier",
+      "label_th": "เลขที่ใบแจ้งหนี้",
+      "description_th": "เลขเอกสารใบแจ้งหนี้",
       "alternative_names": [
         "invoice_no",
         "invoice_id",
@@ -20,6 +22,8 @@
       "type": "date",
       "required": true,
       "validation_rule": "Date in any recognisable format",
+      "label_th": "วันที่ใบแจ้งหนี้",
+      "description_th": "วันที่ออกใบแจ้งหนี้",
       "alternative_names": [
         "order_date",
         "issue_date",
@@ -33,6 +37,8 @@
       "type": "string",
       "required": true,
       "validation_rule": "Non-empty string",
+      "label_th": "ชื่อผู้ขาย",
+      "description_th": "ชื่อผู้ขายหรือบริษัทผู้ออกเอกสาร",
       "alternative_names": [
         "vendor_name",
         "merchant_name",
@@ -46,6 +52,8 @@
       "type": "number",
       "required": true,
       "validation_rule": "Positive numeric value",
+      "label_th": "ยอดรวมทั้งสิ้น",
+      "description_th": "ยอดเงินรวมที่ต้องชำระ",
       "alternative_names": [
         "grand_total",
         "amount_due",
@@ -59,6 +67,8 @@
       "type": "string",
       "required": false,
       "validation_rule": "Non-empty string",
+      "label_th": "ชื่อผู้ซื้อ",
+      "description_th": "ชื่อลูกค้าผู้ชำระเงิน",
       "alternative_names": [
         "bill_to",
         "customer_name",
@@ -71,31 +81,41 @@
       "name": "bill_to_address",
       "type": "string",
       "required": false,
-      "validation_rule": "Non-empty string"
+      "validation_rule": "Non-empty string",
+      "label_th": "ที่อยู่ผู้ซื้อ",
+      "description_th": "ที่อยู่สำหรับออกบิล"
     },
     {
       "name": "seller_address",
       "type": "string",
       "required": false,
-      "validation_rule": "Non-empty string"
+      "validation_rule": "Non-empty string",
+      "label_th": "ที่อยู่ผู้ขาย",
+      "description_th": "ที่อยู่บริษัทผู้ขาย"
     },
     {
       "name": "seller_phone",
       "type": "string",
       "required": false,
-      "validation_rule": "Valid phone number"
+      "validation_rule": "Valid phone number",
+      "label_th": "เบอร์โทรผู้ขาย",
+      "description_th": "หมายเลขโทรศัพท์ผู้ขาย"
     },
     {
       "name": "seller_email",
       "type": "string",
       "required": false,
-      "validation_rule": "Valid email address"
+      "validation_rule": "Valid email address",
+      "label_th": "อีเมลผู้ขาย",
+      "description_th": "ที่อยู่อีเมลผู้ขาย"
     },
     {
       "name": "tax_id",
       "type": "string",
       "required": false,
       "validation_rule": "Non-empty tax identification number",
+      "label_th": "เลขประจำตัวผู้เสียภาษี",
+      "description_th": "เลขประจำตัวผู้เสียภาษีอากร",
       "alternative_names": [
         "gst_id",
         "vat_id",
@@ -107,13 +127,17 @@
       "name": "currency",
       "type": "string",
       "required": false,
-      "validation_rule": "ISO 4217 code or symbol (PHP, USD, THB, EUR …)"
+      "validation_rule": "ISO 4217 code or symbol (PHP, USD, THB, EUR …)",
+      "label_th": "สกุลเงิน",
+      "description_th": "รหัสสกุลเงิน เช่น THB"
     },
     {
       "name": "payment_due_date",
       "type": "date",
       "required": false,
       "validation_rule": "Date in any recognisable format",
+      "label_th": "วันครบกำหนดชำระ",
+      "description_th": "วันที่ครบกำหนดชำระเงิน",
       "alternative_names": [
         "due_date",
         "payment_due",
@@ -125,6 +149,8 @@
       "type": "number",
       "required": false,
       "validation_rule": "Positive numeric value",
+      "label_th": "ยอดรวมย่อย",
+      "description_th": "ยอดรวมก่อนภาษี",
       "alternative_names": [
         "subtotal",
         "net_amount"
@@ -135,6 +161,8 @@
       "type": "number",
       "required": false,
       "validation_rule": "Numeric value",
+      "label_th": "ยอดภาษี",
+      "description_th": "จำนวนภาษีมูลค่าเพิ่ม",
       "alternative_names": [
         "vat",
         "gst",
@@ -148,6 +176,8 @@
       "type": "number",
       "required": false,
       "validation_rule": "Positive numeric value",
+      "label_th": "ยอดชำระแล้ว",
+      "description_th": "จำนวนเงินที่ชำระแล้ว",
       "alternative_names": [
         "tendered_amount",
         "amount_tendered"
@@ -158,6 +188,8 @@
       "type": "number",
       "required": false,
       "validation_rule": "Numeric value",
+      "label_th": "เงินทอน",
+      "description_th": "จำนวนเงินทอน",
       "alternative_names": [
         "change",
         "change_due"
@@ -167,7 +199,9 @@
       "name": "line_items",
       "type": "array",
       "required": false,
-      "validation_rule": "Array of objects with description, quantity, unit_price, amount"
+      "validation_rule": "Array of objects with description, quantity, unit_price, amount",
+      "label_th": "รายการสินค้า",
+      "description_th": "ตารางรายการสินค้าและจำนวนเงิน"
     }
   ]
 }

@@ -8,6 +8,7 @@ import logging
 from uuid import UUID
 
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile, status
+from fastapi.responses import FileResponse
 
 from app.core.config import get_settings
 from app.guards.audit_logger import AuditLogger
@@ -20,7 +21,7 @@ from app.schemas.documents import (
     EvaluateRequest,
     EvaluateResponse,
 )
-from app.services.extraction_service import DocumentExtractionService, UploadedFilePart
+from app.services.extraction_service import DocumentExtractionService, UploadedFilePart, parse_doc_type
 
 logger = logging.getLogger(__name__)
 
@@ -62,8 +63,9 @@ _background_tasks: dict[UUID, asyncio.Task] = {}
 _content_to_job: dict[str, UUID] = {}
 
 
-def _content_fingerprint(parts: list[UploadedFilePart]) -> str:
+def _content_fingerprint(parts: list[UploadedFilePart], doc_type: str | None = None) -> str:
     digest = hashlib.sha256()
+    digest.update((doc_type or "").encode("utf-8", "ignore"))
     for part in parts:
         digest.update(part.filename.encode("utf-8", "ignore"))
         digest.update(part.raw_content)
@@ -72,15 +74,26 @@ def _content_fingerprint(parts: list[UploadedFilePart]) -> str:
 
 @router.get("/")
 def home() -> dict[str, object]:
+    # Effective deployment identity (no credentials): provider/model/endpoint
+    # plus OCR engine and concurrency so operators can verify the active
+    # deployment mode without revealing secrets. Intended per-branch values
+    # live in api/.env.example; a mismatch with these effective values means
+    # the ignored api/.env still points at the other deployment (see README).
     return {
         "name": settings.app_name,
         "status": "ok",
         "doc_types": ["invoice", "purchase_order", "delivery_note"],
         "frontend_origins": settings.frontend_origin_list,
         "temporal_enabled": settings.temporal_enabled,
+        "llm_provider": settings.llm_provider,
+        "llm_model": settings.llm_model,
+        "llm_base_url": settings.llm_base_url,
         "extraction_model": settings.extraction_model_name,
+        "ocr_engine": settings.ocr_engine,
+        "llm_max_concurrent_requests": settings.llm_max_concurrent_requests,
         "langfuse_enabled": settings.langfuse_enabled,
-        "endpoints": ["/extract", "/templates", "/extract/batch", "/jobs/{job_id}", "/evaluate"],
+        "endpoints": ["/extract", "/templates", "/extract/batch", "/jobs/{job_id}", "/evaluate",
+                      "/history", "/history/stats"],
     }
 
 
@@ -93,6 +106,9 @@ def health() -> dict[str, str]:
 async def extract_document(
     request: Request,
     files: list[UploadFile] = File(...),
+    force_refresh: bool = False,
+    disable_caches: bool = False,
+    doc_type: str | None = None,
 ) -> BatchCreateResponse:
     """Upload one or more files (images or PDFs) for async extraction.
 
@@ -100,10 +116,18 @@ async def extract_document(
     - Poll `GET /jobs/{job_id}` until `status` is `completed`/`failed`.
     - Multiple files selected together are treated as pages of one logical upload.
     - A multi-page PDF yields one ExtractionResult per page (multi-document support).
-    - All files are OCR'd locally with RapidOCR, then extracted with the
+    - All files are OCR'd locally with the configured OCR engine
+      (Tesseract default; RapidOCR/hybrid opt-in), then extracted with the
       single text model (no vision model or cloud OCR required).
     - Re-uploading identical bytes while the job runs returns the SAME
       job_id instead of starting a duplicate pipeline (single-flight).
+    - `force_refresh=true` bypasses the completed-result cache (OCR cache
+      stays enabled). `disable_caches=true` (benchmark/debug) bypasses BOTH
+      result and OCR caches.
+    - `doc_type=invoice|purchase_order|delivery_note` optionally fixes the
+      document type for every page, bypassing Router classification (one
+      fewer LLM call). Extraction validation still runs; omit for automatic
+      classification.
     """
     client_id = _get_client_id(request)
 
@@ -149,15 +173,24 @@ async def extract_document(
             )
 
         # Single-flight: identical bytes already being processed → reuse it.
-        fingerprint = _content_fingerprint(parts)
-        existing_job_id = _content_to_job.get(fingerprint)
-        if existing_job_id is not None:
-            existing_task = _background_tasks.get(existing_job_id)
-            if existing_task is not None and not existing_task.done():
-                logger.info("Single-flight hit: reusing running job %s", existing_job_id)
-                return BatchCreateResponse(job_id=existing_job_id, status="queued")
+        # Force-refresh / cache-disabled probes always start a new pipeline.
+        # An explicit doc_type changes routing, so it joins the key.
+        try:
+            selected_type = parse_doc_type(doc_type)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        fingerprint = _content_fingerprint(parts, selected_type)
+        if not (force_refresh or disable_caches):
+            existing_job_id = _content_to_job.get(fingerprint)
+            if existing_job_id is not None:
+                existing_task = _background_tasks.get(existing_job_id)
+                if existing_task is not None and not existing_task.done():
+                    logger.info("Single-flight hit: reusing running job %s", existing_job_id)
+                    return BatchCreateResponse(job_id=existing_job_id, status="queued")
+                _content_to_job.pop(fingerprint, None)
+                _background_tasks.pop(existing_job_id, None)
+        else:
             _content_to_job.pop(fingerprint, None)
-            _background_tasks.pop(existing_job_id, None)
 
         total_size = sum(len(p.raw_content) for p in parts)
         combined_name = parts[0].filename if len(parts) == 1 else f"{len(parts)} files ({parts[0].filename}, ...)"
@@ -178,7 +211,10 @@ async def extract_document(
             elif task.exception() is not None:
                 logger.error("Background extraction %s raised: %s", _job_id, task.exception())
 
-        task = asyncio.create_task(service.run_job(job.job_id, parts))
+        task = asyncio.create_task(
+            service.run_job(job.job_id, parts, force_refresh=force_refresh,
+                            disable_caches=disable_caches, doc_type=selected_type)
+        )
         task.add_done_callback(_done)
         _background_tasks[job.job_id] = task
         _content_to_job[fingerprint] = job.job_id
@@ -281,6 +317,26 @@ def get_stats() -> dict[str, object]:
     return service.job_store.get_stats()
 
 
+@router.delete("/history", status_code=status.HTTP_200_OK)
+def clear_history() -> dict[str, object]:
+    """Delete ALL history jobs, related results, and stored sources.
+
+    Returns per-kind deleted counts (``{"jobs": N, ...}``). Refuses with
+    409 while jobs are active (queued/processing) — finish or cancel
+    background work first. Ground truth, catalogs, models, settings, and
+    backups are never touched.
+    """
+    if not settings.database_enabled:
+        raise HTTPException(
+            status_code=400,
+            detail="Job history requires database (DATABASE_ENABLED=true)",
+        )
+    try:
+        return {"deleted": service.clear_history()}
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
 @router.get("/history/{job_id}")
 def get_job_history(job_id: str) -> dict:
     """Get a specific job from history."""
@@ -301,7 +357,32 @@ def get_job_history(job_id: str) -> dict:
     if job is None:
         raise HTTPException(status_code=404, detail="Job not found")
 
-    return job
+    batch = service.get_batch_status(parsed_job_id)
+    return {**job, "result": batch.result.model_dump(mode="json") if batch and batch.result else None,
+            "progress": batch.progress.model_dump() if batch and batch.progress else None}
+
+
+@router.get("/sources/{source_id}")
+def download_source(source_id: UUID):
+    try:
+        path, meta = service.sources.original(source_id)
+        if not path.is_file():
+            raise FileNotFoundError()
+        return FileResponse(path, media_type=meta["content_type"], filename=meta["filename"],
+                            headers={"X-Content-Type-Options": "nosniff"})
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Original source unavailable") from None
+
+
+@router.get("/sources/{source_id}/pages/{page_number}")
+def preview_source(source_id: UUID, page_number: int):
+    try:
+        path = service.sources.preview(source_id, page_number)
+        if not path.is_file():
+            raise FileNotFoundError()
+        return FileResponse(path, media_type="image/png", headers={"X-Content-Type-Options": "nosniff"})
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Page preview unavailable") from None
 
 
 @router.delete("/history/{job_id}")

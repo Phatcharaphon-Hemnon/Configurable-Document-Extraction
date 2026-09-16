@@ -1,0 +1,1807 @@
+{
+  "filename": "Invoice1.jpg",
+  "eval_seconds": 871.656321653998,
+  "error": null,
+  "documents": [
+    {
+      "id": "6b2b24e1-c615-46d5-ac33-28f6d3b395a5",
+      "doc_type": "invoice",
+      "source": {
+        "source_id": "6d174f28-f270-4c9e-b4a2-f92e33457902",
+        "filename": "Invoice1.jpg",
+        "page_number": 1,
+        "page_count": 1,
+        "preview_url": "/sources/6d174f28-f270-4c9e-b4a2-f92e33457902/pages/1",
+        "download_url": "/sources/6d174f28-f270-4c9e-b4a2-f92e33457902"
+      },
+      "ocr_blocks": [
+        {
+          "text": "SYARIKAT",
+          "confidence": 0.9119253500000001,
+          "box": [
+            130.0,
+            285.0,
+            290.0,
+            44.0
+          ]
+        },
+        {
+          "text": "PERNIAGAAN",
+          "confidence": 0.92125633,
+          "box": [
+            443.0,
+            285.0,
+            375.0,
+            44.0
+          ]
+        },
+        {
+          "text": "GIN",
+          "confidence": 0.9614798,
+          "box": [
+            841.0,
+            285.0,
+            96.0,
+            44.0
+          ]
+        },
+        {
+          "text": "KEE",
+          "confidence": 0.9614798,
+          "box": [
+            962.0,
+            285.0,
+            114.0,
+            45.0
+          ]
+        },
+        {
+          "text": "(81109-A)",
+          "confidence": 0.90719849,
+          "box": [
+            507.0,
+            358.0,
+            193.0,
+            41.0
+          ]
+        },
+        {
+          "text": "NO",
+          "confidence": 0.96389183,
+          "box": [
+            325.0,
+            416.0,
+            61.0,
+            35.0
+          ]
+        },
+        {
+          "text": "290,",
+          "confidence": 0.95996544,
+          "box": [
+            402.0,
+            416.0,
+            79.0,
+            38.0
+          ]
+        },
+        {
+          "text": "JALAN",
+          "confidence": 0.95958206,
+          "box": [
+            498.0,
+            416.0,
+            130.0,
+            35.0
+          ]
+        },
+        {
+          "text": "AIR",
+          "confidence": 0.93083321,
+          "box": [
+            644.0,
+            416.0,
+            68.0,
+            35.0
+          ]
+        },
+        {
+          "text": "PANAS,",
+          "confidence": 0.69667816,
+          "box": [
+            730.0,
+            416.0,
+            150.0,
+            37.0
+          ]
+        },
+        {
+          "text": "SETAPAK,",
+          "confidence": 0.92804062,
+          "box": [
+            502.0,
+            473.0,
+            202.0,
+            38.0
+          ]
+        },
+        {
+          "text": "53200,",
+          "confidence": 0.95926376,
+          "box": [
+            358.0,
+            537.0,
+            128.0,
+            39.0
+          ]
+        },
+        {
+          "text": "KUALA",
+          "confidence": 0.95940567,
+          "box": [
+            505.0,
+            538.0,
+            138.0,
+            35.0
+          ]
+        },
+        {
+          "text": "LUMPUR.",
+          "confidence": 0.9454267900000001,
+          "box": [
+            658.0,
+            538.0,
+            190.0,
+            35.0
+          ]
+        },
+        {
+          "text": "TEL",
+          "confidence": 0.93215324,
+          "box": [
+            419.0,
+            595.0,
+            75.0,
+            35.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.87938187,
+          "box": [
+            511.0,
+            604.0,
+            3.0,
+            25.0
+          ]
+        },
+        {
+          "text": "03-40210276",
+          "confidence": 0.91354912,
+          "box": [
+            531.0,
+            595.0,
+            258.0,
+            36.0
+          ]
+        },
+        {
+          "text": "GST",
+          "confidence": 0.92911133,
+          "box": [
+            369.0,
+            675.0,
+            85.0,
+            33.0
+          ]
+        },
+        {
+          "text": "ID",
+          "confidence": 0.8875606500000001,
+          "box": [
+            471.0,
+            675.0,
+            38.0,
+            33.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.91892578,
+          "box": [
+            526.0,
+            683.0,
+            3.0,
+            24.0
+          ]
+        },
+        {
+          "text": "000750673920",
+          "confidence": 0.9642456799999999,
+          "box": [
+            546.0,
+            675.0,
+            293.0,
+            34.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.7397045900000001,
+          "box": [
+            0.0,
+            731.0,
+            1.0,
+            31.0
+          ]
+        },
+        {
+          "text": "SIMPLIFIED",
+          "confidence": 0.83361969,
+          "box": [
+            314.0,
+            738.0,
+            263.0,
+            36.0
+          ]
+        },
+        {
+          "text": "TAX",
+          "confidence": 0.96371399,
+          "box": [
+            594.0,
+            738.0,
+            88.0,
+            36.0
+          ]
+        },
+        {
+          "text": "INVOICE",
+          "confidence": 0.96186081,
+          "box": [
+            702.0,
+            738.0,
+            190.0,
+            36.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.59521088,
+          "box": [
+            1194.0,
+            733.0,
+            5.0,
+            53.0
+          ]
+        },
+        {
+          "text": "Dac",
+          "confidence": 0.94807137,
+          "box": [
+            72.0,
+            900.0,
+            74.0,
+            34.0
+          ]
+        },
+        {
+          "text": "No.",
+          "confidence": 0.9593197600000001,
+          "box": [
+            163.0,
+            902.0,
+            60.0,
+            33.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.21951172,
+          "box": [
+            351.0,
+            910.0,
+            3.0,
+            25.0
+          ]
+        },
+        {
+          "text": "€S00012726",
+          "confidence": 0.09766144,
+          "box": [
+            391.0,
+            900.0,
+            253.0,
+            35.0
+          ]
+        },
+        {
+          "text": "Date:",
+          "confidence": 0.9132019,
+          "box": [
+            734.0,
+            901.0,
+            96.0,
+            35.0
+          ]
+        },
+        {
+          "text": "13/01/2018",
+          "confidence": 0.9482628599999999,
+          "box": [
+            871.0,
+            901.0,
+            212.0,
+            35.0
+          ]
+        },
+        {
+          "text": ".",
+          "confidence": 0.22678954999999998,
+          "box": [
+            0.0,
+            971.0,
+            1.0,
+            11.0
+          ]
+        },
+        {
+          "text": "Cashier",
+          "confidence": 0.08430138,
+          "box": [
+            70.0,
+            966.0,
+            149.0,
+            33.0
+          ]
+        },
+        {
+          "text": "'",
+          "confidence": 0.33996918,
+          "box": [
+            349.0,
+            973.0,
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "text": "USER",
+          "confidence": 0.95843765,
+          "box": [
+            392.0,
+            967.0,
+            114.0,
+            32.0
+          ]
+        },
+        {
+          "text": "Time:",
+          "confidence": 0.96342545,
+          "box": [
+            730.0,
+            961.0,
+            100.0,
+            36.0
+          ]
+        },
+        {
+          "text": "15:52:00",
+          "confidence": 0.96477608,
+          "box": [
+            870.0,
+            962.0,
+            163.0,
+            34.0
+          ]
+        },
+        {
+          "text": "Salesperson",
+          "confidence": 0.9585011299999999,
+          "box": [
+            70.0,
+            1027.0,
+            237.0,
+            42.0
+          ]
+        },
+        {
+          "text": "Ref.",
+          "confidence": 0.83022003,
+          "box": [
+            729.0,
+            1026.0,
+            74.0,
+            35.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.9277925100000001,
+          "box": [
+            823.0,
+            1033.0,
+            3.0,
+            27.0
+          ]
+        },
+        {
+          "text": "Mem",
+          "confidence": 0.56664413,
+          "box": [
+            52.0,
+            1142.0,
+            116.0,
+            48.0
+          ]
+        },
+        {
+          "text": "Oty,",
+          "confidence": 0.38830849,
+          "box": [
+            344.0,
+            1142.0,
+            208.0,
+            49.0
+          ]
+        },
+        {
+          "text": "S/Price_",
+          "confidence": 0.046019290000000004,
+          "box": [
+            614.0,
+            1142.0,
+            164.0,
+            49.0
+          ]
+        },
+        {
+          "text": "Amount",
+          "confidence": 0.48107109000000003,
+          "box": [
+            822.0,
+            1143.0,
+            315.0,
+            49.0
+          ]
+        },
+        {
+          "text": "Tax",
+          "confidence": 0.42378548000000005,
+          "box": [
+            1036.0,
+            1138.0,
+            68.0,
+            67.0
+          ]
+        },
+        {
+          "text": "_",
+          "confidence": 0.42378548000000005,
+          "box": [
+            1114.0,
+            1138.0,
+            23.0,
+            67.0
+          ]
+        },
+        {
+          "text": "1432",
+          "confidence": 0.96174255,
+          "box": [
+            74.0,
+            1204.0,
+            90.0,
+            32.0
+          ]
+        },
+        {
+          "text": "6",
+          "confidence": 0.96868057,
+          "box": [
+            475.0,
+            1204.0,
+            21.0,
+            31.0
+          ]
+        },
+        {
+          "text": "2.12",
+          "confidence": 0.9508657100000001,
+          "box": [
+            645.0,
+            1204.0,
+            80.0,
+            32.0
+          ]
+        },
+        {
+          "text": "12.72",
+          "confidence": 0.95197891,
+          "box": [
+            881.0,
+            1204.0,
+            102.0,
+            32.0
+          ]
+        },
+        {
+          "text": "SR",
+          "confidence": 0.9530920399999999,
+          "box": [
+            1049.0,
+            1205.0,
+            55.0,
+            31.0
+          ]
+        },
+        {
+          "text": "GLOVE",
+          "confidence": 0.96263329,
+          "box": [
+            69.0,
+            1263.0,
+            145.0,
+            34.0
+          ]
+        },
+        {
+          "text": "1200",
+          "confidence": 0.94211723,
+          "box": [
+            235.0,
+            1263.0,
+            91.0,
+            33.0
+          ]
+        },
+        {
+          "text": "(PER",
+          "confidence": 0.94211723,
+          "box": [
+            341.0,
+            1262.0,
+            98.0,
+            40.0
+          ]
+        },
+        {
+          "text": "PAIR)",
+          "confidence": 0.9596531699999999,
+          "box": [
+            458.0,
+            1263.0,
+            110.0,
+            39.0
+          ]
+        },
+        {
+          "text": "ไช",
+          "confidence": 0.45255478,
+          "box": [
+            53.0,
+            1316.0,
+            341.0,
+            50.0
+          ]
+        },
+        {
+          "text": "พ",
+          "confidence": 0.44807491,
+          "box": [
+            259.0,
+            1312.0,
+            15.0,
+            58.0
+          ]
+        },
+        {
+          "text": "เฉ",
+          "confidence": 0.6864746100000001,
+          "box": [
+            273.0,
+            1316.0,
+            59.0,
+            50.0
+          ]
+        },
+        {
+          "text": "พ",
+          "confidence": 0.77314468,
+          "box": [
+            331.0,
+            1312.0,
+            41.0,
+            58.0
+          ]
+        },
+        {
+          "text": "6",
+          "confidence": 0.90503487,
+          "box": [
+            418.0,
+            1317.0,
+            148.0,
+            40.0
+          ]
+        },
+        {
+          "text": "ท",
+          "confidence": 0.5391597,
+          "box": [
+            672.0,
+            1317.0,
+            101.0,
+            3.0
+          ]
+        },
+        {
+          "text": "ไ",
+          "confidence": 0.91110039,
+          "box": [
+            701.0,
+            1312.0,
+            12.0,
+            58.0
+          ]
+        },
+        {
+          "text": "ไ",
+          "confidence": 0.82901169,
+          "box": [
+            712.0,
+            1317.0,
+            26.0,
+            3.0
+          ]
+        },
+        {
+          "text": "ฬ",
+          "confidence": 0.91594994,
+          "box": [
+            737.0,
+            1312.0,
+            19.0,
+            58.0
+          ]
+        },
+        {
+          "text": "ท",
+          "confidence": 0.8756038700000001,
+          "box": [
+            755.0,
+            1312.0,
+            5.0,
+            58.0
+          ]
+        },
+        {
+          "text": "ฬ",
+          "confidence": 0.6942115,
+          "box": [
+            759.0,
+            1312.0,
+            8.0,
+            58.0
+          ]
+        },
+        {
+          "text": "ท",
+          "confidence": 0.81629318,
+          "box": [
+            766.0,
+            1312.0,
+            5.0,
+            58.0
+          ]
+        },
+        {
+          "text": "ช",
+          "confidence": 0.75099335,
+          "box": [
+            770.0,
+            1312.0,
+            8.0,
+            58.0
+          ]
+        },
+        {
+          "text": "ที",
+          "confidence": 0.7455952499999999,
+          "box": [
+            777.0,
+            1312.0,
+            36.0,
+            58.0
+          ]
+        },
+        {
+          "text": "่",
+          "confidence": 0.5694940900000001,
+          "box": [
+            820.0,
+            1317.0,
+            324.0,
+            42.0
+          ]
+        },
+        {
+          "text": "7",
+          "confidence": 0.52450275,
+          "box": [
+            900.0,
+            1312.0,
+            67.0,
+            58.0
+          ]
+        },
+        {
+          "text": "ว",
+          "confidence": 0.31839478,
+          "box": [
+            966.0,
+            1312.0,
+            15.0,
+            58.0
+          ]
+        },
+        {
+          "text": "2",
+          "confidence": 0.6509442900000001,
+          "box": [
+            980.0,
+            1312.0,
+            16.0,
+            58.0
+          ]
+        },
+        {
+          "text": "ว",
+          "confidence": 0.34172333,
+          "box": [
+            995.0,
+            1317.0,
+            149.0,
+            42.0
+          ]
+        },
+        {
+          "text": "Total",
+          "confidence": 0.9668631000000001,
+          "box": [
+            185.0,
+            1416.0,
+            91.0,
+            34.0
+          ]
+        },
+        {
+          "text": "Sales",
+          "confidence": 0.9654641700000001,
+          "box": [
+            292.0,
+            1417.0,
+            125.0,
+            35.0
+          ]
+        },
+        {
+          "text": "(Excluding",
+          "confidence": 0.9416059099999999,
+          "box": [
+            427.0,
+            1416.0,
+            174.0,
+            43.0
+          ]
+        },
+        {
+          "text": "GST)",
+          "confidence": 0.85767937,
+          "box": [
+            617.0,
+            1416.0,
+            100.0,
+            40.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.91312218,
+          "box": [
+            754.0,
+            1447.0,
+            2.0,
+            4.0
+          ]
+        },
+        {
+          "text": "12.00",
+          "confidence": 0.9542012,
+          "box": [
+            879.0,
+            1417.0,
+            102.0,
+            34.0
+          ]
+        },
+        {
+          "text": "Discount",
+          "confidence": 0.8621839099999999,
+          "box": [
+            552.0,
+            1483.0,
+            164.0,
+            35.0
+          ]
+        },
+        {
+          "text": "'",
+          "confidence": 0.7603624000000001,
+          "box": [
+            753.0,
+            1492.0,
+            4.0,
+            25.0
+          ]
+        },
+        {
+          "text": "0.00",
+          "confidence": 0.8868608899999999,
+          "box": [
+            899.0,
+            1484.0,
+            82.0,
+            34.0
+          ]
+        },
+        {
+          "text": "Total",
+          "confidence": 0.15401146000000002,
+          "box": [
+            526.0,
+            1553.0,
+            90.0,
+            34.0
+          ]
+        },
+        {
+          "text": "GST",
+          "confidence": 0.15401146000000002,
+          "box": [
+            631.0,
+            1553.0,
+            86.0,
+            34.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.9094045300000001,
+          "box": [
+            753.0,
+            1561.0,
+            4.0,
+            26.0
+          ]
+        },
+        {
+          "text": "0.72",
+          "confidence": 0.9514431000000001,
+          "box": [
+            899.0,
+            1554.0,
+            82.0,
+            34.0
+          ]
+        },
+        {
+          "text": "Rounding",
+          "confidence": 0.85443268,
+          "box": [
+            540.0,
+            1623.0,
+            175.0,
+            45.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.91263626,
+          "box": [
+            753.0,
+            1635.0,
+            3.0,
+            24.0
+          ]
+        },
+        {
+          "text": "0.00",
+          "confidence": 0.9673872400000001,
+          "box": [
+            899.0,
+            1624.0,
+            81.0,
+            35.0
+          ]
+        },
+        {
+          "text": "Total",
+          "confidence": 0.9650528,
+          "box": [
+            98.0,
+            1703.0,
+            103.0,
+            35.0
+          ]
+        },
+        {
+          "text": "Sales",
+          "confidence": 0.96189926,
+          "box": [
+            219.0,
+            1703.0,
+            111.0,
+            35.0
+          ]
+        },
+        {
+          "text": "(Inclusive",
+          "confidence": 0.95411331,
+          "box": [
+            345.0,
+            1703.0,
+            202.0,
+            43.0
+          ]
+        },
+        {
+          "text": "of",
+          "confidence": 0.95308228,
+          "box": [
+            563.0,
+            1703.0,
+            39.0,
+            35.0
+          ]
+        },
+        {
+          "text": "GST)",
+          "confidence": 0.92049683,
+          "box": [
+            616.0,
+            1703.0,
+            102.0,
+            44.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.90827759,
+          "box": [
+            752.0,
+            1715.0,
+            6.0,
+            24.0
+          ]
+        },
+        {
+          "text": "12.72",
+          "confidence": 0.9525720200000001,
+          "box": [
+            876.0,
+            1704.0,
+            104.0,
+            35.0
+          ]
+        },
+        {
+          "text": "CASH",
+          "confidence": 0.92668251,
+          "box": [
+            595.0,
+            1778.0,
+            119.0,
+            33.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.91358047,
+          "box": [
+            752.0,
+            1788.0,
+            6.0,
+            23.0
+          ]
+        },
+        {
+          "text": "12.72",
+          "confidence": 0.95383125,
+          "box": [
+            876.0,
+            1777.0,
+            104.0,
+            34.0
+          ]
+        },
+        {
+          "text": "Change",
+          "confidence": 0.9152177399999999,
+          "box": [
+            557.0,
+            1840.0,
+            161.0,
+            44.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.9152177399999999,
+          "box": [
+            752.0,
+            1852.0,
+            6.0,
+            24.0
+          ]
+        },
+        {
+          "text": "0.00",
+          "confidence": 0.9691381099999999,
+          "box": [
+            898.0,
+            1841.0,
+            81.0,
+            35.0
+          ]
+        },
+        {
+          "text": "es",
+          "confidence": 0.05871796,
+          "box": [
+            148.0,
+            1951.0,
+            416.0,
+            4.0
+          ]
+        },
+        {
+          "text": "น",
+          "confidence": 0.7042598,
+          "box": [
+            688.0,
+            1951.0,
+            43.0,
+            4.0
+          ]
+        },
+        {
+          "text": "น",
+          "confidence": 0.5038269,
+          "box": [
+            752.0,
+            1952.0,
+            135.0,
+            3.0
+          ]
+        },
+        {
+          "text": "0",
+          "confidence": 0.54306274,
+          "box": [
+            892.0,
+            1952.0,
+            159.0,
+            4.0
+          ]
+        },
+        {
+          "text": "ป",
+          "confidence": 0.57357906,
+          "box": [
+            1199.0,
+            1905.0,
+            1.0,
+            56.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.49577938000000005,
+          "box": [
+            1.0,
+            2014.0,
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "text": "GST",
+          "confidence": 0.94997192,
+          "box": [
+            143.0,
+            1960.0,
+            93.0,
+            38.0
+          ]
+        },
+        {
+          "text": "SUMMARY",
+          "confidence": 0.96312721,
+          "box": [
+            253.0,
+            1961.0,
+            241.0,
+            37.0
+          ]
+        },
+        {
+          "text": "Tax",
+          "confidence": 0.9624848199999999,
+          "box": [
+            152.0,
+            2045.0,
+            75.0,
+            41.0
+          ]
+        },
+        {
+          "text": "Code",
+          "confidence": 0.96650864,
+          "box": [
+            235.0,
+            2045.0,
+            114.0,
+            41.0
+          ]
+        },
+        {
+          "text": "%",
+          "confidence": 0.77727478,
+          "box": [
+            458.0,
+            2045.0,
+            33.0,
+            42.0
+          ]
+        },
+        {
+          "text": "Amt(RM)",
+          "confidence": 0.90666359,
+          "box": [
+            599.0,
+            2045.0,
+            192.0,
+            44.0
+          ]
+        },
+        {
+          "text": "7",
+          "confidence": 0.59586864,
+          "box": [
+            872.0,
+            2046.0,
+            25.0,
+            41.0
+          ]
+        },
+        {
+          "text": "ละ",
+          "confidence": 0.85824196,
+          "box": [
+            893.0,
+            2056.0,
+            53.0,
+            31.0
+          ]
+        },
+        {
+          "text": "(8",
+          "confidence": 0.46339858999999994,
+          "box": [
+            960.0,
+            2046.0,
+            45.0,
+            43.0
+          ]
+        },
+        {
+          "text": "ด)",
+          "confidence": 0.4244215,
+          "box": [
+            1009.0,
+            2046.0,
+            47.0,
+            43.0
+          ]
+        },
+        {
+          "text": "SR",
+          "confidence": 0.9596598799999999,
+          "box": [
+            156.0,
+            2098.0,
+            60.0,
+            36.0
+          ]
+        },
+        {
+          "text": "6",
+          "confidence": 0.8093228100000001,
+          "box": [
+            465.0,
+            2099.0,
+            45.0,
+            55.0
+          ]
+        },
+        {
+          "text": ".",
+          "confidence": 0.8981266800000001,
+          "box": [
+            636.0,
+            2116.0,
+            7.0,
+            8.0
+          ]
+        },
+        {
+          "text": "12.00",
+          "confidence": 0.94802933,
+          "box": [
+            676.0,
+            2099.0,
+            113.0,
+            36.0
+          ]
+        },
+        {
+          "text": "0.72",
+          "confidence": 0.95874672,
+          "box": [
+            966.0,
+            2100.0,
+            89.0,
+            36.0
+          ]
+        },
+        {
+          "text": "}",
+          "confidence": 0.058223649999999995,
+          "box": [
+            1198.0,
+            2138.0,
+            2.0,
+            25.0
+          ]
+        },
+        {
+          "text": "Total",
+          "confidence": 0.9328305100000001,
+          "box": [
+            390.0,
+            2178.0,
+            105.0,
+            37.0
+          ]
+        },
+        {
+          "text": ":",
+          "confidence": 0.92979111,
+          "box": [
+            516.0,
+            2186.0,
+            6.0,
+            28.0
+          ]
+        },
+        {
+          "text": "12.00",
+          "confidence": 0.9679078699999999,
+          "box": [
+            676.0,
+            2178.0,
+            113.0,
+            37.0
+          ]
+        },
+        {
+          "text": "0.72",
+          "confidence": 0.95627701,
+          "box": [
+            966.0,
+            2179.0,
+            89.0,
+            37.0
+          ]
+        },
+        {
+          "text": "|",
+          "confidence": 0.55860893,
+          "box": [
+            1199.0,
+            2176.0,
+            1.0,
+            52.0
+          ]
+        },
+        {
+          "text": "GOODS",
+          "confidence": 0.9508766900000001,
+          "box": [
+            133.0,
+            2304.0,
+            138.0,
+            29.0
+          ]
+        },
+        {
+          "text": "SOLD",
+          "confidence": 0.95694695,
+          "box": [
+            287.0,
+            2304.0,
+            98.0,
+            30.0
+          ]
+        },
+        {
+          "text": "ARE",
+          "confidence": 0.95694695,
+          "box": [
+            400.0,
+            2305.0,
+            72.0,
+            29.0
+          ]
+        },
+        {
+          "text": "NOT",
+          "confidence": 0.96597115,
+          "box": [
+            488.0,
+            2305.0,
+            74.0,
+            29.0
+          ]
+        },
+        {
+          "text": "RETURNABLE,",
+          "confidence": 0.96605247,
+          "box": [
+            579.0,
+            2297.0,
+            248.0,
+            41.0
+          ]
+        },
+        {
+          "text": "THANK",
+          "confidence": 0.95500771,
+          "box": [
+            844.0,
+            2305.0,
+            119.0,
+            29.0
+          ]
+        },
+        {
+          "text": "YOU",
+          "confidence": 0.95500771,
+          "box": [
+            978.0,
+            2305.0,
+            76.0,
+            29.0
+          ]
+        },
+        {
+          "text": "y",
+          "confidence": 0.78891785,
+          "box": [
+            1136.0,
+            2247.0,
+            62.0,
+            153.0
+          ]
+        },
+        {
+          "text": "ก",
+          "confidence": 0.31269142,
+          "box": [
+            523.0,
+            2399.0,
+            5.0,
+            1.0
+          ]
+        },
+        {
+          "text": "5",
+          "confidence": 0.31269142,
+          "box": [
+            560.0,
+            2379.0,
+            84.0,
+            21.0
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "line_items",
+          "columns": [
+            {
+              "key": "Oty",
+              "label": "Oty"
+            },
+            {
+              "key": "S/Price_ Amount Tax",
+              "label": "S/Price_ Amount Tax"
+            },
+            {
+              "key": "GLOVE 1200 (PER PAIR)",
+              "label": "GLOVE 1200 (PER PAIR)"
+            }
+          ],
+          "rows": [
+            [
+              {
+                "column": "Oty",
+                "value": "6",
+                "confidence": 1.0,
+                "source_span": "'6'"
+              },
+              {
+                "column": "S/Price_ Amount Tax",
+                "value": "2.12 | 12.72 | SR",
+                "confidence": 1.0,
+                "source_span": "'2.12 | 12.72 | SR'"
+              },
+              {
+                "column": "GLOVE 1200 (PER PAIR)",
+                "value": "ไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว",
+                "confidence": 1.0,
+                "source_span": "'ไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว'"
+              }
+            ]
+          ]
+        }
+      ],
+      "timings": {
+        "router": 87.33924611800103,
+        "extractor": 569.9896439570002,
+        "validator": 0.00696019400129444,
+        "judge": 207.05428437199953,
+        "pipeline": 866.2712462010022,
+        "ocr": 4.675572737000039,
+        "render": 0.6838940550005645,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 706,
+          "output_tokens": 55,
+          "total_tokens": 761,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 1137,
+          "output_tokens": 256,
+          "total_tokens": 1393,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_invoice": {
+          "input_tokens": 1297,
+          "output_tokens": 1370,
+          "total_tokens": 2667,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "judge_status": "flagged",
+      "language": "en",
+      "fields": [
+        {
+          "name": "invoice_number",
+          "value": "S00012726",
+          "confidence": 1.0,
+          "source_span": "'S00012726'",
+          "is_new_field": false
+        },
+        {
+          "name": "invoice_date",
+          "value": "13/01/2018",
+          "confidence": 1.0,
+          "source_span": "'13/01/2018'",
+          "is_new_field": false
+        },
+        {
+          "name": "seller_name",
+          "value": "SYARIKAT PERNIAGAAN GIN KEE",
+          "confidence": 1.0,
+          "source_span": "'SYARIKAT PERNIAGAAN GIN KEE'",
+          "is_new_field": false
+        },
+        {
+          "name": "total_amount",
+          "value": "12.72",
+          "confidence": 1.0,
+          "source_span": "'12.72'",
+          "is_new_field": false
+        },
+        {
+          "name": "bill_to_name",
+          "value": "USER",
+          "confidence": 1.0,
+          "source_span": "'USER'",
+          "is_new_field": false
+        },
+        {
+          "name": "bill_to_address",
+          "value": "ไม่มีข้อมูล",
+          "confidence": 1.0,
+          "source_span": "ไม่มีข้อมูล",
+          "is_new_field": false
+        },
+        {
+          "name": "seller_address",
+          "value": "NO 290, JALAN AIR PANAS, SETAPAK, 53200 KUALA LUMPUR",
+          "confidence": 1.0,
+          "source_span": "'NO 290, JALAN AIR PANAS, SETAPAK, 53200 KUALA LUMPUR'",
+          "is_new_field": false
+        },
+        {
+          "name": "seller_phone",
+          "value": "03-40210276",
+          "confidence": 1.0,
+          "source_span": "'03-40210276'",
+          "is_new_field": false
+        },
+        {
+          "name": "seller_email",
+          "value": "ไม่มีข้อมูล",
+          "confidence": 1.0,
+          "source_span": "ไม่มีข้อมูล",
+          "is_new_field": false
+        },
+        {
+          "name": "tax_id",
+          "value": "000750673920",
+          "confidence": 1.0,
+          "source_span": "'000750673920'",
+          "is_new_field": false
+        },
+        {
+          "name": "currency",
+          "value": "RM",
+          "confidence": 1.0,
+          "source_span": "'RM'",
+          "is_new_field": false
+        },
+        {
+          "name": "payment_due_date",
+          "value": "ไม่มีข้อมูล",
+          "confidence": 1.0,
+          "source_span": "ไม่มีข้อมูล",
+          "is_new_field": false
+        },
+        {
+          "name": "subtotal_amount",
+          "value": "12.00",
+          "confidence": 1.0,
+          "source_span": "'12.00'",
+          "is_new_field": false
+        },
+        {
+          "name": "tax_amount",
+          "value": "0.72",
+          "confidence": 1.0,
+          "source_span": "'0.72'",
+          "is_new_field": false
+        },
+        {
+          "name": "paid_amount",
+          "value": "12.72",
+          "confidence": 1.0,
+          "source_span": "'12.72'",
+          "is_new_field": false
+        },
+        {
+          "name": "change_amount",
+          "value": "0.00",
+          "confidence": 1.0,
+          "source_span": "'0.00'",
+          "is_new_field": false
+        },
+        {
+          "name": "line_items",
+          "value": "[{\"column\": \"Oty\", \"value\": \"6\", \"confidence\": 1.0, \"source_span\": \"'6'\"}, {\"column\": \"S/Price_ Amount Tax\", \"value\": \"2.12 | 12.72 | SR\", \"confidence\": 1.0, \"source_span\": \"'2.12 | 12.72 | SR'\"}, {\"column\": \"GLOVE 1200 (PER PAIR)\", \"value\": \"ไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว\", \"confidence\": 1.0, \"source_span\": \"'ไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว'\"}]",
+          "confidence": 1.0,
+          "source_span": "ไม่มีข้อมูล",
+          "is_new_field": false
+        }
+      ],
+      "validation_errors": [
+        "invoice_number: source_span not found in document (possible hallucination)",
+        "invoice_date: source_span not found in document (possible hallucination)",
+        "seller_name: source_span not found in document (possible hallucination)",
+        "total_amount: source_span not found in document (possible hallucination)",
+        "bill_to_name: source_span not found in document (possible hallucination)",
+        "bill_to_address: source_span not found in document (possible hallucination)",
+        "seller_address: source_span not found in document (possible hallucination)",
+        "seller_phone: source_span not found in document (possible hallucination)",
+        "seller_email: source_span not found in document (possible hallucination)",
+        "tax_id: source_span not found in document (possible hallucination)",
+        "currency: source_span not found in document (possible hallucination)",
+        "payment_due_date: source_span not found in document (possible hallucination)",
+        "subtotal_amount: source_span not found in document (possible hallucination)",
+        "tax_amount: source_span not found in document (possible hallucination)",
+        "paid_amount: source_span not found in document (possible hallucination)",
+        "change_amount: source_span not found in document (possible hallucination)",
+        "line_items: array row 0 contains unsupported values (possible hallucination)",
+        "line_items: array row 1 contains unsupported values (possible hallucination)",
+        "line_items: array row 2 contains unsupported values (possible hallucination)",
+        "Unparseable date for payment_due_date: 'ไม่มีข้อมูล'",
+        "line_items row 1 Oty: source_span not found in document (possible hallucination)",
+        "line_items row 1 S/Price_ Amount Tax: source_span not found in document (possible hallucination)",
+        "line_items row 1 GLOVE 1200 (PER PAIR): source_span not found in document (possible hallucination)"
+      ],
+      "needs_review": true,
+      "completeness_score": 1.0,
+      "judge": {
+        "score": 0.65,
+        "issues": [
+          {
+            "field": "invoice_date",
+            "message": "The provided invoice_date '13/01/2018' does not match the date in the original document '13/01/2018'.",
+            "severity": "warning"
+          },
+          {
+            "field": "bill_to_address",
+            "message": "The provided bill_to_address 'ไม่มีข้อมูล' does not match the address in the original document 'NO 290, JALAN AIR PANAS, SETAPAK, 53200 KUALA LUMPUR'.",
+            "severity": "warning"
+          },
+          {
+            "field": "paid_amount",
+            "message": "The provided paid_amount '12.72' matches the total amount '12.72' in the original document.",
+            "severity": "info"
+          },
+          {
+            "field": "change_amount",
+            "message": "The provided change_amount '0.00' matches the total amount '12.72' in the original document.",
+            "severity": "info"
+          },
+          {
+            "field": "line_items",
+            "message": "The provided line_items does not contain the expected structure and values as in the original document.",
+            "severity": "warning"
+          }
+        ],
+        "notes": "The provided values for invoice_date, bill_to_address, and line_items have issues compared to the original document."
+      },
+      "routing_reason": "The document text contains a SIMPLIFIED TAX INVOICE header and follows the structure of an invoice, including details such as product name, quantity, price, and total amount.",
+      "full_text": "SYARIKAT PERNIAGAAN GIN KEE\n(81109-A)\nNO 290, JALAN AIR PANAS,\nSETAPAK,\n53200, KUALA LUMPUR.\nTEL : 03-40210276\nGST ID : 000750673920\n| | SIMPLIFIED TAX INVOICE | |\nDac No. | : €S00012726 | Date: 13/01/2018\n. | Cashier | ' USER | Time: 15:52:00\nSalesperson | Ref. :\nMem | Oty, S/Price_ Amount Tax _\n1432 | 6 | 2.12 | 12.72 | SR\nGLOVE 1200 (PER PAIR)\nไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว\nTotal Sales (Excluding GST) | 12.00\n:\nDiscount ' | 0.00\nTotal GST : | 0.72\nRounding : | 0.00\nTotal Sales (Inclusive of GST) : | 12.72\nCASH : | 12.72\nChange : | 0.00\nป\nes | น | น 0\nGST SUMMARY\n|\nTax Code | % | Amt(RM) | 7 ละ (8 ด)\nSR | 6 | . 12.00 | 0.72\n}\nTotal : | 12.00 | 0.72 | |\nGOODS SOLD ARE NOT RETURNABLE, THANK YOU y\n5\nก",
+      "error": null,
+      "failed_stage": null,
+      "error_details": null,
+      "extraction_source": "ocr",
+      "extracted_at": "2026-09-09T05:36:41.377784",
+      "auto_evaluation": null
+    }
+  ],
+  "pages": [
+    {
+      "expected": "invoice",
+      "predicted": "invoice",
+      "router_ok": true,
+      "language_ok": true,
+      "language": "en",
+      "precision": 0.5294117647058824,
+      "recall": 0.5625,
+      "f1": 0.5454545454545455,
+      "tp": 9,
+      "fp": 8,
+      "fn": 7,
+      "fields_expected": 16,
+      "cells_total": 9,
+      "cells_ok": 0,
+      "columns_total": 9,
+      "columns_found": 0,
+      "rows_total": 2,
+      "rows_found": 0,
+      "extra_rows": 0,
+      "extra_columns": 0,
+      "excluded_cells": 0,
+      "failed": false,
+      "error": null,
+      "needs_review": true,
+      "returned": true,
+      "judge_status": "flagged",
+      "timings": {
+        "router": 87.33924611800103,
+        "extractor": 569.9896439570002,
+        "validator": 0.00696019400129444,
+        "judge": 207.05428437199953,
+        "pipeline": 866.2712462010022,
+        "ocr": 4.675572737000039,
+        "render": 0.6838940550005645,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 706,
+          "output_tokens": 55,
+          "total_tokens": 761,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 1137,
+          "output_tokens": 256,
+          "total_tokens": 1393,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_invoice": {
+          "input_tokens": 1297,
+          "output_tokens": 1370,
+          "total_tokens": 2667,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "mismatches": [
+        {
+          "field": "invoice_number",
+          "expected": "CS00012726",
+          "predicted": "S00012726"
+        },
+        {
+          "field": "seller_address",
+          "expected": "NO 290, JALAN AIR PANAS, SETAPAK, 53200, KUALA LUMPUR.",
+          "predicted": "NO 290, JALAN AIR PANAS, SETAPAK, 53200 KUALA LUMPUR"
+        },
+        {
+          "field": "discount",
+          "expected": 0,
+          "predicted": null
+        },
+        {
+          "field": "rounding",
+          "expected": 0,
+          "predicted": null
+        },
+        {
+          "field": "cashier",
+          "expected": "USER",
+          "predicted": null
+        },
+        {
+          "field": "time",
+          "expected": "15:52:00",
+          "predicted": null
+        },
+        {
+          "field": "total_quantity",
+          "expected": 6,
+          "predicted": null
+        }
+      ],
+      "unexpected_fields": {
+        "bill_to_name": "USER",
+        "bill_to_address": "ไม่มีข้อมูล",
+        "seller_email": "ไม่มีข้อมูล",
+        "currency": "RM",
+        "payment_due_date": "ไม่มีข้อมูล",
+        "line_items": "[{\"column\": \"Oty\", \"value\": \"6\", \"confidence\": 1.0, \"source_span\": \"'6'\"}, {\"column\": \"S/Price_ Amount Tax\", \"value\": \"2.12 | 12.72 | SR\", \"confidence\": 1.0, \"source_span\": \"'2.12 | 12.72 | SR'\"}, {\"column\": \"GLOVE 1200 (PER PAIR)\", \"value\": \"ไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว\", \"confidence\": 1.0, \"source_span\": \"'ไชพเฉพ 6 | ทไไฬทฬทชที่ 7 ว 2 ว'\"}]"
+      },
+      "notes": "Primary labels are English; Malay merchant proper name preserved. Item code and description share one printed Item column.",
+      "stem": "Invoice1.jpg / 1",
+      "filename": "Invoice1.jpg",
+      "page_number": 1,
+      "format": ".jpg"
+    }
+  ]
+}

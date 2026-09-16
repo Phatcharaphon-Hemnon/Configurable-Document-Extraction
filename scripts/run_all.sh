@@ -17,6 +17,13 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
+# Keep package and browser caches inside this checkout, never under the user's home.
+export XDG_CACHE_HOME="$ROOT/.cache/xdg"
+export PIP_CACHE_DIR="$ROOT/.cache/pip"
+export npm_config_cache="$ROOT/.cache/npm"
+export PLAYWRIGHT_BROWSERS_PATH="$ROOT/.cache/playwright"
+export PROJECT_CACHE_DIR="$ROOT/.cache"
+mkdir -p "$XDG_CACHE_HOME" "$PIP_CACHE_DIR" "$npm_config_cache" "$PLAYWRIGHT_BROWSERS_PATH"
 
 step() { printf '\n\033[1;32m==> %s\033[0m\n' "$*"; }
 warn() { printf '\033[1;33mWARNING:\033[0m %s\n' "$*"; }
@@ -60,16 +67,15 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 3. Environment files
+# 3. Environment files (never overwrite an existing .env)
 # ---------------------------------------------------------------------------
 step "Checking environment files"
 
 if [ ! -f "$ROOT/api/.env" ]; then
     cp "$ROOT/api/.env.example" "$ROOT/api/.env"
     echo "    created api/.env from template"
-    warn "LLM_API_KEY in api/.env is empty — set it for real extractions."
 else
-    echo "    api/.env exists ✓"
+    echo "    api/.env exists ✓ (kept as-is; switching branches never rewrites it)"
 fi
 
 if [ ! -f "$ROOT/web/.env" ]; then
@@ -77,6 +83,29 @@ if [ ! -f "$ROOT/web/.env" ]; then
     echo "    created web/.env from template"
 else
     echo "    web/.env exists ✓"
+fi
+
+# Effective vs intended deployment (provider/model only — never print keys).
+# The template declares this checkout's intended mode; the ignored api/.env
+# decides the effective mode. A mismatch after `git checkout <other-branch>`
+# is expected: copy the template value or use a separate worktree/checkout
+# per deployment so .env files, History DBs, and caches do not collide.
+intended_provider="$(grep -E '^LLM_PROVIDER=' "$ROOT/api/.env.example" | head -n1 | cut -d= -f2 | tr -d '[:space:]')"
+intended_model="$(grep -E '^LLM_MODEL=' "$ROOT/api/.env.example" | head -n1 | cut -d= -f2 | tr -d '[:space:]')"
+effective_provider="$(grep -E '^LLM_PROVIDER=' "$ROOT/api/.env" | head -n1 | cut -d= -f2 | tr -d '[:space:]')"
+effective_model="$(grep -E '^LLM_MODEL=' "$ROOT/api/.env" | head -n1 | cut -d= -f2 | tr -d '[:space:]')"
+echo "    intended deployment (template): provider=${intended_provider:-unknown} model=${intended_model:-default}"
+echo "    effective deployment (.env):    provider=${effective_provider:-unknown} model=${effective_model:-default}"
+if [ -n "$intended_provider" ] && [ -n "$effective_provider" ] && [ "$intended_provider" != "$effective_provider" ]; then
+    warn "api/.env selects provider '${effective_provider}' but this checkout's template intends '${intended_provider}'."
+    warn "Switching branches does not rewrite the ignored api/.env — edit LLM_PROVIDER/LLM_MODEL manually,"
+    warn "or prefer separate worktrees/checkouts per deployment (see README). Explicit overrides are preserved."
+fi
+# Local providers need no cloud key; only warn when the effective provider
+# normally requires one (ollama-local ignores LLM_API_KEY by design).
+effective_key="$(grep -E '^LLM_API_KEY=' "$ROOT/api/.env" | head -n1 | cut -d= -f2- | tr -d '[:space:]')"
+if [ -z "$effective_key" ] && [ "${effective_provider:-}" != "ollama-local" ] && [ "${effective_provider:-}" != "openclaw" ]; then
+    warn "LLM_API_KEY in api/.env is empty — set it for provider '${effective_provider:-unknown}' (see README + docs/guides/ai_provider.md)."
 fi
 
 # ---------------------------------------------------------------------------

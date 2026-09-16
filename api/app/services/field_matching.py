@@ -3,7 +3,11 @@
 This module is the single source of truth for :func:`_normalize_name` and
 provides :func:`build_alternative_name_lookup` to build a
 ``normalized_name → FieldDefinition`` dict from catalog fields, keyed by
-both the canonical name and every ``alternative_names`` entry.
+the canonical name ONLY.
+
+Thai display metadata (``label_th`` / ``description_th``) is NEVER part of
+matching — it is a prompt display hint. Display labels must not create
+duplicate catalog entries (they fail the snake_case gate in registration).
 
 Used by ``router.py``, ``extractors.py``, and ``extraction_service.py``.
 """
@@ -52,10 +56,12 @@ def build_alternative_name_lookup(
 ) -> dict[str, FieldDefinition]:
     """Build a normalized-name → FieldDefinition lookup from catalog fields.
 
-    Keys include both the canonical ``field.name`` and every entry in
-    ``field.alternative_names``, all passed through :func:`_normalize_name`.
-    If two fields map the same normalized key, the first one wins (should
-    not happen with well-formed catalogs).
+    Keys include ONLY the canonical ``field.name`` passed through
+    :func:`_normalize_name`. ``alternative_names`` and Thai display metadata
+    (``label_th`` / ``description_th``) are deliberately excluded: matching
+    is EXACT on English keys (normalization only). If two fields map the
+    same normalized key, the first one wins (should not happen with
+    well-formed catalogs).
 
     Parameters
     ----------
@@ -74,10 +80,6 @@ def build_alternative_name_lookup(
         norm = _normalize_name(cf.name)
         if norm not in lookup:
             lookup[norm] = cf
-        for alt in cf.alternative_names:
-            alt_norm = _normalize_name(alt)
-            if alt_norm not in lookup:
-                lookup[alt_norm] = cf
     return lookup
 
 

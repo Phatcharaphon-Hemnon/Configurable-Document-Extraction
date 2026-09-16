@@ -1,0 +1,1384 @@
+{
+  "filename": "Delivery1.webp",
+  "eval_seconds": 739.5269643930005,
+  "error": null,
+  "documents": [
+    {
+      "id": "46c181d1-f1d8-421b-a648-e2c9a7d05ec7",
+      "doc_type": "delivery_note",
+      "source": {
+        "source_id": "d431a375-32ca-4da1-b6e1-a5f79ebf8a8d",
+        "filename": "Delivery1.webp",
+        "page_number": 1,
+        "page_count": 1,
+        "preview_url": "/sources/d431a375-32ca-4da1-b6e1-a5f79ebf8a8d/pages/1",
+        "download_url": "/sources/d431a375-32ca-4da1-b6e1-a5f79ebf8a8d"
+      },
+      "ocr_blocks": [
+        {
+          "text": "Delivery",
+          "confidence": 0.96384972,
+          "box": [
+            77.0,
+            103.0,
+            351.0,
+            86.0
+          ]
+        },
+        {
+          "text": "Note",
+          "confidence": 0.96674278,
+          "box": [
+            463.0,
+            103.0,
+            197.0,
+            68.0
+          ]
+        },
+        {
+          "text": "©",
+          "confidence": 0.92884865,
+          "box": [
+            981.0,
+            72.0,
+            152.0,
+            151.0
+          ]
+        },
+        {
+          "text": "Your",
+          "confidence": 0.9610565200000001,
+          "box": [
+            73.0,
+            367.0,
+            56.0,
+            20.0
+          ]
+        },
+        {
+          "text": "Company",
+          "confidence": 0.95464104,
+          "box": [
+            135.0,
+            367.0,
+            110.0,
+            25.0
+          ]
+        },
+        {
+          "text": "Name",
+          "confidence": 0.95464104,
+          "box": [
+            252.0,
+            367.0,
+            66.0,
+            20.0
+          ]
+        },
+        {
+          "text": "77",
+          "confidence": 0.9222069500000001,
+          "box": [
+            76.0,
+            404.0,
+            21.0,
+            16.0
+          ]
+        },
+        {
+          "text": "Hammersmith",
+          "confidence": 0.9043745400000001,
+          "box": [
+            102.0,
+            404.0,
+            125.0,
+            18.0
+          ]
+        },
+        {
+          "text": "Road,",
+          "confidence": 0.95663208,
+          "box": [
+            233.0,
+            404.0,
+            51.0,
+            18.0
+          ]
+        },
+        {
+          "text": "West",
+          "confidence": 0.93148582,
+          "box": [
+            293.0,
+            404.0,
+            45.0,
+            18.0
+          ]
+        },
+        {
+          "text": "Kensington",
+          "confidence": 0.95969322,
+          "box": [
+            344.0,
+            404.0,
+            101.0,
+            21.0
+          ]
+        },
+        {
+          "text": "Reference",
+          "confidence": 0.9652449,
+          "box": [
+            744.0,
+            401.0,
+            93.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Number:",
+          "confidence": 0.8193203,
+          "box": [
+            843.0,
+            401.0,
+            76.0,
+            17.0
+          ]
+        },
+        {
+          "text": "000-000-0000",
+          "confidence": 0.85222038,
+          "box": [
+            926.0,
+            401.0,
+            128.0,
+            17.0
+          ]
+        },
+        {
+          "text": "London,",
+          "confidence": 0.9483808100000001,
+          "box": [
+            74.0,
+            433.0,
+            70.0,
+            18.0
+          ]
+        },
+        {
+          "text": "พ",
+          "confidence": 0.55903618,
+          "box": [
+            159.0,
+            433.0,
+            12.0,
+            16.0
+          ]
+        },
+        {
+          "text": "14",
+          "confidence": 0.58834023,
+          "box": [
+            170.0,
+            433.0,
+            24.0,
+            16.0
+          ]
+        },
+        {
+          "text": "OQH",
+          "confidence": 0.42542057,
+          "box": [
+            200.0,
+            432.0,
+            42.0,
+            19.0
+          ]
+        },
+        {
+          "text": "invoice",
+          "confidence": 0.68312485,
+          "box": [
+            740.0,
+            431.0,
+            68.0,
+            30.0
+          ]
+        },
+        {
+          "text": "Date:",
+          "confidence": 0.91099945,
+          "box": [
+            817.0,
+            431.0,
+            43.0,
+            30.0
+          ]
+        },
+        {
+          "text": "26.10.2019",
+          "confidence": 0.33017029000000003,
+          "box": [
+            926.0,
+            435.0,
+            102.0,
+            18.0
+          ]
+        },
+        {
+          "text": "Phone:",
+          "confidence": 0.9494754799999999,
+          "box": [
+            74.0,
+            460.0,
+            58.0,
+            17.0
+          ]
+        },
+        {
+          "text": "0208",
+          "confidence": 0.96707375,
+          "box": [
+            143.0,
+            460.0,
+            46.0,
+            17.0
+          ]
+        },
+        {
+          "text": "868",
+          "confidence": 0.7269043700000001,
+          "box": [
+            194.0,
+            460.0,
+            34.0,
+            17.0
+          ]
+        },
+        {
+          "text": "581",
+          "confidence": 0.66053551,
+          "box": [
+            233.0,
+            460.0,
+            33.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Location:",
+          "confidence": 0.8182483700000001,
+          "box": [
+            744.0,
+            455.0,
+            82.0,
+            43.0
+          ]
+        },
+        {
+          "text": "London",
+          "confidence": 0.84259598,
+          "box": [
+            927.0,
+            470.0,
+            67.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Order",
+          "confidence": 0.95974152,
+          "box": [
+            744.0,
+            504.0,
+            52.0,
+            18.0
+          ]
+        },
+        {
+          "text": "Number.",
+          "confidence": 0.57559319,
+          "box": [
+            802.0,
+            504.0,
+            74.0,
+            17.0
+          ]
+        },
+        {
+          "text": "101",
+          "confidence": 0.69693619,
+          "box": [
+            929.0,
+            504.0,
+            46.0,
+            17.0
+          ]
+        },
+        {
+          "text": "To",
+          "confidence": 0.94943039,
+          "box": [
+            74.0,
+            548.0,
+            28.0,
+            19.0
+          ]
+        },
+        {
+          "text": "Client",
+          "confidence": 0.35396026999999997,
+          "box": [
+            744.0,
+            538.0,
+            52.0,
+            18.0
+          ]
+        },
+        {
+          "text": "Number:",
+          "confidence": 0.57630737,
+          "box": [
+            802.0,
+            538.0,
+            74.0,
+            17.0
+          ]
+        },
+        {
+          "text": "000-000",
+          "confidence": 0.85381012,
+          "box": [
+            926.0,
+            538.0,
+            76.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Buyer",
+          "confidence": 0.96723755,
+          "box": [
+            74.0,
+            584.0,
+            58.0,
+            22.0
+          ]
+        },
+        {
+          "text": "Ltd.",
+          "confidence": 0.93704559,
+          "box": [
+            137.0,
+            585.0,
+            36.0,
+            16.0
+          ]
+        },
+        {
+          "text": "Camer:",
+          "confidence": 0.6692836,
+          "box": [
+            740.0,
+            568.0,
+            72.0,
+            32.0
+          ]
+        },
+        {
+          "text": "Delivery",
+          "confidence": 0.09928062,
+          "box": [
+            927.0,
+            573.0,
+            73.0,
+            20.0
+          ]
+        },
+        {
+          "text": "company",
+          "confidence": 0.9606620800000001,
+          "box": [
+            1005.0,
+            576.0,
+            82.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Bivy",
+          "confidence": 0.36064728,
+          "box": [
+            70.0,
+            597.0,
+            41.0,
+            41.0
+          ]
+        },
+        {
+          "text": "Buyer",
+          "confidence": 0.93696182,
+          "box": [
+            121.0,
+            597.0,
+            52.0,
+            41.0
+          ]
+        },
+        {
+          "text": "Delivery",
+          "confidence": 0.43554989,
+          "box": [
+            744.0,
+            607.0,
+            73.0,
+            21.0
+          ]
+        },
+        {
+          "text": "Method:",
+          "confidence": 0.57536842,
+          "box": [
+            823.0,
+            607.0,
+            71.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Air",
+          "confidence": 0.33045830000000004,
+          "box": [
+            917.0,
+            597.0,
+            36.0,
+            36.0
+          ]
+        },
+        {
+          "text": "Freight/Courier",
+          "confidence": 0.42042693999999997,
+          "box": [
+            957.0,
+            607.0,
+            135.0,
+            22.0
+          ]
+        },
+        {
+          "text": "43",
+          "confidence": 0.91825439,
+          "box": [
+            74.0,
+            641.0,
+            22.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Customer",
+          "confidence": 0.91825439,
+          "box": [
+            102.0,
+            641.0,
+            88.0,
+            18.0
+          ]
+        },
+        {
+          "text": "Rood",
+          "confidence": 0.5846040699999999,
+          "box": [
+            195.0,
+            641.0,
+            50.0,
+            18.0
+          ]
+        },
+        {
+          "text": "Total",
+          "confidence": 0.96733727,
+          "box": [
+            744.0,
+            641.0,
+            45.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Weight",
+          "confidence": 0.96672523,
+          "box": [
+            794.0,
+            641.0,
+            66.0,
+            21.0
+          ]
+        },
+        {
+          "text": "25",
+          "confidence": 0.10714119,
+          "box": [
+            926.0,
+            641.0,
+            24.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Kg",
+          "confidence": 0.10714119,
+          "box": [
+            955.0,
+            641.0,
+            25.0,
+            21.0
+          ]
+        },
+        {
+          "text": "Manchester,",
+          "confidence": 0.9344380999999999,
+          "box": [
+            74.0,
+            669.0,
+            109.0,
+            18.0
+          ]
+        },
+        {
+          "text": "M4",
+          "confidence": 0.85082886,
+          "box": [
+            190.0,
+            669.0,
+            28.0,
+            17.0
+          ]
+        },
+        {
+          "text": "THS",
+          "confidence": 0.51032066,
+          "box": [
+            227.0,
+            669.0,
+            36.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Additional",
+          "confidence": 0.96283562,
+          "box": [
+            73.0,
+            759.0,
+            99.0,
+            17.0
+          ]
+        },
+        {
+          "text": "information",
+          "confidence": 0.9571530199999999,
+          "box": [
+            177.0,
+            759.0,
+            112.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Returns",
+          "confidence": 0.9232449300000001,
+          "box": [
+            74.0,
+            787.0,
+            70.0,
+            17.0
+          ]
+        },
+        {
+          "text": "must",
+          "confidence": 0.9689594300000001,
+          "box": [
+            149.0,
+            789.0,
+            44.0,
+            15.0
+          ]
+        },
+        {
+          "text": "be",
+          "confidence": 0.66858948,
+          "box": [
+            199.0,
+            788.0,
+            23.0,
+            16.0
+          ]
+        },
+        {
+          "text": "made",
+          "confidence": 0.9668119000000001,
+          "box": [
+            227.0,
+            788.0,
+            50.0,
+            16.0
+          ]
+        },
+        {
+          "text": "within",
+          "confidence": 0.96217873,
+          "box": [
+            283.0,
+            788.0,
+            52.0,
+            16.0
+          ]
+        },
+        {
+          "text": "30",
+          "confidence": 0.94552315,
+          "box": [
+            340.0,
+            787.0,
+            23.0,
+            17.0
+          ]
+        },
+        {
+          "text": "days.",
+          "confidence": 0.9630268100000001,
+          "box": [
+            368.0,
+            788.0,
+            47.0,
+            19.0
+          ]
+        },
+        {
+          "text": "Please",
+          "confidence": 0.69914719,
+          "box": [
+            422.0,
+            787.0,
+            62.0,
+            17.0
+          ]
+        },
+        {
+          "text": "use",
+          "confidence": 0.95632919,
+          "box": [
+            489.0,
+            790.0,
+            33.0,
+            14.0
+          ]
+        },
+        {
+          "text": "the",
+          "confidence": 0.95632919,
+          "box": [
+            527.0,
+            788.0,
+            28.0,
+            16.0
+          ]
+        },
+        {
+          "text": "included",
+          "confidence": 0.4710091,
+          "box": [
+            561.0,
+            788.0,
+            75.0,
+            16.0
+          ]
+        },
+        {
+          "text": "retums",
+          "confidence": 0.91880753,
+          "box": [
+            642.0,
+            789.0,
+            62.0,
+            15.0
+          ]
+        },
+        {
+          "text": "label.",
+          "confidence": 0.9443613399999999,
+          "box": [
+            710.0,
+            788.0,
+            47.0,
+            16.0
+          ]
+        },
+        {
+          "text": "Product",
+          "confidence": 0.9551728799999999,
+          "box": [
+            84.0,
+            900.0,
+            76.0,
+            17.0
+          ]
+        },
+        {
+          "text": "code",
+          "confidence": 0.96898575,
+          "box": [
+            165.0,
+            901.0,
+            47.0,
+            16.0
+          ]
+        },
+        {
+          "text": "Description",
+          "confidence": 0.9518491400000001,
+          "box": [
+            315.0,
+            891.0,
+            117.0,
+            35.0
+          ]
+        },
+        {
+          "text": "Quantity",
+          "confidence": 0.96460632,
+          "box": [
+            704.0,
+            891.0,
+            91.0,
+            35.0
+          ]
+        },
+        {
+          "text": "Price",
+          "confidence": 0.9616378,
+          "box": [
+            969.0,
+            891.0,
+            50.0,
+            35.0
+          ]
+        },
+        {
+          "text": "Incl.",
+          "confidence": 0.47041931,
+          "box": [
+            1030.0,
+            891.0,
+            45.0,
+            35.0
+          ]
+        },
+        {
+          "text": "VAT)",
+          "confidence": 0.95562943,
+          "box": [
+            1080.0,
+            900.0,
+            48.0,
+            20.0
+          ]
+        },
+        {
+          "text": "ร",
+          "confidence": 0.95177094,
+          "box": [
+            84.0,
+            970.0,
+            11.0,
+            17.0
+          ]
+        },
+        {
+          "text": "พ",
+          "confidence": 0.94179886,
+          "box": [
+            98.0,
+            971.0,
+            12.0,
+            16.0
+          ]
+        },
+        {
+          "text": "บ",
+          "confidence": 0.96671471,
+          "box": [
+            110.0,
+            971.0,
+            14.0,
+            17.0
+          ]
+        },
+        {
+          "text": "1345",
+          "confidence": 0.92387711,
+          "box": [
+            127.0,
+            966.0,
+            43.0,
+            29.0
+          ]
+        },
+        {
+          "text": "Example",
+          "confidence": 0.8315686,
+          "box": [
+            319.0,
+            971.0,
+            78.0,
+            20.0
+          ]
+        },
+        {
+          "text": "product",
+          "confidence": 0.96159683,
+          "box": [
+            403.0,
+            971.0,
+            66.0,
+            19.0
+          ]
+        },
+        {
+          "text": "1",
+          "confidence": 0.9663424700000001,
+          "box": [
+            478.0,
+            972.0,
+            6.0,
+            14.0
+          ]
+        },
+        {
+          "text": "5",
+          "confidence": 0.9642094400000001,
+          "box": [
+            709.0,
+            970.0,
+            10.0,
+            17.0
+          ]
+        },
+        {
+          "text": "£89.00",
+          "confidence": 0.80416214,
+          "box": [
+            973.0,
+            970.0,
+            68.0,
+            17.0
+          ]
+        },
+        {
+          "text": "SKUS678",
+          "confidence": 0.8636316700000001,
+          "box": [
+            84.0,
+            1036.0,
+            86.0,
+            30.0
+          ]
+        },
+        {
+          "text": "Example",
+          "confidence": 0.71599007,
+          "box": [
+            319.0,
+            1040.0,
+            78.0,
+            21.0
+          ]
+        },
+        {
+          "text": "product",
+          "confidence": 0.9629341100000001,
+          "box": [
+            403.0,
+            1042.0,
+            66.0,
+            19.0
+          ]
+        },
+        {
+          "text": "2",
+          "confidence": 0.9629341100000001,
+          "box": [
+            476.0,
+            1040.0,
+            11.0,
+            17.0
+          ]
+        },
+        {
+          "text": "8",
+          "confidence": 0.9092898599999999,
+          "box": [
+            708.0,
+            1040.0,
+            11.0,
+            17.0
+          ]
+        },
+        {
+          "text": "£47.89",
+          "confidence": 0.8765997299999999,
+          "box": [
+            973.0,
+            1040.0,
+            68.0,
+            17.0
+          ]
+        },
+        {
+          "text": "Goods",
+          "confidence": 0.83286926,
+          "box": [
+            68.0,
+            1418.0,
+            52.0,
+            26.0
+          ]
+        },
+        {
+          "text": "received",
+          "confidence": 0.0,
+          "box": [
+            126.0,
+            1418.0,
+            66.0,
+            26.0
+          ]
+        },
+        {
+          "text": "by:",
+          "confidence": 0.93726456,
+          "box": [
+            200.0,
+            1418.0,
+            27.0,
+            26.0
+          ]
+        },
+        {
+          "text": "Prim",
+          "confidence": 0.7905662499999999,
+          "box": [
+            68.0,
+            1487.0,
+            37.0,
+            26.0
+          ]
+        },
+        {
+          "text": "Name:",
+          "confidence": 0.48960360999999997,
+          "box": [
+            113.0,
+            1487.0,
+            44.0,
+            26.0
+          ]
+        },
+        {
+          "text": "Cute",
+          "confidence": 0.6725714100000001,
+          "box": [
+            749.0,
+            1491.0,
+            34.0,
+            14.0
+          ]
+        },
+        {
+          "text": "Siqnewre",
+          "confidence": 0.34665512,
+          "box": [
+            72.0,
+            1606.0,
+            72.0,
+            17.0
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "name": "line_items",
+          "columns": [
+            {
+              "key": "product_code",
+              "label": "Product code"
+            },
+            {
+              "key": "description",
+              "label": "Description"
+            },
+            {
+              "key": "quantity",
+              "label": "Quantity"
+            },
+            {
+              "key": "price_incl_vat",
+              "label": "Price Incl. VAT"
+            }
+          ],
+          "rows": [
+            [
+              {
+                "column": "product_code",
+                "value": "รพบ 1345",
+                "confidence": 1.0,
+                "source_span": "\"รพบ 1345 | Example product 1 | 5 | £89.00\""
+              },
+              {
+                "column": "description",
+                "value": "Example product 1",
+                "confidence": 1.0,
+                "source_span": "\"รพบ 1345 | Example product 1 | 5 | £89.00\""
+              },
+              {
+                "column": "quantity",
+                "value": "5",
+                "confidence": 1.0,
+                "source_span": "\"รพบ 1345 | Example product 1 | 5 | £89.00\""
+              },
+              {
+                "column": "price_incl_vat",
+                "value": "£89.00",
+                "confidence": 1.0,
+                "source_span": "\"รพบ 1345 | Example product 1 | 5 | £89.00\""
+              }
+            ],
+            [
+              {
+                "column": "product_code",
+                "value": "SKUS678",
+                "confidence": 1.0,
+                "source_span": "\"SKUS678 | Example product 2 | 8 | £47.89\""
+              },
+              {
+                "column": "description",
+                "value": "Example product 2",
+                "confidence": 1.0,
+                "source_span": "\"SKUS678 | Example product 2 | 8 | £47.89\""
+              },
+              {
+                "column": "quantity",
+                "value": "8",
+                "confidence": 1.0,
+                "source_span": "\"SKUS678 | Example product 2 | 8 | £47.89\""
+              },
+              {
+                "column": "price_incl_vat",
+                "value": "£47.89",
+                "confidence": 1.0,
+                "source_span": "\"SKUS678 | Example product 2 | 8 | £47.89\""
+              }
+            ]
+          ]
+        }
+      ],
+      "timings": {
+        "router": 68.32073473199853,
+        "extractor": 450.7359355810004,
+        "validator": 0.003202032999979565,
+        "judge": 216.00110774999848,
+        "pipeline": 735.800650524001,
+        "ocr": 3.188117321999016,
+        "render": 0.24423407799986308,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 554,
+          "output_tokens": 42,
+          "total_tokens": 596,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 1072,
+          "output_tokens": 269,
+          "total_tokens": 1341,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_delivery_note": {
+          "input_tokens": 1103,
+          "output_tokens": 1064,
+          "total_tokens": 2167,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "judge_status": "flagged",
+      "language": "en",
+      "fields": [
+        {
+          "name": "delivery_note_number",
+          "value": "101",
+          "confidence": 1.0,
+          "source_span": "\"Order Number. | 101\"",
+          "is_new_field": false
+        },
+        {
+          "name": "delivered_by",
+          "value": "Cute",
+          "confidence": 1.0,
+          "source_span": "\"Goods received by: Prim Name: | Cute\"",
+          "is_new_field": false
+        },
+        {
+          "name": "recipient_name",
+          "value": "Client Number: | 000-000",
+          "confidence": 1.0,
+          "source_span": "\"Client Number: | 000-000\"",
+          "is_new_field": false
+        },
+        {
+          "name": "recipient_address",
+          "value": "Manchester, M4 THS",
+          "confidence": 1.0,
+          "source_span": "\"Customer Rood | Manchester, M4 THS\"",
+          "is_new_field": false
+        },
+        {
+          "name": "sender_name",
+          "value": "Buyer Ltd.",
+          "confidence": 1.0,
+          "source_span": "\"Buyer Ltd.\"",
+          "is_new_field": false
+        },
+        {
+          "name": "sender_address",
+          "value": "43 Customer Rood",
+          "confidence": 1.0,
+          "source_span": "\"Customer Rood | 43 Customer Rood\"",
+          "is_new_field": false
+        },
+        {
+          "name": "total_weight",
+          "value": "25 Kg",
+          "confidence": 1.0,
+          "source_span": "\"Total Weight | 25 Kg\"",
+          "is_new_field": false
+        },
+        {
+          "name": "notes",
+          "value": "Returns must be made within 30 days. Please use the included retums label.",
+          "confidence": 1.0,
+          "source_span": "\"Additional information\nReturns must be made within 30 days. Please use the included retums label.\"\n",
+          "is_new_field": false
+        }
+      ],
+      "validation_errors": [
+        "Missing required field: delivery_date",
+        "delivery_note_number: source_span not found in document (possible hallucination)",
+        "delivered_by: source_span not found in document (possible hallucination)",
+        "recipient_name: source_span not found in document (possible hallucination)",
+        "recipient_address: source_span not found in document (possible hallucination)",
+        "sender_name: source_span not found in document (possible hallucination)",
+        "sender_address: source_span not found in document (possible hallucination)",
+        "total_weight: source_span not found in document (possible hallucination)",
+        "notes: source_span not found in document (possible hallucination)",
+        "line_items row 1 product_code: source_span not found in document (possible hallucination)",
+        "line_items row 1 description: source_span not found in document (possible hallucination)",
+        "line_items row 1 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 1 price_incl_vat: source_span not found in document (possible hallucination)",
+        "line_items row 2 product_code: source_span not found in document (possible hallucination)",
+        "line_items row 2 description: source_span not found in document (possible hallucination)",
+        "line_items row 2 quantity: source_span not found in document (possible hallucination)",
+        "line_items row 2 price_incl_vat: source_span not found in document (possible hallucination)"
+      ],
+      "needs_review": true,
+      "completeness_score": 0.6666666666666666,
+      "judge": {
+        "score": 0.75,
+        "issues": [
+          {
+            "field": "delivery_note_number",
+            "message": "The value '101' is correct and supported by the source text.",
+            "severity": "info"
+          },
+          {
+            "field": "delivered_by",
+            "message": "The value 'Cute' is correct and supported by the source text.",
+            "severity": "info"
+          },
+          {
+            "field": "recipient_name",
+            "message": "The value 'Client Number: | 000-000' is correct and supported by the source text.",
+            "severity": "info"
+          },
+          {
+            "field": "recipient_address",
+            "message": "The value 'Manchester, M4 THS' is correct and supported by the source text.",
+            "severity": "info"
+          },
+          {
+            "field": "sender_name",
+            "message": "The value 'Buyer Ltd.' is correct and supported by the source text.",
+            "severity": "info"
+          },
+          {
+            "field": "sender_address",
+            "message": "The value '43 Customer Rood' is correct and supported by the source text.",
+            "severity": "info"
+          },
+          {
+            "field": "total_weight",
+            "message": "The value '25 Kg' is correct and supported by the source text.",
+            "severity": "info"
+          },
+          {
+            "field": "notes",
+            "message": "The value 'Returns must be made within 30 days. Please use the included retums label.' is correct and supported by the source text.",
+            "severity": "info"
+          }
+        ],
+        "notes": "The line_items field contains correct and supported values."
+      },
+      "routing_reason": "The document contains a Delivery Note with details of goods, order number, delivery method, and total weight.",
+      "full_text": "Delivery Note | ©\nYour Company Name\n77 Hammersmith Road, West Kensington | Reference Number: 000-000-0000\nLondon, พ 14 OQH | invoice Date: | 26.10.2019\nPhone: 0208 868 581 | Location: | London\nOrder Number. | 101\nTo | Client Number: | 000-000\nCamer: | Delivery company\nBuyer Ltd.\nBivy Buyer | Delivery Method: Air Freight/Courier\n43 Customer Rood | Total Weight | 25 Kg\nManchester, M4 THS\nAdditional information\nReturns must be made within 30 days. Please use the included retums label.\nProduct code | Description | Quantity | Price Incl. VAT)\nรพบ 1345 | Example product 1 | 5 | £89.00\nSKUS678 | Example product 2 | 8 | £47.89\nGoods received by:\nPrim Name: | Cute\nSiqnewre",
+      "error": null,
+      "failed_stage": null,
+      "error_details": null,
+      "extraction_source": "ocr",
+      "extracted_at": "2026-09-09T04:16:53.514358",
+      "auto_evaluation": null
+    }
+  ],
+  "pages": [
+    {
+      "expected": "delivery_note",
+      "predicted": "delivery_note",
+      "router_ok": true,
+      "language_ok": true,
+      "language": "en",
+      "precision": 0.125,
+      "recall": 0.08333333333333333,
+      "f1": 0.1,
+      "tp": 1,
+      "fp": 7,
+      "fn": 11,
+      "fields_expected": 12,
+      "cells_total": 8,
+      "cells_ok": 4,
+      "columns_total": 4,
+      "columns_found": 3,
+      "rows_total": 2,
+      "rows_found": 2,
+      "extra_rows": 0,
+      "extra_columns": 0,
+      "excluded_cells": 0,
+      "failed": false,
+      "error": null,
+      "needs_review": true,
+      "returned": true,
+      "judge_status": "flagged",
+      "timings": {
+        "router": 68.32073473199853,
+        "extractor": 450.7359355810004,
+        "validator": 0.003202032999979565,
+        "judge": 216.00110774999848,
+        "pipeline": 735.800650524001,
+        "ocr": 3.188117321999016,
+        "render": 0.24423407799986308,
+        "ocr_cached": 0.0
+      },
+      "usage": {
+        "router": {
+          "input_tokens": 554,
+          "output_tokens": 42,
+          "total_tokens": 596,
+          "attempts": 1,
+          "retries": 0
+        },
+        "judge": {
+          "input_tokens": 1072,
+          "output_tokens": 269,
+          "total_tokens": 1341,
+          "attempts": 1,
+          "retries": 0
+        },
+        "extractor_delivery_note": {
+          "input_tokens": 1103,
+          "output_tokens": 1064,
+          "total_tokens": 2167,
+          "attempts": 1,
+          "retries": 0
+        }
+      },
+      "mismatches": [
+        {
+          "field": "delivery_note_number",
+          "expected": "000-000-0000",
+          "predicted": "101"
+        },
+        {
+          "field": "sender_name",
+          "expected": "Your Company Name",
+          "predicted": "Buyer Ltd."
+        },
+        {
+          "field": "sender_address",
+          "expected": "77 Hammersmith Road, West Kensington London, W14 0QH",
+          "predicted": "43 Customer Rood"
+        },
+        {
+          "field": "recipient_name",
+          "expected": "Buyer Ltd.",
+          "predicted": "Client Number: | 000-000"
+        },
+        {
+          "field": "recipient_address",
+          "expected": "Billy Buyer 43 Customer Road Manchester, M4 1HS",
+          "predicted": "Manchester, M4 THS"
+        },
+        {
+          "field": "delivered_by",
+          "expected": "Delivery company",
+          "predicted": "Cute"
+        },
+        {
+          "field": "delivery_method",
+          "expected": "Air Freight/Courier",
+          "predicted": null
+        },
+        {
+          "field": "order_number",
+          "expected": "1 of 1",
+          "predicted": null
+        },
+        {
+          "field": "client_number",
+          "expected": "000-000",
+          "predicted": null
+        },
+        {
+          "field": "location",
+          "expected": "London",
+          "predicted": null
+        },
+        {
+          "field": "invoice_date",
+          "expected": "25.10.2019",
+          "predicted": null
+        }
+      ],
+      "unexpected_fields": {
+        "notes": "Returns must be made within 30 days. Please use the included retums label."
+      },
+      "notes": "Template placeholders are printed data. Invoice Date is preserved as invoice_date; no delivery date is printed.",
+      "stem": "Delivery1.webp / 1",
+      "filename": "Delivery1.webp",
+      "page_number": 1,
+      "format": ".webp"
+    }
+  ]
+}

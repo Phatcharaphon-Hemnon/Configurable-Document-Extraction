@@ -53,7 +53,7 @@ def _make_response(content: str, prompt_tokens: int = 10, completion_tokens: int
 
 @pytest.mark.anyio
 async def test_retry_preserves_original_source():
-    """On parse failure, regenerate from the original source, not model output."""
+    """On parse failure, one corrective reuses the original source, not model output."""
     client = _make_client()
 
     original_prompt = "Extract data from this very long document text... " * 100
@@ -67,7 +67,7 @@ async def test_retry_preserves_original_source():
         nonlocal call_count
         call_count += 1
         captured_messages.append(kwargs.get("messages", []))
-        if call_count in (1, 2):
+        if call_count == 1:
             return _make_response(malformed_json)
         return _make_response(valid_json)
 
@@ -79,20 +79,19 @@ async def test_retry_preserves_original_source():
         response_schema=_DummySchema,
     )
 
-    # Three calls should have been made (json_schema, json_object, plain fallback)
-    assert call_count == 3
-    assert len(captured_messages) == 3
+    # Classified recovery: one initial + at most one corrective (shared budget).
+    assert call_count == 2
+    assert len(captured_messages) == 2
 
     # First call should contain the original prompt
     first_call_content = captured_messages[0][0]["content"]
     assert original_prompt[:50] in first_call_content
 
-    # Plain regeneration retains the document and schema; previous output is not evidence.
-    third_call_content = captured_messages[2][0]["content"]
-    assert original_prompt[:50] in third_call_content
-    assert malformed_json not in str(captured_messages[2])
-    assert '"name"' in third_call_content
-    assert 'Schema' in third_call_content
+    # Corrective retains the document and schema; previous output is not evidence.
+    assert original_prompt[:50] in str(captured_messages[1])
+    assert malformed_json not in str(captured_messages[1])
+    assert '"name"' in str(captured_messages[1])
+    assert 'Schema' in str(captured_messages[1])
 
     # Result should be valid
     assert result.parsed is not None

@@ -11,7 +11,7 @@ from typing import Generator
 logger = logging.getLogger(__name__)
 
 # Default database path
-DEFAULT_DB_PATH = "data/extraction.db"
+DEFAULT_DB_PATH = str(Path(__file__).resolve().parents[3] / "data/extraction.db")
 
 
 class Database:
@@ -26,7 +26,25 @@ class Database:
         """Initialize database schema."""
         with self.connect() as conn:
             conn.executescript(SCHEMA_SQL)
-            logger.info("Database initialized: %s", self.db_path)
+        # Lightweight migration for pre-existing DBs, in its own connection:
+        # executescript() above manages its own transaction state, so a
+        # follow-up ALTER on the same handle is not guaranteed to persist.
+        # Check PRAGMA instead of matching exception text (wording varies).
+        # See docs/provider_errors.md.
+        try:
+            with self.connect() as conn:
+                columns = [row["name"] for row in conn.execute("PRAGMA table_info(extraction_jobs)")]
+                if "error_details" not in columns:
+                    conn.execute("ALTER TABLE extraction_jobs ADD COLUMN error_details TEXT")
+                    logger.info("Migrated %s: added error_details column", self.db_path)
+        except Exception as exc:
+            logger.warning("error_details migration skipped for %s: %s", self.db_path, exc)
+        with self.connect() as conn:
+            columns = {row["name"] for row in conn.execute("PRAGMA table_info(extraction_jobs)")}
+            for name in ("result_payload", "progress_payload"):
+                if name not in columns:
+                    conn.execute(f"ALTER TABLE extraction_jobs ADD COLUMN {name} TEXT")
+        logger.info("Database initialized: %s", self.db_path)
 
     @contextmanager
     def connect(self) -> Generator[sqlite3.Connection, None, None]:
@@ -62,9 +80,22 @@ CREATE TABLE IF NOT EXISTS extraction_jobs (
     validation_errors TEXT DEFAULT '[]',
     error TEXT,
     failed_stage TEXT,
+    error_details TEXT,
     extracted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS extraction_pages (
+    job_id TEXT NOT NULL REFERENCES extraction_jobs(id) ON DELETE CASCADE,
+    ordinal INTEGER NOT NULL,
+    result_json TEXT NOT NULL,
+    PRIMARY KEY (job_id, ordinal)
+);
+CREATE TABLE IF NOT EXISTS storage_imports (
+    source_path TEXT PRIMARY KEY,
+    imported_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    jobs_imported INTEGER NOT NULL
 );
 
 -- Extracted fields table (stores all fields for each job)

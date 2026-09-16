@@ -37,13 +37,24 @@ export async function fetchApiRoot(): Promise<ApiRoot | null> {
   }
 }
 
-export function extractFiles(files: File[], label: string, signal?: AbortSignal): Promise<JobAcceptedResponse> {
+export function extractFiles(
+  files: File[],
+  label: string,
+  signal?: AbortSignal,
+  opts?: { forceRefresh?: boolean; disableCaches?: boolean },
+): Promise<JobAcceptedResponse> {
   const form = new FormData();
   for (const file of files) {
     form.append('files', file);
   }
+  const params = new URLSearchParams();
+  if (opts?.forceRefresh) params.set('force_refresh', 'true');
+  if (opts?.disableCaches) params.set('disable_caches', 'true');
+  const query = params.toString() ? `?${params.toString()}` : '';
   // 202 Accepted: extraction runs in the background; poll getJobStatus.
-  return requestJson(`${API_BASE_URL}/extract`, { method: 'POST', body: form, signal }, `Extract failed for ${label}`);
+  // force_refresh bypasses the completed-result cache (OCR cache stays on);
+  // disable_caches bypasses both (benchmark/debug).
+  return requestJson(`${API_BASE_URL}/extract${query}`, { method: 'POST', body: form, signal }, `Extract failed for ${label}`);
 }
 
 export function getJobStatus(jobId: string, signal?: AbortSignal): Promise<JobStatusResponse> {
@@ -73,4 +84,30 @@ export function evaluateExtraction(payload: EvaluatePayload): Promise<EvaluateRe
     },
     'Evaluation failed',
   );
+}
+
+export function sourceUrl(path?: string | null): string | undefined {
+  return path ? `${API_BASE_URL.replace(/\/$/, '')}${path}` : undefined;
+}
+
+// Download a stored original for History retry. Throws an actionable error
+// when the backend no longer has the bytes (history cleared, sources pruned,
+// or DB reset) so the UI can tell the user to re-upload instead of spinning.
+export async function downloadOriginal(downloadPath: string, filename: string): Promise<File> {
+  const url = sourceUrl(downloadPath);
+  if (!url) throw new Error(`Original unavailable for ${filename} — re-upload the file to retry.`);
+  const res = await fetch(url);
+  if (res.status === 404) {
+    throw new Error(
+      `Original file for ${filename} is no longer stored (history was cleared or sources were removed). Re-upload the file to retry extraction.`,
+    );
+  }
+  if (!res.ok) {
+    throw new Error(`Could not download original for ${filename} (HTTP ${res.status}). Re-upload the file to retry.`);
+  }
+  const blob = await res.blob();
+  if (blob.size === 0) {
+    throw new Error(`Downloaded original for ${filename} is empty — re-upload the file to retry.`);
+  }
+  return new File([blob], filename, { type: blob.type || 'application/octet-stream' });
 }

@@ -7,6 +7,8 @@ that enters an LLM prompt must pass through :func:`sanitize_document_text`.
 from __future__ import annotations
 
 import re
+import unicodedata
+from decimal import Decimal, InvalidOperation
 
 # Patterns commonly used to smuggle instructions through document text.
 _INJECTION_PATTERNS: tuple[re.Pattern[str], ...] = (
@@ -43,7 +45,7 @@ def sanitize_document_text(text: str | None) -> str:
     for pattern in _INJECTION_PATTERNS:
         cleaned = pattern.sub(_REDACTED, cleaned)
 
-    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    cleaned = re.sub(r"[^\S\n]+", " ", cleaned).strip()
     if len(cleaned) > MAX_PROMPT_CHARS:
         cleaned = cleaned[:MAX_PROMPT_CHARS] + " …[truncated]"
     return cleaned
@@ -54,6 +56,147 @@ def is_suspicious(text: str | None) -> bool:
     if not text:
         return False
     return any(pattern.search(text) for pattern in _INJECTION_PATTERNS)
+
+
+def strip_wrapping_quotes(span: str) -> str:
+    """Remove one layer of wrapping quotes the LLM adds around spans.
+
+    The extractor prompt demands a bare verbatim quote, but models often
+    return `"10256"` or `'S00012726'`. The literal quote chars are never
+    part of the document text, so a strict substring check would flag a
+    correct value as a hallucination. Only strips when the span starts
+    AND ends with a matching quote char and has content inside.
+
+    Also unescapes JSON string escapes (`\\n`, `\\t`) the model emits
+    inside multi-line spans — the document text holds real newlines.
+    """
+    s = span.strip()
+    pairs = {'"': '"', "'": "'", "`": "`", "[": "]", "(": ")"}
+    if len(s) >= 2 and s[0] in pairs and s[-1] == pairs[s[0]]:
+        inner = s[1:-1].strip()
+        if inner:
+            s = inner
+    return s.replace("\\n", "\n").replace("\\t", " ").replace('\\"', '"')
+
+
+def collapse_ocr_spacing(text: str) -> str:
+    """Remove spaces the OCR engine inserts inside tokens.
+
+    Tesseract frequently splits tokens (`"201 6-07-15"` for `2016-07-15`,
+    `"Oty"` stays as-is but digit splits are common). Collapsing
+    digit-adjacent whitespace lets evidence match despite that noise.
+    Word boundaries between letters are preserved.
+    """
+    return re.sub(r"(?<=\d)\s+(?=\d)", "", text)
+
+
+# Coherence gate threshold, validated 2026-09-12 on real Tesseract output:
+# genuine noise scores 0.33 (ICR soup) and 0.35 (handwritten-invoice salad);
+# clean pages score 0.46–0.72 (Thai receipts, invoices, delivery notes, POs).
+COHERENCE_THRESHOLD = 0.40
+
+
+def _is_layout_separator(token: str) -> bool:
+    """True for layout-only tokens (table pipes, rules, brackets).
+
+    These carry no script signal: the layout stage inserts ``" | "`` column
+    separators and Tesseract reports ruling fragments as ``|`` blocks.
+    """
+    return not any(c.isalnum() for c in token)
+
+
+def ocr_text_coherence(text: str) -> float:
+    """Fraction of content tokens with >= 3 alphanumeric chars.
+
+    Layout-only separators (``|``, ``—``, brackets) are ignored and short
+    numeric table cells (``44``, ``700``) dilute but never alone condemn:
+    a page with no letter-bearing token scores 1.0 (nothing textual to
+    judge; per-field evidence checks still apply downstream). Coherent OCR
+    (any language — ``\\w`` is Unicode-aware, so Thai script counts)
+    scores ~0.46-1.0 on the measured gold pages.
+    """
+    tokens = [t for t in re.findall(r"\S+", text) if not _is_layout_separator(t)]
+    words = [t for t in tokens if any(c.isalpha() for c in t)]
+    if not words:
+        return 1.0
+    wordlike = sum(1 for t in words if sum(1 for c in t if c.isalnum()) >= 3)
+    return wordlike / len(tokens)
+
+
+def is_ocr_text_coherent(text: str | None, *, min_tokens: int = 20,
+                         threshold: float = COHERENCE_THRESHOLD) -> bool:
+    """False only for long-enough texts that are mostly OCR noise.
+
+    Short texts (headers, tiny receipts) are exempt — there is too little
+    signal to judge. Validated: the ICR soup (0.33) and the handwritten-
+    invoice salad (0.35) stay below the threshold while clean tables and
+    gold samples (0.46+) pass (see `test_coherence_rules` in
+    `api/tests/test_security.py`).
+    """
+    if not text:
+        return True  # empty text has its own evidence flag downstream
+    tokens = re.findall(r"\S+", text)
+    if len(tokens) < min_tokens:
+        return True
+    return ocr_text_coherence(text) >= threshold
+
+
+def token_overlap(a: str, b: str) -> float:
+    """Fraction of a's tokens present in b (unordered, OCR-noise fallback)."""
+    tokens_a = set(normalize_evidence(a).split())
+    if not tokens_a:
+        return 0.0
+    tokens_b = set(normalize_evidence(b).split())
+    return len(tokens_a & tokens_b) / len(tokens_a)
+
+
+def is_verbatim_span(span: str, document_text: str) -> bool:
+    """True when the (quote-stripped) span is a contiguous document substring.
+
+    Tries both the normalized text and the OCR-spacing-collapsed variant.
+    """
+    needle = normalize_evidence(strip_wrapping_quotes(span))
+    if not needle:
+        return False
+    haystack = normalize_evidence(document_text)
+    if needle in haystack:
+        return True
+    return needle in normalize_evidence(collapse_ocr_spacing(document_text))
+
+
+def _parse_date_any(text: str):
+    """Parse common printed/ISO date forms; None when not a date."""
+    from datetime import datetime
+
+    s = text.strip()
+    for fmt in (
+        "%Y-%m-%d", "%Y/%m/%d", "%Y.%m.%d",
+        "%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y",
+        "%d/%m/%y", "%d-%m-%y", "%d.%m.%y",
+        "%m/%d/%Y", "%m-%d-%Y",
+        "%B %d, %Y", "%b %d, %Y", "%d %B %Y", "%d %b %Y",
+    ):
+        try:
+            return datetime.strptime(s, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
+def _dates_in_text(text: str) -> list:
+    """Extract candidate date substrings from a longer span and parse them."""
+    candidates = re.findall(
+        r"\d{4}-\d{1,2}-\d{1,2}|\d{4}/\d{1,2}/\d{1,2}|\d{4}\.\d{1,2}\.\d{1,2}"
+        r"|\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}"
+        r"|\d{1,2} [A-Za-z]+ \d{4}|[A-Za-z]+ \d{1,2}, \d{4}",
+        text,
+    )
+    parsed = []
+    for cand in candidates:
+        dt = _parse_date_any(cand)
+        if dt is not None:
+            parsed.append(dt)
+    return parsed
 
 
 def check_evidence(
@@ -69,8 +212,16 @@ def check_evidence(
     A field is flagged when it has no source_span at all, or when the
     source_span does not appear (normalized) in the document text.
 
-    For image extractions (is_image_extraction=True), we trust the source_span
-    provided by the vision model since it reads the image directly, not OCR text.
+    Strictness rules (all in the safe direction — flag, never drop):
+    - Wrapping quotes around spans are stripped before comparison.
+    - Short spans (<= 3 tokens) must be a contiguous normalized substring;
+      the unordered token-overlap fallback applies only to longer spans as
+      an OCR-noise tolerance.
+    - Empty/None document text never passes: fields carrying a value are
+      flagged as unverifiable.
+    - ``is_image_extraction`` is kept for caller compatibility but no longer
+      bypasses verification — spans are always checked against OCR text
+      when text exists.
     """
     if value is None:
         return None  # absent fields are validated elsewhere
@@ -79,23 +230,79 @@ def check_evidence(
     if not source_span or not source_span.strip():
         return f"{field_name}: no source_span evidence provided"
 
-    # For image extractions, trust the source_span if provided
-    # The vision model reads the image directly, so source_span reflects
-    # what it actually saw, not OCR output
-    if is_image_extraction:
-        return None
+    span = strip_wrapping_quotes(source_span)
 
-    # For text extractions, validate source_span against document text
-    if document_text:
-        def _norm(s: str) -> str:
-            return re.sub(r"\s+", " ", s).strip().lower()
+    if not document_text:
+        return f"{field_name}: no document text to verify against (possible hallucination)"
 
-        span, doc = _norm(str(source_span)), _norm(document_text)
-        # Evidence must overlap the document; allow substring OR token overlap.
-        if span not in doc:
-            span_tokens = set(span.split())
-            doc_tokens = set(doc.split())
-            overlap = span_tokens & doc_tokens
-            if len(span_tokens) == 0 or len(overlap) / max(len(span_tokens), 1) < 0.75:
-                return f"{field_name}: source_span not found in document (possible hallucination)"
+    if is_verbatim_span(span, document_text):
+        pass
+    elif len(normalize_evidence(span).split()) <= 3:
+        return f"{field_name}: source_span not found in document (possible hallucination)"
+    elif token_overlap(span, document_text) < 0.75 and token_overlap(
+        collapse_ocr_spacing(span), collapse_ocr_spacing(document_text)
+    ) < 0.75:
+        return f"{field_name}: source_span not found in document (possible hallucination)"
+    if not value_in_text(value, span):
+        return f"{field_name}: value not supported by source_span (possible hallucination)"
     return None
+
+
+def normalize_evidence(text: str) -> str:
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFC", text)).strip().casefold()
+
+
+def value_in_text(value: object, text: str) -> bool:
+    """Compare complete strings or numeric magnitudes; no synonyms or fuzzy token overlap."""
+    if value is None:
+        return True
+    span = strip_wrapping_quotes(text)
+    raw_value_text = str(value)
+    value_text = normalize_evidence(strip_wrapping_quotes(raw_value_text)
+                                    if isinstance(value, str) else raw_value_text)
+    normalized = normalize_evidence(span)
+    # Date-aware comparison: the extractor normalizes printed dates to ISO
+    # ("15/07/2016" -> "2016-07-15"). A verbatim string check would flag a
+    # correct normalization, so compare parsed dates when both sides parse.
+    value_date = _parse_date_any(value_text)
+    if value_date is not None:
+        variants = {normalized, normalize_evidence(collapse_ocr_spacing(span))}
+        for variant in variants:
+            if _parse_date_any(variant) == value_date:
+                return True
+            if value_date in _dates_in_text(variant):
+                return True
+    # Numeric coercion is allowed for actual numbers and decimal-formatted strings,
+    # never leading-zero identifiers.
+    numeric = isinstance(value, (int, float)) or bool(re.fullmatch(r"-?\d+[,.]\d[\d,.]*", value_text))
+    if numeric:
+        try:
+            expected = Decimal(value_text.replace(",", ""))
+            for variant in {normalized, normalize_evidence(collapse_ocr_spacing(span))}:
+                tokens = re.findall(r"(?<![\w.])-?\d[\d,]*(?:[.,]\d+)?(?![\w.])", variant)
+                for token in tokens:
+                    candidates = {token.replace(",", "")}
+                    # Comma-as-decimal-separator ("153,50" == 153.5): a single
+                    # comma followed by exactly 2 digits is a decimal mark,
+                    # not a thousands separator.
+                    if re.fullmatch(r"\d+,\d{2}", token):
+                        candidates.add(token.replace(",", "."))
+                    if any(Decimal(c) == expected for c in candidates):
+                        return True
+                # OCR dot-drop ("87 45" for 87.45): re-inserting exactly one
+                # decimal point must recover the expected magnitude. Only the
+                # dot form is tried — never the thousands form ("1 200" must
+                # not match 12.00).
+                for token in re.findall(r"(?<![\w.])-?\d{1,3}(?: \d{2,3})+(?![\w.])", variant):
+                    try:
+                        if Decimal(token.replace(" ", ".")) == expected:
+                            return True
+                    except InvalidOperation:
+                        continue
+            return False
+        except InvalidOperation:
+            return False
+    for variant in {normalized, normalize_evidence(collapse_ocr_spacing(span))}:
+        if re.search(r"(?<!\w)" + re.escape(value_text) + r"(?!\w)", variant):
+            return True
+    return False

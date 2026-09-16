@@ -2,6 +2,97 @@
 
 All notable changes to this project, newest first. Deep dives live in `docs/`.
 
+## 2026-09-11 — RapidOCR fallback salvages ICR (no more FAILED pages)
+
+**Problem:** `ICR.png` (handwritten invoice) failed fast after the
+coherence gate — zero fields. Tesseract `eng+tha` renders Latin cursive
+as Thai-char salad (coherence 0.20); the 3B extractor stalls ~2000s on it.
+
+**Changed:**
+- `api/app/services/local_ocr.py` — `_rapid_fallback`: when Tesseract
+  text is incoherent, one bounded RapidOCR attempt (Latin+digits only →
+  fallback-only, never global; Thai pages untouched). ICR → clean print
+  labels + `160` (coherence 0.90), extraction completes, no stall.
+- Tests: `api/tests/test_ocr_fallback.py` (replace incoherent / keep
+  original on incoherent-fallback / never-call on coherent / failure-safe).
+
+**Verified:** 345 passed, 2 skipped, ruff clean. ICR-only re-run merged:
+14/14 scored, 0 failed, macro F1 0.445, review 57%. Honest limit: the
+3B model hallucinates on label-only text (all 12 ICR fields flagged, F1
+still 0) — cursive reading needs a vision-capable reader. See
+`docs/reports/review_zero_plan.md`.
+
+## 2026-09-11 — Cleanup + TrOCR rejected (ICR stays honestly flagged)
+
+## 2026-09-10 — Zero-review loop: evidence-guard precision + eval re-runs
+
+**Problem:** 2026-09-09 eval at 100% `needs_review` (294 flags, 14/14 pages).
+Triage (`docs/reports/review_triage.md`) showed mostly validator false positives:
+quoted/bracketed spans (139), OCR-spacing/date-format mismatches, plus
+`required` flags for fields no gold PO/DN prints.
+
+**Changed** (strict-direction only — flag, never drop):
+- `api/app/core/security.py` — quote/bracket/escape-tolerant span matching,
+  OCR-spacing + comma-decimal + dot-drop numerics, date-aware values,
+  short-span verbatim rule, empty-text flags, image-bypass removed.
+- `api/app/agents/validator.py` — doc-grounded fallback for imprecise
+  row-level table spans (phantoms still flag); empty-text arrays flag.
+- `api/app/schemas/llm_schemas.py` — `source_span` required non-empty
+  (span-less output retries). `extraction_service.py` — verbatim-numeric
+  judge gate; info-only judge issues don't force review. `judge.py` —
+  provenance block in prompt. `field_catalog.py` — new-field floor
+  `max(configured, 0.8)`; Thai no-data placeholders omitted.
+- `extractors.py` prompt — bare verbatim spans, placeholder ban. Catalogs —
+  PO totals/currency/supplier + DN delivery_date optional (gold-backed).
+- New scripts: `audit_review_causes.py` (triage ledger),
+  `merge_eval_runs.py` (chunked-run merge). New tests:
+  `test_evidence_precision.py`, `test_catalog_required_alignment.py`.
+
+**Verified:** 337 passed, 2 skipped, ruff clean. Live `qwen2.5:3b` loop
+(2 chunks merged): review 100% → 64% (5/14 clean, 4 judge-skipped),
+macro F1 0.439 → 0.446, router 1.000. Remainder = genuine small-model
+errors for the stronger-model loop. See `docs/reports/review_zero_plan.md`.
+
+## 2026-09-10 — ICR fail-fast OCR-coherence gate + full local re-eval
+
+**Problem:** `ICR.png` burned ~2000s (full LLM retry budget) twice on
+trilingual OCR soup, then `FAILED: Extractor failed: LLM request timed
+out`. No cloud key exists locally and 7GB RAM rules out a local 20B
+model, so the stronger-model loop stays queued.
+
+**Changed:**
+- `api/app/core/security.py` — `ocr_text_coherence` /
+  `is_ocr_text_coherent` (wordlike-token ratio, threshold 0.35 tuned on
+  the gold set: ICR 0.29, clean pages ≥ 0.42; short texts exempt).
+- `api/app/services/extraction_service.py` — coherence gate between
+  router and extractor: degenerate OCR fails fast with `failed_stage:
+  "ocr"` and a rescan/manual-review message; extractor never called.
+- Tests: coherence unit test + service fail-fast test (soup errors in
+  <120s, extractor + judge never called).
+
+**Verified:** 339 passed, 2 skipped, ruff clean. Full 14-page local loop
+(3 chunks merged): ICR 2088s → 73s honest error, flags 60 → 50, macro
+F1 0.445, review 64%, router 1.000. Report + artifacts promoted.
+
+## 2026-09-10 — Array-key evidence fix + full re-eval (review 64% → 57%)
+
+**Problem:** `_check_array_rows` verified dict *keys* (`column_1`, flat
+cell-struct keys) as if they were document claims — systematic false
+positives (all 8 Invoice1 rows, parts of THAI/Invoice+purchase rows).
+
+**Changed:**
+- `api/app/agents/validator.py` — `_row_claimed_values`: cell structs
+  check only `value`; `column_N` maps check only vals, never keys.
+  Phantom values absent from the text still flag.
+- Tests: generic-key + flat-struct cases incl. phantom-still-flags.
+
+**Verified:** 341 passed, 2 skipped, ruff clean. Full 14-page local loop
+(4 chunks merged, 1 transient router retry): flags 50 → 33,
+genuine-mismatch 18 → 4, review 64% → 57% (6/14 clean, Invoice1 fully
+clean live), macro F1 0.445, router 1.000. Remainder = genuine
+small-model value errors (invented currencies, mangled dates, dup
+columns) for the stronger-model loop.
+
 ## 2026-09-04 — Langfuse v4 tracing overhaul
 
 **Problem:** tracing was silently dead — the wrapper called
@@ -24,7 +115,7 @@ https://langfuse.com/docs/observability/best-practices):
   into separate traces (use root-handle nesting); un-ended spans are never
   exported (all return paths end the root).
 - `api/requirements.txt`: `langfuse>=4.0`. `api/tests/test_langfuse_tracing.py`:
-  7 new tests. See `docs/langfuse_tracing.md`.
+  7 new tests. See `docs/guides/langfuse_tracing.md`.
 
 **Verified:** live extraction → fetched trace back from Langfuse → single
 nested tree with models, usage, scores, I/O all present.
@@ -61,7 +152,7 @@ extraction runs as a background task; the client polls `GET /jobs/{job_id}`:
   Retry gated while `uploading`.
 - `web/src/types/extraction.ts` — `JobAcceptedResponse`, `JobStatusResponse`.
 - `web/src/components/HistoryTab.tsx` — 15s fetch timeouts → error UI.
-- `docs/async_jobs.md` — full design + verification notes.
+- `docs/reference/async_jobs.md` — full design + verification notes.
 
 **Verified:** 148 backend tests pass, frontend build clean, live: 202 in
 0.1s → poll completes with full documents; re-upload returns same id.
@@ -78,7 +169,7 @@ ON): same-tier timeout retry in `sut_genai_client.py`; `LLM_REQUEST_TIMEOUT_SECO
 90→45, `EXTRACTION_MAX_TOKENS` 8000→3000; wired dead `JUDGE_SKIP_WHEN_CLEAN`
 config; `TimeoutGuard.track()` now really enforces (was warn-only) with limits
 router 100 / extractor 150 / judge 100; Python floor 3.10→3.11
-(`scripts/run_all.sh`, `README.md`). See `docs/timeout_recovery.md`.
+(`scripts/run_all.sh`, `README.md`). See `docs/reference/timeout_recovery.md`.
 
 ## 2026-09-04 — Catalog review helper + discovery fix
 
@@ -86,13 +177,13 @@ router 100 / extractor 150 / judge 100; Python floor 3.10→3.11
 `ai_discovered` fields with `LONG>30`/`DIGITS`/`GENERIC`/`NEAR-DUP` flags) +
 3 tests; strengthened the extractor prompt's new-field rule after a live test
 proved the LLM silently dropped a clearly labeled value (`Loyalty Earned`
-now registers as `loyalty_earned`). See `docs/catalog_review.md`.
+now registers as `loyalty_earned`). See `docs/reference/catalog_review.md`.
 
 ## 2026-09-04 — LlamaParse fully removed
 
 Deleted `api/app/services/llamaparse_client.py` and every reference
 (config, `.env.example`, CI env, `run_all.sh` warning, skill doc); rewrote
-`docs/paddleocr_migration.md` as `docs/local_ocr.md` (current-state doc).
+`docs/paddleocr_migration.md` as `docs/guides/local_ocr.md` (current-state doc).
 
 ## 2026-09-04 — Local OCR on RapidOCR (Python 3.14)
 

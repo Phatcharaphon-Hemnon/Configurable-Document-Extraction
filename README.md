@@ -1,5 +1,14 @@
 # Configurable Document Extraction
 
+> **Deployment mode (this branch `main`): CLOUD/API-key.**
+> Intended: `LLM_PROVIDER=ollama-cloud`, `LLM_MODEL=gpt-oss:20b` (key required;
+> OCR on CPU, provider concurrency 1). The tracked template leaves
+> `LLM_API_KEY` empty — paste a real key into the ignored `api/.env`
+> (or provider-native key var). Switching branches never rewrites `api/.env`;
+> if `run_all.sh` reports an intended/effective mismatch, edit `api/.env` or
+> use a separate worktree/checkout per deployment. Local Ollama deployment
+> lives on `chore/eval-3b-combined-report`.
+
 Extract structured data from scanned or photographed business documents
 (invoices, purchase orders, delivery notes) with a multi-agent AI pipeline —
 local OCR for printed text and handwriting, strict JSON output,
@@ -72,21 +81,79 @@ Re-running skips everything already installed. Ctrl+C stops both.
 
 ## Configuration
 
-Copy `api/.env.example` → `api/.env`:
+### Backend: `api/.env`
+
+1. **Create it.** `./scripts/run_all.sh` creates `api/.env` from
+   `api/.env.example` automatically (and warns when `LLM_API_KEY` is empty
+   for this key-requiring provider). Manual alternative:
+   `cp api/.env.example api/.env`, then paste the key. Never commit this
+   file — it holds live secrets and is git-ignored.
+2. **Edit the 3 lines** that control the whole pipeline (cloud defaults):
+   ```bash
+   LLM_PROVIDER=ollama-cloud
+   LLM_API_KEY=<paste key from https://ollama.com/settings/keys>  # required; never commit
+   LLM_MODEL=gpt-oss:20b
+   ```
+   Key sources for all providers: `docs/guides/ai_provider.md`. `LLM_MODEL`
+   accepts **any** model ID of the active provider (registry defaults are
+   just fallbacks).
+3. **Watch the three gotchas:** `deepseek` fails at startup without an
+   explicit `LLM_MODEL` (it ships no default, by design); `openclaw`
+   needs its gateway Chat Completions endpoint enabled first
+   (`gateway.http.endpoints.chatCompletions.enabled: true`); `LLM_BASE_URL`
+   overrides the automatic URL (e.g. Kimi China region
+   `https://api.moonshot.cn/v1`).
+4. **Restart the API** after any `.env` change — config is read at
+   startup, and uvicorn must run from inside `api/` so `.env` resolves.
+5. **Verify.** Fast offline check (from `api/`):
+   ```bash
+   ../.venv/bin/python -c "from app.core.config import Settings; s=Settings(); print(s.llm_provider, s.llm_base_url, s.llm_model)"
+   ```
+   Live check: `python scripts/time_gateway_modes.py`, or extract a
+   document in the UI.
 
 | Variable | Purpose |
 |---|---|
-| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider (`openai` \| `ollama-cloud` \| `ollama-local`), the only secret, and the single text model for Router + Extractor + Judge (this branch: `ollama-cloud` + `gpt-oss:20b`). See `docs/ai_provider.md`. |
-| `PADDLEOCR_LANG` | OCR language (`en` default, `th` for Thai documents). |
-| `PADDLEOCR_USE_GPU` | `true` (default) = GPU with CPU fallback; `false` = force CPU. |
-| `PADDLEOCR_DPI` | PDF render resolution (default `300`). |
+| `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | AI provider (14 options, see table below), the only secret, and the single text model for Router + Extractor + Judge. No native Claude entry — reach it via `openrouter`/`opencode`/`xkiro`. |
+| `OCR_DPI` | PDF render resolution for local RapidOCR (default `300`). |
+| `SUPPORTED_LANGUAGES` | OCR languages (default `en,th`). |
 | `ROUTER_MODEL_NAME` / `EXTRACTION_MODEL_NAME` / `JUDGE_MODEL_NAME` | Optional per-stage overrides (default: `LLM_MODEL`). |
 | `FEW_SHOT_EXAMPLES_PER_DOC_TYPE` | Few-shot injection count (default 0 = cheapest). |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` / `LANGFUSE_HOST` | Optional tracing. |
 | `TEMPORAL_ENABLED` | `false` (default) = in-process pipeline; `true` = Temporal workflow (run `python -m app.temporal.worker` from `api/`). |
 
-Frontend: `web/.env` → `VITE_API_BASE_URL=http://localhost:8000/api`
-(the `/api` prefix is required).
+### Frontend: `web/.env`
+
+Created from `web/.env.example` by `run_all.sh` (or `cp` manually). The
+only variable is the backend URL — local dev works with the file's empty
+default (the Vite dev proxy forwards `/api` to `http://127.0.0.1:8000`
+automatically); production sets e.g.
+`VITE_API_BASE_URL=https://your-backend.onrender.com/api`. The `/api`
+prefix is required. Never put secrets behind `VITE_` — it compiles into
+the browser bundle (on Vercel, leave "Sensitive" unchecked).
+
+### Provider base URLs (automatic per `LLM_PROVIDER`)
+
+| `LLM_PROVIDER` | Base URL | Key env var |
+|---|---|---|
+| `openai` | `https://api.openai.com/v1` | `OPENAI_API_KEY` |
+| `xai` | `https://api.x.ai/v1` | `XAI_API_KEY` |
+| `gemini` | `https://generativelanguage.googleapis.com/v1beta/openai/` | `GEMINI_API_KEY` |
+| `openrouter` | `https://openrouter.ai/api/v1` | `OPENROUTER_API_KEY` |
+| `deepseek` | `https://api.deepseek.com` | `DEEPSEEK_API_KEY` |
+| `kimi` | `https://api.moonshot.ai/v1` | `MOONSHOT_API_KEY` |
+| `groq` | `https://api.groq.com/openai/v1` | `GROQ_API_KEY` |
+| `ollama-cloud` | `https://ollama.com/v1` | `OLLAMA_API_KEY` |
+| `ollama-local` | `http://localhost:11434/v1` | — (no key) |
+| `mistral` | `https://api.mistral.ai/v1` | `MISTRAL_API_KEY` |
+| `nvidia` | `https://integrate.api.nvidia.com/v1` | `NVIDIA_API_KEY` (`nvapi-...` from build.nvidia.com) |
+| `openclaw` | `http://127.0.0.1:18789/v1` | `OPENCLAW_API_KEY` (gateway token) |
+| `opencode` | `https://opencode.ai/zen/v1` | `OPENCODE_API_KEY` (`public` = free tier) |
+| `xkiro` | `https://api.xkiro.com/v1` | `XKIRO_API_KEY` (gateway key; `LLM_MODEL` required) |
+
+`LLM_API_KEY` falls back to the provider's native key var when set; either
+one works. `LLM_BASE_URL` overrides the table (e.g. Kimi China region
+`https://api.moonshot.cn/v1`). Full per-provider setup: `docs/guides/ai_provider.md`.
 
 ## API contract
 
@@ -110,7 +177,7 @@ Core result shape (one per document/page):
 
 ```bash
 source .venv/bin/activate
-ruff check backend/ && python -m pytest api/tests/ -q   # lint + tests
+ruff check api/ && python -m pytest api/tests/ -q   # lint + tests
 cd web && npm run build                                # typecheck + build
 ```
 
@@ -150,11 +217,20 @@ proxies `/api` to `http://127.0.0.1:8000` automatically.
 ## Documentation
 
 - `CHANGELOG.md` — what changed, newest first
-- `docs/architecture.md` — pipeline, security model, token strategy
-- `docs/backend.md` — module map + API + KB layout
-- `docs/frontend.md` — component structure + behaviour
-- `docs/local_ocr.md` — local RapidOCR pipeline notes
-- `docs/langfuse_tracing.md` — Langfuse v4 trace design + audit
-- `docs/async_jobs.md` — async upload/poll job flow
+- `docs/reference/architecture.md` — pipeline, security model, token strategy
+- `docs/reference/backend.md` — module map + API + KB layout
+- `docs/reference/frontend.md` — component structure + behaviour
+- `docs/guides/local_ocr.md` — local RapidOCR pipeline notes
+- `docs/guides/langfuse_tracing.md` — Langfuse v4 trace design + audit
+- `docs/reference/async_jobs.md` — async upload/poll job flow
 - `docs/adr/` — architecture decision records
 - `AGENTS.md` — persistent memory for AI coding agents
+
+## Multilingual page extraction release
+
+All PDF pages retain their results and source previews, including mixed document types
+and languages. Tables use their printed columns. History opens saved results without
+starting a new extraction. See [page storage](docs/reference/page_storage.md),
+[multilingual OCR setup](docs/guides/multilingual_ocr.md), [table contracts](docs/reference/dynamic_tables.md)
+and [evaluation instructions](docs/guides/evaluation.md). Runtime history is now at
+`data/extraction.db`; local Tesseract English/Thai dependencies must be available.

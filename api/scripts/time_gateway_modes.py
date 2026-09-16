@@ -49,9 +49,15 @@ async def _timed(label: str, coro) -> dict:
         return {"mode": label, "ok": False, "secs": CAP_SECONDS,
                 "detail": f"TIMED OUT after {CAP_SECONDS:.0f}s"}
     except Exception as exc:  # noqa: BLE001
+        from app.services.client import extract_provider_error  # noqa: E402
+
+        details = extract_provider_error(exc)
+        chained = getattr(exc, "provider_details", None)
+        if isinstance(chained, dict) and chained:
+            details = {**details, **{k: v for k, v in chained.items() if k not in details}}
         return {"mode": label, "ok": False,
                 "secs": round(time.perf_counter() - started, 1),
-                "detail": f"{type(exc).__name__}: {exc}"}
+                "detail": f"{type(exc).__name__}: {exc} provider={details}"}
     secs = round(time.perf_counter() - started, 1)
     preview = (raw_text or "(empty)")[:120].replace("\n", " ")
     parsed = Client._try_parse(RoutingResponseSchema, raw_text)

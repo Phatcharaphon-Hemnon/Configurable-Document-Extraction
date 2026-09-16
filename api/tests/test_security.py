@@ -9,7 +9,13 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from app.core.security import check_evidence, is_suspicious, sanitize_document_text  # noqa: E402
+from app.core.security import (  # noqa: E402
+    check_evidence,
+    is_ocr_text_coherent,
+    is_suspicious,
+    ocr_text_coherence,
+    sanitize_document_text,
+)
 
 
 def test_sanitize_neutralizes_injection_phrases():
@@ -50,3 +56,52 @@ def test_evidence_matching_span_passes():
 
 def test_evidence_null_value_passes():
     assert check_evidence("tax_id", None, None, "doc") is None
+
+
+# ---------------------------------------------------------------------------
+# OCR coherence rules (decision-validated fixtures)
+# ---------------------------------------------------------------------------
+
+# ICR-class soup: script salad that must stay blocked.
+SOUP = ("— TAXINVOICE : 86 BELASTINGFAKTUUR Bin 2% ๕๕ _ , โญ ภ ล ท ให ศร เบ 1 ๕ "
+        ". อ ไฮ ก ค ‘ ed r SB ั 77 /7 : ( NA B.T.W.Reg Nr ร่ - ี 3-- ี 33@ "
+        "เ [60 | | SIGE OVC Sard 1 โอ ห ท ร Subtotaal Terme V.A.T. inclusive a "
+        "ea pea จ อ ไก Delete as applicable Skrap waar nie van toepassing nie "
+        "TOTAL ๒ 3 —_— TOTAAL | | | ๑ ๒ ๓")
+
+# Real Tesseract salad from the handwritten invoice 3492511_1.pdf.
+HAND_SALAD = ("INVOICE | 44\nMo =G_—w Gy\nไ | AWMER 700 - KAMBERW 2.\n"
+              "BOT. Kelana dl)\non\nเว๐ | caer fi\nEA Shiv | Pl ol\n1 ๐\n(")
+
+# Clean numeric-heavy English table: must pass despite short numeric cells.
+CLEAN_TABLE = ("Description | Qty | Price\nDress 4 10\nSkirt 4 15\n"
+               "Sequin Beret 1 10\nSilk Shirt 6 6\nSatin Trousers 3 15\n"
+               "Serge Trousers 2\nBelt 10\nTotal 19 6\n"
+               "Invoice Number 44 " + "Additional clean row data here " * 4)
+
+# Clean Thai table with numeric cells and layout separators: must pass.
+THAI_TABLE = ("ใบกำกับภาษี | เลขที่ 44\nจำนวน สินค้า ราคา\n" +
+              "ข้าว 2 50\nน้ำ 1 20\nรวม 70\n" + "รายการเพิ่มเติม 3 40\n" * 6)
+
+
+def test_coherence_blocks_genuine_noise():
+    assert not is_ocr_text_coherent(SOUP)
+    assert not is_ocr_text_coherent(HAND_SALAD)
+    assert ocr_text_coherence(SOUP) < 0.40
+    assert ocr_text_coherence(HAND_SALAD) < 0.40
+
+
+def test_coherence_passes_clean_tables():
+    assert is_ocr_text_coherent(CLEAN_TABLE)
+    assert is_ocr_text_coherent(THAI_TABLE)
+    assert ocr_text_coherence(CLEAN_TABLE) >= 0.40
+    assert ocr_text_coherence(THAI_TABLE) >= 0.40
+
+
+def test_coherence_ignores_separators_and_numeric_cells():
+    # Pipes/brackets alone never decide: letterless content passes through
+    # to the per-field evidence gate instead of being called gibberish.
+    assert ocr_text_coherence("| | | — ( )") == 1.0
+    assert ocr_text_coherence("44 700 2 10 19 6 " * 5) == 1.0
+    # ...but separators do not rescue real salad either.
+    assert not is_ocr_text_coherent(SOUP + " | | | " * 10)

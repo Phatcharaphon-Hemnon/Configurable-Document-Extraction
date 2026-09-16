@@ -48,7 +48,7 @@ export function useDocumentQueue() {
   }, []);
 
   const processGroup = useCallback(
-    async (group: DocumentGroup) => {
+    async (group: DocumentGroup, opts?: { forceRefresh?: boolean; disableCaches?: boolean }) => {
       if (processingRef.current.has(group.id)) {
         pushToast('info', 'This upload is already processing — please wait.');
         return;
@@ -56,15 +56,16 @@ export function useDocumentQueue() {
       processingRef.current.add(group.id);
       const controller = new AbortController();
       controllers.current.set(group.id, controller);
-      let jobId = group.jobId;
+      let jobId = opts?.forceRefresh || opts?.disableCaches ? undefined : group.jobId;
       let terminalFailure = false;
-      patchGroup(group.id, { status: jobId ? 'queued' : 'uploading', error: undefined });
+      patchGroup(group.id, { status: jobId ? 'queued' : 'uploading', error: undefined, ...(jobId ? {} : { jobId: undefined }) });
 
       try {
         // 202 immediately; the pipeline runs server-side. Polling survives
-        // refresh/ retry churn: a duplicate upload reuses the running job.
+        // refresh/ retry churn: a duplicate upload reuses the running job
+        // (single-flight), unless force-refresh bypasses caches.
         if (!jobId) {
-          const accepted = await extractFiles(group.files, group.label, controller.signal);
+          const accepted = await extractFiles(group.files, group.label, controller.signal, opts);
           jobId = accepted.job_id;
           if (controller.signal.aborted) return;
           patchGroup(group.id, { jobId, status: 'queued' });
@@ -73,7 +74,7 @@ export function useDocumentQueue() {
           signal: controller.signal,
           onStatus: (current) => {
             if (current.status === 'queued' || current.status === 'processing') {
-              patchGroup(group.id, { status: current.status });
+              patchGroup(group.id, { status: current.status, progress: current.progress });
             }
           },
         });
@@ -113,14 +114,14 @@ export function useDocumentQueue() {
   );
 
   const retryGroup = useCallback(
-    (id: string) => {
+    (id: string, opts?: { forceRefresh?: boolean; disableCaches?: boolean }) => {
       const group = groups.find((g) => g.id === id);
       if (!group) return;
       if (group.status === 'uploading' || processingRef.current.has(id)) {
         pushToast('info', 'This upload is already processing — please wait.');
         return;
       }
-      void processGroup(group);
+      void processGroup(group, opts);
     },
     [groups, processGroup],
   );

@@ -2,21 +2,91 @@
   "doc_type": "delivery_note",
   "description": "Delivery note / delivery order / packing list",
   "fields": [
-    {"name": "delivery_note_number", "type": "string",  "required": true,  "validation_rule": "Non-empty alphanumeric identifier",
-     "alternative_names": ["do_number", "do_no", "dn_number", "dn_no", "delivery_order_number", "delivery_no"]},
-    {"name": "delivery_date",        "type": "date",    "required": true,  "validation_rule": "Date in any recognisable format"},
-    {"name": "delivered_by",         "type": "string",  "required": true,  "validation_rule": "Non-empty string",
-     "alternative_names": ["courier", "carrier", "driver", "transporter", "logistics_provider"]},
-    {"name": "recipient_name",       "type": "string",  "required": false, "validation_rule": "Non-empty string",
-     "alternative_names": ["ship_to", "deliver_to", "consignee", "receiver_name", "customer_name"]},
-    {"name": "recipient_address",    "type": "string",  "required": false, "validation_rule": "Non-empty string"},
-    {"name": "sender_name",          "type": "string",  "required": false, "validation_rule": "Non-empty string",
-     "alternative_names": ["ship_from", "shipper", "from_name", "dispatch_from"]},
-    {"name": "sender_address",       "type": "string",  "required": false, "validation_rule": "Non-empty string"},
-    {"name": "items",                "type": "array",   "required": false, "validation_rule": "Array of objects with description and quantity"},
-    {"name": "total_weight",         "type": "string",  "required": false, "validation_rule": "Non-empty string",
-     "alternative_names": ["gross_weight", "weight", "net_weight", "package_weight"]},
-    {"name": "notes",                "type": "string",  "required": false, "validation_rule": "Non-empty string",
-     "alternative_names": ["remarks", "comments", "special_instructions", "instructions"]}
+    {
+      "name": "delivery_note_number",
+      "type": "string",
+      "required": true,
+      "validation_rule": "Non-empty alphanumeric identifier",
+      "label_th": "เลขที่ใบส่งของ",
+      "description_th": "เลขเอกสารใบส่งของ",
+      "alternative_names": ["do_number", "do_no", "dn_number", "dn_no", "delivery_order_number", "delivery_no"]
+    },
+    {
+      "name": "delivery_date",
+      "type": "date",
+      "required": false,
+      "validation_rule": "Date in any recognisable format when printed; never invent",
+      "label_th": "วันที่ส่งของ",
+      "description_th": "วันที่ส่งมอบสินค้า"
+    },
+    {
+      "name": "delivered_by",
+      "type": "string",
+      "required": true,
+      "validation_rule": "Non-empty string",
+      "label_th": "ผู้ส่งมอบ",
+      "description_th": "ชื่อผู้ขนส่งหรือผู้ส่ง",
+      "alternative_names": ["courier", "carrier", "driver", "transporter", "logistics_provider"]
+    },
+    {
+      "name": "recipient_name",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "ชื่อผู้รับ",
+      "description_th": "ชื่อผู้รับสินค้า",
+      "alternative_names": ["ship_to", "deliver_to", "consignee", "receiver_name", "customer_name"]
+    },
+    {
+      "name": "recipient_address",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "ที่อยู่ผู้รับ",
+      "description_th": "ที่อยู่จัดส่งสินค้า"
+    },
+    {
+      "name": "sender_name",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "ชื่อผู้ส่ง",
+      "description_th": "ชื่อผู้ส่งสินค้า",
+      "alternative_names": ["ship_from", "shipper", "from_name", "dispatch_from"]
+    },
+    {
+      "name": "sender_address",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "ที่อยู่ผู้ส่ง",
+      "description_th": "ที่อยู่ต้นทางผู้ส่ง"
+    },
+    {
+      "name": "items",
+      "type": "array",
+      "required": false,
+      "validation_rule": "Array of objects with description and quantity",
+      "label_th": "รายการสินค้า",
+      "description_th": "ตารางรายการที่จัดส่ง"
+    },
+    {
+      "name": "total_weight",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "น้ำหนักรวม",
+      "description_th": "น้ำหนักรวมของสินค้า",
+      "alternative_names": ["gross_weight", "weight", "net_weight", "package_weight"]
+    },
+    {
+      "name": "notes",
+      "type": "string",
+      "required": false,
+      "validation_rule": "Non-empty string",
+      "label_th": "หมายเหตุ",
+      "description_th": "ข้อความหมายเหตุเพิ่มเติม",
+      "alternative_names": ["remarks", "comments", "special_instructions", "instructions"]
+    }
   ]
 }

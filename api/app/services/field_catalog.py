@@ -11,11 +11,13 @@ Rules (project spec):
 from __future__ import annotations
 
 import json
+import os
 import re
 import threading
 from pathlib import Path
 
-from app.schemas.documents import DocType, FieldDefinition
+from app.core.security import check_evidence
+from app.schemas.documents import DocType, ExtractedField, FieldDefinition, RegistrationOutcome
 
 # Catalog file names use the legacy short keys.
 _FILE_BY_DOC_TYPE: dict[DocType, str] = {
@@ -30,6 +32,8 @@ PLACEHOLDER_VALUES: frozenset[str] = frozenset({
     "not available", "not applicable", "not answerable", "unanswerable",
     "no answer", "not provided", "not stated", "not found", "unknown",
     "no value", "?", "??", "tbd", "blank", "empty",
+    # Thai equivalents seen in model output ("no data / not specified").
+    "ไม่มีข้อมูล", "ไม่ระบุ", "ไม่มี", "-",
 })
 
 # A field name must look like a clean snake_case identifier to be catalog-worthy.
@@ -37,6 +41,11 @@ _SANE_NAME_RE = re.compile(r"^[a-z][a-z0-9_]{0,47}$")
 
 # Minimum confidence for an AI-discovered field to be written into the catalog.
 NEW_FIELD_MIN_CONFIDENCE = 0.6
+
+# Hard floor: the effective bar is max(configured, floor), so a confident
+# hallucination at exactly the validator's low-confidence boundary (0.6)
+# can never auto-register into the catalog and compound itself.
+NEW_FIELD_CONFIDENCE_FLOOR = 0.8
 
 _lock = threading.Lock()
 
@@ -72,7 +81,7 @@ def is_registerable_new_field(name: str, value: object, confidence: float) -> bo
     non-placeholder value, sane snake_case name, sufficient confidence."""
     return (
         not is_placeholder_value(value)
-        and confidence >= NEW_FIELD_MIN_CONFIDENCE
+        and confidence >= min_new_field_confidence()
         and is_sane_field_name(name)
     )
 
@@ -129,6 +138,8 @@ class FieldCatalog:
                     type=entry.get("type"),
                     required=bool(entry.get("required", False)),
                     source=str(entry.get("source", "catalog")),
+                    label_th=entry.get("label_th"),
+                    description_th=entry.get("description_th"),
                 )
             )
 
@@ -214,9 +225,53 @@ class FieldCatalog:
 
     def compact_for_prompt(self, doc_type: DocType) -> str:
         """Compact catalog representation for LLM prompts: one line per field,
-        name + type + required marker only. Minimizes token usage."""
-        lines = [
-            f"{f.name} ({f.type or 'string'}{', required' if f.required else ''})"
-            for f in self.get_fields(doc_type)
-        ]
+        name + type + required marker plus a short Thai description.
+        Minimizes token usage. Thai text is display-only — matching stays
+        exact on the English `name` (never aliases)."""
+        lines = []
+        for f in self.get_fields(doc_type):
+            base = f"{f.name} ({f.type or 'string'}{', required' if f.required else ''})"
+            th = (f.description_th or f.label_th or "").strip()
+            if th:
+                # Keep the English prefix verbatim so parsers/tests matching
+                # "name (type)" keep working; Thai follows as display hint.
+                base += f" — {th}"
+            lines.append(base)
         return "\n".join(lines) if lines else "(catalog empty — extract clearly labeled fields)"
+
+
+def min_new_field_confidence() -> float:
+    try:
+        configured = max(0, min(1, float(os.getenv("NEW_FIELD_MIN_CONFIDENCE", str(NEW_FIELD_MIN_CONFIDENCE)))))
+    except ValueError:
+        configured = NEW_FIELD_MIN_CONFIDENCE
+    return max(configured, NEW_FIELD_CONFIDENCE_FLOOR)
+
+
+def skip_reason(name: str, value: object, confidence: float) -> str | None:
+    if is_placeholder_value(value):
+        return "placeholder value"
+    if not is_sane_field_name(name):
+        return "invalid snake_case name"
+    if confidence < min_new_field_confidence():
+        return "low confidence"
+    return None
+
+
+def register_discovered_fields(catalog: FieldCatalog, doc_type: DocType,
+                               fields: list[ExtractedField], document_text: str | None = None) -> RegistrationOutcome:
+    known = catalog.known_names(doc_type)
+    outcome = RegistrationOutcome(fields=[f.model_copy(update={"is_new_field": normalize_field_name(f.name) not in known}) for f in fields])
+    eligible = []
+    for field in outcome.fields:
+        if not field.is_new_field:
+            continue
+        reason = skip_reason(field.name, field.value, field.confidence)
+        if reason is None and document_text is not None:
+            reason = check_evidence(field.name, field.value, field.source_span, document_text)
+        if reason:
+            outcome.skipped.append({"name": field.name, "reason": reason})
+        else:
+            eligible.append(field.name)
+    outcome.added = catalog.add_fields(doc_type, eligible)
+    return outcome

@@ -25,13 +25,13 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from app.services.local_ocr import is_pdf_document  # noqa: E402
 from app.services.rapidocr_client import (  # noqa: E402
     RapidOCRClient,
     RapidOCRError,
-    _is_pdf_bytes,
 )
 
-_HAS_RAPIDOCR = importlib.util.find_spec("rapidocr_onnxruntime") is not None
+_HAS_RAPIDOCR = importlib.util.find_spec("rapidocr") is not None
 _HAS_PIL = importlib.util.find_spec("PIL") is not None
 IMG_TEST_DIR = _REPO_ROOT / "img_test"
 _IMG_EXTS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff", ".tif", ".gif", ".pdf"}
@@ -48,10 +48,10 @@ def _sample_images() -> list[Path]:
 # ---------------------------------------------------------------------------
 
 def test_is_pdf_bytes_detects_magic_and_extension():
-    assert _is_pdf_bytes(b"%PDF-1.7 rest", "doc.pdf") is True
-    assert _is_pdf_bytes(b"%PDF-1.7 rest", "noext") is True
-    assert _is_pdf_bytes(b"\x89PNG\r\n", "scan.png") is False
-    assert _is_pdf_bytes(b"hello", "doc.pdf") is True
+    assert is_pdf_document(b"%PDF-1.7 rest", "doc.pdf") is True
+    assert is_pdf_document(b"%PDF-1.7 rest", "noext") is True
+    assert is_pdf_document(b"\x89PNG\r\n", "scan.png") is False
+    assert is_pdf_document(b"hello", "doc.pdf") is True
 
 
 def test_parse_file_rejects_empty_content():
@@ -68,9 +68,9 @@ def test_parse_file_rejects_unsupported_type():
 
 def test_missing_rapidocr_raises_clear_error():
     client = RapidOCRClient(enable_cache=False)
-    with patch.dict(sys.modules, {"rapidocr_onnxruntime": None}):
+    with patch.dict(sys.modules, {"rapidocr": None}):
         # Force the lazy import to fail even if rapidocr is installed.
-        with patch("builtins.__import__", side_effect=ImportError("No module named 'rapidocr_onnxruntime'")):
+        with patch("builtins.__import__", side_effect=ImportError("No module named 'rapidocr'")):
             with pytest.raises(RapidOCRError, match="not installed"):
                 client._ensure_engine()
 
@@ -106,11 +106,17 @@ def test_raw_to_lines_empty_result():
 
 
 def test_cache_returns_without_rerunning_engine(tmp_path):
+    import io as _io
+
+    from PIL import Image as _Image
+
     client = RapidOCRClient(enable_cache=True)
-    fake_png = b"\x89PNG" + b"0" * 100
+    buffer = _io.BytesIO()
+    _Image.new("RGB", (40, 40), "white").save(buffer, format="PNG")
+    real_png = buffer.getvalue()
     with patch.object(client, "_ocr_image_bytes", return_value="cached text") as ocr_mock:
-        first = client.parse_file(fake_png, "a.png")
-        second = client.parse_file(fake_png, "a.png")
+        first = client.parse_file(real_png, "a.png")
+        second = client.parse_file(real_png, "a.png")
     assert first == ["cached text"]
     assert second == ["cached text"]
     assert ocr_mock.call_count == 1  # second call served from cache
@@ -211,7 +217,7 @@ requires_quality_env = pytest.mark.skipif(
 )
 requires_rapidocr = pytest.mark.skipif(
     not (_HAS_RAPIDOCR and _HAS_PIL),
-    reason="RapidOCR/pillow not installed — pip install rapidocr_onnxruntime pymupdf pillow numpy.",
+    reason="RapidOCR/pillow not installed — pip install rapidocr==3.9.2 pymupdf pillow numpy.",
 )
 
 

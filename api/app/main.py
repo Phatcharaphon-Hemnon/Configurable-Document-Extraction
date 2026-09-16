@@ -1,5 +1,8 @@
 """FastAPI application entry point."""
 
+import logging
+import re
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -27,3 +30,15 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix="/api")
+
+
+class _QuietJobsPollFilter(logging.Filter):
+    """Do not emit one access-log line per successful polling request."""
+    def filter(self, record: logging.LogRecord) -> bool:
+        args = record.args
+        if isinstance(args, tuple) and len(args) == 5:
+            return not (args[1] == "GET" and str(args[2]).startswith("/api/jobs/") and str(args[4]) == "200")
+        return not bool(re.search(r'"GET /api/jobs/[^ ]+ HTTP/[^ ]+" 200(?: |$)', record.getMessage()))
+
+
+logging.getLogger("uvicorn.access").addFilter(_QuietJobsPollFilter())

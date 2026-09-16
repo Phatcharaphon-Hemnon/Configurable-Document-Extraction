@@ -1228,3 +1228,10 @@ button:focus-visible,
 }
 
 .status-indicator.processing { background: #174D38; animation: pulse 1.2s ease-in-out infinite; }
+
+/* Page sources and arbitrary table widths. */
+.table-wrap { overflow-x: auto; max-width: 100%; }
+.line-items-table th, .line-items-table td { white-space: nowrap; }
+.ocr-text { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 30rem; overflow-y: auto; }
+.source-image { width: 100%; height: auto; }
+.page-tabs { flex-wrap: wrap; }

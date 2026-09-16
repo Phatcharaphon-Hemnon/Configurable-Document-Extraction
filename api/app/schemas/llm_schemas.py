@@ -6,6 +6,8 @@ from typing import Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.schemas.documents import ExtractedTable
+
 
 class RoutingResponseSchema(BaseModel):
     """Router output — doc_type restricted to the 3 fixed types."""
@@ -20,19 +22,32 @@ class ExtractedFieldEntry(BaseModel):
     name: str
     value: Optional[Union[str, float, int, list, dict]] = None
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)
-    source_span: Optional[str] = None
+    # Required non-empty: span-less LLM output must fail parsing and trigger
+    # the client's retry tiers instead of flowing downstream to a review flag.
+    # (The output contract ExtractedField.source_span stays Optional — the
+    # validator still flags, never drops, span-less fields.)
+    source_span: str = Field(min_length=1)
 
 
 class ExtractionResponseSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     fields: list[ExtractedFieldEntry]
+    tables: list[ExtractedTable] = Field(default_factory=list)
 
 
 class JudgeIssueEntry(BaseModel):
     field: str
     message: str
     severity: Literal["info", "warning", "error"] = "warning"
+    # Structured-issue extensions (optional for backward compat; the Judge
+    # prompt requires them, but older models may omit them).
+    category: Literal[
+        "mechanical", "unsupported", "row_column", "type", "semantic", "ocr_ambiguity"
+    ] | None = None
+    target: str | None = None
+    evidence: str | None = None
+    explanation: str | None = None
 
 
 class JudgeResponseSchema(BaseModel):
