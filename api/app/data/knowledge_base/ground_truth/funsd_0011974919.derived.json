@@ -1,0 +1,1790 @@
+{
+  "entities": [
+    {
+      "id": 0,
+      "text": "To",
+      "box": [
+        172,
+        205,
+        190,
+        220
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            172,
+            205,
+            190,
+            220
+          ],
+          "text": "To"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "text": "From:",
+      "box": [
+        172,
+        236,
+        204,
+        251
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            172,
+            236,
+            204,
+            251
+          ],
+          "text": "From:"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Date:",
+      "box": [
+        173,
+        265,
+        201,
+        280
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            173,
+            265,
+            201,
+            280
+          ],
+          "text": "Date:"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "Brand:",
+      "box": [
+        70,
+        309,
+        105,
+        326
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            70,
+            309,
+            105,
+            326
+          ],
+          "text": "Brand:"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Title:",
+      "box": [
+        68,
+        339,
+        96,
+        353
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            68,
+            339,
+            96,
+            353
+          ],
+          "text": "Title:"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "Eclipse",
+      "box": [
+        110,
+        304,
+        149,
+        319
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            110,
+            304,
+            149,
+            319
+          ],
+          "text": "Eclipse"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "Description:",
+      "box": [
+        70,
+        359,
+        134,
+        379
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            70,
+            359,
+            134,
+            379
+          ],
+          "text": "Description:"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "APAC",
+      "box": [
+        211,
+        459,
+        247,
+        474
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            211,
+            459,
+            247,
+            474
+          ],
+          "text": "APAC"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "300",
+      "box": [
+        226,
+        490,
+        250,
+        504
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            226,
+            490,
+            250,
+            504
+          ],
+          "text": "300"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "300",
+      "box": [
+        226,
+        549,
+        248,
+        564
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            226,
+            549,
+            248,
+            564
+          ],
+          "text": "300"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "W25",
+      "box": [
+        425,
+        628,
+        464,
+        649
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            425,
+            628,
+            464,
+            649
+          ],
+          "text": "W25"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "APAC",
+      "box": [
+        362,
+        751,
+        397,
+        766
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            362,
+            751,
+            397,
+            766
+          ],
+          "text": "APAC"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "C:",
+      "box": [
+        68,
+        845,
+        83,
+        860
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            68,
+            845,
+            83,
+            860
+          ],
+          "text": "C:"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "text": "602399",
+      "box": [
+        376,
+        304,
+        418,
+        321
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            376,
+            304,
+            418,
+            321
+          ],
+          "text": "602399"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "RESPONSE CODE REQUEST CONFIRMATION",
+      "box": [
+        127,
+        130,
+        595,
+        157
+      ],
+      "label": "header",
+      "words": [
+        {
+          "text": "RESPONSE",
+          "box": [
+            127,
+            130,
+            249,
+            157
+          ]
+        },
+        {
+          "text": "CODE",
+          "box": [
+            253,
+            133,
+            316,
+            157
+          ]
+        },
+        {
+          "text": "REQUEST",
+          "box": [
+            320,
+            131,
+            422,
+            156
+          ]
+        },
+        {
+          "text": "CONFIRMATION",
+          "box": [
+            426,
+            131,
+            595,
+            153
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "Joe Leinster",
+      "box": [
+        219,
+        201,
+        289,
+        216
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Joe",
+          "box": [
+            219,
+            201,
+            241,
+            216
+          ]
+        },
+        {
+          "text": "Leinster",
+          "box": [
+            242,
+            203,
+            289,
+            214
+          ]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "text": "Joyce Bagby",
+      "box": [
+        219,
+        230,
+        289,
+        248
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Joyce",
+          "box": [
+            219,
+            233,
+            253,
+            248
+          ]
+        },
+        {
+          "text": "Bagby",
+          "box": [
+            254,
+            230,
+            289,
+            248
+          ]
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "text": "September 10, 1996",
+      "box": [
+        221,
+        258,
+        329,
+        278
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "September",
+          "box": [
+            221,
+            260,
+            280,
+            278
+          ]
+        },
+        {
+          "text": "10,",
+          "box": [
+            281,
+            258,
+            298,
+            275
+          ]
+        },
+        {
+          "text": "1996",
+          "box": [
+            302,
+            260,
+            329,
+            277
+          ]
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "text": "PPS Program #",
+      "box": [
+        282,
+        309,
+        367,
+        324
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "PPS",
+          "box": [
+            282,
+            310,
+            307,
+            323
+          ]
+        },
+        {
+          "text": "Program",
+          "box": [
+            310,
+            309,
+            355,
+            324
+          ]
+        },
+        {
+          "text": "#",
+          "box": [
+            356,
+            309,
+            367,
+            324
+          ]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "text": "Requested By:",
+      "box": [
+        440,
+        307,
+        519,
+        326
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Requested",
+          "box": [
+            440,
+            309,
+            500,
+            326
+          ]
+        },
+        {
+          "text": "By:",
+          "box": [
+            501,
+            307,
+            519,
+            325
+          ]
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "text": "Sneak Preview Confirmation Call- Charlotte Tests",
+      "box": [
+        109,
+        334,
+        366,
+        354
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Sneak",
+          "box": [
+            109,
+            334,
+            144,
+            354
+          ]
+        },
+        {
+          "text": "Preview",
+          "box": [
+            144,
+            335,
+            191,
+            350
+          ]
+        },
+        {
+          "text": "Confirmation",
+          "box": [
+            191,
+            334,
+            259,
+            352
+          ]
+        },
+        {
+          "text": "Call-",
+          "box": [
+            261,
+            334,
+            285,
+            351
+          ]
+        },
+        {
+          "text": "Charlotte",
+          "box": [
+            285,
+            335,
+            334,
+            348
+          ]
+        },
+        {
+          "text": "Tests",
+          "box": [
+            335,
+            334,
+            366,
+            352
+          ]
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "text": "Record of confirmation calls for sneak preview appointments",
+      "box": [
+        134,
+        363,
+        449,
+        382
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Record",
+          "box": [
+            134,
+            363,
+            176,
+            378
+          ]
+        },
+        {
+          "text": "of",
+          "box": [
+            176,
+            363,
+            190,
+            376
+          ]
+        },
+        {
+          "text": "confirmation",
+          "box": [
+            190,
+            363,
+            254,
+            378
+          ]
+        },
+        {
+          "text": "calls",
+          "box": [
+            256,
+            363,
+            281,
+            378
+          ]
+        },
+        {
+          "text": "for",
+          "box": [
+            284,
+            363,
+            301,
+            378
+          ]
+        },
+        {
+          "text": "sneak",
+          "box": [
+            300,
+            365,
+            334,
+            380
+          ]
+        },
+        {
+          "text": "preview",
+          "box": [
+            334,
+            365,
+            375,
+            382
+          ]
+        },
+        {
+          "text": "appointments",
+          "box": [
+            376,
+            365,
+            449,
+            380
+          ]
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "text": "Fullfillment Data Entry at",
+      "box": [
+        68,
+        465,
+        203,
+        480
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Fullfillment",
+          "box": [
+            68,
+            465,
+            125,
+            479
+          ]
+        },
+        {
+          "text": "Data",
+          "box": [
+            128,
+            465,
+            155,
+            480
+          ]
+        },
+        {
+          "text": "Entry",
+          "box": [
+            158,
+            466,
+            187,
+            480
+          ]
+        },
+        {
+          "text": "at",
+          "box": [
+            189,
+            466,
+            203,
+            479
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "text": "Circulation Quantity:",
+      "box": [
+        68,
+        494,
+        179,
+        511
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Circulation",
+          "box": [
+            68,
+            494,
+            127,
+            511
+          ]
+        },
+        {
+          "text": "Quantity:",
+          "box": [
+            127,
+            496,
+            179,
+            511
+          ]
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "text": "Estimated Response:",
+      "box": [
+        70,
+        525,
+        185,
+        539
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Estimated",
+          "box": [
+            70,
+            525,
+            123,
+            539
+          ]
+        },
+        {
+          "text": "Response:",
+          "box": [
+            126,
+            525,
+            185,
+            539
+          ]
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "text": "Estimated Responders:",
+      "box": [
+        70,
+        554,
+        192,
+        569
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Estimated",
+          "box": [
+            70,
+            554,
+            124,
+            569
+          ]
+        },
+        {
+          "text": "Responders:",
+          "box": [
+            124,
+            554,
+            192,
+            568
+          ]
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "text": "Distribution Drop Date:",
+      "box": [
+        68,
+        582,
+        190,
+        599
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Distribution",
+          "box": [
+            68,
+            582,
+            129,
+            599
+          ]
+        },
+        {
+          "text": "Drop",
+          "box": [
+            130,
+            585,
+            158,
+            599
+          ]
+        },
+        {
+          "text": "Date:",
+          "box": [
+            161,
+            584,
+            190,
+            599
+          ]
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "text": "10/ 03/ 96",
+      "box": [
+        207,
+        580,
+        252,
+        597
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "10/",
+          "box": [
+            207,
+            580,
+            224,
+            594
+          ]
+        },
+        {
+          "text": "03/",
+          "box": [
+            223,
+            580,
+            238,
+            597
+          ]
+        },
+        {
+          "text": "96",
+          "box": [
+            237,
+            580,
+            252,
+            597
+          ]
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "text": "100.00 %",
+      "box": [
+        219,
+        520,
+        272,
+        538
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "100.00",
+          "box": [
+            219,
+            520,
+            254,
+            534
+          ]
+        },
+        {
+          "text": "%",
+          "box": [
+            258,
+            520,
+            272,
+            538
+          ]
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "text": "Expiration Date:",
+      "box": [
+        358,
+        582,
+        440,
+        600
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Expiration",
+          "box": [
+            358,
+            582,
+            410,
+            600
+          ]
+        },
+        {
+          "text": "Date:",
+          "box": [
+            413,
+            582,
+            440,
+            599
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "text": "Response Code Assigned:",
+      "box": [
+        228,
+        630,
+        405,
+        651
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Response",
+          "box": [
+            228,
+            631,
+            296,
+            651
+          ]
+        },
+        {
+          "text": "Code",
+          "box": [
+            300,
+            631,
+            334,
+            649
+          ]
+        },
+        {
+          "text": "Assigned:",
+          "box": [
+            337,
+            630,
+            405,
+            648
+          ]
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "text": "Address, postal requirements, barcodes, document storage, and batch numbers to be supplied by:",
+      "box": [
+        66,
+        705,
+        410,
+        737
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Address,",
+          "box": [
+            67,
+            707,
+            117,
+            722
+          ]
+        },
+        {
+          "text": "postal",
+          "box": [
+            117,
+            705,
+            153,
+            723
+          ]
+        },
+        {
+          "text": "requirements,",
+          "box": [
+            152,
+            708,
+            227,
+            722
+          ]
+        },
+        {
+          "text": "barcodes,",
+          "box": [
+            228,
+            707,
+            284,
+            722
+          ]
+        },
+        {
+          "text": "document",
+          "box": [
+            285,
+            705,
+            338,
+            722
+          ]
+        },
+        {
+          "text": "storage,",
+          "box": [
+            339,
+            707,
+            382,
+            721
+          ]
+        },
+        {
+          "text": "and",
+          "box": [
+            383,
+            708,
+            410,
+            721
+          ]
+        },
+        {
+          "text": "batch",
+          "box": [
+            66,
+            723,
+            100,
+            736
+          ]
+        },
+        {
+          "text": "numbers",
+          "box": [
+            101,
+            722,
+            150,
+            733
+          ]
+        },
+        {
+          "text": "to",
+          "box": [
+            149,
+            723,
+            163,
+            733
+          ]
+        },
+        {
+          "text": "be",
+          "box": [
+            165,
+            723,
+            179,
+            734
+          ]
+        },
+        {
+          "text": "supplied",
+          "box": [
+            182,
+            722,
+            228,
+            736
+          ]
+        },
+        {
+          "text": "by:",
+          "box": [
+            228,
+            723,
+            246,
+            737
+          ]
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "text": "DE Fullfillment Vendor",
+      "box": [
+        358,
+        767,
+        475,
+        782
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "DE",
+          "box": [
+            358,
+            767,
+            375,
+            781
+          ]
+        },
+        {
+          "text": "Fullfillment",
+          "box": [
+            377,
+            768,
+            434,
+            782
+          ]
+        },
+        {
+          "text": "Vendor",
+          "box": [
+            436,
+            767,
+            475,
+            781
+          ]
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "text": "Suzi Hicks RJR- IR",
+      "box": [
+        91,
+        844,
+        195,
+        861
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Suzi Hicks",
+          "box": [
+            91,
+            844,
+            151,
+            861
+          ]
+        },
+        {
+          "text": "RJR-",
+          "box": [
+            154,
+            844,
+            182,
+            861
+          ]
+        },
+        {
+          "text": "IR",
+          "box": [
+            182,
+            844,
+            195,
+            861
+          ]
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "text": "Karen Giddens",
+      "box": [
+        91,
+        862,
+        174,
+        882
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Karen",
+          "box": [
+            91,
+            862,
+            126,
+            882
+          ]
+        },
+        {
+          "text": "Giddens",
+          "box": [
+            124,
+            862,
+            174,
+            880
+          ]
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "text": "Drew Huyett",
+      "box": [
+        94,
+        884,
+        161,
+        901
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Drew",
+          "box": [
+            94,
+            885,
+            122,
+            900
+          ]
+        },
+        {
+          "text": "Huyett",
+          "box": [
+            122,
+            884,
+            161,
+            901
+          ]
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "text": "Jackson Roper",
+      "box": [
+        89,
+        908,
+        173,
+        923
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Jackson",
+          "box": [
+            89,
+            908,
+            138,
+            923
+          ]
+        },
+        {
+          "text": "Roper",
+          "box": [
+            138,
+            908,
+            173,
+            922
+          ]
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "text": "Debbie Lockery",
+      "box": [
+        418,
+        839,
+        499,
+        856
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Debbie",
+          "box": [
+            418,
+            839,
+            456,
+            856
+          ]
+        },
+        {
+          "text": "Lockery",
+          "box": [
+            457,
+            841,
+            499,
+            856
+          ]
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "text": "Vanessa Oakley",
+      "box": [
+        418,
+        862,
+        507,
+        879
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Vanessa",
+          "box": [
+            418,
+            862,
+            464,
+            879
+          ]
+        },
+        {
+          "text": "Oakley",
+          "box": [
+            464,
+            862,
+            507,
+            879
+          ]
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "text": "Melissa Andrews - TBM",
+      "box": [
+        418,
+        884,
+        544,
+        903
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Melissa",
+          "box": [
+            418,
+            884,
+            460,
+            901
+          ]
+        },
+        {
+          "text": "Andrews",
+          "box": [
+            458,
+            885,
+            507,
+            903
+          ]
+        },
+        {
+          "text": "-",
+          "box": [
+            508,
+            888,
+            514,
+            896
+          ]
+        },
+        {
+          "text": "TBM",
+          "box": [
+            515,
+            885,
+            544,
+            902
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "text": "Tammi LaManna - M/ B",
+      "box": [
+        416,
+        906,
+        538,
+        924
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Tammi",
+          "box": [
+            416,
+            906,
+            454,
+            923
+          ]
+        },
+        {
+          "text": "LaManna",
+          "box": [
+            458,
+            906,
+            504,
+            924
+          ]
+        },
+        {
+          "text": "-",
+          "box": [
+            507,
+            911,
+            514,
+            921
+          ]
+        },
+        {
+          "text": "M/",
+          "box": [
+            514,
+            908,
+            528,
+            922
+          ]
+        },
+        {
+          "text": "B",
+          "box": [
+            527,
+            908,
+            538,
+            921
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "text": "52251 2963",
+      "box": [
+        694,
+        867,
+        710,
+        961
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "52251",
+          "box": [
+            694,
+            867,
+            709,
+            914
+          ]
+        },
+        {
+          "text": "2963",
+          "box": [
+            696,
+            922,
+            710,
+            961
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "target": 15,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 1,
+      "target": 16,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 12,
+      "target": 33,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 12,
+      "target": 34,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 12,
+      "target": 35,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 12,
+      "target": 36,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 12,
+      "target": 37,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 12,
+      "target": 38,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 12,
+      "target": 39,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 12,
+      "target": 40,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 18,
+      "target": 13,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 2,
+      "target": 17,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 22,
+      "target": 7,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 23,
+      "target": 8,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 24,
+      "target": 28,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 25,
+      "target": 9,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 26,
+      "target": 27,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 3,
+      "target": 5,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 30,
+      "target": 10,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 32,
+      "target": 11,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 20,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 6,
+      "target": 21,
+      "repeated": true,
+      "declarations": 2
+    }
+  ],
+  "unlinked_ids": [
+    14,
+    19,
+    29,
+    31,
+    41
+  ],
+  "ambiguous": [],
+  "qa_pairs": [
+    {
+      "from": 0,
+      "to": 15,
+      "from_text": "To",
+      "to_text": "Joe Leinster"
+    },
+    {
+      "from": 1,
+      "to": 16,
+      "from_text": "From:",
+      "to_text": "Joyce Bagby"
+    },
+    {
+      "from": 12,
+      "to": 33,
+      "from_text": "C:",
+      "to_text": "Suzi Hicks RJR- IR"
+    },
+    {
+      "from": 12,
+      "to": 34,
+      "from_text": "C:",
+      "to_text": "Karen Giddens"
+    },
+    {
+      "from": 12,
+      "to": 35,
+      "from_text": "C:",
+      "to_text": "Drew Huyett"
+    },
+    {
+      "from": 12,
+      "to": 36,
+      "from_text": "C:",
+      "to_text": "Jackson Roper"
+    },
+    {
+      "from": 12,
+      "to": 37,
+      "from_text": "C:",
+      "to_text": "Debbie Lockery"
+    },
+    {
+      "from": 12,
+      "to": 38,
+      "from_text": "C:",
+      "to_text": "Vanessa Oakley"
+    },
+    {
+      "from": 12,
+      "to": 39,
+      "from_text": "C:",
+      "to_text": "Melissa Andrews - TBM"
+    },
+    {
+      "from": 12,
+      "to": 40,
+      "from_text": "C:",
+      "to_text": "Tammi LaManna - M/ B"
+    },
+    {
+      "from": 18,
+      "to": 13,
+      "from_text": "PPS Program #",
+      "to_text": "602399"
+    },
+    {
+      "from": 2,
+      "to": 17,
+      "from_text": "Date:",
+      "to_text": "September 10, 1996"
+    },
+    {
+      "from": 22,
+      "to": 7,
+      "from_text": "Fullfillment Data Entry at",
+      "to_text": "APAC"
+    },
+    {
+      "from": 23,
+      "to": 8,
+      "from_text": "Circulation Quantity:",
+      "to_text": "300"
+    },
+    {
+      "from": 24,
+      "to": 28,
+      "from_text": "Estimated Response:",
+      "to_text": "100.00 %"
+    },
+    {
+      "from": 25,
+      "to": 9,
+      "from_text": "Estimated Responders:",
+      "to_text": "300"
+    },
+    {
+      "from": 26,
+      "to": 27,
+      "from_text": "Distribution Drop Date:",
+      "to_text": "10/ 03/ 96"
+    },
+    {
+      "from": 3,
+      "to": 5,
+      "from_text": "Brand:",
+      "to_text": "Eclipse"
+    },
+    {
+      "from": 30,
+      "to": 10,
+      "from_text": "Response Code Assigned:",
+      "to_text": "W25"
+    },
+    {
+      "from": 32,
+      "to": 11,
+      "from_text": "DE Fullfillment Vendor",
+      "to_text": "APAC"
+    },
+    {
+      "from": 4,
+      "to": 20,
+      "from_text": "Title:",
+      "to_text": "Sneak Preview Confirmation Call- Charlotte Tests"
+    },
+    {
+      "from": 6,
+      "to": 21,
+      "from_text": "Description:",
+      "to_text": "Record of confirmation calls for sneak preview appointments"
+    }
+  ],
+  "source_sha256": "06aa1fff89f415642ec3bd72399afb10f113080a4fcd73dd16ce9629b2948fd1"
+}

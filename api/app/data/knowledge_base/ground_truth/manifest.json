@@ -1,834 +1,798 @@
 {
-  "version": 1,
-  "annotation_method": "Assistant visual transcription from original sources before pipeline evaluation; provisional, not independently human-adjudicated. Exact catalog field keys; no aliases. Null cells and listed excluded fields are unscored. Printed source errors are preserved.",
+  "version": 2,
+  "annotation_method": "Mixed external suite (SROIE/DocILE/Thai Receipt), original annotations preserved; adapters eval-local. AI-assisted/provisional, not human-adjudicated.",
   "release_subset": [
-    "Invoice1.jpg",
-    "THAI_RECEIPT.jpg",
-    "THAI_bill.jpg",
-    "Delivery1.webp",
-    "Delivery_note2.png",
-    "purchase_orders1.pdf",
-    "Invoice+purchase.pdf",
-    "Thai(invoice)+EN(Purchase).pdf"
+    "funsd_0001118259.png",
+    "funsd_0011973451.png",
+    "funsd_0011974919.png",
+    "funsd_00283813.png",
+    "funsd_0060207528.png",
+    "funsd_01197604.png",
+    "funsd_71108371.png",
+    "funsd_87533049.png",
+    "funsd_91361993.png",
+    "funsd_93380187.png",
+    "sroie_X51005301667.jpg",
+    "sroie_X51005663293.jpg",
+    "sroie_X51005663297.jpg",
+    "sroie_X51005663311.jpg",
+    "sroie_X51005806685.jpg",
+    "sroie_X51006414713.jpg",
+    "sroie_X51006556815.jpg",
+    "sroie_X51006857265.jpg",
+    "sroie_X51008123604.jpg",
+    "sroie_X51008142033.jpg"
   ],
   "files": [
     {
-      "filename": "3492511_1.pdf",
-      "sha256": "f8fc8b3e28a399d7772f5f9219dbf8b78f84918df847451d030bf1a3955112e2",
+      "filename": "sroie_X51005301667.jpg",
+      "sha256": "192d3f280e4995faec969496a79defb556de9d399023e0f096972f929136467e",
       "pages": [
         {
+          "page_number": 1,
           "doc_type": "invoice",
           "language": "en",
           "fields": {
-            "invoice_number": "44",
-            "bill_to_name": "EMMERTON - LAMBERT",
-            "bill_to_address": "253 KINGS ROAD, CHELSEA, S.W.3"
+            "seller_address": "NO: 28, JALAN ASTANA 1C, BANDAR BUKIT RAJA, 41050 KLANG SELANGOR D.E, MALAYSIA",
+            "seller_name": "LIGHTROOM GALLERY SDN BHD",
+            "sroie_receipt_date": "20/11/2017",
+            "total_amount": "39.80"
           },
           "tables": [],
-          "excluded_fields": [
-            "invoice_date",
-            "seller_name",
-            "currency",
-            "total_amount",
-            "line_items",
-            "notes"
-          ],
-          "notes": "One-page English HANDWRITTEN invoice, no embedded text (recovery case). Printed: INVOICE, 44, M, BOT. OF. Handwritten addressee in caps is legible: EMMERTON - LAMBERT, 253 KINGS ROAD, CHELSEA, S.W.3. EXCLUDED as uncertain: date reads 26-9 with printed 19 and handwritten 67 (likely 26-9-1967 but format ambiguous); seller line reads Keith Richard(s) (final letter + flourish ambiguous); item amounts are pre-decimal pounds/shillings (e.g. 4 10 -, 4 15 -, 1 10 -, 6 6 -, 3 15 -, 2 -, 10 -, total 19 6) with no currency mark and must not be reinterpreted as decimals; item words Skirt/Shirt and Serge/Satin spellings are handwriting-ambiguous; bottom purple line (Lilac shirt?) and amount are crossed out; signature scrawl is decorative. Score only the three confident fields; everything else is unscored.",
-          "page_number": 1
-        }
-      ]
-    },
-    {
-      "filename": "Delivery1.webp",
-      "sha256": "3f6f73f532e6c00a249c9d323dc4107aa30c8b49e2dae039a6c7765716330fd8",
-      "pages": [
-        {
-          "doc_type": "delivery_note",
-          "language": "en",
-          "fields": {
-            "delivery_note_number": "000-000-0000",
-            "sender_name": "Your Company Name",
-            "sender_address": "77 Hammersmith Road, West Kensington London, W14 0QH",
-            "recipient_name": "Buyer Ltd.",
-            "recipient_address": "Billy Buyer 43 Customer Road Manchester, M4 1HS",
-            "delivered_by": "Delivery company",
-            "total_weight": "25 Kg",
-            "delivery_method": "Air Freight/Courier",
-            "order_number": "1 of 1",
-            "client_number": "000-000",
-            "location": "London",
-            "invoice_date": "25.10.2019"
-          },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "Product code",
-                "Description",
-                "Quantity",
-                "Price (incl. VAT)"
-              ],
-              "rows": [
-                [
-                  "SKU1345",
-                  "Example product 1",
-                  5,
-                  89
-                ],
-                [
-                  "SKU5678",
-                  "Example product 2",
-                  8,
-                  47.89
-                ]
-              ]
-            }
-          ],
           "excluded_fields": [],
-          "notes": "Template placeholders are printed data. Invoice Date is preserved as invoice_date; no delivery date is printed.",
-          "page_number": 1
-        }
-      ]
-    },
-    {
-      "filename": "Delivery_note2.png",
-      "sha256": "09b12cab8e36e2205e3729eacdbe38e157b213905884a235e80e5572658c89ed",
-      "pages": [
-        {
-          "doc_type": "delivery_note",
-          "language": "en",
-          "fields": {
-            "delivery_note_number": "US-001",
-            "delivery_date": "11/02/2019",
-            "sender_name": "East Repair Inc.",
-            "sender_address": "1912 Harvest Lane New York, NY 12210",
-            "recipient_name": "John Smith",
-            "recipient_address": "3787 Pineview Drive Cambridge, MA 12210",
-            "po_number": "2312/2019",
-            "due_date": "26/02/2019",
-            "subtotal": 145,
-            "sales_tax": 9.07,
-            "total_amount": 154.06
-          },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "DESCRIPTION",
-                "UNIT PRICE",
-                "QTY",
-                "AMOUNT"
-              ],
-              "rows": [
-                [
-                  "Front and rear brake cables",
-                  100,
-                  1,
-                  100
-                ],
-                [
-                  "New set of pedal arms",
-                  15,
-                  2,
-                  30
-                ],
-                [
-                  "Labor 3hrs",
-                  5,
-                  3,
-                  15
-                ]
-              ]
-            }
-          ],
-          "excluded_fields": [],
-          "notes": "Source prints sales tax 9.07 and total 154.06; preserve both despite arithmetic inconsistency. Deliver To billing address differs from Ship To.",
-          "page_number": 1
-        }
-      ]
-    },
-    {
-      "filename": "ICR.png",
-      "sha256": "b42ff9d199aed8964ac4d0a4609903d462e2edb299b3ab190173c3d4147de19f",
-      "pages": [
-        {
-          "doc_type": "invoice",
-          "language": "en",
-          "fields": {
-            "invoice_date": "12/7/2014",
-            "total_amount": 305
-          },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "column_1",
-                "column_2"
-              ],
-              "rows": [
-                [
-                  null,
-                  160
-                ],
-                [
-                  null,
-                  100
-                ],
-                [
-                  "SAMOSAS",
-                  45
-                ]
-              ]
-            }
-          ],
-          "excluded_fields": [
-            "seller_name",
+          "annotation_scope": [
             "seller_address",
-            "bill_to_name"
+            "seller_name",
+            "total_amount"
           ],
-          "notes": "Handwritten merchant, buyer, address and first two item descriptions are ambiguous and excluded. Printed labels bilingual English/Afrikaans; primary language recorded en. Blank amount-pence column not scored.",
-          "page_number": 1
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
         }
-      ]
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005301667",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.544929+00:00"
+      }
     },
     {
-      "filename": "Invoice+purchase.pdf",
-      "sha256": "f99e23a58301ac8b3c6e86e73052e9150c7bde8f3931f9a1b41d2c375e59221f",
+      "filename": "sroie_X51005663293.jpg",
+      "sha256": "f501529a447f003e2f542b827933c2e72b7e6edca53be15c02d01161a1429221",
       "pages": [
         {
+          "page_number": 1,
           "doc_type": "invoice",
           "language": "en",
           "fields": {
-            "seller_name": "KEDAI PAPAN YEW CHUAN",
-            "seller_address": "LOT 276 JALAN BANTING 43800 DENGKIL, SELANGOR.",
-            "seller_phone": "03-87686092",
-            "tax_id": "000781500416",
-            "bill_to_name": "SUCI ALAM JAYA TRANSPORT",
-            "bill_to_address": "NO 1 JALAN AMAN 2 TAMAN DESA 43800 DENGKIL SELANGOR",
-            "cashier": "USER",
-            "discount": 0,
-            "rounding": 0,
-            "change_amount": 0,
-            "invoice_number": "CS00013033",
-            "invoice_date": "23/05/2018",
-            "subtotal_amount": 153.5,
-            "tax_amount": 9.21,
-            "total_amount": 162.71,
-            "paid_amount": 162.71,
-            "total_quantity": 8,
-            "time": "15:28:00"
+            "seller_address": "NO 21, JLN BUNGA KANTAN TAMAN P. RAMLEE SETAPAK 53000 KUALA LUMPUR",
+            "seller_name": "SWEET FOREST CAFE",
+            "sroie_receipt_date": "14-02-2018",
+            "total_amount": "30.30"
           },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "Item",
-                "Qty",
-                "S/Price",
-                "(GST) S/Price",
-                "(GST) Amount",
-                "Tax"
-              ],
-              "rows": [
-                [
-                  "101870 PASIR HALUS (D)",
-                  1,
-                  65,
-                  68.9,
-                  68.9,
-                  "SR"
-                ],
-                [
-                  "101756 SIMEN",
-                  5,
-                  16.5,
-                  17.49,
-                  87.45,
-                  "SR"
-                ],
-                [
-                  "100160 KAPUR AIR (A1)",
-                  2,
-                  3,
-                  3.18,
-                  6.36,
-                  "SR"
-                ]
-              ]
-            },
-            {
-              "name": "gst_summary",
-              "columns": [
-                "Tax Code",
-                "%",
-                "Amt(RM)",
-                "Tax(RM)"
-              ],
-              "rows": [
-                [
-                  "SR",
-                  6,
-                  153.5,
-                  9.21
-                ]
-              ]
-            }
-          ],
+          "tables": [],
           "excluded_fields": [],
-          "notes": "",
-          "page_number": 1
-        },
-        {
-          "doc_type": "invoice",
-          "language": "en",
-          "fields": {
-            "seller_name": "KEDAI PAPAN YEW CHUAN",
-            "seller_address": "LOT 276 JALAN BANTING 43800 DENGKIL, SELANGOR.",
-            "seller_phone": "03-87686092",
-            "tax_id": "000781500416",
-            "bill_to_name": "SUCI ALAM JAYA TRANSPORT",
-            "bill_to_address": "NO 1 JALAN AMAN 2 TAMAN DESA 43800 DENGKIL SELANGOR",
-            "cashier": "USER",
-            "discount": 0,
-            "rounding": 0,
-            "change_amount": 0,
-            "invoice_number": "CS00013125",
-            "invoice_date": "26/05/2018",
-            "subtotal_amount": 115,
-            "tax_amount": 6.9,
-            "total_amount": 121.9,
-            "paid_amount": 121.9,
-            "total_quantity": 5,
-            "time": "11:22:00"
-          },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "Item",
-                "Qty",
-                "S/Price",
-                "(GST) S/Price",
-                "(GST) Amount",
-                "Tax"
-              ],
-              "rows": [
-                [
-                  "100588 SILING PRIMP 1X9 (B)",
-                  5,
-                  23,
-                  24.38,
-                  121.9,
-                  "SR"
-                ]
-              ]
-            },
-            {
-              "name": "gst_summary",
-              "columns": [
-                "Tax Code",
-                "%",
-                "Amt(RM)",
-                "Tax(RM)"
-              ],
-              "rows": [
-                [
-                  "SR",
-                  6,
-                  115,
-                  6.9
-                ]
-              ]
-            }
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
           ],
-          "excluded_fields": [],
-          "notes": "",
-          "page_number": 2
-        },
-        {
-          "doc_type": "purchase_order",
-          "language": "en",
-          "fields": {
-            "po_number": "10256",
-            "order_date": "2016-07-15",
-            "buyer_name": "Paula Parente"
-          },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "Product ID:",
-                "Product:",
-                "Quantity:",
-                "Unit Price:"
-              ],
-              "rows": [
-                [
-                  "53",
-                  "Perth Pasties",
-                  15,
-                  26.2
-                ],
-                [
-                  "77",
-                  "Original Frankfurter grüne Soße",
-                  12,
-                  10.4
-                ]
-              ]
-            }
+          "unsupported_fields": [
+            "sroie_receipt_date"
           ],
-          "excluded_fields": [],
-          "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
-          "page_number": 3
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
         }
-      ]
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663293",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.551583+00:00"
+      }
     },
     {
-      "filename": "Invoice1.jpg",
-      "sha256": "69f0ac05640746713f1c346a4a6cdd2d01927ae328bcf34819a67833f99a71ad",
+      "filename": "sroie_X51005663297.jpg",
+      "sha256": "ab2465d0f638c5435c7a5e6684db750deac44c332847c381ff10e0aa91a3a227",
       "pages": [
         {
+          "page_number": 1,
           "doc_type": "invoice",
           "language": "en",
           "fields": {
-            "invoice_number": "CS00012726",
-            "invoice_date": "13/01/2018",
-            "seller_name": "SYARIKAT PERNIAGAAN GIN KEE",
-            "seller_address": "NO 290, JALAN AIR PANAS, SETAPAK, 53200, KUALA LUMPUR.",
-            "seller_phone": "03-40210276",
-            "tax_id": "000750673920",
-            "subtotal_amount": 12,
-            "tax_amount": 0.72,
-            "total_amount": 12.72,
-            "paid_amount": 12.72,
-            "change_amount": 0,
-            "discount": 0,
-            "rounding": 0,
-            "cashier": "USER",
-            "time": "15:52:00",
-            "total_quantity": 6
+            "seller_address": "LOT 1-0-2, JLN 1/50, DIAMOND SQUARE, OFF JLN GOMBAK 53000 KUALA LUMPUR",
+            "seller_name": "BEYOND BROTHERS HARDWARE",
+            "sroie_receipt_date": "14/03/2018",
+            "total_amount": "599.45"
           },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "Item",
-                "Qty",
-                "S/Price",
-                "Amount",
-                "Tax"
-              ],
-              "rows": [
-                [
-                  "1432 GLOVE 1200 (PER PAIR)",
-                  6,
-                  2.12,
-                  12.72,
-                  "SR"
-                ]
-              ]
-            },
-            {
-              "name": "gst_summary",
-              "columns": [
-                "Tax Code",
-                "%",
-                "Amt (RM)",
-                "Tax (RM)"
-              ],
-              "rows": [
-                [
-                  "SR",
-                  6,
-                  12,
-                  0.72
-                ]
-              ]
-            }
-          ],
+          "tables": [],
           "excluded_fields": [],
-          "notes": "Primary labels are English; Malay merchant proper name preserved. Item code and description share one printed Item column.",
-          "page_number": 1
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
+          ],
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
         }
-      ]
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663297",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.557888+00:00"
+      }
     },
     {
-      "filename": "Invoice2.jpg",
-      "sha256": "dedc362a14f4dd64d59b93352ca9f7a51319af9457672f478d60a529a0854354",
+      "filename": "sroie_X51005806685.jpg",
+      "sha256": "dab060ae8139a6fd841bba0aea092a5caade7dd5093abc285e5809bf4510117f",
       "pages": [
         {
+          "page_number": 1,
           "doc_type": "invoice",
           "language": "en",
           "fields": {
-            "invoice_number": "7025F713",
-            "invoice_date": "25/10/2017",
+            "seller_address": "NO 1&3, JALAN WANGSA DELIMA 12, WANGSA LINK, WANGSA MAJU, 53300 KUALA LUMPUR",
+            "seller_name": "ADVANCO COMPANY",
+            "sroie_receipt_date": "17/01/2018",
+            "total_amount": "29.00"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
+          ],
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005806685",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.562889+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51006414713.jpg",
+      "sha256": "ebf7d6f7571cd416eb236507cf9acbfe6ce70c6eb939eb32a2990ad11fcc8595",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "S117, SECOND FLOOR, AEON TEBRAU CITY, 1, JALAN DESA TEBRAU, TAMAN DESA TEBRAU, 81100 JOHOR BAHRU, JOHOR.",
+            "seller_name": "YHM AEON TEBRAU CITY",
+            "sroie_receipt_date": "17/04/2018",
+            "total_amount": "81.80"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
+          ],
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006414713",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.581492+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51006556815.jpg",
+      "sha256": "331f232842148ff49f529e3a9a0d611e1f68717b490db6dbc64ca636e210d1cf",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "LOT 3, JALAN PELABUR 23/1, 40300 SHAH ALAM, SELANGOR.",
             "seller_name": "GARDENIA BAKERIES (KL) SDN BHD",
-            "seller_address": "Lot 3, Jalan Pelabur 23/1, 40300 Shah Alam, Selangor.",
-            "seller_phone": "03-55423228",
-            "tax_id": "000381399440",
-            "bill_to_name": "MAKASSAR FRESH MARKET SDN BHD",
-            "bill_to_address": "GROUND FLOOR, NO. 4 & 6, JALAN SS 15/4B, 47500 SUBANG JAYA, SELANGOR",
-            "tax_amount": 0.48,
-            "total_amount": 35.01
+            "sroie_receipt_date": "05/09/2017",
+            "total_amount": "54.15"
           },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "Description",
-                "U.P",
-                "Iss",
-                "Exc",
-                "D",
-                "Sale",
-                "Amt(RM)"
-              ],
-              "rows": [
-                [
-                  "O.C. WHITE",
-                  2.13,
-                  3,
-                  0,
-                  0,
-                  3,
-                  6.39
-                ],
-                [
-                  "WHOLEMEAL",
-                  2.78,
-                  3,
-                  0,
-                  0,
-                  3,
-                  8.34
-                ],
-                [
-                  "O.C JUMBO",
-                  2.97,
-                  4,
-                  0,
-                  0,
-                  4,
-                  11.88
-                ],
-                [
-                  "CR-CHOCLT",
-                  0.72,
-                  20,
-                  9,
-                  0,
-                  11,
-                  7.92
-                ]
-              ]
-            }
-          ],
-          "excluded_fields": [
-            "dd",
-            "salesperson"
-          ],
-          "notes": "Separate GST summary totals are not item rows; DD timestamp and salesperson identifier excluded due to print quality.",
-          "page_number": 1
-        }
-      ]
-    },
-    {
-      "filename": "THAI_RECEIPT.jpg",
-      "sha256": "450b970467019dcd2d4282c667e57e4d752f437f3242a09f782e9f4e807495f1",
-      "pages": [
-        {
-          "doc_type": "invoice",
-          "language": "th",
-          "fields": {
-            "invoice_number": "5812003668",
-            "invoice_date": "29/12/2558",
-            "seller_name": "MC Shop Co., Ltd",
-            "seller_address": "4, 4/1-2, 4/4 อาคารศูนย์การค้าเซ็นทรัลเวิลด์ ถนนราชดำริห์ แขวงปทุมวัน เขตปทุมวัน กรุงเทพฯ 10330",
-            "seller_phone": "(662) 613-1183",
-            "tax_id": "0105543022904",
-            "bill_to_address": "186/47 ซ.ลาดพร้าว 87 (จันทราสุข) แขวงคลองเจ้าคุณสิงห์ เขตวังทองหลาง กทม. 10310",
-            "subtotal_amount": 6576.64,
-            "tax_amount": 460.36,
-            "total_amount": 7037,
-            "discount": 3743,
-            "branch": "00003"
-          },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "ลำดับ",
-                "รหัสสินค้า",
-                "รายการสินค้า",
-                "จำนวน",
-                "ราคาต่อหน่วย",
-                "รวม",
-                "ส่วนลด%",
-                "จำนวนเงิน"
-              ],
-              "rows": [
-                [
-                  1,
-                  "5415280238060",
-                  "ORELIE BP Plover Black",
-                  1,
-                  5490,
-                  5490,
-                  20,
-                  4392
-                ],
-                [
-                  2,
-                  "5415065377441",
-                  "CLAS SEOUL BLACK",
-                  1,
-                  5290,
-                  5290,
-                  50,
-                  2645
-                ]
-              ]
-            }
-          ],
-          "excluded_fields": [
-            "bill_to_name"
-          ],
-          "notes": "Buyer name not scored due to ambiguous Thai characters. No email, due date, paid/change amounts are printed. Keep Buddhist Era date. Thai address transcription is provisional.",
-          "page_number": 1
-        }
-      ]
-    },
-    {
-      "filename": "THAI_bill.jpg",
-      "sha256": "6c554da9a7371fc418e1cf7fa53022169cf682a7b5da4f10b801b35fd4c82402",
-      "pages": [
-        {
-          "doc_type": "invoice",
-          "language": "th",
-          "fields": {
-            "invoice_number": "4504RC112566/004044",
-            "invoice_date": "27/11/2566",
-            "seller_name": "หจก.บุญรอดคอฟฟี่",
-            "tax_id": "0323560000723",
-            "total_amount": 60,
-            "paid_amount": 100,
-            "change_amount": 40,
-            "tax_amount": 3.93,
-            "branch": "4504",
-            "time": "10:57",
-            "cashier": "4504014 นวพร",
-            "customer_count": 1
-          },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "column_1",
-                "column_2",
-                "column_3"
-              ],
-              "rows": [
-                [
-                  null,
-                  1,
-                  60
-                ],
-                [
-                  "- DI 0%",
-                  0,
-                  0
-                ]
-              ]
-            }
-          ],
+          "tables": [],
           "excluded_fields": [],
-          "notes": "Unlabeled item columns use positional names; line code D1/DI is excluded from exact cell scoring. Price includes VAT. Wi-Fi credentials and advertising are outside the data-field contract.",
-          "page_number": 1
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
+          ],
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
         }
-      ]
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006556815",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.585738+00:00"
+      }
     },
     {
-      "filename": "Thai(invoice)+EN(Purchase).pdf",
-      "sha256": "24b3e6e42b6fda6fa777d692279afd88bf48632015d73dec78946b0d56f1d271",
+      "filename": "sroie_X51006857265.jpg",
+      "sha256": "b8d4193f9f2d132da39f2c8e1356bcb11dd3ce9240840921999ebe0c396f8b47",
       "pages": [
         {
+          "page_number": 1,
           "doc_type": "invoice",
-          "language": "th",
-          "fields": {
-            "total_amount": 0,
-            "subtotal_amount": 0,
-            "tax_amount": 0,
-            "currency": "THB"
-          },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "N° ลำดับ",
-                "DESCRIPTION รายการ",
-                "PRICE/ UNIT ราคาต่อหน่วย",
-                "QUANTITY ปริมาณ",
-                "TOTAL (THB) รวม (บาท)"
-              ],
-              "rows": [
-                [
-                  null,
-                  null,
-                  0,
-                  0,
-                  0
-                ],
-                [
-                  null,
-                  null,
-                  0,
-                  0,
-                  0
-                ]
-              ]
-            }
-          ],
-          "excluded_fields": [],
-          "notes": "Unfilled bilingual form: IDs, dates, companies and addresses are blank; only printed zero amounts/currency are scored. Blank cells are unscored, not guessed.",
-          "page_number": 1
-        },
-        {
-          "doc_type": "purchase_order",
           "language": "en",
           "fields": {
-            "po_number": "10344",
-            "order_date": "2016-11-01",
-            "buyer_name": "Karl Jablonski"
+            "seller_address": "LOT S319, 2ND FLOOR, 1 UTAMA SHOPPING CENTRE, NO1, LEBUH BANDAR UTAMA,47800 P.JAYA",
+            "seller_name": "MPH BOOKSTORES SDN BHD",
+            "sroie_receipt_date": "11/12/2017",
+            "total_amount": "31.45"
           },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "Product ID:",
-                "Product:",
-                "Quantity:",
-                "Unit Price:"
-              ],
-              "rows": [
-                [
-                  "4",
-                  "Chef Anton's Cajun Seasoning",
-                  35,
-                  17.6
-                ],
-                [
-                  "8",
-                  "Northwoods Cranberry Sauce",
-                  70,
-                  32
-                ]
-              ]
-            }
-          ],
+          "tables": [],
           "excluded_fields": [],
-          "notes": "",
-          "page_number": 2
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
+          ],
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
         }
-      ]
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006857265",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.590439+00:00"
+      }
     },
     {
-      "filename": "purchase_orders1.pdf",
-      "sha256": "2d2e41d87b116938930e5d32fd734a25b4a48fb6de91d8f9557336582f5d7c61",
+      "filename": "sroie_X51008123604.jpg",
+      "sha256": "c2cb61f2f430fcb9748decbed7c6857d380f236c196d548cdc58d2ed02e692be",
       "pages": [
         {
-          "doc_type": "purchase_order",
+          "page_number": 1,
+          "doc_type": "invoice",
           "language": "en",
           "fields": {
-            "po_number": "10256",
-            "order_date": "2016-07-15",
-            "buyer_name": "Paula Parente"
+            "seller_address": "NO.29M, JALAN DINAR G U3/G, SEKSYEN U3, SUBANG PERDANA, 40150 SHAH ALAM",
+            "seller_name": "OGN GROUP SDN BHD",
+            "sroie_receipt_date": "24/06/2018",
+            "total_amount": "52.40"
           },
-          "tables": [
-            {
-              "name": "line_items",
-              "columns": [
-                "Product ID:",
-                "Product:",
-                "Quantity:",
-                "Unit Price:"
-              ],
-              "rows": [
-                [
-                  "53",
-                  "Perth Pasties",
-                  15,
-                  26.2
-                ],
-                [
-                  "77",
-                  "Original Frankfurter grüne Soße",
-                  12,
-                  10.4
-                ]
-              ]
-            }
-          ],
+          "tables": [],
           "excluded_fields": [],
-          "notes": "Customer is the buyer; supplier, currency and total are absent. Do not calculate missing amounts.",
-          "page_number": 1
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
+          ],
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
         }
-      ]
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51008123604",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.594435+00:00"
+      }
     },
     {
-      "filename": "purchase_orders_2.pdf",
-      "sha256": "7f64dabac88fbcf623b85de6051094bb3411f856b541cb914c5294216261d893",
+      "filename": "sroie_X51005663311.jpg",
+      "sha256": "60ec7b2610fd3b66ee2f148b510d07a96f3cd18e63d14c76c7dfe79463d39485",
       "pages": [
         {
-          "doc_type": "purchase_order",
+          "page_number": 1,
+          "doc_type": "invoice",
           "language": "en",
           "fields": {
-            "po_number": "10540",
-            "order_date": "2017-05-19",
-            "buyer_name": "Horst Kloss"
+            "seller_address": "NO 7, SIMPANG OFF BATU VILLAGE, JALAN IPOH BATU 5, 51200 KUALA LUMPUR MALAYSIA",
+            "seller_name": "LIM SENG THO HARDWARE TRADING",
+            "sroie_receipt_date": "09/02/2018",
+            "total_amount": "7.00"
           },
-          "tables": [
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
+          ],
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/total only; date kept as sroie_receipt_date, not invoice_date. Incremental selection seed 20260915 excluding active 8. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663311",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T17:05:09.628564+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51008142033.jpg",
+      "sha256": "4176fc77f4b3d32fa9703fda9a50a20025897b8be0a4506320b3d4ead0b3d03b",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "NO. 1, TAMAN SRI DENGKIL, JALAN AIR HITAM 43800 DENGKIL, SELANGOR.",
+            "seller_name": "ONE ONE THREE SEAFOOD RESTAURANT SDN BHD",
+            "sroie_receipt_date": "19-05-2018",
+            "total_amount": "42.40"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "total_amount"
+          ],
+          "unsupported_fields": [
+            "sroie_receipt_date"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/total only; date kept as sroie_receipt_date, not invoice_date. Incremental selection seed 20260915 excluding active 8. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51008142033",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T17:05:09.636754+00:00"
+      }
+    },
+    {
+      "filename": "funsd_0001118259.png",
+      "sha256": "965cba81a627d3a3345683854dd54ba930cdc33ce984066520aa5ac5f09a8f4d",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
             {
-              "name": "line_items",
-              "columns": [
-                "Product ID:",
-                "Product:",
-                "Quantity:",
-                "Unit Price:"
-              ],
-              "rows": [
-                [
-                  "3",
-                  "Aniseed Syrup",
-                  60,
-                  10
-                ],
-                [
-                  "26",
-                  "Gumbär Gummibärchen",
-                  40,
-                  31.23
-                ],
-                [
-                  "38",
-                  "Côte de Blaye",
-                  30,
-                  263.5
-                ],
-                [
-                  "68",
-                  "Scottish Longbreads",
-                  35,
-                  12.5
-                ]
-              ]
+              "path": "funsd_0001118259.json",
+              "sha256": "fa0334df737f0fd5c3e5d1a66e4747283b4ef462ebf87dcaed797d92a560a2e6",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_0001118259.derived.json",
+              "sha256": "1aa3cf0212842ff52e06051f01222705e8abfaf90b5fbf343fae71c4a8b806cd",
+              "kind": "funsd-derived"
             }
           ],
-          "excluded_fields": [],
-          "notes": "",
-          "page_number": 1
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
         }
-      ]
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "0001118259",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.137170+00:00"
+      }
+    },
+    {
+      "filename": "funsd_0011973451.png",
+      "sha256": "f4e3084c0900374addaf5b849fcede7155ea92d6edeaecfa26ede091c737466d",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_0011973451.json",
+              "sha256": "4d3ef4aa691504e3c8b6f8b47766a87e1d6175e2e24f7f834dec9d5343628b8b",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_0011973451.derived.json",
+              "sha256": "411006cc1f8cce036259667b8e781dc2dfe0b761f3719dd418ed78850693c4e7",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "0011973451",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.140152+00:00"
+      }
+    },
+    {
+      "filename": "funsd_0011974919.png",
+      "sha256": "535ec87519e2b4a120136885c5b861c59ece06739ba951699626ba232a0be7a1",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_0011974919.json",
+              "sha256": "06aa1fff89f415642ec3bd72399afb10f113080a4fcd73dd16ce9629b2948fd1",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_0011974919.derived.json",
+              "sha256": "ea5df8b22b35284d27c35ebf1a2d153317a750e4b993a07f86ca986a6cb99346",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "0011974919",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.142198+00:00"
+      }
+    },
+    {
+      "filename": "funsd_00283813.png",
+      "sha256": "fbad2beb8a5d00ec1ec583c84e18d5390c84d762b2c866311a6f9c44f751ffbb",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_00283813.json",
+              "sha256": "d0299a49a6ce5875daf02eba522db371e5523fb20d9d9b8813c69148536466bf",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_00283813.derived.json",
+              "sha256": "706731b83728234bab407b543b6ee189825bf82066b61a629605d5ea4890ab4e",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "00283813",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.145558+00:00"
+      }
+    },
+    {
+      "filename": "funsd_0060207528.png",
+      "sha256": "094a7a19137203aff43f3da92a3d94bebbb8d50829252f134433e51387c0c1c6",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_0060207528.json",
+              "sha256": "e9b2ebf1d1e9a5defda464ba6b4330eb47a65a35d3a132bf6c69567c8d3e2822",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_0060207528.derived.json",
+              "sha256": "961a050975e2effe605b9dc4a79c51e5bdf47184bd7c6d3e09f1ab9a86228520",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "0060207528",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.147115+00:00"
+      }
+    },
+    {
+      "filename": "funsd_01197604.png",
+      "sha256": "bc5954ea7b27acff4b46e6535ec16e357d721b3994f04215e928ddebd4c4eed4",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_01197604.json",
+              "sha256": "acdadaa5d7a68452f6133874874adcfb4bf513e8b8ba40f252760754727b22c1",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_01197604.derived.json",
+              "sha256": "1eaf5d38b24d39df07630fb61aee5fd343948426315a4483287211eae59f98af",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "01197604",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.148564+00:00"
+      }
+    },
+    {
+      "filename": "funsd_71108371.png",
+      "sha256": "dcec006247c18d15b163704343696d079a94683ef5f181c2f46e3184d3cbe297",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_71108371.json",
+              "sha256": "f3e4946cfd91ec4b48baa70150d0a5590a1f8df5f36d9c81ed26999f42e6216c",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_71108371.derived.json",
+              "sha256": "48a206f918e325f09509a7a5cc5d5a73e35e89a83e4fabf074bef77276328962",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "71108371",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.152721+00:00"
+      }
+    },
+    {
+      "filename": "funsd_87533049.png",
+      "sha256": "0c122aeeaac9126ae8ae83c59935bc890ed7f9bd9264aba1010faab8fb678955",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_87533049.json",
+              "sha256": "37fa35687bf46c0394340abdd11f602983eddbadb4692ebbdd53c979967e679c",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_87533049.derived.json",
+              "sha256": "cf3a0359526c6bf1f250e0999af69ea7debb1eb0d3a25a47601b06a3a24b3715",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "87533049",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.156106+00:00"
+      }
+    },
+    {
+      "filename": "funsd_91361993.png",
+      "sha256": "99b0330f3639c3142107172f7ca41d7ef48b2f7e9b58a5b362b41ec5b9320dba",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_91361993.json",
+              "sha256": "35973517e3f00e243fbe850f7ddcca39c59d0a75c1fafbe195def9e396f3ad53",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_91361993.derived.json",
+              "sha256": "7506661ebb5d503529d053ea2a52286a5c2e7e466f863a3abeeeda52c82c1809",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "91361993",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.158688+00:00"
+      }
+    },
+    {
+      "filename": "funsd_93380187.png",
+      "sha256": "4f9b412deb21c41977574e0f9a212ce54e8e4c0dcd456ce1fc24f795470c8102",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": null,
+          "document_kind": "form",
+          "production_doc_type": null,
+          "language": "en",
+          "fields": {},
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [],
+          "unsupported_fields": [],
+          "routing_excluded": true,
+          "annotation_refs": [
+            {
+              "path": "funsd_93380187.json",
+              "sha256": "346fc4f50955718d40cdcf62aa9ff29b2f487967cdc7bdd5b84816d7886ab56a",
+              "kind": "funsd-original"
+            },
+            {
+              "path": "funsd_93380187.derived.json",
+              "sha256": "84cf5504d89e90b6e5967ab381d2ae8bdd18b41521b9581b7f350b8039309eed",
+              "kind": "funsd-derived"
+            }
+          ],
+          "notes": "FUNSD form: extraction/evaluation unsupported for production tasks (entity/relationship review only). Local copy /home/phatcharaphon/Downloads/dataset/ (149 complete train pairs, official FUNSD layout)."
+        }
+      ],
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "93380187",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.161129+00:00"
+      }
     }
   ]
 }

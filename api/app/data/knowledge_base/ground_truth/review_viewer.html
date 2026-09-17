@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gold-set review viewer (offline, local only)</title>
+<style>
+  body { font-family: sans-serif; margin: 1em 2em; color: #222; }
+  .entry { border: 1px solid #CBCBCB; background: #F2F2F2; margin: .6em 0; padding: .6em; }
+  .meta { font-size: .85em; color: #444; }
+  .conflict { border-left: 6px solid #4D1717; }
+  .ok { border-left: 6px solid #174D38; }
+  label { display: block; margin-top: .4em; font-size: .9em; }
+  input, select, textarea { width: 100%; }
+  button { margin: .4em .4em .4em 0; }
+  #log { white-space: pre-wrap; background: #fff; border: 1px solid #CBCBCB; padding: .5em; }
+  .imgwrap { position: relative; display: inline-block; max-width: 100%; border: 1px solid #174D38; margin-top: .4em; }
+  .imgwrap img { display: block; max-width: 900px; width: 100%; height: auto; }
+  .box { position: absolute; border: 2px solid #174D38; background: rgba(23,77,56,.08); font-size: 10px; }
+  .box.hl { border-color: #4D1717; background: rgba(77,23,23,.15); }
+  .box .tag { background: #174D38; color: #fff; padding: 0 3px; }
+  .box.hl .tag { background: #4D1717; }
+  table.ann { border-collapse: collapse; font-size: .8em; margin-top: .4em; }
+  table.ann td, table.ann th { border: 1px solid #CBCBCB; padding: 2px 5px; }
+  tr.hl td { background: #F2F2F2; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Gold-set review viewer (offline)</h1>
+<p class="meta">Local-only. No network, analytics, model calls, or manifest overwrites.
+Serve with <code>python3 -m http.server</code> in the repo root, then open this file under
+<code>localhost</code>; <code>file://</code> fetch is not assumed. Open the source page
+(PDF/image) beside this viewer and compare visually. See <code>docs/guides/gold_review_viewer.md</code>.</p>
+<p>
+  <label>1. Load review package (review_package.json): <input type="file" id="pkgFile" accept=".json"></label>
+  <label>2. (Optional) Load prior decisions export to merge: <input type="file" id="decFile" accept=".json"></label>
+  <label>Reviewer identity (recorded as attestation only, not authenticated): <input type="text" id="reviewer" placeholder="name or initials"></label>
+  <label>Dataset filter: <select id="dsFilter"><option value="">all datasets</option></select></label>
+  <button id="exportBtn">Export decisions JSON</button>
+</p>
+<div id="summary" class="meta"></div>
+<div id="list"></div>
+<h2>Validation log</h2>
+<div id="log"></div>
+<script>
+"use strict";
+const ALLOWED = ["pending", "disputed", "verified", "unresolved"];
+let PKG = null, DECISIONS = {};
+const $ = (id) => document.getElementById(id);
+function log(msg) { $("log").textContent += msg + "\n"; }
+function text(el, s) { el.textContent = (s === null || s === undefined) ? "" : String(s); }
+function loadJSON(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => { try { res(JSON.parse(r.result)); } catch (e) { rej(e); } };
+    r.onerror = rej;
+    r.readAsText(file);
+  });
+}
+$("pkgFile").addEventListener("change", async (e) => {
+  try {
+    PKG = await loadJSON(e.target.files[0]);
+    DECISIONS = {};
+    validateAndRender();
+  } catch (err) { log("Package load failed: " + err); }
+});
+$("decFile").addEventListener("change", async (e) => {
+  try {
+    const dec = await loadJSON(e.target.files[0]);
+    applyDecisions(dec);
+  } catch (err) { log("Decisions load failed: " + err); }
+});
+$("dsFilter").addEventListener("change", () => { if (PKG) validateAndRender(); });
+function validateAndRender() {
+  $("log").textContent = "";
+  $("list").textContent = "";
+  if (!PKG || !PKG.entries) { log("No package loaded."); return; }
+  const seen = new Set(), dups = [];
+  let pending = 0;
+  PKG.entries.forEach((en) => {
+    if (seen.has(en.ref_id)) dups.push(en.ref_id);
+    seen.add(en.ref_id);
+    if (!ALLOWED.includes(en.human_status)) log("CONFLICT bad status " + en.ref_id + ": " + en.human_status);
+    if (en.reviewer !== null || en.reviewed_at !== null) {
+      if (en.human_status !== "verified") log("CONFLICT reviewer set without verified: " + en.ref_id);
+    }
+    if (en.human_status === "pending") pending++;
+  });
+  if (dups.length) log("CONFLICT duplicate ref_ids: " + dups.join(", "));
+  text($("summary"), "Package v" + PKG.package_version + " · policy " + PKG.annotation_policy_version +
+    " · gold " + (PKG.gold_manifest_sha256 || "").slice(0, 12) + " · entries " + PKG.entries.length +
+    " · pending " + pending);
+  log("Validated " + PKG.entries.length + " entries against allowed states [" + ALLOWED.join(", ") + "]; duplicates checked.");
+  const dsOf = (en) => ((en.dataset && en.dataset.source) || en.dataset_source || "local");
+  const dsSel = $("dsFilter"), cur = dsSel.value;
+  dsSel.textContent = "";
+  const allOpt = document.createElement("option"); allOpt.value = ""; text(allOpt, "all datasets"); dsSel.appendChild(allOpt);
+  Array.from(new Set(PKG.entries.map(dsOf))).sort().forEach((ds) => {
+    const o = document.createElement("option"); o.value = ds; text(o, ds); dsSel.appendChild(o);
+  });
+  dsSel.value = cur;
+  const dsBadge = (en) => {
+    const ds = dsOf(en), det = en.dataset || {};
+    return "dataset " + ds +
+      (det.split ? " · split " + det.split : "") +
+      (det.source_id ? " · id " + det.source_id : "") +
+      (det.license ? " · " + det.license : "") +
+      (en.document_kind ? " · kind " + en.document_kind : "") +
+      (en.routing_excluded ? " · extraction-only (router excluded)" : "") +
+      (en.annotation_scope ? " · scope " + en.annotation_scope.join(",") : "") +
+      (en.review_status_note ? " · " + en.review_status_note : "");
+  };
+  PKG.entries.forEach((en, i) => {
+    if (dsSel.value && dsOf(en) !== dsSel.value) return;
+    const d = document.createElement("div");
+    d.className = "entry" + (DECISIONS[en.ref_id] ? " ok" : "");
+    const h = document.createElement("h3"); text(h, en.ref_id); d.appendChild(h);
+    const m = document.createElement("div"); m.className = "meta";
+    text(m, en.filename + " · p" + en.page_number + " · " + en.kind + ":" + en.name +
+      " · sha " + (en.source_sha256 || "").slice(0, 12) + " · policy " + en.annotation_policy_version +
+      " · annotator " + en.annotator);
+    d.appendChild(m);
+    const rows = [["existing", en.existing_value], ["proposed", en.proposed_value],
+      ["evidence", en.evidence_ref], ["AI audit (not verification)", en.ai_audit_finding],
+      ["reason", en.reason],
+      ["dataset / provenance", dsBadge(en)],
+      ["original labels", en.original_labels], ["mapped labels", en.mapped_labels],
+      ["text / boxes", en.boxes], ["unsupported / missing scope", en.unsupported_scope]];
+    rows.forEach(([k, v]) => {
+      if (v === undefined) return;
+      const p = document.createElement("div");
+      const b = document.createElement("b"); text(b, k + ": "); p.appendChild(b);
+      const s = document.createElement("span");
+      text(s, (v !== null && typeof v === "object") ? JSON.stringify(v) : v);
+      p.appendChild(s); d.appendChild(p);
+    });
+    const lab = document.createElement("label"); text(lab, "Decision (recorded with your identity + timestamp on export):");
+    const sel = document.createElement("select");
+    ALLOWED.forEach((s) => { const o = document.createElement("option"); o.value = s; text(o, s); sel.appendChild(o); });
+    sel.value = (DECISIONS[en.ref_id] && DECISIONS[en.ref_id].human_status) || en.human_status;
+    sel.addEventListener("change", () => {
+      DECISIONS[en.ref_id] = Object.assign({}, DECISIONS[en.ref_id], { ref_id: en.ref_id, human_status: sel.value });
+      d.className = "entry ok";
+    });
+    lab.appendChild(sel); d.appendChild(lab);
+    const nlab = document.createElement("label"); text(nlab, "Note:");
+    const note = document.createElement("input"); note.type = "text";
+    note.value = (DECISIONS[en.ref_id] && DECISIONS[en.ref_id].reviewer_note) || "";
+    note.addEventListener("input", () => {
+      DECISIONS[en.ref_id] = Object.assign({}, DECISIONS[en.ref_id], { ref_id: en.ref_id, reviewer_note: note.value });
+    });
+    nlab.appendChild(note); d.appendChild(nlab);
+    d.appendChild(mediaControls(en));
+    $("list").appendChild(d);
+  });
+}
+// ---- Image + annotation media (minimal, textContent-only; no innerHTML) ----
+function mediaControls(en) {
+  const wrap = document.createElement("div");
+  const isImg = /\.(png|jpe?g|webp|gif|bmp)$/i.test(en.filename || "");
+  if (!isImg) {
+    const p = document.createElement("div"); p.className = "meta";
+    text(p, "No image asset for this entry."); wrap.appendChild(p); return wrap;
+  }
+  const btn = document.createElement("button"); text(btn, "Show image");
+  const status = document.createElement("div"); status.className = "meta";
+  text(status, "image not loaded");
+  const holder = document.createElement("div");
+  btn.addEventListener("click", () => {
+    holder.textContent = "";
+    const box = document.createElement("div"); box.className = "imgwrap";
+    const img = document.createElement("img");
+    img.alt = en.filename || "source image";
+    img.src = encodeURIComponent(en.filename || "");
+    img.addEventListener("load", () => {
+      text(status, "loaded " + (en.filename || "") + " — decoded " +
+        img.naturalWidth + "x" + img.naturalHeight);
+      if (en.document_kind === "form") loadSidecars(en, box, img, status);
+    });
+    img.addEventListener("error", () => { text(status, "FAILED to load " + (en.filename || "")); });
+    box.appendChild(img); holder.appendChild(box);
+  });
+  wrap.appendChild(btn); wrap.appendChild(status); wrap.appendChild(holder);
+  if (en.document_kind === "form") {
+    const hint = document.createElement("div"); hint.className = "meta";
+    text(hint, "FUNSD overlays load from sidecars named in evidence_ref (same directory).");
+    wrap.appendChild(hint);
+  }
+  return wrap;
+}
+function sidecarNames(en) {
+  return String(en.evidence_ref || "").split("+").map((s) => s.trim())
+    .filter((s) => s.toLowerCase().endsWith(".json"));
+}
+async function loadSidecars(en, box, img, status) {
+  const names = sidecarNames(en);
+  if (!names.length) {
+    const p = document.createElement("div"); p.className = "meta";
+    text(p, "No sidecar files named in evidence_ref."); status.appendChild(p); return;
+  }
+  let derived = null;
+  for (const name of names) {
+    try {
+      const res = await fetch(encodeURIComponent(name));
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      if (data && data.entities && data.links) { derived = { name: name, data: data }; break; }
+    } catch (err) {
+      const p = document.createElement("div"); p.className = "meta";
+      text(p, "Sidecar " + name + " unavailable: " + err); status.appendChild(p);
+    }
+  }
+  if (!derived) {
+    const p = document.createElement("div"); p.className = "meta";
+    text(p, "No entity sidecar loaded; boxes/links unavailable."); status.appendChild(p); return;
+  }
+  renderOverlays(en, box, img, derived.data);
+}
+function renderOverlays(en, box, img, derived) {
+  const byId = {};
+  (derived.entities || []).forEach((e) => { byId[String(e.id)] = e; });
+  const edges = {}; // "a->b" -> declarations (unique vs repeated)
+  (derived.links || []).forEach((l) => {
+    const k = String(l.source) + "->" + String(l.target);
+    edges[k] = l.declarations || 1;
+  });
+  const scale = () => (img.clientWidth || img.naturalWidth) / (img.naturalWidth || 1);
+  const overlayDivs = {};
+  (derived.entities || []).forEach((e) => {
+    if (!Array.isArray(e.box) || e.box.length !== 4) return;
+    const dv = document.createElement("div"); dv.className = "box";
+    dv.dataset.eid = String(e.id);
+    const tag = document.createElement("span"); tag.className = "tag";
+    text(tag, String(e.id) + " " + (e.label || ""));
+    dv.appendChild(tag); box.appendChild(dv); overlayDivs[String(e.id)] = dv;
+  });
+  const place = () => {
+    const s = scale();
+    (derived.entities || []).forEach((e) => {
+      const dv = overlayDivs[String(e.id)];
+      if (!dv || !Array.isArray(e.box) || e.box.length !== 4) return;
+      const b = e.box;
+      dv.style.left = (b[0] * s) + "px"; dv.style.top = (b[1] * s) + "px";
+      dv.style.width = Math.max(2, (b[2] - b[0]) * s) + "px";
+      dv.style.height = Math.max(2, (b[3] - b[1]) * s) + "px";
+    });
+  };
+  place();
+  if (typeof ResizeObserver !== "undefined") new ResizeObserver(place).observe(box);
+  const clearHl = () => {
+    Object.values(overlayDivs).forEach((dv) => dv.classList.remove("hl"));
+    box.parentElement.querySelectorAll("tr.hl").forEach((tr) => tr.classList.remove("hl"));
+  };
+  const highlight = (ids) => {
+    clearHl();
+    ids.forEach((id) => {
+      const dv = overlayDivs[String(id)];
+      if (dv) dv.classList.add("hl");
+      const tr = box.parentElement.querySelector('tr[data-eid="' + String(id) + '"]');
+      if (tr) tr.classList.add("hl");
+    });
+  };
+  const neighbours = (id) => {
+    const out = [String(id)];
+    Object.keys(edges).forEach((k) => {
+      const parts = k.split("->");
+      if (parts[0] === String(id)) out.push(parts[1]);
+      if (parts[1] === String(id)) out.push(parts[0]);
+    });
+    return out;
+  };
+  // Entity table with traceable links.
+  const tbl = document.createElement("table"); tbl.className = "ann";
+  const head = document.createElement("tr");
+  ["id", "label", "text", "box", "links"].forEach((c) => {
+    const th = document.createElement("th"); text(th, c); head.appendChild(th);
+  });
+  tbl.appendChild(head);
+  (derived.entities || []).forEach((e) => {
+    const tr = document.createElement("tr"); tr.dataset.eid = String(e.id);
+    const linked = neighbours(e.id).filter((x) => x !== String(e.id));
+    [String(e.id), e.label || "", String(e.text || "").slice(0, 60),
+     Array.isArray(e.box) ? e.box.join(",") : "", linked.join(", ") || "—"].forEach((v) => {
+      const td = document.createElement("td"); text(td, v); tr.appendChild(td);
+    });
+    tr.addEventListener("click", () => highlight(neighbours(e.id)));
+    tbl.appendChild(tr);
+  });
+  box.parentElement.appendChild(tbl);
+  // Link list: unique edges vs repeated declarations.
+  const ul = document.createElement("ul");
+  const uniq = Object.keys(edges).length;
+  const rep = Object.values(edges).filter((c) => c > 1).length;
+  const sum = document.createElement("div"); sum.className = "meta";
+  text(sum, "relationships: " + uniq + " unique edges (" + rep + " repeated in source) — click to trace");
+  box.parentElement.appendChild(sum);
+  Object.keys(edges).sort().forEach((k) => {
+    const parts = k.split("->");
+    const li = document.createElement("li");
+    const a = document.createElement("a"); a.href = "#";
+    text(a, parts[0] + " → " + parts[1] + (edges[k] > 1 ? " ×" + edges[k] + " (repeated)" : ""));
+    a.addEventListener("click", (ev) => { ev.preventDefault(); highlight([parts[0], parts[1]]); });
+    li.appendChild(a); ul.appendChild(li);
+  });
+  box.parentElement.appendChild(ul);
+  const note = document.createElement("div"); note.className = "meta";
+  text(note, "Unlinked entities: " + (derived.unlinked_ids || []).length +
+    " · ambiguous: " + (derived.ambiguous || []).length);
+  box.parentElement.appendChild(note);
+}
+function applyDecisions(dec) {
+  if (!PKG) { log("Load the review package first."); return; }
+  const known = new Set(PKG.entries.map((e) => e.ref_id));
+  const arr = dec.decisions || dec.entries || [];
+  const messages = [];
+  let applied = 0;
+  arr.forEach((d) => {
+    if (!d.ref_id || !known.has(d.ref_id)) { messages.push("CONFLICT unknown ref_id: " + d.ref_id); return; }
+    if (!ALLOWED.includes(d.human_status)) { messages.push("CONFLICT bad status " + d.ref_id + ": " + d.human_status); return; }
+    if (dec.annotation_policy_version && dec.annotation_policy_version !== PKG.annotation_policy_version) {
+      messages.push("CONFLICT policy mismatch for " + d.ref_id + ": file " + dec.annotation_policy_version + " vs package " + PKG.annotation_policy_version);
+      return;
+    }
+    if (DECISIONS[d.ref_id]) messages.push("CONFLICT duplicate decision in import (overwriting): " + d.ref_id);
+    DECISIONS[d.ref_id] = d; applied++;
+  });
+  messages.push("Import checked: applied " + applied + "/" + arr.length + ". Conflicts shown above; nothing applied silently.");
+  validateAndRender();
+  messages.forEach((m) => log(m));
+}
+$("exportBtn").addEventListener("click", () => {
+  if (!PKG) { log("Nothing to export."); return; }
+  const reviewer = $("reviewer").value.trim();
+  const ts = new Date().toISOString();
+  const decisions = Object.values(DECISIONS).map((d) => Object.assign({}, d, {
+    reviewer: reviewer || d.reviewer || null,
+    reviewed_at: d.reviewed_at || ts,
+  }));
+  const out = {
+    decisions_version: 1,
+    gold_manifest_sha256: PKG.gold_manifest_sha256,
+    annotation_policy_version: PKG.annotation_policy_version,
+    exported_at: ts,
+    attestation_note: "Reviewer identity is self-asserted in this file; importing records an attestation, not an authenticated identity. AI-assisted entries stay provisional until marked verified by a human here.",
+    decisions: decisions,
+  };
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "gold_review_decisions.json";
+  a.click();
+  log("Exported " + decisions.length + " decisions as a NEW file (manifest untouched).");
+});
+</script>
+</body>
+</html>
