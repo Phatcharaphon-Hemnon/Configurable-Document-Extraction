@@ -11,6 +11,8 @@ recreate deleted rows or orphaned originals.
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import io
 import json
 import sqlite3
@@ -111,21 +113,26 @@ async def test_workflows_leave_application_history_untouched(tmp_path):
         activities._page_service = None
     assert out["doc_type"] == "invoice"
 
-    # 4) Mock evaluation on a copied gold file (no LLM, fully isolated).
-    real_gold = _API_DIR / "app" / "data" / "knowledge_base" / "ground_truth"
-    entry = next(f for f in json.loads((real_gold / "manifest.json").read_text(encoding="utf-8"))["files"]
-                 if f["filename"] == "Delivery_note2.png")
+    # 4) Mock evaluation on an isolated fixture gold file (no LLM, fully isolated).
+    # Uses synthetic bytes + a minimal manifest: history isolation does not
+    # depend on any particular gold content.
     gold_dir = tmp_path / "gold"
     gold_dir.mkdir()
-    (gold_dir / "Delivery_note2.png").write_bytes((real_gold / "Delivery_note2.png").read_bytes())
+    (gold_dir / "fixture.png").write_bytes(
+        base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="))
+    entry = {"filename": "fixture.png",
+             "sha256": hashlib.sha256((gold_dir / "fixture.png").read_bytes()).hexdigest(),
+             "pages": [{"page_number": 1, "doc_type": "delivery_note", "language": "en",
+                        "fields": {"delivery_note_number": "1"}}]}
     (gold_dir / "manifest.json").write_text(json.dumps({
-        "version": 1, "annotation_method": "test", "release_subset": ["Delivery_note2.png"],
+        "version": 1, "annotation_method": "test", "release_subset": ["fixture.png"],
         "files": [entry],
     }), encoding="utf-8")
     sys.path.insert(0, str(_API_DIR / "scripts"))
     from run_eval import run
 
-    code = await run(SimpleNamespace(gold_dir=gold_dir, all=False, subset=["Delivery_note2.png"],
+    code = await run(SimpleNamespace(gold_dir=gold_dir, all=False, subset=["fixture.png"],
                                      few_shot=0, mock=True, output_dir=tmp_path / "out"))
     assert code in (0, 2)
 

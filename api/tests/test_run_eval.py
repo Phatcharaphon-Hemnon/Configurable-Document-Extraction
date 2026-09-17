@@ -24,10 +24,9 @@ from scripts.run_eval import (  # noqa: E402
 
 
 def test_default_subset_covers_all_doc_types():
-    assert len(DEFAULT_SUBSET) == 8
-    assert "Invoice1.jpg" in DEFAULT_SUBSET
-    assert "purchase_orders1.pdf" in DEFAULT_SUBSET
-    assert "Delivery1.webp" in DEFAULT_SUBSET
+    assert len(DEFAULT_SUBSET) == 20
+    assert "sroie_X51005301667.jpg" in DEFAULT_SUBSET
+    assert "funsd_0001118259.png" in DEFAULT_SUBSET
     assert len(set(DEFAULT_SUBSET)) == len(DEFAULT_SUBSET)
 
 

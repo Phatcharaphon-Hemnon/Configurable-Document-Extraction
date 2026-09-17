@@ -31,15 +31,32 @@ from app.services.extraction_service import DocumentExtractionService, UploadedF
 from app.services.field_catalog import normalize_field_name  # noqa: E402
 from app.services.field_matching import values_match  # noqa: E402
 
+# Default evaluation dataset. Activation of a replacement suite updates this
+# constant (after full validation at final paths); explicit --gold-dir
+# overrides always win. Do not add a competing configuration mechanism.
+DEFAULT_GOLD_DIR = REPO_ROOT / "api/app/data/knowledge_base/ground_truth"
+
 DEFAULT_SUBSET = [
-    "Invoice1.jpg",
-    "THAI_RECEIPT.jpg",
-    "THAI_bill.jpg",
-    "Delivery1.webp",
-    "Delivery_note2.png",
-    "purchase_orders1.pdf",
-    "Invoice+purchase.pdf",
-    "Thai(invoice)+EN(Purchase).pdf",
+    "sroie_X51005301667.jpg",
+    "sroie_X51005663293.jpg",
+    "sroie_X51005663297.jpg",
+    "sroie_X51005663311.jpg",
+    "sroie_X51005806685.jpg",
+    "sroie_X51006414713.jpg",
+    "sroie_X51006556815.jpg",
+    "sroie_X51006857265.jpg",
+    "sroie_X51008123604.jpg",
+    "sroie_X51008142033.jpg",
+    "funsd_0001118259.png",
+    "funsd_0011973451.png",
+    "funsd_0011974919.png",
+    "funsd_00283813.png",
+    "funsd_0060207528.png",
+    "funsd_01197604.png",
+    "funsd_71108371.png",
+    "funsd_87533049.png",
+    "funsd_91361993.png",
+    "funsd_93380187.png",
 ]
 FORMATS = {".pdf", ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff", ".tif", ".gif"}
 # Per-file prediction JSONs live beside gold inputs but are never gold inputs
@@ -95,18 +112,114 @@ def match_value(predicted: Any, expected: Any) -> bool:
     return values_match(predicted, expected)
 
 
-def score_page(gold: GoldPage, doc: ExtractionResult | None) -> dict:
-    expected = {normalize_field_name(k): v for k, v in gold.fields.items() if k not in gold.excluded_fields}
-    predicted = (
-        {normalize_field_name(f.name): f.value for f in doc.fields if f.name not in gold.excluded_fields} if doc else {}
+def apply_aliases(names: dict[str, Any], aliases: dict[str, str] | None) -> dict[str, Any]:
+    """Apply an eval-local alias map symmetrically (refs and predictions).
+
+    Keys are normalized first; aliases map normalized-alternative ->
+    normalized-canonical. Two distinct names collapsing to one canonical is
+    an explicit ValueError, never a silent merge.
+    """
+    if not aliases:
+        return dict(names)
+    table = {normalize_field_name(k): normalize_field_name(v) for k, v in aliases.items()}
+    seen: dict[str, str] = {}
+    for name in names:
+        canon = table.get(name, name)
+        if canon in seen and seen[canon] != name:
+            raise ValueError(f"alias collision: {seen[canon]!r} and {name!r} both map to {canon!r}")
+        seen[canon] = name
+    return {table.get(name, name): value for name, value in names.items()}
+
+
+def file_support(pages: list[GoldPage]) -> tuple[str, str]:
+    """Dispatch verdict for one file's pages, before any pipeline call.
+
+    Returns ("supported", "") when every page has a supported production
+    evaluation path, else ("not_evaluated", reason). Mixed files are reported
+    as an explicit limitation and never partially run: silently skipping only
+    the unsupported pages of a file would misattribute shared pipeline work.
+    """
+    kinds = {p.effective_kind() for p in pages}
+    if kinds <= {"invoice", "purchase_order", "delivery_note"}:
+        return "supported", ""
+    if kinds == {"form"}:
+        return ("not_evaluated",
+                "document_kind=form has no supported production evaluation path")
+    return ("not_evaluated",
+            f"mixed page kinds {sorted(kinds)} cannot be processed safely")
+
+
+def not_evaluated_record(filename: str, gold: GoldPage, reason: str) -> dict:
+    return dict(
+        expected=gold.doc_type or gold.effective_kind(),
+        predicted=None,
+        router_ok=False,
+        router_evaluated=False,
+        language_ok=False,
+        language=gold.language,
+        precision=0.0,
+        recall=0.0,
+        f1=None,
+        tp=0,
+        fp=0,
+        fn=0,
+        fields_expected=0,
+        scoreable=False,
+        out_of_scope_ignored={},
+        cells_total=0,
+        cells_ok=0,
+        columns_total=0,
+        columns_found=0,
+        rows_total=0,
+        rows_found=0,
+        extra_rows=0,
+        extra_columns=0,
+        excluded_cells=0,
+        failed=False,
+        evaluated=False,
+        status="not_evaluated",
+        kind=gold.effective_kind(),
+        status_reason=reason,
+        error=None,
+        needs_review=False,
+        returned=False,
+        judge_status="unavailable",
+        timings={},
+        usage={},
+        mismatches=[],
+        unexpected_fields={},
+        notes=gold.notes,
     )
-    matched = sum(k in predicted and match_value(predicted[k], value) for k, value in expected.items())
-    fp = sum(k not in expected or not match_value(value, expected[k]) for k, value in predicted.items())
-    fn = len(expected) - matched
-    precision = matched / (matched + fp) if matched + fp else (1.0 if not expected else 0.0)
-    recall = matched / len(expected) if expected else 1.0
-    if doc is None or doc.error:
-        precision = recall = 0.0
+
+
+def score_page(gold: GoldPage, doc: ExtractionResult | None,
+               aliases: dict[str, str] | None = None) -> dict:
+    raw_expected = {normalize_field_name(k): v for k, v in gold.fields.items()
+                    if k not in gold.excluded_fields}
+    raw_predicted = (
+        {normalize_field_name(f.name): f.value for f in doc.fields
+         if f.name not in gold.excluded_fields} if doc else {}
+    )
+    expected = apply_aliases(raw_expected, aliases)
+    predicted_all = apply_aliases(raw_predicted, aliases)
+    scope = (set(gold.annotation_scope) if gold.annotation_scope is not None
+             else set(expected) | set(predicted_all))
+    expected = {k: v for k, v in expected.items() if k in scope}
+    out_of_scope_ignored = {k: v for k, v in predicted_all.items() if k not in scope}
+    predicted = {k: v for k, v in predicted_all.items() if k in scope}
+    failed = doc is None or bool(doc.error)
+    if failed:
+        # No invented false positives: nothing was returned, so every
+        # scoreable reference is a false negative.
+        tp, fp, fn = 0, 0, len(expected)
+    else:
+        tp = sum(k in predicted and match_value(predicted[k], value) for k, value in expected.items())
+        fp = sum(k not in expected or not match_value(value, expected[k]) for k, value in predicted.items())
+        fn = len(expected) - tp
+    # Zero-denominator convention (documented): 0/0 -> 1.0 iff there is
+    # nothing scoreable on that side, else 0.0.
+    precision = tp / (tp + fp) if (tp + fp) else (1.0 if not expected else 0.0)
+    recall = tp / len(expected) if expected else 1.0
     cells_total = cells_ok = columns_total = columns_found = rows_total = rows_found = excluded_cells = 0
     tables = doc.tables if doc else []
     used = set()
@@ -137,18 +250,21 @@ def score_page(gold: GoldPage, doc: ExtractionResult | None) -> dict:
                 if label in actual_labels and match_value(actual_row.get(actual_labels[label]), expected_cell):
                     cells_ok += 1
     return dict(
-        expected=gold.doc_type,
+        expected=gold.doc_type or gold.effective_kind(),
         predicted=doc.doc_type if doc else None,
         router_ok=bool(doc and doc.failed_stage not in ("ocr", "router") and doc.doc_type == gold.doc_type),
+        router_evaluated=not gold.routing_excluded and gold.effective_kind() != "form",
         language_ok=bool(doc and doc.language == gold.language),
         language=gold.language,
         precision=precision,
         recall=recall,
         f1=2 * precision * recall / (precision + recall) if precision + recall else 0,
-        tp=matched,
+        tp=tp,
         fp=fp,
         fn=fn,
         fields_expected=len(expected),
+        scoreable=bool(expected) or bool(cells_total),
+        out_of_scope_ignored=out_of_scope_ignored,
         cells_total=cells_total,
         cells_ok=cells_ok,
         columns_total=columns_total,
@@ -159,6 +275,9 @@ def score_page(gold: GoldPage, doc: ExtractionResult | None) -> dict:
         extra_columns=max(0, sum(len(t.columns) for t in tables) - columns_total),
         excluded_cells=excluded_cells,
         failed=doc is None or bool(doc.error),
+        evaluated=True,
+        status="evaluated" if not (doc is None or bool(doc.error)) else "failed",
+        kind=gold.effective_kind(),
         error=doc.error if doc else "Missing page result",
         needs_review=bool(doc is None or doc.needs_review),
         returned=doc is not None,
@@ -177,10 +296,12 @@ def score_page(gold: GoldPage, doc: ExtractionResult | None) -> dict:
 
 def summarize(results: list[dict]) -> dict:
     n = len(results)
-    scored = [r for r in results if not r.get("failed") and r.get("f1") is not None]
+    evaluated = [r for r in results if r.get("evaluated", True)]
+    unevaluated = [r for r in results if not r.get("evaluated", True)]
+    scored = [r for r in evaluated if not r.get("failed") and r.get("f1") is not None]
 
     def avg(key):
-        return sum(r.get(key) or 0 for r in results) / n if n else 0
+        return sum(r.get(key) or 0 for r in evaluated) / len(evaluated) if evaluated else 0
 
     def ratio(a, b):
         denom = sum(r.get(b, 0) for r in results)
@@ -192,16 +313,29 @@ def summarize(results: list[dict]) -> dict:
         + r.get("timings", {}).get("render", 0)
         for r in results
     ]
+    routed = [r for r in evaluated if r.get("router_evaluated", True)]
+    scoreable = [r for r in evaluated if r.get("scoreable", True)]
     return dict(
         n_total=n,
+        n_evaluated=len(evaluated),
+        n_unevaluated=len(unevaluated),
         n_scored=len(scored),
-        n_failed=n - len(scored),
-        returned=sum(r.get("returned", False) for r in results),
-        router_accuracy=avg("router_ok"),
+        n_failed=len(evaluated) - len(scored),
+        returned=sum(r.get("returned", False) for r in evaluated),
+        router_accuracy=(sum(r.get("router_ok") or 0 for r in routed) / len(routed)) if routed else None,
+        router_evaluated=len(routed),
+        router_excluded=len(evaluated) - len(routed),
         language_accuracy=avg("language_ok"),
         macro_precision=avg("precision"),
         macro_recall=avg("recall"),
         macro_f1=avg("f1"),
+        macro_f1_scoreable=(sum(r.get("f1") or 0 for r in scoreable) / len(scoreable)) if scoreable else None,
+        n_scoreable=len(scoreable),
+        n_empty_scope=len(evaluated) - len(scoreable),
+        tp_total=sum(r.get("tp", 0) for r in evaluated),
+        fp_total=sum(r.get("fp", 0) for r in evaluated),
+        fn_total=sum(r.get("fn", 0) for r in evaluated),
+        fields_expected_total=sum(r.get("fields_expected", 0) for r in evaluated),
         success_only_f1=statistics.mean(r["f1"] for r in scored) if scored else 0,
         needs_review_rate=avg("needs_review"),
         table_cell_accuracy=ratio("cells_ok", "cells_total"),
@@ -214,6 +348,10 @@ def summarize(results: list[dict]) -> dict:
 
 def md(value):
     return str(value).replace("|", "\\|").replace("\n", " ")
+
+
+def _fmt_acc(value) -> str:
+    return "N/A" if value is None else f"{value:.3f}"
 
 
 def build_report(results: list[dict], config: dict, summary: dict) -> str:
@@ -235,10 +373,13 @@ def build_report(results: list[dict], config: dict, summary: dict) -> str:
         "| Metric | Value |",
         "|---|---|",
         f"| Pages returned / expected | {summary['returned']} / {summary['n_total']} |",
+        f"| Evaluated / not evaluated | {summary.get('n_evaluated', summary['n_total'])} / {summary.get('n_unevaluated', 0)} |",
         f"| Successful / failed pages | {summary['n_scored']} / {summary['n_failed']} |",
+        f"| TP / FP / FN (fields) | {summary.get('tp_total', 0)} / {summary.get('fp_total', 0)} / {summary.get('fn_total', 0)} |",
+        f"| Scoreable / empty-scope pages | {summary.get('n_scoreable', summary['n_total'])} / {summary.get('n_empty_scope', 0)} |",
         f"| Field macro precision / recall / F1 | {summary['macro_precision']:.3f} / {summary['macro_recall']:.3f} / **{summary['macro_f1']:.3f}** |",
         f"| Successful-page-only F1 | {summary['success_only_f1']:.3f} |",
-        f"| Routing / language accuracy | {summary['router_accuracy']:.3f} / {summary['language_accuracy']:.3f} |",
+        f"| Routing / language accuracy | {_fmt_acc(summary.get('router_accuracy'))} / {summary['language_accuracy']:.3f} |",
         f"| Table cell accuracy | {summary['table_cell_accuracy']:.3f} |",
         f"| Table row / column coverage | {summary['row_coverage']:.3f} / {summary['column_coverage']:.3f} |",
         f"| Review rate | {summary['needs_review_rate']:.1%} |",
@@ -251,13 +392,21 @@ def build_report(results: list[dict], config: dict, summary: dict) -> str:
     ]
     for r in results:
         duration = sum(r.get("timings", {}).get(k, 0) for k in ("pipeline", "ocr", "render"))
+        if not r.get("evaluated", True):
+            outcome = "NOT EVALUATED: " + str(r.get("status_reason", ""))
+        elif r.get("failed") or r.get("f1") is None:
+            outcome = "FAILED: " + str(r.get("error"))
+        elif r.get("needs_review"):
+            outcome = "review"
+        else:
+            outcome = "completed"
         lines.append(
-            f"| {md(r.get('stem', ''))} | {r['expected']} → {r.get('predicted') or '—'} | {r.get('precision', 0):.3f} | {r.get('recall', 0):.3f} | {(r.get('f1') or 0):.3f} | {r.get('judge_status', 'unavailable')} | {duration:.2f} | {md('FAILED: ' + str(r.get('error')) if r.get('failed') or r.get('f1') is None else 'review' if r.get('needs_review') else 'completed')} |"
+            f"| {md(r.get('stem', ''))} | {r['expected']} → {r.get('predicted') or '—'} | {r.get('precision', 0):.3f} | {r.get('recall', 0):.3f} | {(r.get('f1') or 0):.3f} | {r.get('judge_status', 'unavailable')} | {duration:.2f} | {md(outcome)} |"
         )
-    for grouping in ("expected", "language", "format"):
+    for grouping in ("expected", "language", "format", "kind", "dataset_source"):
         lines += ["", f"## Breakdown by {grouping}", "", "| Group | Pages | F1 | Median seconds |", "|---|---|---|---|"]
-        for group in sorted({r.get(grouping, "unknown") for r in results}):
-            stats = summarize([r for r in results if r.get(grouping, "unknown") == group])
+        for group in sorted({r.get(grouping, "unknown") or "unknown" for r in results}):
+            stats = summarize([r for r in results if (r.get(grouping, "unknown") or "unknown") == group])
             lines.append(f"| {group} | {stats['n_total']} | {stats['macro_f1']:.3f} | {stats['median_seconds']:.2f} |")
     lines += ["", "## Stage timing and provider usage", "",
               "| Stage | Calls recorded | Total seconds | Retries | Reported tokens |", "|---|---|---|---|---|"]
@@ -397,6 +546,27 @@ async def run(args):
         for name in selected:
             print(f"Processing {name} ({len(available[name].pages)} expected pages)", flush=True)
             started = time.perf_counter()
+            verdict, reason = file_support(available[name].pages)
+            if verdict == "not_evaluated":
+                # Guard before inference: no mock fabrication, no
+                # extract_group (OCR/Router/Extractor/Validator/Judge), no
+                # catalog contact for unsupported pages.
+                print(f"  not evaluated: {reason}", flush=True)
+                for gold in available[name].pages:
+                    record = not_evaluated_record(name, gold, reason)
+                    record.update(
+                        stem=f"{name} / {gold.page_number}",
+                        filename=name,
+                        page_number=gold.page_number,
+                        format=Path(name).suffix.lower(),
+                        dataset_source=(available[name].dataset.source
+                                        if available[name].dataset else ""),
+                    )
+                    results.append(record)
+                responses[name] = {"documents": [], "error": None,
+                                   "eval_seconds": time.perf_counter() - started,
+                                   "not_evaluated": reason}
+                continue
             if args.mock:
                 docs = []
                 for expected in available[name].pages:
@@ -434,6 +604,8 @@ async def run(args):
                     filename=name,
                     page_number=gold.page_number,
                     format=Path(name).suffix.lower(),
+                    dataset_source=(available[name].dataset.source
+                                    if available[name].dataset else ""),
                 )
                 results.append(record)
                 print(
@@ -490,7 +662,7 @@ async def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--gold-dir", type=Path, default=REPO_ROOT / "api/app/data/knowledge_base/ground_truth")
+    parser.add_argument("--gold-dir", type=Path, default=DEFAULT_GOLD_DIR)
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--subset", nargs="+")
     parser.add_argument("--few-shot", type=int, default=0)
