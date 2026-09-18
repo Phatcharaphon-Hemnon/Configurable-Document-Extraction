@@ -87,6 +87,15 @@ async def extract_activity(
     from app.schemas.documents import ExtractionCallResult
 
     extractors = build_extractors(_settings(), _catalog())
+    if doc_type == "unsupported":
+        # Never reach the registry: unsupported pages short-circuit in the
+        # service before any extractor runs. An explicit ValueError here
+        # (instead of a bare KeyError from the lookup below) keeps the
+        # standalone path honest too.
+        raise ValueError(
+            "extract_activity received doc_type='unsupported': "
+            "unsupported pages must short-circuit before extraction"
+        )
     ext = extractors[doc_type]
     call = None
     # Test doubles that stub only `extract` (instance-dict MagicMock/AsyncMock)

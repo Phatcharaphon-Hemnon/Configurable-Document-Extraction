@@ -1,0 +1,1961 @@
+{
+  "entities": [
+    {
+      "id": 0,
+      "text": "DATE:",
+      "box": [
+        115,
+        172,
+        161,
+        192
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            115,
+            172,
+            161,
+            192
+          ],
+          "text": "DATE:"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "text": "TIME:",
+      "box": [
+        244,
+        173,
+        283,
+        191
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            244,
+            173,
+            283,
+            191
+          ],
+          "text": "TIME:"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "MANUFACTURER:",
+      "box": [
+        64,
+        225,
+        186,
+        245
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            64,
+            225,
+            186,
+            245
+          ],
+          "text": "MANUFACTURER:"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "91361993",
+      "box": [
+        733,
+        824,
+        750,
+        895
+      ],
+      "label": "other",
+      "words": [
+        {
+          "box": [
+            733,
+            824,
+            750,
+            895
+          ],
+          "text": "91361993"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "cc:",
+      "box": [
+        66,
+        751,
+        90,
+        764
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            66,
+            751,
+            90,
+            764
+          ],
+          "text": "cc:"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "NEW COMPETITIVE PRODUCTS",
+      "box": [
+        295,
+        59,
+        513,
+        77
+      ],
+      "label": "header",
+      "words": [
+        {
+          "text": "NEW",
+          "box": [
+            295,
+            60,
+            333,
+            77
+          ]
+        },
+        {
+          "text": "COMPETITIVE",
+          "box": [
+            334,
+            61,
+            429,
+            76
+          ]
+        },
+        {
+          "text": "PRODUCTS",
+          "box": [
+            433,
+            59,
+            513,
+            77
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "C. M. WIECHMANN, D. M. , LUBBOCK, TX",
+      "box": [
+        184,
+        117,
+        492,
+        139
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "C.",
+          "box": [
+            184,
+            122,
+            205,
+            137
+          ]
+        },
+        {
+          "text": "M.",
+          "box": [
+            211,
+            123,
+            231,
+            138
+          ]
+        },
+        {
+          "text": "WIECHMANN,",
+          "box": [
+            240,
+            122,
+            328,
+            139
+          ]
+        },
+        {
+          "text": "D.",
+          "box": [
+            338,
+            122,
+            356,
+            137
+          ]
+        },
+        {
+          "text": "M.",
+          "box": [
+            356,
+            122,
+            371,
+            137
+          ]
+        },
+        {
+          "text": ",",
+          "box": [
+            374,
+            122,
+            384,
+            139
+          ]
+        },
+        {
+          "text": "LUBBOCK,",
+          "box": [
+            391,
+            120,
+            462,
+            137
+          ]
+        },
+        {
+          "text": "TX",
+          "box": [
+            471,
+            117,
+            492,
+            135
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "REPORTED BY",
+      "box": [
+        63,
+        119,
+        164,
+        138
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "REPORTED",
+          "box": [
+            63,
+            120,
+            138,
+            138
+          ]
+        },
+        {
+          "text": "BY",
+          "box": [
+            142,
+            119,
+            164,
+            137
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "10 /5 /92",
+      "box": [
+        170,
+        172,
+        233,
+        190
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "10",
+          "box": [
+            170,
+            172,
+            187,
+            189
+          ]
+        },
+        {
+          "text": "/5",
+          "box": [
+            186,
+            173,
+            206,
+            190
+          ]
+        },
+        {
+          "text": "/92",
+          "box": [
+            204,
+            172,
+            233,
+            189
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "R. J. REYNOLDS",
+      "box": [
+        229,
+        222,
+        358,
+        242
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "R.",
+          "box": [
+            229,
+            223,
+            250,
+            241
+          ]
+        },
+        {
+          "text": "J.",
+          "box": [
+            254,
+            222,
+            275,
+            242
+          ]
+        },
+        {
+          "text": "REYNOLDS",
+          "box": [
+            285,
+            222,
+            358,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "CARDINAL CIGARETTES (11 PACKINGS)",
+      "box": [
+        194,
+        278,
+        499,
+        298
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "CARDINAL",
+          "box": [
+            194,
+            281,
+            272,
+            298
+          ]
+        },
+        {
+          "text": "CIGARETTES",
+          "box": [
+            278,
+            278,
+            369,
+            296
+          ]
+        },
+        {
+          "text": "(11",
+          "box": [
+            385,
+            281,
+            412,
+            298
+          ]
+        },
+        {
+          "text": "PACKINGS)",
+          "box": [
+            418,
+            279,
+            499,
+            296
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "BRAND NAME:",
+      "box": [
+        63,
+        278,
+        162,
+        297
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "BRAND",
+          "box": [
+            63,
+            278,
+            113,
+            295
+          ]
+        },
+        {
+          "text": "NAME:",
+          "box": [
+            116,
+            279,
+            162,
+            297
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "TYPE OF PRODUCT:",
+      "box": [
+        64,
+        332,
+        140,
+        368
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "TYPE",
+          "box": [
+            64,
+            332,
+            100,
+            347
+          ]
+        },
+        {
+          "text": "OF",
+          "box": [
+            105,
+            332,
+            125,
+            345
+          ]
+        },
+        {
+          "text": "PRODUCT:",
+          "box": [
+            66,
+            351,
+            140,
+            368
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "text": "SIZE OR SIZES:",
+      "box": [
+        63,
+        398,
+        173,
+        417
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "SIZE",
+          "box": [
+            63,
+            399,
+            97,
+            417
+          ]
+        },
+        {
+          "text": "OR",
+          "box": [
+            102,
+            398,
+            123,
+            416
+          ]
+        },
+        {
+          "text": "SIZES:",
+          "box": [
+            126,
+            399,
+            173,
+            417
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "LIST PRICE:",
+      "box": [
+        64,
+        454,
+        150,
+        472
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "LIST",
+          "box": [
+            64,
+            454,
+            93,
+            471
+          ]
+        },
+        {
+          "text": "PRICE:",
+          "box": [
+            98,
+            454,
+            150,
+            472
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "EXTENT OF DISTRIBUTION:",
+      "box": [
+        64,
+        507,
+        172,
+        540
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "EXTENT",
+          "box": [
+            64,
+            507,
+            120,
+            521
+          ]
+        },
+        {
+          "text": "OF",
+          "box": [
+            124,
+            507,
+            145,
+            521
+          ]
+        },
+        {
+          "text": "DISTRIBUTION:",
+          "box": [
+            66,
+            522,
+            172,
+            540
+          ]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "text": "OTHER INFORMATION:",
+      "box": [
+        64,
+        608,
+        175,
+        645
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "OTHER",
+          "box": [
+            64,
+            608,
+            114,
+            625
+          ]
+        },
+        {
+          "text": "INFORMATION:",
+          "box": [
+            66,
+            628,
+            175,
+            645
+          ]
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "text": "SEE ATTACHMENT",
+      "box": [
+        235,
+        624,
+        364,
+        644
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "SEE",
+          "box": [
+            235,
+            624,
+            266,
+            644
+          ]
+        },
+        {
+          "text": "ATTACHMENT",
+          "box": [
+            272,
+            624,
+            364,
+            641
+          ]
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "text": "K. P. Augustyn",
+      "box": [
+        534,
+        763,
+        631,
+        779
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "K.",
+          "box": [
+            534,
+            763,
+            547,
+            778
+          ]
+        },
+        {
+          "text": "P.",
+          "box": [
+            549,
+            763,
+            564,
+            778
+          ]
+        },
+        {
+          "text": "Augustyn",
+          "box": [
+            568,
+            764,
+            631,
+            779
+          ]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "text": "V. D. Lindsley",
+      "box": [
+        532,
+        779,
+        625,
+        797
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "V.",
+          "box": [
+            532,
+            779,
+            547,
+            794
+          ]
+        },
+        {
+          "text": "D.",
+          "box": [
+            549,
+            779,
+            567,
+            797
+          ]
+        },
+        {
+          "text": "Lindsley",
+          "box": [
+            568,
+            781,
+            625,
+            796
+          ]
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "text": "R. D. Hammer",
+      "box": [
+        532,
+        797,
+        629,
+        813
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "R.",
+          "box": [
+            532,
+            797,
+            547,
+            812
+          ]
+        },
+        {
+          "text": "D.",
+          "box": [
+            549,
+            799,
+            566,
+            813
+          ]
+        },
+        {
+          "text": "Hammer",
+          "box": [
+            568,
+            800,
+            629,
+            813
+          ]
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "text": "J. J. Tatulli",
+      "box": [
+        355,
+        764,
+        430,
+        780
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "J.",
+          "box": [
+            355,
+            764,
+            370,
+            778
+          ]
+        },
+        {
+          "text": "J.",
+          "box": [
+            373,
+            765,
+            384,
+            779
+          ]
+        },
+        {
+          "text": "Tatulli",
+          "box": [
+            387,
+            765,
+            430,
+            780
+          ]
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "text": "L. H. Kersh",
+      "box": [
+        355,
+        781,
+        432,
+        798
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "L.",
+          "box": [
+            355,
+            781,
+            369,
+            798
+          ]
+        },
+        {
+          "text": "H.",
+          "box": [
+            370,
+            781,
+            387,
+            798
+          ]
+        },
+        {
+          "text": "Kersh",
+          "box": [
+            390,
+            784,
+            432,
+            797
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "text": "J. R. Slater",
+      "box": [
+        355,
+        799,
+        429,
+        817
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "J.",
+          "box": [
+            355,
+            802,
+            372,
+            815
+          ]
+        },
+        {
+          "text": "R.",
+          "box": [
+            372,
+            799,
+            387,
+            814
+          ]
+        },
+        {
+          "text": "Slater",
+          "box": [
+            390,
+            800,
+            429,
+            817
+          ]
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "text": "A. Pasheluk",
+      "box": [
+        356,
+        818,
+        434,
+        833
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "A.",
+          "box": [
+            356,
+            818,
+            371,
+            833
+          ]
+        },
+        {
+          "text": "Pasheluk",
+          "box": [
+            374,
+            818,
+            434,
+            832
+          ]
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "text": "R. R. S. Goldbrenner",
+      "box": [
+        353,
+        834,
+        474,
+        851
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "R.",
+          "box": [
+            353,
+            838,
+            371,
+            851
+          ]
+        },
+        {
+          "text": "R.",
+          "box": [
+            356,
+            834,
+            371,
+            851
+          ]
+        },
+        {
+          "text": "S.",
+          "box": [
+            373,
+            835,
+            390,
+            850
+          ]
+        },
+        {
+          "text": "Goldbrenner",
+          "box": [
+            392,
+            835,
+            474,
+            850
+          ]
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "text": "N. Simeonidis",
+      "box": [
+        356,
+        852,
+        448,
+        869
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "N.",
+          "box": [
+            356,
+            855,
+            370,
+            869
+          ]
+        },
+        {
+          "text": "Simeonidis",
+          "box": [
+            377,
+            852,
+            448,
+            867
+          ]
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "text": "S. F. Smith",
+      "box": [
+        356,
+        867,
+        430,
+        885
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "S.",
+          "box": [
+            356,
+            870,
+            371,
+            885
+          ]
+        },
+        {
+          "text": "F.",
+          "box": [
+            373,
+            867,
+            388,
+            884
+          ]
+        },
+        {
+          "text": "Smith",
+          "box": [
+            391,
+            872,
+            430,
+            885
+          ]
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "text": "F. J. Schultz",
+      "box": [
+        222,
+        767,
+        307,
+        781
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "F.",
+          "box": [
+            222,
+            767,
+            239,
+            781
+          ]
+        },
+        {
+          "text": "J.",
+          "box": [
+            240,
+            767,
+            254,
+            781
+          ]
+        },
+        {
+          "text": "Schultz",
+          "box": [
+            258,
+            767,
+            307,
+            781
+          ]
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "text": "A. W. Spears",
+      "box": [
+        222,
+        781,
+        310,
+        799
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "A.",
+          "box": [
+            222,
+            784,
+            237,
+            798
+          ]
+        },
+        {
+          "text": "W.",
+          "box": [
+            239,
+            781,
+            261,
+            799
+          ]
+        },
+        {
+          "text": "Spears",
+          "box": [
+            263,
+            785,
+            310,
+            799
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "text": "N. P. Ruffalo",
+      "box": [
+        222,
+        799,
+        307,
+        815
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "N.",
+          "box": [
+            222,
+            799,
+            239,
+            814
+          ]
+        },
+        {
+          "text": "P.",
+          "box": [
+            243,
+            800,
+            258,
+            815
+          ]
+        },
+        {
+          "text": "Ruffalo",
+          "box": [
+            260,
+            803,
+            307,
+            814
+          ]
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "text": "T. L. Achey",
+      "box": [
+        225,
+        818,
+        300,
+        834
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "T.",
+          "box": [
+            225,
+            818,
+            240,
+            833
+          ]
+        },
+        {
+          "text": "L.",
+          "box": [
+            242,
+            820,
+            256,
+            834
+          ]
+        },
+        {
+          "text": "Achey",
+          "box": [
+            257,
+            820,
+            300,
+            834
+          ]
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "text": "P. J. McCann",
+      "box": [
+        222,
+        835,
+        314,
+        851
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "P.",
+          "box": [
+            222,
+            835,
+            240,
+            850
+          ]
+        },
+        {
+          "text": "J.",
+          "box": [
+            240,
+            837,
+            255,
+            851
+          ]
+        },
+        {
+          "text": "McCann",
+          "box": [
+            257,
+            837,
+            314,
+            851
+          ]
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "text": "A. J. Giacoio",
+      "box": [
+        223,
+        852,
+        310,
+        869
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "A.",
+          "box": [
+            223,
+            852,
+            240,
+            869
+          ]
+        },
+        {
+          "text": "J.",
+          "box": [
+            242,
+            852,
+            256,
+            869
+          ]
+        },
+        {
+          "text": "Giacoio",
+          "box": [
+            258,
+            853,
+            310,
+            868
+          ]
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "text": "A. H. Tisch",
+      "box": [
+        66,
+        767,
+        137,
+        781
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "A.",
+          "box": [
+            66,
+            768,
+            81,
+            781
+          ]
+        },
+        {
+          "text": "H.",
+          "box": [
+            82,
+            767,
+            99,
+            781
+          ]
+        },
+        {
+          "text": "Tisch",
+          "box": [
+            103,
+            768,
+            137,
+            781
+          ]
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "text": "R. H. Orcutt",
+      "box": [
+        67,
+        785,
+        146,
+        800
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "R.",
+          "box": [
+            67,
+            785,
+            81,
+            798
+          ]
+        },
+        {
+          "text": "H.",
+          "box": [
+            82,
+            785,
+            99,
+            800
+          ]
+        },
+        {
+          "text": "Orcutt",
+          "box": [
+            103,
+            785,
+            146,
+            800
+          ]
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "text": "M. A. Peterson",
+      "box": [
+        66,
+        802,
+        164,
+        817
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "M.",
+          "box": [
+            66,
+            802,
+            83,
+            817
+          ]
+        },
+        {
+          "text": "A.",
+          "box": [
+            85,
+            803,
+            100,
+            817
+          ]
+        },
+        {
+          "text": "Peterson",
+          "box": [
+            105,
+            804,
+            164,
+            815
+          ]
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "text": "M. L. Orlowsky",
+      "box": [
+        66,
+        818,
+        165,
+        835
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "M.",
+          "box": [
+            66,
+            818,
+            84,
+            835
+          ]
+        },
+        {
+          "text": "L.",
+          "box": [
+            87,
+            818,
+            102,
+            835
+          ]
+        },
+        {
+          "text": "Orlowsky",
+          "box": [
+            105,
+            820,
+            165,
+            835
+          ]
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "text": "L. Gordon",
+      "box": [
+        66,
+        838,
+        131,
+        852
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "L.",
+          "box": [
+            66,
+            839,
+            80,
+            852
+          ]
+        },
+        {
+          "text": "Gordon",
+          "box": [
+            82,
+            838,
+            131,
+            852
+          ]
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "text": "G. Telford",
+      "box": [
+        66,
+        855,
+        137,
+        870
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "G.",
+          "box": [
+            66,
+            855,
+            86,
+            870
+          ]
+        },
+        {
+          "text": "Telford",
+          "box": [
+            87,
+            856,
+            137,
+            869
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "target": 8,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 11,
+      "target": 10,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 16,
+      "target": 17,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 2,
+      "target": 9,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 18,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 19,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 20,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 21,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 22,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 23,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 24,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 25,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 26,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 27,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 28,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 29,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 30,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 31,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 32,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 33,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 34,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 35,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 36,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 37,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 38,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 39,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 0,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 1,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 11,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 12,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 13,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 14,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 15,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 16,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 2,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 4,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 7,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 7,
+      "target": 6,
+      "repeated": true,
+      "declarations": 2
+    }
+  ],
+  "unlinked_ids": [
+    3
+  ],
+  "ambiguous": [],
+  "qa_pairs": [
+    {
+      "from": 0,
+      "to": 8,
+      "from_text": "DATE:",
+      "to_text": "10 /5 /92"
+    },
+    {
+      "from": 11,
+      "to": 10,
+      "from_text": "BRAND NAME:",
+      "to_text": "CARDINAL CIGARETTES (11 PACKINGS)"
+    },
+    {
+      "from": 16,
+      "to": 17,
+      "from_text": "OTHER INFORMATION:",
+      "to_text": "SEE ATTACHMENT"
+    },
+    {
+      "from": 2,
+      "to": 9,
+      "from_text": "MANUFACTURER:",
+      "to_text": "R. J. REYNOLDS"
+    },
+    {
+      "from": 4,
+      "to": 18,
+      "from_text": "cc:",
+      "to_text": "K. P. Augustyn"
+    },
+    {
+      "from": 4,
+      "to": 19,
+      "from_text": "cc:",
+      "to_text": "V. D. Lindsley"
+    },
+    {
+      "from": 4,
+      "to": 20,
+      "from_text": "cc:",
+      "to_text": "R. D. Hammer"
+    },
+    {
+      "from": 4,
+      "to": 21,
+      "from_text": "cc:",
+      "to_text": "J. J. Tatulli"
+    },
+    {
+      "from": 4,
+      "to": 22,
+      "from_text": "cc:",
+      "to_text": "L. H. Kersh"
+    },
+    {
+      "from": 4,
+      "to": 23,
+      "from_text": "cc:",
+      "to_text": "J. R. Slater"
+    },
+    {
+      "from": 4,
+      "to": 24,
+      "from_text": "cc:",
+      "to_text": "A. Pasheluk"
+    },
+    {
+      "from": 4,
+      "to": 25,
+      "from_text": "cc:",
+      "to_text": "R. R. S. Goldbrenner"
+    },
+    {
+      "from": 4,
+      "to": 26,
+      "from_text": "cc:",
+      "to_text": "N. Simeonidis"
+    },
+    {
+      "from": 4,
+      "to": 27,
+      "from_text": "cc:",
+      "to_text": "S. F. Smith"
+    },
+    {
+      "from": 4,
+      "to": 28,
+      "from_text": "cc:",
+      "to_text": "F. J. Schultz"
+    },
+    {
+      "from": 4,
+      "to": 29,
+      "from_text": "cc:",
+      "to_text": "A. W. Spears"
+    },
+    {
+      "from": 4,
+      "to": 30,
+      "from_text": "cc:",
+      "to_text": "N. P. Ruffalo"
+    },
+    {
+      "from": 4,
+      "to": 31,
+      "from_text": "cc:",
+      "to_text": "T. L. Achey"
+    },
+    {
+      "from": 4,
+      "to": 32,
+      "from_text": "cc:",
+      "to_text": "P. J. McCann"
+    },
+    {
+      "from": 4,
+      "to": 33,
+      "from_text": "cc:",
+      "to_text": "A. J. Giacoio"
+    },
+    {
+      "from": 4,
+      "to": 34,
+      "from_text": "cc:",
+      "to_text": "A. H. Tisch"
+    },
+    {
+      "from": 4,
+      "to": 35,
+      "from_text": "cc:",
+      "to_text": "R. H. Orcutt"
+    },
+    {
+      "from": 4,
+      "to": 36,
+      "from_text": "cc:",
+      "to_text": "M. A. Peterson"
+    },
+    {
+      "from": 4,
+      "to": 37,
+      "from_text": "cc:",
+      "to_text": "M. L. Orlowsky"
+    },
+    {
+      "from": 4,
+      "to": 38,
+      "from_text": "cc:",
+      "to_text": "L. Gordon"
+    },
+    {
+      "from": 4,
+      "to": 39,
+      "from_text": "cc:",
+      "to_text": "G. Telford"
+    },
+    {
+      "from": 5,
+      "to": 0,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "DATE:"
+    },
+    {
+      "from": 5,
+      "to": 1,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "TIME:"
+    },
+    {
+      "from": 5,
+      "to": 11,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "BRAND NAME:"
+    },
+    {
+      "from": 5,
+      "to": 12,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "TYPE OF PRODUCT:"
+    },
+    {
+      "from": 5,
+      "to": 13,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "SIZE OR SIZES:"
+    },
+    {
+      "from": 5,
+      "to": 14,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "LIST PRICE:"
+    },
+    {
+      "from": 5,
+      "to": 15,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "EXTENT OF DISTRIBUTION:"
+    },
+    {
+      "from": 5,
+      "to": 16,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "OTHER INFORMATION:"
+    },
+    {
+      "from": 5,
+      "to": 2,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "MANUFACTURER:"
+    },
+    {
+      "from": 5,
+      "to": 4,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "cc:"
+    },
+    {
+      "from": 5,
+      "to": 7,
+      "from_text": "NEW COMPETITIVE PRODUCTS",
+      "to_text": "REPORTED BY"
+    },
+    {
+      "from": 7,
+      "to": 6,
+      "from_text": "REPORTED BY",
+      "to_text": "C. M. WIECHMANN, D. M. , LUBBOCK, TX"
+    }
+  ],
+  "source_sha256": "35973517e3f00e243fbe850f7ddcca39c59d0a75c1fafbe195def9e396f3ad53"
+}

@@ -1,0 +1,2235 @@
+{
+  "entities": [
+    {
+      "id": 0,
+      "text": "APPROVALS:",
+      "box": [
+        59,
+        817,
+        167,
+        834
+      ],
+      "label": "header",
+      "words": [
+        {
+          "box": [
+            59,
+            817,
+            167,
+            834
+          ],
+          "text": "APPROVALS:"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "text": "Date:",
+      "box": [
+        57,
+        73,
+        91,
+        86
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            57,
+            73,
+            91,
+            86
+          ],
+          "text": "Date:"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "OBJECTIVE:",
+      "box": [
+        57,
+        281,
+        127,
+        292
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            57,
+            281,
+            127,
+            292
+          ],
+          "text": "OBJECTIVE:"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "Cartons:",
+      "box": [
+        59,
+        691,
+        97,
+        699
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            59,
+            691,
+            97,
+            699
+          ],
+          "text": "Cartons:"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Cases:",
+      "box": [
+        59,
+        707,
+        90,
+        715
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            59,
+            707,
+            90,
+            715
+          ],
+          "text": "Cases:"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "TIMETABLE:",
+      "box": [
+        57,
+        737,
+        128,
+        750
+      ],
+      "label": "header",
+      "words": [
+        {
+          "box": [
+            57,
+            737,
+            128,
+            750
+          ],
+          "text": "TIMETABLE:"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "Manufacturing:",
+      "box": [
+        59,
+        757,
+        126,
+        767
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            59,
+            757,
+            126,
+            767
+          ],
+          "text": "Manufacturing:"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "Date",
+      "box": [
+        346,
+        823,
+        366,
+        834
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            346,
+            823,
+            366,
+            834
+          ],
+          "text": "Date"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "TBD",
+      "box": [
+        60,
+        422,
+        85,
+        433
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            60,
+            422,
+            85,
+            433
+          ],
+          "text": "TBD"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "TBD",
+      "box": [
+        462,
+        603,
+        487,
+        616
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            462,
+            603,
+            487,
+            616
+          ],
+          "text": "TBD"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "TBD",
+      "box": [
+        67,
+        521,
+        91,
+        534
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            67,
+            521,
+            91,
+            534
+          ],
+          "text": "TBD"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "TBD",
+      "box": [
+        134,
+        605,
+        158,
+        616
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            134,
+            605,
+            158,
+            616
+          ],
+          "text": "TBD"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "500",
+      "box": [
+        289,
+        705,
+        310,
+        716
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            289,
+            705,
+            310,
+            716
+          ],
+          "text": "500"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "text": "$250",
+      "box": [
+        434,
+        704,
+        461,
+        715
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            434,
+            704,
+            461,
+            715
+          ],
+          "text": "$250"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "670886182",
+      "box": [
+        521,
+        939,
+        641,
+        957
+      ],
+      "label": "other",
+      "words": [
+        {
+          "box": [
+            521,
+            939,
+            641,
+            957
+          ],
+          "text": "670886182"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "Date",
+      "box": [
+        677,
+        821,
+        698,
+        832
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            677,
+            821,
+            698,
+            832
+          ],
+          "text": "Date"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "text": "Shipping:",
+      "box": [
+        385,
+        756,
+        428,
+        769
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            385,
+            756,
+            428,
+            769
+          ],
+          "text": "Shipping:"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "text": "Start",
+      "box": [
+        56,
+        591,
+        78,
+        599
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            56,
+            591,
+            78,
+            599
+          ],
+          "text": "Start"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "text": "Up:",
+      "box": [
+        81,
+        589,
+        98,
+        600
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            81,
+            589,
+            98,
+            600
+          ],
+          "text": "Up:"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "text": "VOLUME:",
+      "box": [
+        57,
+        570,
+        111,
+        583
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            57,
+            570,
+            111,
+            583
+          ],
+          "text": "VOLUME:"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "text": "NEW EXPORT PRODUCT DEVELOPMENT CHARTER",
+      "box": [
+        54,
+        52,
+        473,
+        70
+      ],
+      "label": "header",
+      "words": [
+        {
+          "text": "NEW",
+          "box": [
+            54,
+            52,
+            93,
+            69
+          ]
+        },
+        {
+          "text": "EXPORT",
+          "box": [
+            99,
+            53,
+            166,
+            70
+          ]
+        },
+        {
+          "text": "PRODUCT",
+          "box": [
+            172,
+            52,
+            256,
+            69
+          ]
+        },
+        {
+          "text": "DEVELOPMENT",
+          "box": [
+            260,
+            52,
+            387,
+            69
+          ]
+        },
+        {
+          "text": "CHARTER",
+          "box": [
+            392,
+            52,
+            473,
+            67
+          ]
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "text": "6/ 24/ 94",
+      "box": [
+        94,
+        73,
+        144,
+        84
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "6/",
+          "box": [
+            94,
+            73,
+            109,
+            84
+          ]
+        },
+        {
+          "text": "24/",
+          "box": [
+            109,
+            73,
+            126,
+            84
+          ]
+        },
+        {
+          "text": "94",
+          "box": [
+            127,
+            73,
+            144,
+            84
+          ]
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "text": "BRAND/PROJECT NAME:",
+      "box": [
+        56,
+        105,
+        202,
+        119
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "BRAND/PROJECT",
+          "box": [
+            56,
+            105,
+            155,
+            119
+          ]
+        },
+        {
+          "text": "NAME:",
+          "box": [
+            156,
+            106,
+            202,
+            117
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "text": "RICHLAND Kings (Soft Pack) -Duty Free (Phoenix)",
+      "box": [
+        57,
+        133,
+        553,
+        161
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "RICHLAND",
+          "box": [
+            57,
+            137,
+            165,
+            157
+          ]
+        },
+        {
+          "text": "Kings",
+          "box": [
+            172,
+            135,
+            226,
+            157
+          ]
+        },
+        {
+          "text": "(Soft",
+          "box": [
+            233,
+            134,
+            278,
+            156
+          ]
+        },
+        {
+          "text": "Pack)",
+          "box": [
+            284,
+            134,
+            341,
+            158
+          ]
+        },
+        {
+          "text": "-Duty",
+          "box": [
+            345,
+            134,
+            404,
+            161
+          ]
+        },
+        {
+          "text": "Free",
+          "box": [
+            411,
+            134,
+            454,
+            155
+          ]
+        },
+        {
+          "text": "(Phoenix)",
+          "box": [
+            461,
+            133,
+            553,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "text": "MARKET (S):",
+      "box": [
+        57,
+        191,
+        127,
+        207
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "MARKET",
+          "box": [
+            57,
+            193,
+            104,
+            207
+          ]
+        },
+        {
+          "text": "(S):",
+          "box": [
+            103,
+            191,
+            127,
+            205
+          ]
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "text": "World- wide Duty Free",
+      "box": [
+        57,
+        221,
+        265,
+        243
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "World-",
+          "box": [
+            57,
+            223,
+            114,
+            241
+          ]
+        },
+        {
+          "text": "wide",
+          "box": [
+            113,
+            223,
+            165,
+            240
+          ]
+        },
+        {
+          "text": "Duty",
+          "box": [
+            172,
+            222,
+            217,
+            243
+          ]
+        },
+        {
+          "text": "Free",
+          "box": [
+            222,
+            221,
+            265,
+            242
+          ]
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "text": "Generate incremental volume for B& W by providing a low price brand to various international duty- free markets.",
+      "box": [
+        66,
+        292,
+        566,
+        330
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Generate",
+          "box": [
+            66,
+            295,
+            137,
+            310
+          ]
+        },
+        {
+          "text": "incremental",
+          "box": [
+            142,
+            295,
+            236,
+            310
+          ]
+        },
+        {
+          "text": "volume",
+          "box": [
+            239,
+            297,
+            296,
+            310
+          ]
+        },
+        {
+          "text": "for",
+          "box": [
+            302,
+            295,
+            324,
+            309
+          ]
+        },
+        {
+          "text": "B&",
+          "box": [
+            330,
+            293,
+            351,
+            307
+          ]
+        },
+        {
+          "text": "W",
+          "box": [
+            353,
+            292,
+            370,
+            310
+          ]
+        },
+        {
+          "text": "by",
+          "box": [
+            373,
+            295,
+            394,
+            312
+          ]
+        },
+        {
+          "text": "providing",
+          "box": [
+            398,
+            296,
+            472,
+            311
+          ]
+        },
+        {
+          "text": "a",
+          "box": [
+            478,
+            297,
+            486,
+            308
+          ]
+        },
+        {
+          "text": "low",
+          "box": [
+            492,
+            295,
+            519,
+            308
+          ]
+        },
+        {
+          "text": "price",
+          "box": [
+            524,
+            295,
+            566,
+            312
+          ]
+        },
+        {
+          "text": "brand",
+          "box": [
+            66,
+            313,
+            112,
+            328
+          ]
+        },
+        {
+          "text": "to",
+          "box": [
+            115,
+            316,
+            132,
+            330
+          ]
+        },
+        {
+          "text": "various",
+          "box": [
+            137,
+            313,
+            196,
+            328
+          ]
+        },
+        {
+          "text": "international",
+          "box": [
+            200,
+            313,
+            299,
+            328
+          ]
+        },
+        {
+          "text": "duty-",
+          "box": [
+            303,
+            313,
+            342,
+            330
+          ]
+        },
+        {
+          "text": "free",
+          "box": [
+            344,
+            311,
+            373,
+            328
+          ]
+        },
+        {
+          "text": "markets.",
+          "box": [
+            376,
+            313,
+            447,
+            327
+          ]
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "text": "SOURCE OF BUSINESS:",
+      "box": [
+        57,
+        372,
+        193,
+        385
+      ],
+      "label": "header",
+      "words": [
+        {
+          "text": "SOURCE",
+          "box": [
+            57,
+            373,
+            107,
+            384
+          ]
+        },
+        {
+          "text": "OF",
+          "box": [
+            110,
+            372,
+            127,
+            385
+          ]
+        },
+        {
+          "text": "BUSINESS:",
+          "box": [
+            130,
+            372,
+            193,
+            385
+          ]
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "text": "Major Competitive Brands:",
+      "box": [
+        57,
+        391,
+        179,
+        401
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Major",
+          "box": [
+            57,
+            391,
+            82,
+            401
+          ]
+        },
+        {
+          "text": "Competitive",
+          "box": [
+            84,
+            391,
+            140,
+            401
+          ]
+        },
+        {
+          "text": "Brands:",
+          "box": [
+            140,
+            391,
+            179,
+            399
+          ]
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "text": "Target Audience:",
+      "box": [
+        384,
+        390,
+        462,
+        400
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Target",
+          "box": [
+            384,
+            390,
+            413,
+            400
+          ]
+        },
+        {
+          "text": "Audience:",
+          "box": [
+            416,
+            390,
+            462,
+            398
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "text": "Value- conscious Smokers",
+      "box": [
+        384,
+        420,
+        524,
+        433
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Value-",
+          "box": [
+            384,
+            422,
+            419,
+            433
+          ]
+        },
+        {
+          "text": "conscious",
+          "box": [
+            420,
+            423,
+            472,
+            433
+          ]
+        },
+        {
+          "text": "Smokers",
+          "box": [
+            475,
+            420,
+            524,
+            433
+          ]
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "text": "COST OR RETAIL PRICING:",
+      "box": [
+        57,
+        489,
+        212,
+        500
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "COST",
+          "box": [
+            57,
+            489,
+            89,
+            499
+          ]
+        },
+        {
+          "text": "OR",
+          "box": [
+            94,
+            489,
+            114,
+            500
+          ]
+        },
+        {
+          "text": "RETAIL",
+          "box": [
+            115,
+            489,
+            157,
+            500
+          ]
+        },
+        {
+          "text": "PRICING:",
+          "box": [
+            156,
+            489,
+            212,
+            500
+          ]
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "text": "Est. Monthly Ongoing:",
+      "box": [
+        384,
+        589,
+        486,
+        600
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Est.",
+          "box": [
+            384,
+            589,
+            402,
+            599
+          ]
+        },
+        {
+          "text": "Monthly",
+          "box": [
+            404,
+            589,
+            442,
+            600
+          ]
+        },
+        {
+          "text": "Ongoing:",
+          "box": [
+            443,
+            589,
+            486,
+            599
+          ]
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "text": "INITIAL MATERIALS REQUIRED:",
+      "box": [
+        57,
+        654,
+        236,
+        667
+      ],
+      "label": "header",
+      "words": [
+        {
+          "text": "INITIAL",
+          "box": [
+            57,
+            655,
+            96,
+            666
+          ]
+        },
+        {
+          "text": "MATERIALS",
+          "box": [
+            101,
+            655,
+            167,
+            666
+          ]
+        },
+        {
+          "text": "REQUIRED:",
+          "box": [
+            170,
+            654,
+            236,
+            667
+          ]
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "text": "Qty In Units",
+      "box": [
+        289,
+        656,
+        343,
+        667
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Qty",
+          "box": [
+            289,
+            656,
+            306,
+            667
+          ]
+        },
+        {
+          "text": "In",
+          "box": [
+            307,
+            656,
+            318,
+            666
+          ]
+        },
+        {
+          "text": "Units",
+          "box": [
+            318,
+            656,
+            343,
+            666
+          ]
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "text": "Dollar Cost",
+      "box": [
+        383,
+        656,
+        435,
+        666
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Dollar",
+          "box": [
+            383,
+            656,
+            411,
+            664
+          ]
+        },
+        {
+          "text": "Cost",
+          "box": [
+            413,
+            656,
+            435,
+            666
+          ]
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "text": "On Hand",
+      "box": [
+        289,
+        670,
+        338,
+        684
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "On",
+          "box": [
+            289,
+            670,
+            307,
+            683
+          ]
+        },
+        {
+          "text": "Hand",
+          "box": [
+            309,
+            670,
+            338,
+            684
+          ]
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "text": "On Hand",
+      "box": [
+        291,
+        687,
+        341,
+        701
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "On",
+          "box": [
+            291,
+            687,
+            306,
+            701
+          ]
+        },
+        {
+          "text": "Hand",
+          "box": [
+            310,
+            687,
+            341,
+            700
+          ]
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "text": "Pack Flats Labels:",
+      "box": [
+        59,
+        675,
+        140,
+        685
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Pack",
+          "box": [
+            59,
+            675,
+            80,
+            683
+          ]
+        },
+        {
+          "text": "Flats",
+          "box": [
+            81,
+            675,
+            106,
+            683
+          ]
+        },
+        {
+          "text": "Labels:",
+          "box": [
+            106,
+            675,
+            140,
+            685
+          ]
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "text": "Product Specs Date:",
+      "box": [
+        59,
+        774,
+        150,
+        784
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Product",
+          "box": [
+            59,
+            774,
+            94,
+            784
+          ]
+        },
+        {
+          "text": "Specs",
+          "box": [
+            94,
+            774,
+            122,
+            782
+          ]
+        },
+        {
+          "text": "Date:",
+          "box": [
+            126,
+            774,
+            150,
+            782
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "text": "In- Market Arrival Date:",
+      "box": [
+        384,
+        771,
+        486,
+        782
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "In-",
+          "box": [
+            384,
+            772,
+            394,
+            782
+          ]
+        },
+        {
+          "text": "Market",
+          "box": [
+            394,
+            774,
+            429,
+            782
+          ]
+        },
+        {
+          "text": "Arrival",
+          "box": [
+            430,
+            772,
+            459,
+            782
+          ]
+        },
+        {
+          "text": "Date:",
+          "box": [
+            462,
+            771,
+            486,
+            782
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "text": "Launch Date:",
+      "box": [
+        384,
+        789,
+        444,
+        799
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Launch",
+          "box": [
+            384,
+            789,
+            419,
+            799
+          ]
+        },
+        {
+          "text": "Date:",
+          "box": [
+            420,
+            789,
+            444,
+            799
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "text": "Start Manufacture Date:",
+      "box": [
+        59,
+        791,
+        164,
+        799
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Start",
+          "box": [
+            59,
+            791,
+            80,
+            799
+          ]
+        },
+        {
+          "text": "Manufacture",
+          "box": [
+            81,
+            791,
+            140,
+            799
+          ]
+        },
+        {
+          "text": "Date:",
+          "box": [
+            140,
+            791,
+            164,
+            799
+          ]
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "text": "Group Prod Dir",
+      "box": [
+        59,
+        841,
+        126,
+        850
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Group",
+          "box": [
+            59,
+            842,
+            86,
+            850
+          ]
+        },
+        {
+          "text": "Prod",
+          "box": [
+            88,
+            841,
+            110,
+            849
+          ]
+        },
+        {
+          "text": "Dir",
+          "box": [
+            112,
+            841,
+            126,
+            849
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "text": "Dir. Int' Admin",
+      "box": [
+        59,
+        874,
+        125,
+        884
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Dir.",
+          "box": [
+            59,
+            874,
+            74,
+            884
+          ]
+        },
+        {
+          "text": "Int'",
+          "box": [
+            75,
+            874,
+            93,
+            884
+          ]
+        },
+        {
+          "text": "Admin",
+          "box": [
+            94,
+            874,
+            125,
+            882
+          ]
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "text": "Regional Dir/ VP",
+      "box": [
+        59,
+        908,
+        130,
+        919
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Regional",
+          "box": [
+            59,
+            908,
+            97,
+            919
+          ]
+        },
+        {
+          "text": "Dir/",
+          "box": [
+            101,
+            908,
+            115,
+            918
+          ]
+        },
+        {
+          "text": "VP",
+          "box": [
+            115,
+            909,
+            130,
+            917
+          ]
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "text": "VP Int'l Planning",
+      "box": [
+        384,
+        839,
+        458,
+        851
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "VP",
+          "box": [
+            384,
+            839,
+            397,
+            849
+          ]
+        },
+        {
+          "text": "Int'l",
+          "box": [
+            399,
+            839,
+            417,
+            849
+          ]
+        },
+        {
+          "text": "Planning",
+          "box": [
+            419,
+            841,
+            458,
+            851
+          ]
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "text": "VP Int'l Marketing",
+      "box": [
+        383,
+        873,
+        465,
+        884
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "VP",
+          "box": [
+            383,
+            873,
+            397,
+            883
+          ]
+        },
+        {
+          "text": "Int'l",
+          "box": [
+            399,
+            873,
+            417,
+            883
+          ]
+        },
+        {
+          "text": "Marketing",
+          "box": [
+            419,
+            873,
+            465,
+            884
+          ]
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "text": "Senior VP Int'l",
+      "box": [
+        385,
+        906,
+        450,
+        917
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "Senior",
+          "box": [
+            385,
+            906,
+            414,
+            916
+          ]
+        },
+        {
+          "text": "VP",
+          "box": [
+            415,
+            906,
+            430,
+            916
+          ]
+        },
+        {
+          "text": "Int'l",
+          "box": [
+            432,
+            906,
+            450,
+            917
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "target": 15,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 0,
+      "target": 43,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 0,
+      "target": 44,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 0,
+      "target": 45,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 0,
+      "target": 46,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 0,
+      "target": 47,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 0,
+      "target": 48,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 0,
+      "target": 7,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 1,
+      "target": 21,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 19,
+      "target": 11,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 19,
+      "target": 17,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 19,
+      "target": 18,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 2,
+      "target": 26,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 22,
+      "target": 23,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 24,
+      "target": 25,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 27,
+      "target": 28,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 27,
+      "target": 29,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 28,
+      "target": 8,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 29,
+      "target": 30,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 3,
+      "target": 37,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 31,
+      "target": 10,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 32,
+      "target": 9,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 33,
+      "target": 3,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 33,
+      "target": 34,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 33,
+      "target": 35,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 33,
+      "target": 38,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 33,
+      "target": 4,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 34,
+      "target": 12,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 34,
+      "target": 36,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 34,
+      "target": 37,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 35,
+      "target": 13,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 38,
+      "target": 36,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 4,
+      "target": 12,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 16,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 39,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 40,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 41,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 42,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 5,
+      "target": 6,
+      "repeated": true,
+      "declarations": 2
+    }
+  ],
+  "unlinked_ids": [
+    14,
+    20
+  ],
+  "ambiguous": [],
+  "qa_pairs": [
+    {
+      "from": 0,
+      "to": 15,
+      "from_text": "APPROVALS:",
+      "to_text": "Date"
+    },
+    {
+      "from": 0,
+      "to": 43,
+      "from_text": "APPROVALS:",
+      "to_text": "Group Prod Dir"
+    },
+    {
+      "from": 0,
+      "to": 44,
+      "from_text": "APPROVALS:",
+      "to_text": "Dir. Int' Admin"
+    },
+    {
+      "from": 0,
+      "to": 45,
+      "from_text": "APPROVALS:",
+      "to_text": "Regional Dir/ VP"
+    },
+    {
+      "from": 0,
+      "to": 46,
+      "from_text": "APPROVALS:",
+      "to_text": "VP Int'l Planning"
+    },
+    {
+      "from": 0,
+      "to": 47,
+      "from_text": "APPROVALS:",
+      "to_text": "VP Int'l Marketing"
+    },
+    {
+      "from": 0,
+      "to": 48,
+      "from_text": "APPROVALS:",
+      "to_text": "Senior VP Int'l"
+    },
+    {
+      "from": 0,
+      "to": 7,
+      "from_text": "APPROVALS:",
+      "to_text": "Date"
+    },
+    {
+      "from": 1,
+      "to": 21,
+      "from_text": "Date:",
+      "to_text": "6/ 24/ 94"
+    },
+    {
+      "from": 19,
+      "to": 11,
+      "from_text": "VOLUME:",
+      "to_text": "TBD"
+    },
+    {
+      "from": 19,
+      "to": 17,
+      "from_text": "VOLUME:",
+      "to_text": "Start"
+    },
+    {
+      "from": 19,
+      "to": 18,
+      "from_text": "VOLUME:",
+      "to_text": "Up:"
+    },
+    {
+      "from": 2,
+      "to": 26,
+      "from_text": "OBJECTIVE:",
+      "to_text": "Generate incremental volume for B& W by providing a low price brand to various international duty- free markets."
+    },
+    {
+      "from": 22,
+      "to": 23,
+      "from_text": "BRAND/PROJECT NAME:",
+      "to_text": "RICHLAND Kings (Soft Pack) -Duty Free (Phoenix)"
+    },
+    {
+      "from": 24,
+      "to": 25,
+      "from_text": "MARKET (S):",
+      "to_text": "World- wide Duty Free"
+    },
+    {
+      "from": 27,
+      "to": 28,
+      "from_text": "SOURCE OF BUSINESS:",
+      "to_text": "Major Competitive Brands:"
+    },
+    {
+      "from": 27,
+      "to": 29,
+      "from_text": "SOURCE OF BUSINESS:",
+      "to_text": "Target Audience:"
+    },
+    {
+      "from": 28,
+      "to": 8,
+      "from_text": "Major Competitive Brands:",
+      "to_text": "TBD"
+    },
+    {
+      "from": 29,
+      "to": 30,
+      "from_text": "Target Audience:",
+      "to_text": "Value- conscious Smokers"
+    },
+    {
+      "from": 3,
+      "to": 37,
+      "from_text": "Cartons:",
+      "to_text": "On Hand"
+    },
+    {
+      "from": 31,
+      "to": 10,
+      "from_text": "COST OR RETAIL PRICING:",
+      "to_text": "TBD"
+    },
+    {
+      "from": 32,
+      "to": 9,
+      "from_text": "Est. Monthly Ongoing:",
+      "to_text": "TBD"
+    },
+    {
+      "from": 33,
+      "to": 3,
+      "from_text": "INITIAL MATERIALS REQUIRED:",
+      "to_text": "Cartons:"
+    },
+    {
+      "from": 33,
+      "to": 34,
+      "from_text": "INITIAL MATERIALS REQUIRED:",
+      "to_text": "Qty In Units"
+    },
+    {
+      "from": 33,
+      "to": 35,
+      "from_text": "INITIAL MATERIALS REQUIRED:",
+      "to_text": "Dollar Cost"
+    },
+    {
+      "from": 33,
+      "to": 38,
+      "from_text": "INITIAL MATERIALS REQUIRED:",
+      "to_text": "Pack Flats Labels:"
+    },
+    {
+      "from": 33,
+      "to": 4,
+      "from_text": "INITIAL MATERIALS REQUIRED:",
+      "to_text": "Cases:"
+    },
+    {
+      "from": 34,
+      "to": 12,
+      "from_text": "Qty In Units",
+      "to_text": "500"
+    },
+    {
+      "from": 34,
+      "to": 36,
+      "from_text": "Qty In Units",
+      "to_text": "On Hand"
+    },
+    {
+      "from": 34,
+      "to": 37,
+      "from_text": "Qty In Units",
+      "to_text": "On Hand"
+    },
+    {
+      "from": 35,
+      "to": 13,
+      "from_text": "Dollar Cost",
+      "to_text": "$250"
+    },
+    {
+      "from": 38,
+      "to": 36,
+      "from_text": "Pack Flats Labels:",
+      "to_text": "On Hand"
+    },
+    {
+      "from": 4,
+      "to": 12,
+      "from_text": "Cases:",
+      "to_text": "500"
+    },
+    {
+      "from": 5,
+      "to": 16,
+      "from_text": "TIMETABLE:",
+      "to_text": "Shipping:"
+    },
+    {
+      "from": 5,
+      "to": 39,
+      "from_text": "TIMETABLE:",
+      "to_text": "Product Specs Date:"
+    },
+    {
+      "from": 5,
+      "to": 40,
+      "from_text": "TIMETABLE:",
+      "to_text": "In- Market Arrival Date:"
+    },
+    {
+      "from": 5,
+      "to": 41,
+      "from_text": "TIMETABLE:",
+      "to_text": "Launch Date:"
+    },
+    {
+      "from": 5,
+      "to": 42,
+      "from_text": "TIMETABLE:",
+      "to_text": "Start Manufacture Date:"
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "from_text": "TIMETABLE:",
+      "to_text": "Manufacturing:"
+    }
+  ],
+  "source_sha256": "4d3ef4aa691504e3c8b6f8b47766a87e1d6175e2e24f7f834dec9d5343628b8b"
+}

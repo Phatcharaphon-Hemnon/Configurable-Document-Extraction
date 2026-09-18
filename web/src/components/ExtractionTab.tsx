@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { sourceUrl } from '../api/client';
 import { PipelineStepper } from './PipelineStepper';
 import { AlertTriangleIcon, CheckCircleIcon } from './icons';
-import { JUDGE_PASS_SCORE, formatFieldValue, getDisplayDocType, getFailedStageLabel, getPipelineStage, getResultKind } from '../utils/pipeline';
+import { JUDGE_PASS_SCORE, formatFieldValue, getDisplayDocType, getFailedStageLabel, getPipelineStage, getResultKind, isUnsupportedDocument } from '../utils/pipeline';
 import type { CombinedField, DocumentGroup, ExtractionResult, ProviderErrorDetails } from '../types/extraction';
 
 interface ExtractionTabProps {
@@ -235,7 +235,18 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
         </div>
       )}
 
-      {doc?.error && (
+      {doc?.error && isUnsupportedDocument(doc) && (
+        <div className="callout">
+          <AlertTriangleIcon />
+          <div className="callout-body">
+            <h3>Unsupported document type</h3>
+            <p className="box-text">{doc.error}</p>
+            <p className="box-text spaced">This pipeline extracts invoice, purchase order, and delivery note documents only.</p>
+          </div>
+        </div>
+      )}
+
+      {doc?.error && !isUnsupportedDocument(doc) && (
         <div className="callout callout-danger">
           <AlertTriangleIcon />
           <div className="callout-body">

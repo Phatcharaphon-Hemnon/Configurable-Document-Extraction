@@ -1,0 +1,509 @@
+{
+  "package_version": 1,
+  "gold_manifest_sha256": "b1ae0f400f46b5894058366fac5ac29c7c4adec952f4f0aeafee8ca2bf19e7ea",
+  "gold_manifest_version": 2,
+  "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+  "status_note": "All entries pending. AI findings are not human verification.",
+  "entries": [
+    {
+      "ref_id": "sroie_X51005301667.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005301667.jpg",
+      "source_sha256": "192d3f280e4995faec969496a79defb556de9d399023e0f096972f929136467e",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51005301667.jpg + sroie_X51005301667.box.txt + sroie_X51005301667.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005301667",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.544929+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51005663293.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005663293.jpg",
+      "source_sha256": "f501529a447f003e2f542b827933c2e72b7e6edca53be15c02d01161a1429221",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51005663293.jpg + sroie_X51005663293.box.txt + sroie_X51005663293.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663293",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.551583+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51005663297.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005663297.jpg",
+      "source_sha256": "ab2465d0f638c5435c7a5e6684db750deac44c332847c381ff10e0aa91a3a227",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51005663297.jpg + sroie_X51005663297.box.txt + sroie_X51005663297.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663297",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.557888+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51005806685.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005806685.jpg",
+      "source_sha256": "dab060ae8139a6fd841bba0aea092a5caade7dd5093abc285e5809bf4510117f",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51005806685.jpg + sroie_X51005806685.box.txt + sroie_X51005806685.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005806685",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.562889+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51006414713.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51006414713.jpg",
+      "source_sha256": "ebf7d6f7571cd416eb236507cf9acbfe6ce70c6eb939eb32a2990ad11fcc8595",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51006414713.jpg + sroie_X51006414713.box.txt + sroie_X51006414713.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006414713",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.581492+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51006556815.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51006556815.jpg",
+      "source_sha256": "331f232842148ff49f529e3a9a0d611e1f68717b490db6dbc64ca636e210d1cf",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51006556815.jpg + sroie_X51006556815.box.txt + sroie_X51006556815.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006556815",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.585738+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51006857265.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51006857265.jpg",
+      "source_sha256": "b8d4193f9f2d132da39f2c8e1356bcb11dd3ce9240840921999ebe0c396f8b47",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51006857265.jpg + sroie_X51006857265.box.txt + sroie_X51006857265.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006857265",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.590439+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51008123604.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51008123604.jpg",
+      "source_sha256": "c2cb61f2f430fcb9748decbed7c6857d380f236c196d548cdc58d2ed02e692be",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51008123604.jpg + sroie_X51008123604.box.txt + sroie_X51008123604.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51008123604",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.594435+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51005663311.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005663311.jpg",
+      "source_sha256": "60ec7b2610fd3b66ee2f148b510d07a96f3cd18e63d14c76c7dfe79463d39485",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51005663311.jpg + sroie_X51005663311.box.txt + sroie_X51005663311.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663311",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T17:05:09.628564+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "ref_id": "sroie_X51008142033.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51008142033.jpg",
+      "source_sha256": "4176fc77f4b3d32fa9703fda9a50a20025897b8be0a4506320b3d4ead0b3d03b",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "evidence_ref": "sroie_X51008142033.jpg + sroie_X51008142033.box.txt + sroie_X51008142033.entities.json",
+      "ai_audit_finding": "Staged SROIE import; labels equal source entities JSON (verified). Not human verification.",
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51008142033",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T17:05:09.636754+00:00"
+      },
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ],
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    }
+  ]
+}

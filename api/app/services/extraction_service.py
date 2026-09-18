@@ -166,6 +166,33 @@ def _provider_error_details(
         seen = ProviderErrorDetails(stage=stage, provider=provider, model=model)
     return seen
 
+
+# Router language-tag correction: Tesseract with Thai traineddata emits
+# Thai-looking fragments on English print and a small router LLM obeys the
+# noise. A page tagged "th" whose letters are mostly Latin is really
+# English. Threshold is a letters-only majority vote (digits/symbols
+# excluded); only the tag is ever touched.
+_LATIN_PAGE_THRESHOLD = 0.70
+
+
+def _correct_router_language(routing, page_text: str | None):
+    """Fix a noisy "th" tag on Latin-majority pages; nothing else changes.
+
+    `doc_type`, confidence, and the LLM's original reason are preserved —
+    the correction is appended to the reason for auditability. Pages tagged
+    anything other than "th" are returned untouched.
+    """
+    if getattr(routing, "language", None) != "th":
+        return routing
+    from app.services.hybrid_ocr import page_latin_fraction
+
+    if page_latin_fraction(page_text) <= _LATIN_PAGE_THRESHOLD:
+        return routing
+    note = " [language tag corrected th->en: Latin-majority page]"
+    return routing.model_copy(
+        update={"language": "en", "reason": f"{routing.reason or ''}{note}"}
+    )
+
 _IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tiff", ".tif"}
 _IMAGE_CONTENT_TYPES = {
     "image/jpeg", "image/png", "image/gif", "image/webp",
@@ -964,6 +991,83 @@ class DocumentExtractionService:
                     failed_stage="router",
                     error_details=details,
                 )
+
+        # --- 1b. Unsupported / low-confidence short-circuits (before ANY extractor) ---
+        if routing.doc_type == "unsupported":
+            from app.schemas.documents import UNSUPPORTED_DOCUMENT_MARKER
+
+            message = (
+                f"Unsupported document type: this document {UNSUPPORTED_DOCUMENT_MARKER} "
+                f"(invoice, purchase_order, delivery_note). "
+                f"[Router note: {routing.reason or 'no reason'}]"
+            )
+            # Note: router_gen already ended with the classification output
+            # above — record the short-circuit as its own span (a second
+            # end() on the generation double-ends it in the SDK).
+            trace.span("router-short-circuit",
+                       output={"doc_type": "unsupported",
+                               "confidence": routing.confidence,
+                               "reason": routing.reason})
+            trace.end()
+            self.tracer.flush()
+            logger.info("Router short-circuit: unsupported (%s)", filename)
+            return ExtractionResult(
+                doc_type="invoice",  # placeholder; no supported type matched
+                fields=[],
+                validation_errors=[message],
+                needs_review=True,
+                completeness_score=0.0,
+                error=message,
+                failed_stage="router",
+                language=routing.language,
+                routing_reason=routing.reason,
+            )
+        from app.schemas.documents import ROUTER_LOW_CONFIDENCE_THRESHOLD
+
+        if routing.confidence < ROUTER_LOW_CONFIDENCE_THRESHOLD:
+            # Same single-end rule as above: router_gen already ended.
+            trace.span("router-short-circuit",
+                       output={"doc_type": routing.doc_type,
+                               "confidence": routing.confidence,
+                               "reason": routing.reason,
+                               "short_circuited": "low_confidence"})
+            logger.info(
+                "Router short-circuit: low confidence %.2f (%s)",
+                routing.confidence, filename,
+            )
+            low_conf_msg = (
+                f"Router uncertain (confidence {routing.confidence:.2f} "
+                f"< {ROUTER_LOW_CONFIDENCE_THRESHOLD:.2f}): extraction skipped "
+                "instead of extracting on a guess. "
+                f"[Router note: {routing.reason or 'no reason'}]"
+            )
+            if routing.doc_type in ("invoice", "purchase_order", "delivery_note"):
+                low_conf_type = routing.doc_type
+            else:  # defensive: never emit a non-registry type downstream
+                low_conf_type = "invoice"
+            trace.end()
+            self.tracer.flush()
+            return ExtractionResult(
+                doc_type=low_conf_type,
+                fields=[],
+                validation_errors=[low_conf_msg],
+                needs_review=True,
+                completeness_score=0.0,
+                language=routing.language,
+                routing_reason=routing.reason,
+            )
+
+        # --- 1c. Language-tag correction (router noise, not doc content) ---
+        # Tesseract with Thai traineddata emits Thai-looking fragments on
+        # English print and a small router LLM obeys the noise. A Latin
+        # majority page tagged "th" is corrected to "en" with the reason
+        # annotated; type, confidence and the original reason are preserved.
+        routing = _correct_router_language(routing, page_text)
+
+        # Invariant: "unsupported" and sub-threshold guesses returned above,
+        # so from here routing.doc_type is one of the 3 supported types —
+        # every downstream registry/catalog lookup below is total.
+        assert routing.doc_type in ("invoice", "purchase_order", "delivery_note")
 
         # --- 2. Extractor (per doc type) ---
         few_shot: list[dict] | None = None

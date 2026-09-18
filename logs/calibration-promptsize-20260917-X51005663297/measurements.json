@@ -1,0 +1,85 @@
+[
+  {
+    "source_id": "sroie_X51005663297.jpg",
+    "outcome": "partial",
+    "phase": "sweep",
+    "dispatches": 2,
+    "ocr_seconds": 11.539812097000322,
+    "ocr_cache": "isolated-empty-miss",
+    "router_seconds": 186.57954851100112,
+    "extractor_seconds": 300.1472829689992,
+    "judge_seconds": 0.0,
+    "stage_timing_status": {
+      "ocr": "measured",
+      "router": "measured",
+      "extractor": "measured",
+      "judge": "not_run"
+    },
+    "timing_note": "stage seconds are TimeoutGuard stage-block durations (queue + attempts + backoff); attempt/censored durations are per-HTTP-dispatch transport timings",
+    "total_seconds": 499.5886298969999,
+    "effective_request_s": 300.0,
+    "dispatch_detail": {
+      "dispatches_known": 2,
+      "dispatches_uncertain": 0,
+      "dispatch_intents": 2,
+      "terminal_by_outcome": {
+        "ok": 1,
+        "timeout": 1
+      },
+      "effective_request_s": 300.0
+    },
+    "cold": true,
+    "mem": {
+      "MemTotal": "7838576 kB",
+      "MemAvailable": "1361024 kB",
+      "SwapTotal": "4194300 kB",
+      "SwapFree": "297808 kB"
+    },
+    "validation_errors": [
+      "Extractor failed: LLM request timed out"
+    ],
+    "judge_status": "unavailable",
+    "evidence": {
+      "n_fields": 0,
+      "missing_source": 0
+    },
+    "error": null,
+    "attempt_durations": {
+      "router": [
+        186.57271048599978
+      ],
+      "extractor": [],
+      "judge": []
+    },
+    "censored_durations": {
+      "router": [],
+      "extractor": [
+        300.1009017209999
+      ],
+      "judge": []
+    },
+    "attempt_outcomes": {
+      "extractor": [
+        "timeout"
+      ],
+      "router": [
+        "ok"
+      ]
+    },
+    "timeouts": 1,
+    "errors": 0,
+    "extractor_prompt": {
+      "chars": 9035,
+      "sha": "3e200119f846"
+    },
+    "accuracy": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 3,
+      "precision": 0.0,
+      "recall": 0.0,
+      "pred_supported": {}
+    },
+    "unsupported_date_present": true
+  }
+]

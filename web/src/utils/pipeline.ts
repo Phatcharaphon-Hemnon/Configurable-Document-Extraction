@@ -49,10 +49,22 @@ export function getDisplayDocType(doc: ExtractionResult | null): string {
   return (doc.doc_type ?? '').replace(/_/g, ' ') || 'Unclassified';
 }
 
-export type ResultKind = 'technical_failure' | 'unreadable_source' | 'partial' | 'completed';
+export type ResultKind = 'technical_failure' | 'unreadable_source' | 'partial' | 'completed' | 'unsupported';
+
+// Shared marker with the API (UNSUPPORTED_DOCUMENT_MARKER in
+// app/schemas/documents.py): unsupported pages are an honest scope outcome,
+// never a technical failure. Keep the substring stable.
+const UNSUPPORTED_DOCUMENT_MARKER = 'does not match any supported type';
+
+export function isUnsupportedDocument(doc: ExtractionResult | null): boolean {
+  if (!doc) return false;
+  const hay = `${doc.error ?? ''} ${(doc.validation_errors ?? []).join(' ')}`.toLowerCase();
+  return hay.includes(UNSUPPORTED_DOCUMENT_MARKER);
+}
 
 export function getResultKind(doc: ExtractionResult | null): ResultKind {
   if (!doc) return 'technical_failure';
+  if (isUnsupportedDocument(doc)) return 'unsupported';
   if (doc.error || doc.failed_stage) {
     // OCR incoherence / no readable text = unreadable source (honest block),
     // distinct from transport/timeout technical failures.

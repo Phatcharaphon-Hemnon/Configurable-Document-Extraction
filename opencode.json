@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "command": {
+    "ecc-debug": {
+      "description": "Evidence-driven debugging for this FastAPI+React project (project-local ECC adaptation)",
+      "template": "{file:.opencode/ecc/commands/ecc-debug.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
+    },
+    "ecc-tdd": {
+      "description": "Regression-first bug fixes for this FastAPI+React project (project-local ECC adaptation)",
+      "template": "{file:.opencode/ecc/commands/ecc-tdd.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
+    },
+    "ecc-code-review": {
+      "description": "Correctness/security review for this FastAPI+React project (project-local ECC adaptation)",
+      "template": "{file:.opencode/ecc/commands/ecc-code-review.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
+    },
+    "ecc-verify": {
+      "description": "Actual verification for this FastAPI+React project (project-local ECC adaptation)",
+      "template": "{file:.opencode/ecc/commands/ecc-verify.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
+    },
+    "ecc-update-docs": {
+      "description": "Evidence-backed reports for this project (project-local ECC adaptation)",
+      "template": "{file:.opencode/ecc/commands/ecc-update-docs.md}\n\n$ARGUMENTS",
+      "agent": "build",
+      "subtask": true
+    }
+  }
+}

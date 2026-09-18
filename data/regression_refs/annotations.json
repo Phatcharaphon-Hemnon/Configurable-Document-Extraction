@@ -1,0 +1,45 @@
+{
+  "notice": "Assistant-generated annotations. PROVISIONAL until independently verified. Stored outside extraction prompts, few-shot examples, retrieval sources, and runtime catalogs. Never injected into prompts.",
+  "references": [
+    {
+      "filename": "3492511_1.jpg",
+      "sha256": "eb4a6d3bbbf8edef8ed3aa703dda350739df427f504e9591968084f0a60851f2",
+      "dimensions": [1204, 2000],
+      "pages": 1,
+      "provenance": "Runtime History original (job a531cfdf-f3b8-4add-a20c-6d642c067837) + backup data/backups/20260912T053413-pre-implementation/. Related gold: ground_truth/3492511_1.pdf (3 confident fields; date/seller/currency/amounts excluded as ambiguous).",
+      "screenshot_symptoms": "invoice_date='253 KINGS ROAD', currency='THB' without evidence, 'th' label on English source, 'ไม่มีข้อมูล' table row, 100% confidences on invalid fields."
+    },
+    {
+      "filename": "invoice_form.webp",
+      "sha256": "08472d2acecd242a852d3152bf080637c914f79c6ad93ddbf2ee45df797d2487",
+      "dimensions": [868, 812],
+      "pages": 1,
+      "provenance": "Runtime History original (job a82d26fc-ad22-457f-84a4-4bfc5700b2b0) + backup.",
+      "screenshot_symptoms": "seller_name='Client name:', total_amount='ยอดรวม', Thai labels as values, coverage 75% despite invalid candidates."
+    },
+    {
+      "filename": "Invoice+purchase.pdf",
+      "sha256": "f99e23a58301ac8b3c6e86e73052e9150c7bde8f3931f9a1b41d2c375e59221f",
+      "dimensions": "3 pages (PDF)",
+      "pages": 3,
+      "provenance": "Runtime History original (job 35d6214a-18ac-4851-9605-d4b7957f24ce) + backup. Page order preserved 1/3 invoice, 2/3 invoice, 3/3 purchase_order.",
+      "screenshot_symptoms": "Duplicate S/PRICE columns invoice page; PO page extra S/PRICE col with 68.90/17.49 not in preview; 4-col summary vs wider render; buyer=supplier='Paula Parente'; Judge 'should be X but is X' messages."
+    },
+    {
+      "filename": "Delivery_note2.png",
+      "sha256": "09b12cab8e36e2205e3729eacdbe38e157b213905884a235e80e5572658c89ed",
+      "dimensions": [750, 1061],
+      "pages": 1,
+      "provenance": "Runtime source dir 2144e200 (no History job row; preserved bytes only) + gold manifest entry. Kept as auxiliary reference; not one of the three reported failures.",
+      "screenshot_symptoms": "None reported."
+    }
+  ],
+  "missing_attachments": [
+    "2459fb76-5772-4765-b65f-885ec3f68f07.png",
+    "877868a4-7eb9-4bd2-906b-e66ee88baa16.png",
+    "137ca538-3136-49cd-a94b-e83050a27490.png",
+    "37008434-e7a7-4b7a-882e-a6ce190073b2.png",
+    "deb2fb44-e754-436d-98f5-4a2850c28db7.png",
+    "note": "Prior image-read attempts failed (ENOENT); /workspace/scratch/6e745e337d63/upload/ does not exist in this environment (verified). Screenshots analyzed from the task description only; originals above are the extraction fixtures, not substitutes."
+  ]
+}

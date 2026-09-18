@@ -156,8 +156,19 @@ class ValidatorAgent:
                 errors.append(f"{table.name}: duplicate column keys")
             for index, row in enumerate(table.rows):
                 row_keys = [cell.column for cell in row]
-                if len(row_keys) != len(set(row_keys)) or set(row_keys) != set(keys):
-                    errors.append(f"{table.name} row {index + 1}: columns missing, duplicated or unknown")
+                # Acceptance (v1.1.0) guarantees an accepted row was
+                # structurally complete on input: a column absent from a
+                # kept row can only be a placeholder-omitted cell
+                # (info-level absence), never a structural defect. Only
+                # duplicates, unknown keys, or an empty row are errors.
+                if (
+                    not row_keys
+                    or len(row_keys) != len(set(row_keys))
+                    or not set(row_keys) <= set(keys)
+                ):
+                    errors.append(
+                        f"{table.name} row {index + 1}: columns duplicated, unknown, or empty row"
+                    )
                 for cell in row:
                     label = f"{table.name} row {index + 1} {cell.column}"
                     if cell.value is None:

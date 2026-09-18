@@ -1,0 +1,14 @@
+{
+  "run": "one-document calibration smoke after ledger fix",
+  "doc": "sroie_X51008142033.jpg",
+  "harness": "api/scripts/calibrate_timeouts.py --out <isolated> --only sroie_X51008142033.jpg (no --confirm/--apply)",
+  "outer_bound_s": 660,
+  "exit": 0,
+  "wall_elapsed_s": 411,
+  "task_elapsed_s": 406.67,
+  "doc_total_s": 406.66,
+  "dispatches": 2,
+  "env_sha256": "7942bfbdc924bf87324e9f5a57ce4a5db435452bf69e9856a879f4aaf9819cc9 (unchanged)",
+  "git_rev": "7c6139b08207901988157f2605e5830260d82d11",
+  "sanitization": "dropped mem blocks; redacted absolute app_db path; stderr kept as transport evidence; no document text or credentials in any artifact"
+}

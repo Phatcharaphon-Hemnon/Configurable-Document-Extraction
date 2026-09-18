@@ -61,11 +61,24 @@ def is_digit_only(text: str) -> bool:
     return not any(c.isalpha() for c in s)
 
 
-def is_ambiguous_script(text: str) -> bool:
-    """True when letters exist outside Latin + Thai (e.g. CJK/Arabic).
+def page_latin_fraction(text: str | None) -> float:
+    """Fraction of Latin letters among ALL letters on the page (0.0-1.0).
 
-    Selective retry only — not a handwriting classifier.
+    Letters-only vote: digits, whitespace, and punctuation never count —
+    only A–Z/a–z vs other alphabetic characters (Thai, CJK, …). Empty or
+    letterless pages return 0.0. Used to correct router language noise:
+    Tesseract with Thai traineddata emits Thai-looking fragments on English
+    print, so a Latin-majority page mistagged "th" is really English.
     """
+    letters = [c for c in (text or "") if c.isalpha()]
+    if not letters:
+        return 0.0
+    latin = sum(1 for c in letters if "A" <= c <= "Z" or "a" <= c <= "z")
+    return latin / len(letters)
+
+
+def is_ambiguous_script(text: str) -> bool:
+    """True when letters exist outside Latin + Thai (e.g. CJK/Arabic)."""
     for c in text or "":
         if c.isalpha() and not ("A" <= c <= "Z" or "a" <= c <= "z" or "\u0e00" <= c <= "\u0e7f"):
             return True

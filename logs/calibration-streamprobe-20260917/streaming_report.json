@@ -1,0 +1,649 @@
+{
+  "job_id": "334f03b7-de2e-49d7-9c18-79ea243926cc",
+  "status": "dispatch-failed",
+  "judge": "unavailable (by design)",
+  "cache_eligible": false,
+  "stream": true,
+  "provenance": {
+    "filename": "sroie_X51008142033.jpg",
+    "content_type": "image/jpeg",
+    "size_bytes": 184361,
+    "source_id": "cfbd3f60-868f-4bcb-bab5-014363617a3c",
+    "source_sha256": "4176fc77f4b3d32fa9703fda9a50a20025897b8be0a4506320b3d4ead0b3d03b",
+    "text_chars": 682,
+    "block_count": 109,
+    "engines": [
+      "tesseract"
+    ],
+    "failed_stage": "extractor",
+    "failed_error": "Extractor failed: LLM request timed out"
+  },
+  "settings": {
+    "provider": "ollama-local",
+    "endpoint": "http://localhost:11434/v1",
+    "model": "qwen2.5:3b",
+    "temperature": 0.0,
+    "extraction_max_tokens": 3000,
+    "request_timeout_s": 45.0,
+    "read_idle_s": 45.0,
+    "stage_deadline_s": 300.0,
+    "overall_deadline_s": 480.0,
+    "region_extraction_enabled": false,
+    "compact_request": false,
+    "prompt_chars": 3433,
+    "message_chars": 7382,
+    "schema_chars": 3757
+  },
+  "request_differences": [
+    "stream=true (incremental delivery; same server compute)",
+    "no stream_options (usage unavailable by design)",
+    "SDK timeout 180s (connect/headers/reads; longer than the 150s stage, so the stage guard fires first)"
+  ],
+  "model_state_before": {
+    "reachable": true,
+    "ps": {
+      "models": []
+    }
+  },
+  "memory_before": {
+    "MemTotal": "7838580 kB",
+    "MemAvailable": "3199528 kB",
+    "SwapTotal": "4194300 kB",
+    "SwapFree": "2970968 kB"
+  },
+  "duration_s": 300.002,
+  "error": "TimeoutError: ",
+  "assembled_chars": 0,
+  "chunk_count": 0,
+  "empty_count": 0,
+  "finish_reason": null,
+  "parsed": false,
+  "diagnosis": "empty",
+  "established_at_s": 278.215,
+  "timestamps": {
+    "dispatched_at": null,
+    "established_at": 5243.588370235,
+    "first_event_at": null,
+    "first_content_at": null,
+    "completed_at": null
+  },
+  "inter_arrival": {
+    "count": 0,
+    "max_s": null
+  },
+  "usage": "unavailable (no stream_options by design)",
+  "model_state_after": {
+    "reachable": true,
+    "ps": {
+      "models": [
+        {
+          "name": "qwen2.5:3b",
+          "model": "qwen2.5:3b",
+          "size": 2164156005,
+          "digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen2",
+            "families": [
+              "qwen2"
+            ],
+            "parameter_size": "3.1B",
+            "quantization_level": "Q4_K_M"
+          },
+          "expires_at": "2026-09-17T19:23:06.915992006+07:00",
+          "size_vram": 0,
+          "context_length": 4096
+        }
+      ]
+    }
+  },
+  "memory_after": {
+    "MemTotal": "7838580 kB",
+    "MemAvailable": "1242068 kB",
+    "SwapTotal": "4194300 kB",
+    "SwapFree": "2858824 kB"
+  },
+  "resource_samples": [
+    {
+      "at": 4965.382,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "3181016 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2970968 kB"
+      }
+    },
+    {
+      "at": 4970.387,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "2015816 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2904976 kB"
+      }
+    },
+    {
+      "at": 4975.395,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1246232 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2803668 kB"
+      }
+    },
+    {
+      "at": 4980.401,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1238804 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2803668 kB"
+      }
+    },
+    {
+      "at": 4985.406,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1237604 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2803668 kB"
+      }
+    },
+    {
+      "at": 4990.412,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "934864 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856284 kB"
+      }
+    },
+    {
+      "at": 4995.419,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "986700 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856284 kB"
+      }
+    },
+    {
+      "at": 5000.425,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "980484 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856308 kB"
+      }
+    },
+    {
+      "at": 5005.43,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "977796 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856312 kB"
+      }
+    },
+    {
+      "at": 5010.435,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "977120 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856312 kB"
+      }
+    },
+    {
+      "at": 5015.441,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "975144 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856312 kB"
+      }
+    },
+    {
+      "at": 5020.446,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "967392 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856324 kB"
+      }
+    },
+    {
+      "at": 5025.451,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "969660 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856328 kB"
+      }
+    },
+    {
+      "at": 5030.456,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "962592 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856328 kB"
+      }
+    },
+    {
+      "at": 5035.461,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "961780 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856328 kB"
+      }
+    },
+    {
+      "at": 5040.466,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "952536 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856332 kB"
+      }
+    },
+    {
+      "at": 5045.471,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "949888 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856332 kB"
+      }
+    },
+    {
+      "at": 5050.478,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "949372 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856336 kB"
+      }
+    },
+    {
+      "at": 5055.483,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "947740 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2856336 kB"
+      }
+    },
+    {
+      "at": 5060.489,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1036924 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858456 kB"
+      }
+    },
+    {
+      "at": 5065.495,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1038532 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858460 kB"
+      }
+    },
+    {
+      "at": 5070.5,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1039396 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858472 kB"
+      }
+    },
+    {
+      "at": 5075.505,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1038948 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858472 kB"
+      }
+    },
+    {
+      "at": 5080.51,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1040212 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858492 kB"
+      }
+    },
+    {
+      "at": 5085.515,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1039736 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858496 kB"
+      }
+    },
+    {
+      "at": 5090.52,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1039056 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858496 kB"
+      }
+    },
+    {
+      "at": 5095.525,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1083760 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858624 kB"
+      }
+    },
+    {
+      "at": 5100.53,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1083492 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858624 kB"
+      }
+    },
+    {
+      "at": 5105.535,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1080860 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858640 kB"
+      }
+    },
+    {
+      "at": 5110.541,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1079068 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858644 kB"
+      }
+    },
+    {
+      "at": 5115.546,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1078080 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858644 kB"
+      }
+    },
+    {
+      "at": 5120.551,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1076372 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858648 kB"
+      }
+    },
+    {
+      "at": 5125.556,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1071896 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858652 kB"
+      }
+    },
+    {
+      "at": 5130.562,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1068632 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858652 kB"
+      }
+    },
+    {
+      "at": 5135.567,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1064556 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858656 kB"
+      }
+    },
+    {
+      "at": 5140.572,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1065776 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858656 kB"
+      }
+    },
+    {
+      "at": 5145.577,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1068404 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858660 kB"
+      }
+    },
+    {
+      "at": 5150.582,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1067160 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858660 kB"
+      }
+    },
+    {
+      "at": 5155.588,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1063240 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858692 kB"
+      }
+    },
+    {
+      "at": 5160.593,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1062444 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858700 kB"
+      }
+    },
+    {
+      "at": 5165.598,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1062952 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858712 kB"
+      }
+    },
+    {
+      "at": 5170.603,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1061764 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858716 kB"
+      }
+    },
+    {
+      "at": 5175.608,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1063900 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858716 kB"
+      }
+    },
+    {
+      "at": 5180.613,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1064968 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858720 kB"
+      }
+    },
+    {
+      "at": 5185.618,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1063096 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858724 kB"
+      }
+    },
+    {
+      "at": 5190.623,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1052008 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858736 kB"
+      }
+    },
+    {
+      "at": 5195.628,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1051780 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858744 kB"
+      }
+    },
+    {
+      "at": 5200.633,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1048708 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858744 kB"
+      }
+    },
+    {
+      "at": 5205.638,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1048032 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858752 kB"
+      }
+    },
+    {
+      "at": 5210.643,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1047404 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858752 kB"
+      }
+    },
+    {
+      "at": 5215.649,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1046984 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858752 kB"
+      }
+    },
+    {
+      "at": 5220.65,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1043292 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858768 kB"
+      }
+    },
+    {
+      "at": 5225.656,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1264460 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858768 kB"
+      }
+    },
+    {
+      "at": 5230.661,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1268848 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858768 kB"
+      }
+    },
+    {
+      "at": 5235.666,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1265072 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858768 kB"
+      }
+    },
+    {
+      "at": 5240.671,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1268928 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858772 kB"
+      }
+    },
+    {
+      "at": 5245.673,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1251852 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858820 kB"
+      }
+    },
+    {
+      "at": 5250.674,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1251832 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858820 kB"
+      }
+    },
+    {
+      "at": 5255.676,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1250928 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858820 kB"
+      }
+    },
+    {
+      "at": 5260.677,
+      "mem": {
+        "MemTotal": "7838580 kB",
+        "MemAvailable": "1250236 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "2858824 kB"
+      }
+    }
+  ]
+}

@@ -1,0 +1,909 @@
+{
+  "package_version": 1,
+  "gold_manifest_sha256": "a98aa41dc183cb2836e4cd49132ba307beac22e33b5a96973b17a751467f35b9",
+  "gold_manifest_version": 2,
+  "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+  "status_note": "All entries pending. AI findings are not human verification.",
+  "entries": [
+    {
+      "ref_id": "sroie_X51005301667.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005301667.jpg",
+      "source_sha256": "192d3f280e4995faec969496a79defb556de9d399023e0f096972f929136467e",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005301667",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.544929+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51005301667.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51005663293.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005663293.jpg",
+      "source_sha256": "f501529a447f003e2f542b827933c2e72b7e6edca53be15c02d01161a1429221",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663293",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.551583+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51005663293.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51005663297.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005663297.jpg",
+      "source_sha256": "ab2465d0f638c5435c7a5e6684db750deac44c332847c381ff10e0aa91a3a227",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663297",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.557888+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51005663297.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51005806685.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005806685.jpg",
+      "source_sha256": "dab060ae8139a6fd841bba0aea092a5caade7dd5093abc285e5809bf4510117f",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005806685",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.562889+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51005806685.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51006414713.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51006414713.jpg",
+      "source_sha256": "ebf7d6f7571cd416eb236507cf9acbfe6ce70c6eb939eb32a2990ad11fcc8595",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006414713",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.581492+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51006414713.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51006556815.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51006556815.jpg",
+      "source_sha256": "331f232842148ff49f529e3a9a0d611e1f68717b490db6dbc64ca636e210d1cf",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006556815",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.585738+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51006556815.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51006857265.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51006857265.jpg",
+      "source_sha256": "b8d4193f9f2d132da39f2c8e1356bcb11dd3ce9240840921999ebe0c396f8b47",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006857265",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.590439+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51006857265.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51008123604.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51008123604.jpg",
+      "source_sha256": "c2cb61f2f430fcb9748decbed7c6857d380f236c196d548cdc58d2ed02e692be",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51008123604",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:31:40.594435+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51008123604.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51005663311.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51005663311.jpg",
+      "source_sha256": "60ec7b2610fd3b66ee2f148b510d07a96f3cd18e63d14c76c7dfe79463d39485",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663311",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T17:05:09.628564+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51005663311.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "sroie_X51008142033.jpg#p1:page",
+      "kind": "page",
+      "filename": "sroie_X51008142033.jpg",
+      "source_sha256": "4176fc77f4b3d32fa9703fda9a50a20025897b8be0a4506320b3d4ead0b3d03b",
+      "page_number": 1,
+      "doc_type": "invoice",
+      "document_kind": null,
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51008142033",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T17:05:09.636754+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "sroie_X51008142033.jpg + box/entities sidecars",
+      "ai_audit_finding": "Labels equal source entities JSON (verified). Not human verification.",
+      "original_labels": [
+        "company",
+        "address",
+        "date",
+        "total"
+      ],
+      "mapped_labels": [
+        "seller_name",
+        "seller_address",
+        "sroie_receipt_date",
+        "total_amount"
+      ],
+      "annotation_scope": [
+        "seller_address",
+        "seller_name",
+        "total_amount"
+      ],
+      "unsupported_scope": [
+        "sroie_receipt_date"
+      ]
+    },
+    {
+      "ref_id": "funsd_0001118259.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_0001118259.png",
+      "source_sha256": "965cba81a627d3a3345683854dd54ba930cdc33ce984066520aa5ac5f09a8f4d",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "0001118259",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.137170+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_0001118259.png + funsd_0001118259.json + funsd_0001118259.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_0011973451.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_0011973451.png",
+      "source_sha256": "f4e3084c0900374addaf5b849fcede7155ea92d6edeaecfa26ede091c737466d",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "0011973451",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.140152+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_0011973451.png + funsd_0011973451.json + funsd_0011973451.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_0011974919.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_0011974919.png",
+      "source_sha256": "535ec87519e2b4a120136885c5b861c59ece06739ba951699626ba232a0be7a1",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "0011974919",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.142198+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_0011974919.png + funsd_0011974919.json + funsd_0011974919.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_00283813.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_00283813.png",
+      "source_sha256": "fbad2beb8a5d00ec1ec583c84e18d5390c84d762b2c866311a6f9c44f751ffbb",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "00283813",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.145558+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_00283813.png + funsd_00283813.json + funsd_00283813.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_0060207528.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_0060207528.png",
+      "source_sha256": "094a7a19137203aff43f3da92a3d94bebbb8d50829252f134433e51387c0c1c6",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "0060207528",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.147115+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_0060207528.png + funsd_0060207528.json + funsd_0060207528.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_01197604.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_01197604.png",
+      "source_sha256": "bc5954ea7b27acff4b46e6535ec16e357d721b3994f04215e928ddebd4c4eed4",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "01197604",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.148564+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_01197604.png + funsd_01197604.json + funsd_01197604.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_71108371.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_71108371.png",
+      "source_sha256": "dcec006247c18d15b163704343696d079a94683ef5f181c2f46e3184d3cbe297",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "71108371",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.152721+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_71108371.png + funsd_71108371.json + funsd_71108371.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_87533049.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_87533049.png",
+      "source_sha256": "0c122aeeaac9126ae8ae83c59935bc890ed7f9bd9264aba1010faab8fb678955",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "87533049",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.156106+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_87533049.png + funsd_87533049.json + funsd_87533049.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_91361993.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_91361993.png",
+      "source_sha256": "99b0330f3639c3142107172f7ca41d7ef48b2f7e9b58a5b362b41ec5b9320dba",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "91361993",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.158688+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_91361993.png + funsd_91361993.json + funsd_91361993.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    },
+    {
+      "ref_id": "funsd_93380187.png#p1:page",
+      "kind": "page",
+      "filename": "funsd_93380187.png",
+      "source_sha256": "4f9b412deb21c41977574e0f9a212ce54e8e4c0dcd456ce1fc24f795470c8102",
+      "page_number": 1,
+      "doc_type": null,
+      "document_kind": "form",
+      "language": "en",
+      "name": "page",
+      "existing_value": null,
+      "proposed_value": null,
+      "reason": "Page-level review placeholder.",
+      "dataset": {
+        "source": "funsd",
+        "split": "train",
+        "source_id": "93380187",
+        "license": "FUNSD (Vu et al.); check https://guillaumejaume.github.io/FUNSD/",
+        "provenance_url": "https://guillaumejaume.github.io/FUNSD/",
+        "retrieved_at": "2026-09-15T17:59:25.161129+00:00"
+      },
+      "routing_excluded": true,
+      "review_status_note": "dataset-provided; pending local review",
+      "annotation_policy_version": "annotation-scoring-policy-proposed-v1.0.0",
+      "annotator": "AI-assisted/provisional",
+      "human_status": "pending",
+      "reviewer": null,
+      "reviewed_at": null,
+      "evidence_ref": "funsd_93380187.png + funsd_93380187.json + funsd_93380187.derived.json",
+      "ai_audit_finding": "Entities/links equal source FUNSD JSON (verified); QA from explicit links only. Not human verification.",
+      "original_labels": [
+        "header",
+        "question",
+        "answer",
+        "other"
+      ],
+      "annotation_scope": [],
+      "unsupported_scope": "entity/relationship review only; production tasks not evaluated"
+    }
+  ]
+}

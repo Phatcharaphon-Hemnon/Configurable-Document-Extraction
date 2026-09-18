@@ -218,3 +218,155 @@ def test_legacy_records_default_unevaluated():
     assert result.rejected_candidates == []
     assert result.review_issues == []
     assert result.fields[0].acceptance == "unevaluated"
+
+
+# --- v1.1.0: invoice letterhead supplier + placeholder cell relaxation ---
+
+
+def test_invoice_letterhead_supplier_accepted_without_role_label(tmp_path):
+    """Receipt header IS the seller: top-of-page position satisfies supplier
+    fields on invoices (info issue, no forced review)."""
+    cat = _catalog(tmp_path)
+    page = (
+        "RESTORAN WAN SHENG\n002043319-W\nNo.2, Jalan Temenggung 19/9\n"
+        "Tax Invoice\nINV No.: 1213543\nDate: 27-06-2018\nTOTAL: 2.30"
+    )
+    fields = [
+        _f("seller_name", "RESTORAN WAN SHENG", "RESTORAN WAN SHENG"),
+        _f("seller_address", "No.2, Jalan Temenggung 19/9", "No.2, Jalan Temenggung 19/9"),
+        _f("invoice_number", "1213543", "INV No.: 1213543"),
+    ]
+    accepted, _, rejected, issues, coverage = accept_page(
+        "invoice", page_number=1, fields=fields, tables=[], page_text=page,
+        blocks=[], catalog=cat,
+    )
+    names = {f.name for f in accepted}
+    assert {"seller_name", "seller_address", "invoice_number"} <= names
+    assert rejected == []
+    # required = invoice_number, invoice_date, seller_name, total_amount → 2/4
+    assert coverage == 0.5
+    assert any(
+        i.severity == "info" and "letterhead" in i.explanation and i.target == "field:seller_name"
+        for i in issues
+    )
+
+
+def test_invoice_supplier_midpage_without_role_still_rejected(tmp_path):
+    """No role label AND not in the header region → still rejected."""
+    cat = _catalog(tmp_path)
+    filler = "\n".join(f"line {i} padding text" for i in range(60))
+    page = f"Tax Invoice\n{filler}\nACME Tools Ltd"
+    fields = [_f("seller_name", "ACME Tools Ltd", "ACME Tools Ltd")]
+    accepted, _, rejected, _, _ = accept_page(
+        "invoice", page_number=1, fields=fields, tables=[], page_text=page,
+        blocks=[], catalog=cat,
+    )
+    assert accepted == []
+    assert any("role" in r.rejection_reason.lower() for r in rejected)
+
+
+def test_po_letterhead_supplier_not_relaxed(tmp_path):
+    """A purchase order's letterhead is the BUYER — header position must
+    never satisfy a supplier field on POs (scope: invoice only)."""
+    cat = _catalog(tmp_path)
+    page = "ACME BUYER CORP\nPO No: 1"
+    fields = [_f("supplier_name", "ACME BUYER CORP", "ACME BUYER CORP")]
+    accepted, _, rejected, _, _ = accept_page(
+        "purchase_order", page_number=1, fields=fields, tables=[], page_text=page,
+        blocks=[], catalog=cat,
+    )
+    assert accepted == []
+    assert any("role" in r.rejection_reason.lower() for r in rejected)
+
+
+def _receipt_table(tax_row0="ไม่มีข้อมูล", tax_row1="ไม่มีข้อมูล", row1_total_span="0.20 ZRL"):
+    def cell(col, value, span, conf=0.9):
+        return {"column": col, "value": value, "confidence": conf, "source_span": span}
+
+    def tax_cell(tax_value):
+        # Placeholder cells carry no span (absent data); a printed tax
+        # amount needs verbatim span evidence like any real value.
+        if tax_value == "ไม่มีข้อมูล":
+            return cell("tax", tax_value, None, 0.5)
+        return cell("tax", tax_value, tax_value, 0.9)
+
+    return ExtractedTable(
+        name="line_items",
+        columns=[
+            {"key": "description", "label": "Description"},
+            {"key": "quantity", "label": "Qty"},
+            {"key": "unit_price", "label": "U.Price"},
+            {"key": "total_price", "label": "Total"},
+            {"key": "tax", "label": "Tax"},
+        ],
+        rows=[
+            [
+                cell("description", "Cham (B)", "Cham (B) 1"),
+                cell("quantity", 1, "1 x"),
+                cell("unit_price", 2.10, "x 2.10"),
+                cell("total_price", 2.10, "2.10 ZRL"),
+                tax_cell(tax_row0),
+            ],
+            [
+                cell("description", "Take Away", "Take Away 1"),
+                cell("quantity", 1, "1 x"),
+                cell("unit_price", 0.20, "x 0.20"),
+                cell("total_price", 0.20, row1_total_span),
+                tax_cell(tax_row1),
+            ],
+        ],
+    )
+
+
+def test_placeholder_tax_cells_do_not_withhold_rows(tmp_path):
+    """v1.1.0: placeholder cells mean absent data — rows keep their grounded
+    cells; a fully-placeholder column is dropped from the accepted table."""
+    cat = _catalog(tmp_path)
+    page = "Cham (B) 1 x 2.10 2.10 ZRL\nTake Away 1 x 0.20 0.20 ZRL\nTOTAL: 2.30"
+    _, tables, rejected, issues, _ = accept_page(
+        "invoice", page_number=1, fields=[], tables=[_receipt_table()],
+        page_text=page, blocks=[], catalog=cat,
+    )
+    assert len(tables) == 1
+    keys = [c.key for c in tables[0].columns]
+    assert "tax" not in keys  # all tax cells placeholder → column dropped
+    assert len(tables[0].rows) == 2
+    assert all(len(row) == 4 for row in tables[0].rows)
+    assert any("placeholder cell omitted" in r.rejection_reason for r in rejected)
+    assert not any("row withheld" in r.rejection_reason for r in rejected)
+    assert not any("table withheld" in r.rejection_reason for r in rejected)
+    assert any(i.severity == "info" and "column 'tax' omitted" in i.explanation for i in issues)
+
+
+def test_mixed_placeholder_tax_keeps_column_and_row(tmp_path):
+    """One row placeholder tax, one row printed zero: column survives, the
+    placeholder row is kept without the tax cell, and the validator's
+    structural gate tolerates the placeholder-omitted cell. Runs the full
+    validate_detailed pass once (raw extractor output), like the pipeline."""
+    from app.agents.validator import ValidatorAgent
+
+    cat = _catalog(tmp_path)
+    page = (
+        "RESTORAN WAN SHENG\nTax Invoice\nINV No.: 1213543\nDate: 27-06-2018\n"
+        "Cham (B) 1 x 2.10 2.10 ZRL\nTake Away 1 x 0.20 0.20 0.00\nTOTAL: 2.30"
+    )
+    table = _receipt_table(tax_row1="0.00", row1_total_span="0.20 0.00")
+    fields = [
+        _f("invoice_number", "1213543", "INV No.: 1213543"),
+        _f("invoice_date", "27-06-2018", "27-06-2018"),
+        _f("seller_name", "RESTORAN WAN SHENG", "RESTORAN WAN SHENG"),
+        _f("total_amount", 2.30, "TOTAL: 2.30"),
+    ]
+    validator = ValidatorAgent(cat)
+    errors, completeness, needs_review, vfields, vtables, rej, iss = validator.validate_detailed(
+        "invoice", fields, document_text=page, tables=[table],
+    )
+    structural = [e for e in errors if "columns" in e or "empty row" in e]
+    assert structural == []
+    assert len(vtables) == 1
+    keys = [c.key for c in vtables[0].columns]
+    assert "tax" in keys  # row 1 has a real tax cell → column kept
+    assert [len(row) for row in vtables[0].rows] == [4, 5]  # row 0 omitted tax
+    # All four required invoice fields accepted (seller via letterhead).
+    assert completeness == 1.0
+    assert needs_review is False

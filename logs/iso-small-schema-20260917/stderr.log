@@ -1,0 +1,25 @@
+an error occurred during closing of asynchronous generator <async_generator object PoolByteStream.__aiter__ at 0x7f29cbd9c240>
+asyncgen: <async_generator object PoolByteStream.__aiter__ at 0x7f29cbd9c240>
+Traceback (most recent call last):
+  File "/home/phatcharaphon/Project/Configurable-Document-Extraction/.venv/lib/python3.14/site-packages/httpcore2/_async/http11.py", line 313, in __aiter__
+    yield chunk
+GeneratorExit
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/phatcharaphon/Project/Configurable-Document-Extraction/.venv/lib/python3.14/site-packages/httpcore2/_async/connection_pool.py", line 425, in __aiter__
+    async with safe_async_iterate(self._stream) as iterator:
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/contextlib.py", line 235, in __aexit__
+    await self.gen.athrow(value)
+  File "/home/phatcharaphon/Project/Configurable-Document-Extraction/.venv/lib/python3.14/site-packages/httpcore2/_utils.py", line 62, in safe_async_iterate
+    await iterator.aclose()
+  File "/home/phatcharaphon/Project/Configurable-Document-Extraction/.venv/lib/python3.14/site-packages/httpcore2/_async/http11.py", line 320, in __aiter__
+    raise exc
+  File "/home/phatcharaphon/Project/Configurable-Document-Extraction/.venv/lib/python3.14/site-packages/httpcore2/_async/http11.py", line 311, in __aiter__
+    async with safe_async_iterate(self._connection._receive_response_body(**kwargs)) as iterator:
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/contextlib.py", line 271, in __aexit__
+    raise RuntimeError("generator didn't stop after athrow()")
+RuntimeError: generator didn't stop after athrow()

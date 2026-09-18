@@ -1,0 +1,13 @@
+LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in router limit 550s (needs ~602s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in extractor limit 550s (needs ~602s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in judge limit 550s (needs ~602s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in router limit 550s (needs ~602s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in extractor limit 550s (needs ~602s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in judge limit 550s (needs ~602s); single attempts still run
+Startup timeout config: LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in router limit 550s (needs ~602s); single attempts still run
+Startup timeout config: LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in extractor limit 550s (needs ~602s); single attempts still run
+Startup timeout config: LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in judge limit 550s (needs ~602s); single attempts still run
+STRICT-PROBE override active: extractor model=qwen2.5:3b starts at json_object (strict:true bypassed this run only)
+LLM timeout exhausted job=- stage=extractor model=qwen2.5:3b attempt=1 duration=300.1s category=timeout timeout_retries=0
+LLM request timed out job=- stage=extractor model=qwen2.5:3b attempts=1 duration=300.1s category=timeout timeout=300s
+STRICT-PROBE override reverted (original _strongest_tier restored)

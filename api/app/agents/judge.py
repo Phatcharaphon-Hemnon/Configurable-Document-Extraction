@@ -244,7 +244,10 @@ class JudgeAgent:
                 image_bytes=image_bytes,
                 image_media_type=image_media_type,
                 response_schema=JudgeResponseSchema,
-                max_tokens=1000,
+                # 2000 (was 1000): structured issues with target/evidence/
+                # explanation fields truncated at 1000 on gpt-oss:20b
+                # (finish_reason=length) leaving Judge unavailable.
+                max_tokens=2000,
                 disable_reasoning=True,
             )
         else:
@@ -252,7 +255,7 @@ class JudgeAgent:
                 model=self.settings.judge_model_name,
                 prompt=prompt,
                 response_schema=JudgeResponseSchema,
-                max_tokens=1000,
+                max_tokens=2000,
                 disable_reasoning=True,
             )
 

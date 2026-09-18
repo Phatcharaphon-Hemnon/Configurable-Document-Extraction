@@ -1,0 +1,287 @@
+{
+  "version": 2,
+  "annotation_method": "Mixed external suite (SROIE/DocILE/Thai Receipt), original annotations preserved; adapters eval-local. AI-assisted/provisional, not human-adjudicated.",
+  "release_subset": [],
+  "files": [
+    {
+      "filename": "sroie_X51005301667.jpg",
+      "sha256": "192d3f280e4995faec969496a79defb556de9d399023e0f096972f929136467e",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "NO: 28, JALAN ASTANA 1C, BANDAR BUKIT RAJA, 41050 KLANG SELANGOR D.E, MALAYSIA",
+            "seller_name": "LIGHTROOM GALLERY SDN BHD",
+            "sroie_receipt_date": "20/11/2017",
+            "total_amount": "39.80"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "sroie_receipt_date",
+            "total_amount"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005301667",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:00:03.513801+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51005663293.jpg",
+      "sha256": "f501529a447f003e2f542b827933c2e72b7e6edca53be15c02d01161a1429221",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "NO 21, JLN BUNGA KANTAN TAMAN P. RAMLEE SETAPAK 53000 KUALA LUMPUR",
+            "seller_name": "SWEET FOREST CAFE",
+            "sroie_receipt_date": "14-02-2018",
+            "total_amount": "30.30"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "sroie_receipt_date",
+            "total_amount"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663293",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:00:03.516103+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51005663297.jpg",
+      "sha256": "ab2465d0f638c5435c7a5e6684db750deac44c332847c381ff10e0aa91a3a227",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "LOT 1-0-2, JLN 1/50, DIAMOND SQUARE, OFF JLN GOMBAK 53000 KUALA LUMPUR",
+            "seller_name": "BEYOND BROTHERS HARDWARE",
+            "sroie_receipt_date": "14/03/2018",
+            "total_amount": "599.45"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "sroie_receipt_date",
+            "total_amount"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005663297",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:00:03.520385+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51005806685.jpg",
+      "sha256": "dab060ae8139a6fd841bba0aea092a5caade7dd5093abc285e5809bf4510117f",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "NO 1&3, JALAN WANGSA DELIMA 12, WANGSA LINK, WANGSA MAJU, 53300 KUALA LUMPUR",
+            "seller_name": "ADVANCO COMPANY",
+            "sroie_receipt_date": "17/01/2018",
+            "total_amount": "29.00"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "sroie_receipt_date",
+            "total_amount"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51005806685",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:00:03.524288+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51006414713.jpg",
+      "sha256": "ebf7d6f7571cd416eb236507cf9acbfe6ce70c6eb939eb32a2990ad11fcc8595",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "S117, SECOND FLOOR, AEON TEBRAU CITY, 1, JALAN DESA TEBRAU, TAMAN DESA TEBRAU, 81100 JOHOR BAHRU, JOHOR.",
+            "seller_name": "YHM AEON TEBRAU CITY",
+            "sroie_receipt_date": "17/04/2018",
+            "total_amount": "81.80"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "sroie_receipt_date",
+            "total_amount"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006414713",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:00:03.534410+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51006556815.jpg",
+      "sha256": "331f232842148ff49f529e3a9a0d611e1f68717b490db6dbc64ca636e210d1cf",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "LOT 3, JALAN PELABUR 23/1, 40300 SHAH ALAM, SELANGOR.",
+            "seller_name": "GARDENIA BAKERIES (KL) SDN BHD",
+            "sroie_receipt_date": "05/09/2017",
+            "total_amount": "54.15"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "sroie_receipt_date",
+            "total_amount"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006556815",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:00:03.537699+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51006857265.jpg",
+      "sha256": "b8d4193f9f2d132da39f2c8e1356bcb11dd3ce9240840921999ebe0c396f8b47",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "LOT S319, 2ND FLOOR, 1 UTAMA SHOPPING CENTRE, NO1, LEBUH BANDAR UTAMA,47800 P.JAYA",
+            "seller_name": "MPH BOOKSTORES SDN BHD",
+            "sroie_receipt_date": "11/12/2017",
+            "total_amount": "31.45"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "sroie_receipt_date",
+            "total_amount"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51006857265",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:00:03.541815+00:00"
+      }
+    },
+    {
+      "filename": "sroie_X51008123604.jpg",
+      "sha256": "c2cb61f2f430fcb9748decbed7c6857d380f236c196d548cdc58d2ed02e692be",
+      "pages": [
+        {
+          "page_number": 1,
+          "doc_type": "invoice",
+          "language": "en",
+          "fields": {
+            "seller_address": "NO.29M, JALAN DINAR G U3/G, SEKSYEN U3, SUBANG PERDANA, 40150 SHAH ALAM",
+            "seller_name": "OGN GROUP SDN BHD",
+            "sroie_receipt_date": "24/06/2018",
+            "total_amount": "52.40"
+          },
+          "tables": [],
+          "excluded_fields": [],
+          "annotation_scope": [
+            "seller_address",
+            "seller_name",
+            "sroie_receipt_date",
+            "total_amount"
+          ],
+          "routing_excluded": true,
+          "notes": "SROIE scope: company/address/date/total only. date kept as sroie_receipt_date, not invoice_date. Local prepared copy /home/phatcharaphon/dataset/SROIE2019 (LayoutLM-structured; 626 train triples, not the official 600; mirror github.com/zzzDavid/ICDAR-2019-SROIE claims corrected annotations; official RRC competition terms govern the images)."
+        }
+      ],
+      "dataset": {
+        "source": "sroie",
+        "split": "train",
+        "source_id": "X51008123604",
+        "license": "ICDAR-2019-SROIE competition terms (images); check RRC",
+        "provenance_url": "https://github.com/zzzDavid/ICDAR-2019-SROIE",
+        "retrieved_at": "2026-09-15T16:00:03.544337+00:00"
+      }
+    }
+  ]
+}

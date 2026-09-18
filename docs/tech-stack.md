@@ -80,7 +80,7 @@ flowchart LR
 * **LLM / providers / errors:** see `docs/guides/ai_provider.md`, `docs/reference/provider_errors.md`, `docs/reference/llm_request_queue.md`.
 * **Full tools reference:** [`docs/tech-stack/tools.md`](tech-stack/tools.md).
 * **Security:** `sanitize_document_text` redacts instruction patterns/role tags + length-caps; `check_evidence` requires ≥75% token overlap or substring; provider messages are redacted so keys never reach UI/DB.
-* **Tokens:** compact catalog (name+type+required per line), 12k char text cap, `ROUTER_TEXT_CHARS=2000`, `ROUTER_MAX_TOKENS=400`, `EXTRACTION_MAX_TOKENS=3000`, `JUDGE_SKIP_WHEN_CLEAN=true`.
+* **Tokens:** compact catalog (name+type+required per line), 12k char text cap, `ROUTER_TEXT_CHARS=2000`, `ROUTER_MAX_TOKENS=1500` (reasoning-model headroom; was 400), `EXTRACTION_MAX_TOKENS=3000`, `JUDGE_SKIP_WHEN_CLEAN=true`.
 
 ## 4. Run it
 

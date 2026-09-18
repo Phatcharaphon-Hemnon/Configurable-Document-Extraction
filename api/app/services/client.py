@@ -526,6 +526,36 @@ def _is_complete_table_object(obj: Any) -> bool:
         return False
 
 
+def _empty_diagnosis(raw_text: str | None, raw_response: Any = None) -> ParseDiagnosis:
+    """Empty-output diagnosis that honors provider termination metadata.
+
+    A model that fills its whole output budget with a reasoning trace (or
+    any non-delivered content) returns empty `content` with
+    finish_reason='length' — that is confirmed truncation, not a blank
+    answer. Reporting it as truncated skips the doomed same-budget
+    corrective retry and points at the real fix (raise max_tokens or set a
+    reasoning effort level). Only explicit length-ish finish values count;
+    anything else stays "empty" (corrective still allowed).
+    """
+    raw_len = len(raw_text or "")
+    finish = _extract_finish_reason(raw_response)
+    if finish in ("length", "max_tokens", "truncated"):
+        return ParseDiagnosis(
+            kind="truncated",
+            message=(
+                f"empty output with finish_reason={finish!r}: the output budget "
+                "was exhausted before any content was delivered (a reasoning "
+                "trace likely consumed it — raise max_tokens or set a "
+                "reasoning effort level)"
+            ),
+            raw_length=raw_len,
+            truncated=True,
+        )
+    return ParseDiagnosis(
+        kind="empty", message="empty output: model returned no content", raw_length=raw_len
+    )
+
+
 def _classify_parse_failure(
     schema: type[BaseModel],
     raw_text: str | None,
@@ -538,11 +568,12 @@ def _classify_parse_failure(
     """
     raw_len = len(raw_text or "")
     if not raw_text or not raw_text.strip():
-        return ParseDiagnosis(
-            kind="empty", message="empty output: model returned no content", raw_length=raw_len
-        )
+        return _empty_diagnosis(raw_text, raw_response)
     text = _strip_local_wrappers(raw_text)
     if not text:
+        diag = _empty_diagnosis(raw_text, raw_response)
+        if diag.kind == "truncated":
+            return diag
         return ParseDiagnosis(
             kind="empty",
             message="empty output after stripping unambiguous wrappers",
@@ -1715,16 +1746,10 @@ class Client:
     ) -> tuple[T | None, ParseDiagnosis | None]:
         """Parse with structured diagnostics (JSON vs schema failures separated)."""
         if not raw_text or not raw_text.strip():
-            return None, ParseDiagnosis(
-                kind="empty", message="empty output", raw_length=len(raw_text or "")
-            )
+            return None, _classify_parse_failure(schema, raw_text, raw_response)
         text = _strip_local_wrappers(raw_text)
         if not text:
-            return None, ParseDiagnosis(
-                kind="empty",
-                message="empty output after stripping unambiguous wrappers",
-                raw_length=len(raw_text or ""),
-            )
+            return None, _classify_parse_failure(schema, raw_text, raw_response)
         try:
             parsed = schema.model_validate_json(text)
             return parsed, None

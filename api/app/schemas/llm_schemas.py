@@ -10,9 +10,10 @@ from app.schemas.documents import ExtractedTable
 
 
 class RoutingResponseSchema(BaseModel):
-    """Router output — doc_type restricted to the 3 fixed types."""
+    """Router output — 3 fixed types plus "unsupported" for pages matching
+    none of them (the service short-circuits before any extractor runs)."""
 
-    doc_type: Literal["invoice", "purchase_order", "delivery_note"]
+    doc_type: Literal["invoice", "purchase_order", "delivery_note", "unsupported"]
     language: Optional[str] = None
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     reason: Optional[str] = None

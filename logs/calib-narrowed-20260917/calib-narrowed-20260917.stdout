@@ -1,0 +1,22 @@
+{
+  "total_dispatches": 2,
+  "total_dispatches_uncertain": 0,
+  "outcomes": {
+    "completed": 0,
+    "partial": 1,
+    "failed": 0,
+    "cancelled": 0,
+    "not_attempted": 0,
+    "interrupted": 0
+  },
+  "candidates": {
+    "router": 114.10417739625018,
+    "extractor": null,
+    "judge": null
+  },
+  "confirm": [],
+  "applied": {
+    "applied": false,
+    "reason": "not requested"
+  }
+}

@@ -18,6 +18,22 @@ DocType = Literal["invoice", "purchase_order", "delivery_note"]
 
 DOC_TYPES: tuple[DocType, ...] = ("invoice", "purchase_order", "delivery_note")
 
+# Router-only document type: the 3 fixed types plus "unsupported" for pages
+# matching none of them (spec tables, grade charts, reference sheets, blank
+# forms). Router routing contracts use RouterDocType; output contracts
+# (ExtractionResult, ExtractionCallResult, extractor registry, DOC_TYPES)
+# keep the strict 3-type DocType Literal — the extraction invariant is
+# untouched, "unsupported" short-circuits before any extractor runs.
+RouterDocType = Literal["invoice", "purchase_order", "delivery_note", "unsupported"]
+
+# Marker substring shared by the API and the frontend for unsupported pages.
+# Kept stable: web/src/utils/pipeline.ts keys off it.
+UNSUPPORTED_DOCUMENT_MARKER = "does not match any supported type"
+
+# Below this router confidence the page keeps its routed (supported) type
+# but skips extraction honestly instead of extracting on a guess.
+ROUTER_LOW_CONFIDENCE_THRESHOLD = 0.5
+
 
 # ---------------------------------------------------------------------------
 # Catalog
@@ -95,7 +111,10 @@ class JudgeResult(BaseModel):
 
 # Acceptance-policy version. Bumped whenever acceptance rules change; part of
 # the result-cache fingerprint so policy edits invalidate stale results.
-ACCEPTANCE_POLICY_VERSION = "v1.0.0"
+# v1.1.0 (2026-09-18): invoice letterhead supplier fallback + placeholder
+# cells no longer withhold rows (column drop when unpopulated) — see
+# docs/reports/seller_header_tax_placeholder_2026-09-18.md.
+ACCEPTANCE_POLICY_VERSION = "v1.1.0"
 
 AcceptanceStatus = Literal["accepted", "rejected", "unresolved", "unevaluated"]
 
@@ -173,7 +192,7 @@ class ResultCacheMetadata(BaseModel):
 
 
 class RoutingDecision(BaseModel):
-    doc_type: DocType
+    doc_type: RouterDocType
     language: str | None = None
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     reason: str | None = None

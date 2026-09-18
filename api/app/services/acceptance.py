@@ -19,7 +19,11 @@ Rules (all deterministic, no LLM):
   inferred from language, Thai text, or locale.
 - Buyer/supplier assignment requires surrounding role evidence. A name found
   somewhere is insufficient. Genuine multi-role cases (same org in both
-  roles, each evidenced) are preserved.
+  roles, each evidenced) are preserved. Exception (v1.1.0): on invoices the
+  issuing letterhead at the top of the page satisfies supplier/seller fields
+  without a printed role label — a receipt's header IS its seller. Scope is
+  invoice-only: a purchase order's letterhead is the BUYER, so header
+  position must never satisfy a supplier field there.
 - Printed zeros, leading-zero identifiers, and legitimate repeated values are
   preserved (never auto-rejected as placeholders/duplicates).
 - Ambiguous dates/amounts/handwriting stay unresolved, never guessed.
@@ -28,6 +32,10 @@ Rules (all deterministic, no LLM):
   elsewhere" fallback); invalid structures rejected with reasons; placeholder
   ("ไม่มีข้อมูล") rows never fabricated; document totals never moved into
   item rows; duplicate scalar/table representations collapsed to the table.
+  Placeholder CELLS mean absent data (info-level), not unresolved evidence:
+  since v1.1.0 a row is withheld only for unresolved cells — placeholder
+  cells are omitted and the row keeps its grounded cells. Columns with no
+  accepted cell in any row are dropped from the accepted table (info).
 - Arithmetic checked only with sufficient operands/semantics.
 """
 
@@ -76,6 +84,16 @@ SUPPLIER_ROLE_HINTS = {
     "supplier", "vendor", "seller", "merchant", "from", "ผู้จำหน่าย",
     "ผู้ขาย", "บริษัทผู้ขาย", "ที่อยู่ผู้ขาย", "ชื่อผู้ขาย",
 }
+
+# Invoice letterhead supplier (v1.1.0): on a receipt/tax invoice the
+# organization printed at the top of the page is the seller by document
+# convention, even with no printed role label ("Seller:", "ผู้ขาย").
+# Scope is deliberately invoice-only — a purchase order's letterhead is the
+# BUYER (the issuing org), so header position must never satisfy a supplier
+# field there. "Top of page" is measured in normalized OCR reading order
+# (Tesseract emits blocks top-to-bottom), first SUPPLIER_HEADER_CHARS chars.
+SUPPLIER_HEADER_DOC_TYPES = frozenset({"invoice"})
+SUPPLIER_HEADER_CHARS = 400
 
 ROLE_FIELDS_BUYER = {"buyer_name", "buyer_address", "bill_to_name", "bill_to_address"}
 ROLE_FIELDS_SUPPLIER = {"supplier_name", "supplier_address", "seller_name", "seller_address"}
@@ -196,6 +214,33 @@ def _role_evidence_present(value: object, page_text: str | None, hints: set[str]
         start = idx + max(1, len(val))
         if start >= len(hay):
             return False
+
+
+def _supplier_header_evidence(value: object, page_text: str | None) -> bool:
+    """Invoice letterhead: value sits at the top of the page (reading order).
+
+    Deterministic position check on normalized OCR text — the first
+    occurrence of the value within SUPPLIER_HEADER_CHARS counts as the
+    letterhead region. Never invents or moves evidence; the value must
+    already have resolved page-locally (checked before this runs).
+
+    Printed-caption guard: a value that is itself a buyer-role word
+    ("Client name:") or ends with a label colon is a caption, never a
+    supplier name — the header position must not launder it into one.
+    """
+    if not isinstance(value, str) or not value.strip() or not page_text:
+        return False
+    raw = strip_wrapping_quotes(value).strip()
+    if raw.endswith(":") or raw.endswith("："):
+        return False
+    val = normalize_evidence(raw)
+    if not val:
+        return False
+    if any(normalize_evidence(h) in val for h in BUYER_ROLE_HINTS):
+        return False
+    hay = normalize_evidence(page_text)
+    idx = hay.find(val)
+    return 0 <= idx < SUPPLIER_HEADER_CHARS
 
 
 def _dedupe_issues(issues: list[StructuredReviewIssue]) -> list[StructuredReviewIssue]:
@@ -395,11 +440,31 @@ def accept_page(
                     continue
             if name in ROLE_FIELDS_SUPPLIER and isinstance(value, str):
                 if not _role_evidence_present(value, page_text, SUPPLIER_ROLE_HINTS):
-                    reason = f"semantic: supplier role for {value!r} lacks surrounding role evidence; name found somewhere is insufficient"
-                    _reject(rejected, issues, kind="field", location=name, value=value,
-                            confidence=field.confidence, span=span, refs=refs,
-                            reason=reason, findings=[reason], category="semantic")
-                    continue
+                    # v1.1.0: invoice letterhead fallback — the issuing org
+                    # printed at the top of a receipt/tax invoice is the
+                    # seller by document convention. Info issue for
+                    # transparency; never silently accepted.
+                    if doc_type in SUPPLIER_HEADER_DOC_TYPES and _supplier_header_evidence(
+                        value, page_text
+                    ):
+                        issues.append(
+                            StructuredReviewIssue(
+                                category="semantic",
+                                target=f"field:{name}",
+                                severity="info",
+                                evidence=span,
+                                explanation=(
+                                    "supplier accepted by invoice letterhead position "
+                                    "(top of page, no printed role label)"
+                                ),
+                            )
+                        )
+                    else:
+                        reason = f"semantic: supplier role for {value!r} lacks surrounding role evidence; name found somewhere is insufficient"
+                        _reject(rejected, issues, kind="field", location=name, value=value,
+                                confidence=field.confidence, span=span, refs=refs,
+                                reason=reason, findings=[reason], category="semantic")
+                        continue
 
         accepted_fields.append(field.model_copy(update={"evidence_refs": refs, "acceptance": "accepted"}))
 
@@ -438,11 +503,13 @@ def accept_page(
             for cell in row:
                 cloc = f"{norm_table.name}/{ri}/{cell.column}"
                 if is_placeholder_value(cell.value) or (isinstance(cell.value, str) and cell.value.strip() in PLACEHOLDER_THAI_EXTRA):
+                    # v1.1.0: placeholder means ABSENT data (info-level), not
+                    # unresolved evidence — it must not withhold the row.
+                    # Only unresolved cells (no refs / span mismatch) do.
                     _reject(rejected, issues, kind="cell", location=cloc, value=cell.value,
                             confidence=cell.confidence, span=cell.source_span, refs=[],
                             reason="placeholder cell omitted", findings=["placeholder value"],
                             category="unsupported", severity="info")
-                    row_ok = False
                     continue
                 refs = resolve_evidence(cell.source_span, page_number=page_number, blocks=blocks,
                                         page_text=page_text, role="value")
@@ -487,6 +554,26 @@ def accept_page(
         if kept_rows:
             kept = copy.deepcopy(norm_table)
             kept.rows = kept_rows
+            # v1.1.0: a column with no accepted cell in any kept row carries
+            # no data (all its cells were placeholders) — drop it from the
+            # accepted table so exports/renders stay tidy. Info issue only;
+            # any evidence failures already surfaced as cell rejections.
+            present_cols = {c.column for row in kept_rows for c in row}
+            dropped = [c for c in kept.columns if c.key not in present_cols]
+            if dropped:
+                kept.columns = [c for c in kept.columns if c.key in present_cols]
+                for col in dropped:
+                    issues.append(
+                        StructuredReviewIssue(
+                            category="row_column",
+                            target=f"table:{table.name}",
+                            severity="info",
+                            explanation=(
+                                f"column '{col.key}' omitted from accepted table: "
+                                "no populated cells in any accepted row (all placeholder)"
+                            ),
+                        )
+                    )
             accepted_tables.append(kept)
         else:
             _reject(rejected, issues, kind="table", location=norm_table.name, value=None,

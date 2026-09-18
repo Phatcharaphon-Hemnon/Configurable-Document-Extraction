@@ -1,0 +1,12 @@
+LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in router limit 1250s (needs ~2402s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in extractor limit 1250s (needs ~2402s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in judge limit 1250s (needs ~2402s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in router limit 1250s (needs ~2402s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in extractor limit 1250s (needs ~2402s); single attempts still run
+LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in judge limit 1250s (needs ~2402s); single attempts still run
+Startup timeout config: LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in router limit 1250s (needs ~2402s); single attempts still run
+Startup timeout config: LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in extractor limit 1250s (needs ~2402s); single attempts still run
+Startup timeout config: LLM_REQUEST_TIMEOUT_SECONDS=1200s leaves no room for one timeout retry in judge limit 1250s (needs ~2402s); single attempts still run
+LLM timeout exhausted job=- stage=extractor model=qwen2.5:3b attempt=1 duration=1200.1s category=timeout timeout_retries=0
+LLM request timed out job=- stage=extractor model=qwen2.5:3b attempts=1 duration=1200.1s category=timeout timeout=1200s
+Stage 'extractor' took 1200.3s (timeout: 1250.0s) - approaching limit

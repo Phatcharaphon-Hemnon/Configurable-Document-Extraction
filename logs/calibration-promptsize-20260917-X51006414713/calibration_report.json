@@ -1,0 +1,234 @@
+{
+  "generated_at": "2026-09-16T22:18:01.138589+00:00",
+  "preflight": {
+    "provider": "ollama-local",
+    "model": "qwen2.5:3b",
+    "base_url": "http://localhost:11434/v1",
+    "temperature": 0.0,
+    "extraction_max_tokens": 3000,
+    "compact": false,
+    "regions": false,
+    "concurrency": 1,
+    "tags_reachable": true,
+    "models": [
+      "qwen2.5:3b",
+      "qwen2.5:1.5b"
+    ],
+    "app_db": "/home/phatcharaphon/Project/Configurable-Document-Extraction/data-local/extraction.db",
+    "active_jobs": []
+  },
+  "production_timeouts": {
+    "request_timeout_s": 45.0,
+    "router_timeout_s": 100.0,
+    "extractor_timeout_s": 150.0,
+    "judge_timeout_s": 100.0,
+    "ocr_timeout_s": 120.0
+  },
+  "startup_warnings_experimental": [
+    "LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in router limit 550s (needs ~602s); single attempts still run",
+    "LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in extractor limit 550s (needs ~602s); single attempts still run",
+    "LLM_REQUEST_TIMEOUT_SECONDS=300s leaves no room for one timeout retry in judge limit 550s (needs ~602s); single attempts still run"
+  ],
+  "conditions": {
+    "model": "qwen2.5:3b",
+    "endpoint": "http://localhost:11434/v1",
+    "temperature": 0.0,
+    "max_tokens": 3000,
+    "compact": false,
+    "regions": false,
+    "retries": 0,
+    "fallbacks": 0,
+    "corrections": 0,
+    "request_timeout": 300.0,
+    "doc_limit": 600.0,
+    "task_limit": 3600.0,
+    "max_dispatches": 60,
+    "concurrency": 1,
+    "order": [
+      "sroie_X51006414713.jpg"
+    ],
+    "ocr_cache": "isolated empty per phase; sweep sources processed once (cold misses by construction)",
+    "judge": "skipped docs contribute no judge sample (recorded as n_skipped, never 0s measurements)"
+  },
+  "records": [
+    {
+      "source_id": "sroie_X51006414713.jpg",
+      "outcome": "partial",
+      "phase": "sweep",
+      "dispatches": 2,
+      "ocr_seconds": 13.217703590000383,
+      "ocr_cache": "isolated-empty-miss",
+      "router_seconds": 143.52058430000034,
+      "extractor_seconds": 300.16309677500067,
+      "judge_seconds": 0.0,
+      "stage_timing_status": {
+        "ocr": "measured",
+        "router": "measured",
+        "extractor": "measured",
+        "judge": "not_run"
+      },
+      "timing_note": "stage seconds are TimeoutGuard stage-block durations (queue + attempts + backoff); attempt/censored durations are per-HTTP-dispatch transport timings",
+      "total_seconds": 459.1455172450005,
+      "effective_request_s": 300.0,
+      "dispatch_detail": {
+        "dispatches_known": 2,
+        "dispatches_uncertain": 0,
+        "dispatch_intents": 2,
+        "terminal_by_outcome": {
+          "ok": 1,
+          "timeout": 1
+        },
+        "effective_request_s": 300.0
+      },
+      "cold": true,
+      "mem": {
+        "MemTotal": "7838576 kB",
+        "MemAvailable": "1379908 kB",
+        "SwapTotal": "4194300 kB",
+        "SwapFree": "284916 kB"
+      },
+      "validation_errors": [
+        "Extractor failed: LLM request timed out"
+      ],
+      "judge_status": "unavailable",
+      "evidence": {
+        "n_fields": 0,
+        "missing_source": 0
+      },
+      "error": null,
+      "attempt_durations": {
+        "router": [
+          143.5094170579996
+        ],
+        "extractor": [],
+        "judge": []
+      },
+      "censored_durations": {
+        "router": [],
+        "extractor": [
+          300.10172483899987
+        ],
+        "judge": []
+      },
+      "attempt_outcomes": {
+        "extractor": [
+          "timeout"
+        ],
+        "router": [
+          "ok"
+        ]
+      },
+      "timeouts": 1,
+      "errors": 0,
+      "extractor_prompt": {
+        "chars": 8697,
+        "sha": "0f2eddbbbb55"
+      },
+      "accuracy": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 3,
+        "precision": 0.0,
+        "recall": 0.0,
+        "pred_supported": {}
+      },
+      "unsupported_date_present": true
+    }
+  ],
+  "summary": {
+    "router": {
+      "label": "router",
+      "n_completed": 1,
+      "n_censored": 0,
+      "method": "linear-interpolation-type7",
+      "provisional_tail": true,
+      "min": 143.5094170579996,
+      "median": 143.5094170579996,
+      "mean": 143.5094170579996,
+      "p90": 143.5094170579996,
+      "max": 143.5094170579996,
+      "p95": 143.5094170579996,
+      "p95_withheld": false
+    },
+    "extractor": {
+      "label": "extractor",
+      "n_completed": 0,
+      "n_censored": 1,
+      "method": "linear-interpolation-type7",
+      "provisional_tail": true,
+      "min": null,
+      "median": null,
+      "mean": null,
+      "p90": null,
+      "p95": null,
+      "max": null,
+      "p95_withheld": true,
+      "reason": "no completed samples"
+    },
+    "judge": {
+      "label": "judge",
+      "n_completed": 0,
+      "n_censored": 0,
+      "method": "linear-interpolation-type7",
+      "provisional_tail": true,
+      "min": null,
+      "median": null,
+      "mean": null,
+      "p90": null,
+      "p95": null,
+      "max": null,
+      "p95_withheld": true,
+      "reason": "no completed samples",
+      "n_skipped": 1
+    }
+  },
+  "candidates_p95x1.25": {
+    "router": 179.3867713224995,
+    "extractor": null,
+    "judge": null
+  },
+  "proposals_stage_specific": {
+    "router": {
+      "label": "router",
+      "candidate_request_s": 179.3867713224995,
+      "withheld": false,
+      "current_request_s": 45.0,
+      "current_stage_s": 100.0,
+      "retry_fit": "exceeds: candidate leaves no room for the existing timeout retry in the current stage limit; adopting it would change retry behavior",
+      "note": "No-retry benchmark measurements do not by themselves validate production retry timing; candidate is a starting heuristic (P95 x 1.25)."
+    },
+    "extractor": {
+      "label": "extractor",
+      "candidate_request_s": null,
+      "withheld": true,
+      "current_request_s": 45.0,
+      "current_stage_s": 150.0,
+      "retry_fit": "unknown (p95 withheld \u2014 no defensible candidate)",
+      "note": "No-retry benchmark measurements do not by themselves validate production retry timing; candidate is a starting heuristic (P95 x 1.25)."
+    },
+    "judge": {
+      "label": "judge",
+      "candidate_request_s": null,
+      "withheld": true,
+      "current_request_s": 45.0,
+      "current_stage_s": 100.0,
+      "retry_fit": "unknown (p95 withheld \u2014 no defensible candidate)",
+      "note": "No-retry benchmark measurements do not by themselves validate production retry timing; candidate is a starting heuristic (P95 x 1.25)."
+    }
+  },
+  "confirm_ids": [],
+  "confirm_blocked": "",
+  "confirm_records": [],
+  "confirm_ok": false,
+  "applied": {
+    "applied": false,
+    "reason": "not requested"
+  },
+  "total_dispatches": 2,
+  "total_dispatches_uncertain": 0,
+  "server_cancellation": "unknown \u2014 client timeout never proves server-side cancellation: the provider may still be generating after the client bound; no further inference is dispatched after the bound",
+  "task_elapsed_s": 459.1751677809989,
+  "idle_notes": [],
+  "store_write_errors": [],
+  "git_rev": "7c6139b08207901988157f2605e5830260d82d11"
+}

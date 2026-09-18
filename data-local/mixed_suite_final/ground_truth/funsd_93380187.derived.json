@@ -1,0 +1,2856 @@
+{
+  "entities": [
+    {
+      "id": 0,
+      "text": "FAXED",
+      "box": [
+        43,
+        79,
+        188,
+        130
+      ],
+      "label": "other",
+      "words": [
+        {
+          "box": [
+            43,
+            79,
+            188,
+            130
+          ],
+          "text": "FAXED"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "text": "FROM:",
+      "box": [
+        99,
+        151,
+        144,
+        166
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            99,
+            151,
+            144,
+            166
+          ],
+          "text": "FROM:"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "TO:",
+      "box": [
+        97,
+        178,
+        128,
+        193
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            97,
+            178,
+            128,
+            193
+          ],
+          "text": "TO:"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "CC:",
+      "box": [
+        99,
+        210,
+        130,
+        225
+      ],
+      "label": "question",
+      "words": [
+        {
+          "box": [
+            99,
+            210,
+            130,
+            225
+          ],
+          "text": "CC:"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "TRUE",
+      "box": [
+        335,
+        277,
+        372,
+        292
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            335,
+            277,
+            372,
+            292
+          ],
+          "text": "TRUE"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "560,000",
+      "box": [
+        329,
+        496,
+        381,
+        509
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            329,
+            496,
+            381,
+            509
+          ],
+          "text": "560,000"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "PROVIDENCE",
+      "box": [
+        207,
+        792,
+        265,
+        802
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            207,
+            792,
+            265,
+            802
+          ],
+          "text": "PROVIDENCE"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "CAMDEN",
+      "box": [
+        204,
+        807,
+        249,
+        817
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            204,
+            807,
+            249,
+            817
+          ],
+          "text": "CAMDEN"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "CONCORD",
+      "box": [
+        208,
+        825,
+        254,
+        834
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            208,
+            825,
+            254,
+            834
+          ],
+          "text": "CONCORD"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "SPRINGFIELD",
+      "box": [
+        204,
+        837,
+        265,
+        850
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            204,
+            837,
+            265,
+            850
+          ],
+          "text": "SPRINGFIELD"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "BALTIMORE",
+      "box": [
+        205,
+        855,
+        259,
+        865
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            205,
+            855,
+            259,
+            865
+          ],
+          "text": "BALTIMORE"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "HARTFORD",
+      "box": [
+        90,
+        822,
+        139,
+        834
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            90,
+            822,
+            139,
+            834
+          ],
+          "text": "HARTFORD"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "SYRACUSE",
+      "box": [
+        88,
+        853,
+        139,
+        863
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            88,
+            853,
+            139,
+            863
+          ],
+          "text": "SYRACUSE"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "text": "ROCHESTER",
+      "box": [
+        88,
+        870,
+        145,
+        880
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            88,
+            870,
+            145,
+            880
+          ],
+          "text": "ROCHESTER"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "BUFFALO",
+      "box": [
+        88,
+        916,
+        130,
+        926
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            88,
+            916,
+            130,
+            926
+          ],
+          "text": "BUFFALO"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "DC",
+      "box": [
+        295,
+        901,
+        308,
+        911
+      ],
+      "label": "other",
+      "words": [
+        {
+          "box": [
+            295,
+            901,
+            308,
+            911
+          ],
+          "text": "DC"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "text": "WILMINGTON",
+      "box": [
+        204,
+        918,
+        265,
+        927
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            204,
+            918,
+            265,
+            927
+          ],
+          "text": "WILMINGTON"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "text": "ALBANY",
+      "box": [
+        88,
+        931,
+        127,
+        943
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            88,
+            931,
+            127,
+            943
+          ],
+          "text": "ALBANY"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "text": "57288",
+      "box": [
+        445,
+        825,
+        514,
+        850
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            445,
+            825,
+            514,
+            850
+          ],
+          "text": "57288"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "text": "1143",
+      "box": [
+        457,
+        852,
+        494,
+        865
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "box": [
+            457,
+            852,
+            494,
+            865
+          ],
+          "text": "1143"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "text": "",
+      "box": [
+        593,
+        804,
+        621,
+        876
+      ],
+      "label": "other",
+      "words": [
+        {
+          "box": [
+            593,
+            804,
+            621,
+            876
+          ],
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "text": "COUPON CODE REGISTRATION FORM",
+      "box": [
+        199,
+        118,
+        419,
+        136
+      ],
+      "label": "header",
+      "words": [
+        {
+          "text": "COUPON",
+          "box": [
+            199,
+            118,
+            251,
+            136
+          ]
+        },
+        {
+          "text": "CODE",
+          "box": [
+            256,
+            120,
+            289,
+            135
+          ]
+        },
+        {
+          "text": "REGISTRATION",
+          "box": [
+            295,
+            120,
+            382,
+            136
+          ]
+        },
+        {
+          "text": "FORM",
+          "box": [
+            385,
+            120,
+            419,
+            136
+          ]
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "text": "-95 92",
+      "box": [
+        457,
+        93,
+        555,
+        159
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "-95",
+          "box": [
+            500,
+            93,
+            555,
+            135
+          ]
+        },
+        {
+          "text": "92",
+          "box": [
+            457,
+            114,
+            499,
+            159
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "text": "EXHIBIT ",
+      "box": [
+        560,
+        85,
+        627,
+        101
+      ],
+      "label": "other",
+      "words": [
+        {
+          "text": "EXHIBIT",
+          "box": [
+            560,
+            85,
+            609,
+            101
+          ]
+        },
+        {
+          "text": "",
+          "box": [
+            617,
+            87,
+            627,
+            97
+          ]
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "text": "MICHELLE LEPRE",
+      "box": [
+        201,
+        148,
+        304,
+        169
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "MICHELLE",
+          "box": [
+            201,
+            148,
+            264,
+            164
+          ]
+        },
+        {
+          "text": "LEPRE",
+          "box": [
+            268,
+            148,
+            304,
+            169
+          ]
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "text": "V. M. LOSITO",
+      "box": [
+        204,
+        180,
+        278,
+        198
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "V.",
+          "box": [
+            204,
+            181,
+            216,
+            196
+          ]
+        },
+        {
+          "text": "M.",
+          "box": [
+            217,
+            180,
+            230,
+            195
+          ]
+        },
+        {
+          "text": "LOSITO",
+          "box": [
+            235,
+            180,
+            278,
+            198
+          ]
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "text": "S. A. RAPISARLDI",
+      "box": [
+        202,
+        211,
+        306,
+        226
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "S.",
+          "box": [
+            202,
+            211,
+            215,
+            226
+          ]
+        },
+        {
+          "text": "A.",
+          "box": [
+            216,
+            213,
+            229,
+            225
+          ]
+        },
+        {
+          "text": "RAPISARLDI",
+          "box": [
+            234,
+            213,
+            306,
+            226
+          ]
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "text": "J BAYLIES",
+      "box": [
+        202,
+        226,
+        271,
+        244
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "J",
+          "box": [
+            202,
+            226,
+            214,
+            244
+          ]
+        },
+        {
+          "text": "BAYLIES",
+          "box": [
+            219,
+            228,
+            271,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "text": "K. P. AUGUSTYN",
+      "box": [
+        201,
+        243,
+        301,
+        262
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "K.",
+          "box": [
+            201,
+            246,
+            217,
+            258
+          ]
+        },
+        {
+          "text": "P.",
+          "box": [
+            217,
+            243,
+            229,
+            258
+          ]
+        },
+        {
+          "text": "AUGUSTYN",
+          "box": [
+            231,
+            244,
+            301,
+            262
+          ]
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "text": "M. McGLYNN",
+      "box": [
+        328,
+        225,
+        411,
+        246
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "M.",
+          "box": [
+            328,
+            231,
+            352,
+            243
+          ]
+        },
+        {
+          "text": "McGLYNN",
+          "box": [
+            356,
+            225,
+            411,
+            246
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "text": "- BRAND(S) APPLICABLE",
+      "box": [
+        99,
+        275,
+        253,
+        290
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            99,
+            280,
+            108,
+            287
+          ]
+        },
+        {
+          "text": "BRAND(S)",
+          "box": [
+            112,
+            275,
+            172,
+            290
+          ]
+        },
+        {
+          "text": "APPLICABLE",
+          "box": [
+            174,
+            275,
+            253,
+            288
+          ]
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "text": "- MEDIA TYPE",
+      "box": [
+        97,
+        307,
+        188,
+        322
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            97,
+            310,
+            109,
+            320
+          ]
+        },
+        {
+          "text": "MEDIA",
+          "box": [
+            112,
+            307,
+            151,
+            322
+          ]
+        },
+        {
+          "text": "TYPE",
+          "box": [
+            154,
+            307,
+            188,
+            320
+          ]
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "text": "- MEDIA NAME",
+      "box": [
+        97,
+        337,
+        192,
+        350
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            97,
+            341,
+            107,
+            350
+          ]
+        },
+        {
+          "text": "MEDIA",
+          "box": [
+            109,
+            340,
+            148,
+            350
+          ]
+        },
+        {
+          "text": "NAME",
+          "box": [
+            153,
+            337,
+            192,
+            350
+          ]
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "text": "- ISSUE FREQUENCY/YEAR",
+      "box": [
+        97,
+        368,
+        265,
+        383
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            97,
+            371,
+            104,
+            381
+          ]
+        },
+        {
+          "text": "ISSUE",
+          "box": [
+            111,
+            368,
+            148,
+            381
+          ]
+        },
+        {
+          "text": "FREQUENCY/YEAR",
+          "box": [
+            151,
+            368,
+            265,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "text": "- SPACE/COLOR",
+      "box": [
+        97,
+        398,
+        202,
+        416
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            97,
+            404,
+            107,
+            411
+          ]
+        },
+        {
+          "text": "SPACE/COLOR",
+          "box": [
+            109,
+            398,
+            202,
+            416
+          ]
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "text": "- COUPON ISSUE DATE",
+      "box": [
+        94,
+        430,
+        242,
+        446
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            94,
+            436,
+            104,
+            445
+          ]
+        },
+        {
+          "text": "COUPON",
+          "box": [
+            111,
+            430,
+            163,
+            445
+          ]
+        },
+        {
+          "text": "ISSUE",
+          "box": [
+            166,
+            430,
+            202,
+            446
+          ]
+        },
+        {
+          "text": "DATE",
+          "box": [
+            205,
+            433,
+            242,
+            446
+          ]
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "text": "- COUPON EXPIRATION DATE",
+      "box": [
+        96,
+        461,
+        273,
+        479
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            96,
+            467,
+            105,
+            476
+          ]
+        },
+        {
+          "text": "COUPON",
+          "box": [
+            108,
+            461,
+            163,
+            477
+          ]
+        },
+        {
+          "text": "EXPIRATION",
+          "box": [
+            166,
+            464,
+            239,
+            479
+          ]
+        },
+        {
+          "text": "DATE",
+          "box": [
+            243,
+            464,
+            273,
+            477
+          ]
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "text": "- CIRCULATION",
+      "box": [
+        94,
+        494,
+        197,
+        507
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            94,
+            497,
+            104,
+            504
+          ]
+        },
+        {
+          "text": "CIRCULATION",
+          "box": [
+            109,
+            494,
+            197,
+            507
+          ]
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "text": "- GEOGRAPHICAL AREA(S)",
+      "box": [
+        94,
+        525,
+        256,
+        540
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            94,
+            527,
+            103,
+            537
+          ]
+        },
+        {
+          "text": "GEOGRAPHICAL",
+          "box": [
+            106,
+            525,
+            202,
+            538
+          ]
+        },
+        {
+          "text": "AREA(S)",
+          "box": [
+            207,
+            525,
+            256,
+            540
+          ]
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "text": "- COUPON VALUE",
+      "box": [
+        94,
+        555,
+        204,
+        571
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            94,
+            560,
+            103,
+            569
+          ]
+        },
+        {
+          "text": "COUPON",
+          "box": [
+            109,
+            555,
+            160,
+            570
+          ]
+        },
+        {
+          "text": "VALUE",
+          "box": [
+            165,
+            555,
+            204,
+            571
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "text": "- PACK AND/OR CARTON",
+      "box": [
+        91,
+        584,
+        247,
+        602
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            91,
+            588,
+            104,
+            600
+          ]
+        },
+        {
+          "text": "PACK",
+          "box": [
+            108,
+            584,
+            142,
+            600
+          ]
+        },
+        {
+          "text": "AND/OR",
+          "box": [
+            144,
+            585,
+            192,
+            601
+          ]
+        },
+        {
+          "text": "CARTON",
+          "box": [
+            192,
+            587,
+            247,
+            602
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "text": "- ADVERTISING CREATIVE TITLE",
+      "box": [
+        91,
+        617,
+        294,
+        633
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            91,
+            623,
+            103,
+            629
+          ]
+        },
+        {
+          "text": "ADVERTISING",
+          "box": [
+            115,
+            618,
+            194,
+            631
+          ]
+        },
+        {
+          "text": "CREATIVE",
+          "box": [
+            196,
+            618,
+            259,
+            631
+          ]
+        },
+        {
+          "text": "TITLE",
+          "box": [
+            260,
+            617,
+            294,
+            633
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "text": "- SIGNATURE OF INITIATOR",
+      "box": [
+        93,
+        663,
+        260,
+        680
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            93,
+            668,
+            102,
+            677
+          ]
+        },
+        {
+          "text": "SIGNATURE",
+          "box": [
+            105,
+            663,
+            177,
+            678
+          ]
+        },
+        {
+          "text": "OF",
+          "box": [
+            177,
+            665,
+            195,
+            677
+          ]
+        },
+        {
+          "text": "INITIATOR",
+          "box": [
+            196,
+            665,
+            260,
+            680
+          ]
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "text": "- -DATE INITIATED",
+      "box": [
+        93,
+        695,
+        202,
+        708
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "-",
+          "box": [
+            93,
+            698,
+            103,
+            707
+          ]
+        },
+        {
+          "text": "-DATE",
+          "box": [
+            105,
+            695,
+            141,
+            707
+          ]
+        },
+        {
+          "text": "INITIATED",
+          "box": [
+            144,
+            695,
+            202,
+            708
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "text": "ANALYTICAL REQUIREMENTS:",
+      "box": [
+        88,
+        722,
+        271,
+        741
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "ANALYTICAL",
+          "box": [
+            88,
+            722,
+            166,
+            741
+          ]
+        },
+        {
+          "text": "REQUIREMENTS:",
+          "box": [
+            168,
+            725,
+            271,
+            741
+          ]
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "text": "TRUE CORE AREAS",
+      "box": [
+        102,
+        757,
+        216,
+        772
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "TRUE",
+          "box": [
+            102,
+            757,
+            135,
+            772
+          ]
+        },
+        {
+          "text": "CORE",
+          "box": [
+            136,
+            760,
+            172,
+            770
+          ]
+        },
+        {
+          "text": "AREAS",
+          "box": [
+            174,
+            759,
+            216,
+            772
+          ]
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "text": "SALES FORCE APPLIED - IRC",
+      "box": [
+        334,
+        308,
+        509,
+        323
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "SALES",
+          "box": [
+            334,
+            308,
+            373,
+            321
+          ]
+        },
+        {
+          "text": "FORCE",
+          "box": [
+            379,
+            310,
+            418,
+            322
+          ]
+        },
+        {
+          "text": "APPLIED",
+          "box": [
+            419,
+            308,
+            471,
+            321
+          ]
+        },
+        {
+          "text": "-",
+          "box": [
+            475,
+            311,
+            484,
+            323
+          ]
+        },
+        {
+          "text": "IRC",
+          "box": [
+            482,
+            308,
+            509,
+            323
+          ]
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "text": "MAY 1992",
+      "box": [
+        332,
+        433,
+        392,
+        446
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "MAY",
+          "box": [
+            332,
+            433,
+            360,
+            446
+          ]
+        },
+        {
+          "text": "1992",
+          "box": [
+            365,
+            433,
+            392,
+            446
+          ]
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "text": "8 /31 /92",
+      "box": [
+        332,
+        464,
+        378,
+        479
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "8",
+          "box": [
+            332,
+            464,
+            339,
+            479
+          ]
+        },
+        {
+          "text": "/31",
+          "box": [
+            341,
+            466,
+            357,
+            478
+          ]
+        },
+        {
+          "text": "/92",
+          "box": [
+            356,
+            466,
+            378,
+            478
+          ]
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "text": "TRUE CORE MARKETS *",
+      "box": [
+        332,
+        525,
+        474,
+        542
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TRUE",
+          "box": [
+            332,
+            525,
+            365,
+            540
+          ]
+        },
+        {
+          "text": "CORE",
+          "box": [
+            370,
+            525,
+            401,
+            540
+          ]
+        },
+        {
+          "text": "MARKETS",
+          "box": [
+            407,
+            527,
+            462,
+            542
+          ]
+        },
+        {
+          "text": "*",
+          "box": [
+            467,
+            527,
+            474,
+            536
+          ]
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "text": "50c",
+      "box": [
+        331,
+        555,
+        356,
+        571
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "50c",
+          "box": [
+            331,
+            555,
+            356,
+            571
+          ]
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "text": "PACK",
+      "box": [
+        331,
+        587,
+        371,
+        602
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "PACK",
+          "box": [
+            331,
+            587,
+            371,
+            602
+          ]
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "text": "Michell ",
+      "box": [
+        329,
+        654,
+        542,
+        690
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "Michell",
+          "box": [
+            329,
+            656,
+            459,
+            683
+          ]
+        },
+        {
+          "text": "",
+          "box": [
+            463,
+            654,
+            542,
+            690
+          ]
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "text": "JANUARY 8, 1992",
+      "box": [
+        328,
+        695,
+        430,
+        711
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "JANUARY",
+          "box": [
+            328,
+            695,
+            385,
+            710
+          ]
+        },
+        {
+          "text": "8,",
+          "box": [
+            388,
+            696,
+            400,
+            711
+          ]
+        },
+        {
+          "text": "1992",
+          "box": [
+            403,
+            695,
+            430,
+            710
+          ]
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "text": "FOA CONTROL USE ONLY:",
+      "box": [
+        328,
+        805,
+        482,
+        822
+      ],
+      "label": "header",
+      "words": [
+        {
+          "text": "FOA",
+          "box": [
+            328,
+            807,
+            353,
+            819
+          ]
+        },
+        {
+          "text": "CONTROL",
+          "box": [
+            355,
+            807,
+            415,
+            822
+          ]
+        },
+        {
+          "text": "USE",
+          "box": [
+            418,
+            805,
+            443,
+            821
+          ]
+        },
+        {
+          "text": "ONLY:",
+          "box": [
+            443,
+            805,
+            482,
+            821
+          ]
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "text": "CODE ASSIGNED:",
+      "box": [
+        326,
+        837,
+        429,
+        852
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "CODE",
+          "box": [
+            326,
+            837,
+            362,
+            852
+          ]
+        },
+        {
+          "text": "ASSIGNED:",
+          "box": [
+            365,
+            837,
+            429,
+            850
+          ]
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "text": "JOE NUMBER:",
+      "box": [
+        326,
+        855,
+        410,
+        867
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "JOE",
+          "box": [
+            326,
+            855,
+            350,
+            867
+          ]
+        },
+        {
+          "text": "NUMBER:",
+          "box": [
+            353,
+            855,
+            410,
+            867
+          ]
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "text": "EST. REDEMPTION:",
+      "box": [
+        325,
+        868,
+        439,
+        881
+      ],
+      "label": "question",
+      "words": [
+        {
+          "text": "EST.",
+          "box": [
+            325,
+            870,
+            353,
+            880
+          ]
+        },
+        {
+          "text": "REDEMPTION:",
+          "box": [
+            358,
+            868,
+            439,
+            881
+          ]
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "text": "80 %",
+      "box": [
+        464,
+        864,
+        527,
+        888
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "80",
+          "box": [
+            464,
+            867,
+            492,
+            882
+          ]
+        },
+        {
+          "text": "%",
+          "box": [
+            490,
+            864,
+            527,
+            888
+          ]
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "text": "TOTAL NEW YORK",
+      "box": [
+        91,
+        775,
+        169,
+        787
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TOTAL",
+          "box": [
+            91,
+            777,
+            119,
+            787
+          ]
+        },
+        {
+          "text": "NEW",
+          "box": [
+            120,
+            777,
+            141,
+            787
+          ]
+        },
+        {
+          "text": "YORK",
+          "box": [
+            142,
+            775,
+            169,
+            787
+          ]
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "text": "TOTAL NEW JERSEY",
+      "box": [
+        205,
+        777,
+        295,
+        787
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TOTAL",
+          "box": [
+            205,
+            777,
+            233,
+            787
+          ]
+        },
+        {
+          "text": "NEW",
+          "box": [
+            237,
+            777,
+            258,
+            787
+          ]
+        },
+        {
+          "text": "JERSEY",
+          "box": [
+            259,
+            777,
+            295,
+            787
+          ]
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "text": "NEW HAVEN",
+      "box": [
+        88,
+        792,
+        145,
+        802
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "NEW",
+          "box": [
+            88,
+            792,
+            110,
+            802
+          ]
+        },
+        {
+          "text": "HAVEN",
+          "box": [
+            112,
+            792,
+            145,
+            801
+          ]
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "text": "TOTAL BOSTON",
+      "box": [
+        91,
+        805,
+        160,
+        818
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TOTAL",
+          "box": [
+            91,
+            805,
+            119,
+            818
+          ]
+        },
+        {
+          "text": "BOSTON",
+          "box": [
+            121,
+            807,
+            160,
+            817
+          ]
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "text": "TOTAL SAN FRANCISCO",
+      "box": [
+        88,
+        837,
+        191,
+        850
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TOTAL",
+          "box": [
+            88,
+            837,
+            118,
+            849
+          ]
+        },
+        {
+          "text": "SAN",
+          "box": [
+            121,
+            840,
+            139,
+            850
+          ]
+        },
+        {
+          "text": "FRANCISCO",
+          "box": [
+            139,
+            837,
+            191,
+            850
+          ]
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "text": "TOTAL PHILADELPHIA",
+      "box": [
+        88,
+        883,
+        181,
+        894
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TOTAL",
+          "box": [
+            88,
+            885,
+            118,
+            894
+          ]
+        },
+        {
+          "text": "PHILADELPHIA",
+          "box": [
+            121,
+            883,
+            181,
+            893
+          ]
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "text": "TOTAL CHICAGO",
+      "box": [
+        88,
+        900,
+        162,
+        912
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TOTAL",
+          "box": [
+            88,
+            900,
+            118,
+            912
+          ]
+        },
+        {
+          "text": "CHICAGO",
+          "box": [
+            120,
+            900,
+            162,
+            912
+          ]
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "text": "REGION 15 x SAN BERNADINO",
+      "box": [
+        202,
+        931,
+        336,
+        943
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "REGION",
+          "box": [
+            202,
+            931,
+            238,
+            940
+          ]
+        },
+        {
+          "text": "15",
+          "box": [
+            241,
+            933,
+            251,
+            942
+          ]
+        },
+        {
+          "text": "x",
+          "box": [
+            253,
+            933,
+            262,
+            942
+          ]
+        },
+        {
+          "text": "SAN",
+          "box": [
+            265,
+            931,
+            281,
+            943
+          ]
+        },
+        {
+          "text": "BERNADINO",
+          "box": [
+            281,
+            931,
+            336,
+            943
+          ]
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "text": "TOTAL WASHINGTON",
+      "box": [
+        201,
+        900,
+        294,
+        913
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TOTAL",
+          "box": [
+            201,
+            900,
+            231,
+            913
+          ]
+        },
+        {
+          "text": "WASHINGTON",
+          "box": [
+            234,
+            901,
+            294,
+            911
+          ]
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "text": "TOTAL DETROIT",
+      "box": [
+        202,
+        883,
+        274,
+        896
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "TOTAL",
+          "box": [
+            202,
+            885,
+            233,
+            894
+          ]
+        },
+        {
+          "text": "DETROIT",
+          "box": [
+            235,
+            883,
+            274,
+            896
+          ]
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "text": "PORTLAND, ME",
+      "box": [
+        207,
+        870,
+        272,
+        882
+      ],
+      "label": "answer",
+      "words": [
+        {
+          "text": "PORTLAND,",
+          "box": [
+            207,
+            870,
+            256,
+            880
+          ]
+        },
+        {
+          "text": "ME",
+          "box": [
+            259,
+            870,
+            272,
+            882
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": 1,
+      "target": 24,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 2,
+      "target": 25,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 3,
+      "target": 26,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 3,
+      "target": 27,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 3,
+      "target": 28,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 3,
+      "target": 29,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 30,
+      "target": 4,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 31,
+      "target": 46,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 35,
+      "target": 47,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 36,
+      "target": 48,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 37,
+      "target": 5,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 38,
+      "target": 49,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 39,
+      "target": 50,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 40,
+      "target": 51,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 42,
+      "target": 52,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 43,
+      "target": 53,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 10,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 11,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 12,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 13,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 14,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 16,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 17,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 59,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 6,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 60,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 61,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 62,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 63,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 64,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 65,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 66,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 67,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 68,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 69,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 7,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 8,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 45,
+      "target": 9,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 54,
+      "target": 55,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 54,
+      "target": 56,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 54,
+      "target": 57,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 55,
+      "target": 18,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 56,
+      "target": 19,
+      "repeated": true,
+      "declarations": 2
+    },
+    {
+      "source": 57,
+      "target": 58,
+      "repeated": true,
+      "declarations": 2
+    }
+  ],
+  "unlinked_ids": [
+    0,
+    15,
+    20,
+    21,
+    22,
+    23,
+    32,
+    33,
+    34,
+    41,
+    44
+  ],
+  "ambiguous": [],
+  "qa_pairs": [
+    {
+      "from": 1,
+      "to": 24,
+      "from_text": "FROM:",
+      "to_text": "MICHELLE LEPRE"
+    },
+    {
+      "from": 2,
+      "to": 25,
+      "from_text": "TO:",
+      "to_text": "V. M. LOSITO"
+    },
+    {
+      "from": 3,
+      "to": 26,
+      "from_text": "CC:",
+      "to_text": "S. A. RAPISARLDI"
+    },
+    {
+      "from": 3,
+      "to": 27,
+      "from_text": "CC:",
+      "to_text": "J BAYLIES"
+    },
+    {
+      "from": 3,
+      "to": 28,
+      "from_text": "CC:",
+      "to_text": "K. P. AUGUSTYN"
+    },
+    {
+      "from": 3,
+      "to": 29,
+      "from_text": "CC:",
+      "to_text": "M. McGLYNN"
+    },
+    {
+      "from": 30,
+      "to": 4,
+      "from_text": "- BRAND(S) APPLICABLE",
+      "to_text": "TRUE"
+    },
+    {
+      "from": 31,
+      "to": 46,
+      "from_text": "- MEDIA TYPE",
+      "to_text": "SALES FORCE APPLIED - IRC"
+    },
+    {
+      "from": 35,
+      "to": 47,
+      "from_text": "- COUPON ISSUE DATE",
+      "to_text": "MAY 1992"
+    },
+    {
+      "from": 36,
+      "to": 48,
+      "from_text": "- COUPON EXPIRATION DATE",
+      "to_text": "8 /31 /92"
+    },
+    {
+      "from": 37,
+      "to": 5,
+      "from_text": "- CIRCULATION",
+      "to_text": "560,000"
+    },
+    {
+      "from": 38,
+      "to": 49,
+      "from_text": "- GEOGRAPHICAL AREA(S)",
+      "to_text": "TRUE CORE MARKETS *"
+    },
+    {
+      "from": 39,
+      "to": 50,
+      "from_text": "- COUPON VALUE",
+      "to_text": "50c"
+    },
+    {
+      "from": 40,
+      "to": 51,
+      "from_text": "- PACK AND/OR CARTON",
+      "to_text": "PACK"
+    },
+    {
+      "from": 42,
+      "to": 52,
+      "from_text": "- SIGNATURE OF INITIATOR",
+      "to_text": "Michell "
+    },
+    {
+      "from": 43,
+      "to": 53,
+      "from_text": "- -DATE INITIATED",
+      "to_text": "JANUARY 8, 1992"
+    },
+    {
+      "from": 45,
+      "to": 10,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "BALTIMORE"
+    },
+    {
+      "from": 45,
+      "to": 11,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "HARTFORD"
+    },
+    {
+      "from": 45,
+      "to": 12,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "SYRACUSE"
+    },
+    {
+      "from": 45,
+      "to": 13,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "ROCHESTER"
+    },
+    {
+      "from": 45,
+      "to": 14,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "BUFFALO"
+    },
+    {
+      "from": 45,
+      "to": 16,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "WILMINGTON"
+    },
+    {
+      "from": 45,
+      "to": 17,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "ALBANY"
+    },
+    {
+      "from": 45,
+      "to": 59,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "TOTAL NEW YORK"
+    },
+    {
+      "from": 45,
+      "to": 6,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "PROVIDENCE"
+    },
+    {
+      "from": 45,
+      "to": 60,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "TOTAL NEW JERSEY"
+    },
+    {
+      "from": 45,
+      "to": 61,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "NEW HAVEN"
+    },
+    {
+      "from": 45,
+      "to": 62,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "TOTAL BOSTON"
+    },
+    {
+      "from": 45,
+      "to": 63,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "TOTAL SAN FRANCISCO"
+    },
+    {
+      "from": 45,
+      "to": 64,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "TOTAL PHILADELPHIA"
+    },
+    {
+      "from": 45,
+      "to": 65,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "TOTAL CHICAGO"
+    },
+    {
+      "from": 45,
+      "to": 66,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "REGION 15 x SAN BERNADINO"
+    },
+    {
+      "from": 45,
+      "to": 67,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "TOTAL WASHINGTON"
+    },
+    {
+      "from": 45,
+      "to": 68,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "TOTAL DETROIT"
+    },
+    {
+      "from": 45,
+      "to": 69,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "PORTLAND, ME"
+    },
+    {
+      "from": 45,
+      "to": 7,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "CAMDEN"
+    },
+    {
+      "from": 45,
+      "to": 8,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "CONCORD"
+    },
+    {
+      "from": 45,
+      "to": 9,
+      "from_text": "TRUE CORE AREAS",
+      "to_text": "SPRINGFIELD"
+    },
+    {
+      "from": 54,
+      "to": 55,
+      "from_text": "FOA CONTROL USE ONLY:",
+      "to_text": "CODE ASSIGNED:"
+    },
+    {
+      "from": 54,
+      "to": 56,
+      "from_text": "FOA CONTROL USE ONLY:",
+      "to_text": "JOE NUMBER:"
+    },
+    {
+      "from": 54,
+      "to": 57,
+      "from_text": "FOA CONTROL USE ONLY:",
+      "to_text": "EST. REDEMPTION:"
+    },
+    {
+      "from": 55,
+      "to": 18,
+      "from_text": "CODE ASSIGNED:",
+      "to_text": "57288"
+    },
+    {
+      "from": 56,
+      "to": 19,
+      "from_text": "JOE NUMBER:",
+      "to_text": "1143"
+    },
+    {
+      "from": 57,
+      "to": 58,
+      "from_text": "EST. REDEMPTION:",
+      "to_text": "80 %"
+    }
+  ],
+  "source_sha256": "346fc4f50955718d40cdcf62aa9ff29b2f487967cdc7bdd5b84816d7886ab56a"
+}

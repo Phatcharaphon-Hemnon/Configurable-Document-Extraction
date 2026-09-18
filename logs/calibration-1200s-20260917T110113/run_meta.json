@@ -1,0 +1,51 @@
+{
+  "run": "diag-1200s-extractor-ceiling",
+  "doc": "sroie_X51008142033.jpg",
+  "utc_stamp": "20260917T110114",
+  "mechanism": "process-local only: inline env for Settings + in-process patch of calibrate_timeouts EXPERIMENT_* (repo file untouched); attempt_ceiling_s ContextVar to transport boundary",
+  "patched_bounds": {
+    "EXPERIMENT_REQUEST_S": 1200.0,
+    "EXPERIMENT_STAGE_S": 1250.0,
+    "DOC_LIMIT_S": 1400.0,
+    "TASK_LIMIT_S": 1500.0
+  },
+  "max_sends": 2,
+  "env_timeouts": {
+    "LLM_REQUEST_TIMEOUT_SECONDS": 1200.0,
+    "ROUTER_TIMEOUT_SECONDS": 1250.0,
+    "EXTRACTOR_TIMEOUT_SECONDS": 1250.0,
+    "JUDGE_TIMEOUT_SECONDS": 1250.0
+  },
+  "provider": "ollama-local",
+  "model": "qwen2.5:3b",
+  "endpoint": "http://localhost:11434/v1",
+  "env_sha_before": "7942bfbdc924bf87",
+  "git_rev": "7c6139b08207901988157f2605e5830260d82d11",
+  "pre_dispatch_gate": {
+    "tags_reachable": true,
+    "model_present_no_pull": true,
+    "models": [
+      "qwen2.5:3b",
+      "qwen2.5:1.5b"
+    ],
+    "ps_reachable": true,
+    "ps_empty": true,
+    "ollama_ps_empty": true,
+    "port_8000_free": true,
+    "no_llama_worker": true,
+    "history_active_empty": true
+  },
+  "patched_verified": {
+    "EXPERIMENT_REQUEST_S": 1200.0,
+    "EXPERIMENT_STAGE_S": 1250.0,
+    "DOC_LIMIT_S": 1400.0,
+    "TASK_LIMIT_S": 1500.0
+  },
+  "dispatch_guard": "pre-send block after 2 sends",
+  "guard_sends": 2,
+  "guard_blocked": 0,
+  "env_sha_after": "7942bfbdc924bf87",
+  "env_unchanged": true,
+  "wall_s": 1319.9,
+  "harness_exit": 0
+}

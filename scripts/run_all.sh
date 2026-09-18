@@ -166,7 +166,14 @@ echo "    ports 8000 and 5173 are free ✓"
 # ---------------------------------------------------------------------------
 # 6. Run
 # ---------------------------------------------------------------------------
+_CLEANED_UP=0
 cleanup() {
+    # Disarm first: `kill 0` below signals our own process group (including
+    # this shell), which would re-enter the trap and loop "Stopping
+    # services..." forever. Guard + disarm make cleanup run exactly once.
+    [ "$_CLEANED_UP" -eq 1 ] && return 0
+    _CLEANED_UP=1
+    trap - EXIT INT TERM
     echo
     echo "==> Stopping services..."
     kill 0 2>/dev/null || true

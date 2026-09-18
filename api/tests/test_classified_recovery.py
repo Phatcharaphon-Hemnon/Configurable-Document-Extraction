@@ -155,6 +155,24 @@ def test_syntax_vs_schema_classification():
     assert d5.kind == "syntax_error"  # ambiguous multiple objects rejected
 
 
+def test_empty_with_length_finish_is_confirmed_truncation():
+    # Reasoning trace fills the whole budget: empty content + length finish
+    # is truncation, never "empty" (skips the doomed same-budget retry).
+    length_resp = {"choices": [{"finish_reason": "length"}]}
+    d = _classify_parse_failure(_Dummy, "", length_resp)
+    assert d.kind == "truncated" and d.truncated is True
+    d2 = _classify_parse_failure(_Dummy, "<think>reasoning…</think>", length_resp)
+    assert d2.kind == "truncated" and d2.truncated is True
+    _, dd = Client._try_parse_detailed(_Dummy, "", length_resp)
+    assert dd is not None and dd.kind == "truncated" and dd.truncated is True
+    # Genuinely blank answers (finish=stop) stay "empty": corrective allowed.
+    stop_resp = {"choices": [{"finish_reason": "stop"}]}
+    d3 = _classify_parse_failure(_Dummy, "", stop_resp)
+    assert d3.kind == "empty" and not d3.truncated
+    d4 = _classify_parse_failure(_Dummy, "")
+    assert d4.kind == "empty" and not d4.truncated
+
+
 def test_display_preview_truncation_is_not_model_truncation():
     long_text = '{"name": "a", "value": 1, "extra": "' + "x" * 2000 + '"}'
     # No finish_reason + display preview marker alone => syntax/field, never truncated.

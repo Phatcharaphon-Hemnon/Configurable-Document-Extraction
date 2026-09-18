@@ -16,10 +16,15 @@ _ROUTER_PROMPT = (
     "Classify this document image/text as exactly one of:\n"
     "- invoice (tax invoice, sales invoice, POS receipt, billing document)\n"
     "- purchase_order (PO document ordering goods/services)\n"
-    "- delivery_note (shipping/delivery document accompanying goods)\n\n"
-    "Also detect the primary language (en, th, or other).\n"
+    "- delivery_note (shipping/delivery document accompanying goods)\n"
+    "- unsupported (anything else: specification tables, Grade Substitutions\n"
+    "  charts, reference sheets, blank forms, or pages without monetary\n"
+    "  business content — never force one of the three types onto them)\n\n"
+    "Also detect the primary language by script majority (Latin-script\n"
+    "business text is en; Thai script is th), or other.\n"
     "Answer from the document content only — the filename is a weak hint.\n"
-    "Return confidence 0.0-1.0 and a one-sentence reason.\n"
+    "Return confidence 0.0-1.0 and a one-sentence reason. When guessing,\n"
+    "keep confidence below 0.5.\n"
 )
 
 
