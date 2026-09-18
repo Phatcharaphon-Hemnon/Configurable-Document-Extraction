@@ -57,6 +57,7 @@ multi-agent AI pipeline.
 | Path | Purpose |
 |---|---|
 | `api/app/agents/` | router, extractors (3), validator, judge |
+| `api/app/prompts/` | prompt registry: versioned templates (router/extractor/judge JSON + `registry.py`); cache version derived from content — see `docs/reference/prompt_registry.md` |
 | `api/app/core/` | config (env), security (injection guard) |
 | `api/app/observability/` | Langfuse tracing wrapper |
 | `api/app/schemas/` | Pydantic contracts |

@@ -23,4 +23,5 @@ audit/eval outputs see `../reports/README.md`; for setup see
 | `llm_request_queue.md` / `timeout_recovery.md` | Request queue, retries, timeout recovery |
 | `provider_errors.md` | Redacted provider errors, surfaced end to end |
 | `result_cache.md` | Persistent completed-result cache |
+| `prompt_registry.md` | Versioned prompt templates (`api/app/prompts/`), content-derived cache invalidation |
 | `ai_guardrails.md` | Guardrails implementation plan |

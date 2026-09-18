@@ -154,7 +154,10 @@ async def test_recovery_preserves_page_isolation_and_provenance():
 def test_policy_changes_invalidate_caches():
     from app.services.result_cache import CLIENT_RECOVERY_VERSION, PROMPT_VERSION
 
-    assert PROMPT_VERSION.startswith("prompts-v4")
+    assert PROMPT_VERSION.startswith("prompts-registry:")
+    # Registry-derived: content hash pinned at import (edits to prompt
+    # templates change it automatically).
+    assert len(PROMPT_VERSION) == len("prompts-registry:") + 12
     assert CLIENT_RECOVERY_VERSION.startswith("client-recovery-v2")
     # OCR cache key includes the coherence threshold.
     import inspect

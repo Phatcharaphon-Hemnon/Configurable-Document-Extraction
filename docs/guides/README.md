@@ -11,6 +11,7 @@ How to configure, run, and evaluate the system. Start with `ai_provider.md`.
 | `thai_catalog_hybrid_ocr.md` | Thai catalogs + CPU hybrid OCR (opt-in) |
 | `evaluation.md` | Gold-set release evaluation |
 | `api_scripts.md` | Operator scripts: eval, gateway probe, OCR benchmark, review audit |
+| `security_guardrails.md` | Guard layers, injection corpus, PII policy, UI disclaimers |
 | `temporal.md` | Temporal durable-workflow mode (optional) |
 | `langfuse_tracing.md` | Langfuse LLM observability |
 | `cloudflare-tunnel-demo.md` | Cloudflare Tunnel demo notes |

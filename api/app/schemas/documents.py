@@ -12,6 +12,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
 
+from app.prompts.registry import compound_prompt_version
 from app.schemas.ocr import OCRBlock
 
 DocType = Literal["invoice", "purchase_order", "delivery_note"]
@@ -294,6 +295,9 @@ class ExtractionResult(BaseModel):
     review_issues: list[StructuredReviewIssue] = Field(default_factory=list)
     acceptance_status: AcceptanceStatus = "unevaluated"
     acceptance_policy_version: str = ACCEPTANCE_POLICY_VERSION
+    # Registry-derived prompt version this result was computed with
+    # (api/app/prompts/*.json — content hash, set at construction time).
+    prompt_version: str = Field(default_factory=compound_prompt_version)
     cache_metadata: ResultCacheMetadata | None = None
 
 

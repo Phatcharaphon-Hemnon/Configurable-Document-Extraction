@@ -25,6 +25,10 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.core.config import REPO_ROOT, Settings  # noqa: E402
+from app.prompts.registry import (  # noqa: E402
+    active_versions as active_prompt_versions,
+)
+from app.prompts.registry import compound_prompt_version  # noqa: E402
 from app.schemas.documents import ExtractionResult  # noqa: E402
 from app.schemas.evaluation import GoldManifest, GoldPage  # noqa: E402
 from app.services.extraction_service import DocumentExtractionService, UploadedFilePart  # noqa: E402
@@ -525,6 +529,8 @@ async def run(args):
             for p in sorted((REPO_ROOT / "api/app").rglob("*.py"))
         )).hexdigest(),
         source_hashes={name: available[name].sha256 for name in selected},
+        prompt_versions=active_prompt_versions(),
+        prompt_version=compound_prompt_version(),
     )
     results = []
     responses = {}

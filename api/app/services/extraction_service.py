@@ -23,6 +23,8 @@ from app.guards.content_guard import ContentLimits, validate_document_text
 from app.guards.pii_detector import PIIDetector
 from app.guards.timeout_guard import StageTimeoutConfig, TimeoutGuard, stage_notifier
 from app.observability.langfuse import LangfuseTracer
+from app.prompts.registry import active_versions as active_prompt_versions
+from app.prompts.registry import compound_prompt_version
 from app.schemas.documents import (
     BatchCreateResponse,
     BatchStatusResponse,
@@ -863,6 +865,8 @@ class DocumentExtractionService:
                 "router_model": self.settings.router_model_name,
                 "extraction_model": self.settings.extraction_model_name,
                 "judge_model": self.settings.judge_model_name,
+                "prompt_versions": active_prompt_versions(),
+                "prompt_version": compound_prompt_version(),
             },
         )
 

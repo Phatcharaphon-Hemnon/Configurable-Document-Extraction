@@ -1,4 +1,5 @@
 import { AlertTriangleIcon } from './icons';
+import { Disclaimer } from './Disclaimer';
 import { useEvaluation } from '../hooks/useEvaluation';
 import type { CombinedField, ExtractionResult } from '../types/extraction';
 import { formatFieldValue } from '../utils/pipeline';
@@ -36,6 +37,8 @@ export function EvaluationTab({ groupId, docIndex, doc, combinedFields }: Evalua
   return (
     <div className="evaluation-tab-content">
       <h3 className="section-title flush-top">Evaluation Metrics</h3>
+
+      <Disclaimer variant="evaluation" />
 
       <p className="hint">
         Paste or upload the expected (ground truth) field values as JSON to score this document's extracted

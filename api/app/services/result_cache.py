@@ -40,6 +40,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+from app.prompts.registry import compound_prompt_version
+
 logger = logging.getLogger(__name__)
 
 SCHEMA_SQL = """
@@ -77,7 +79,10 @@ JUDGE_VERSION = "judge-v3-canonical"
 # (id | value | source_span) — the repeated prediction/provenance/identifier
 # triple is gone. Same output contract (score/issues/notes), so saved results
 # still load; fingerprints change so old entries resolve as misses.
-PROMPT_VERSION = "prompts-v4-canonical-judge"
+# v5 (registry): prompts moved to api/app/prompts/*.json. The compound version
+# below is derived from template CONTENT (sha256) — editing any template
+# invalidates result-cache fingerprints automatically, no manual bump.
+PROMPT_VERSION = compound_prompt_version()
 # Client recovery policy (classified parse kinds, table-root normalization,
 # truncation handling). Bumped with the prompt contract — both invalidate.
 CLIENT_RECOVERY_VERSION = "client-recovery-v2-classified"

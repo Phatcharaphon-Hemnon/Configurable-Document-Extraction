@@ -34,11 +34,126 @@ hallucination guards, and full LLM observability.
 - **Hallucination control** — every field carries `source_span` evidence +
   `confidence`; the Validator verifies evidence against the document.
 - **Prompt-injection defense** — document text is sanitized before it reaches
-  any LLM.
+  any LLM, regression-tested against a 31-payload adversarial corpus.
+- **Prompt versioning** — prompts live in a versioned registry
+  (`api/app/prompts/`); editing a template invalidates result caches
+  automatically.
 - **Observability** — Langfuse traces every agent call (auto-disabled without
   keys). Temporal workflow mode optional.
 - **Evaluate tab** — score extractions against ground truth
   (precision / recall / F1 + mismatch table).
+
+## Pipeline
+
+One page, one result — every stage is guarded and evidence-checked
+(guard details: `docs/guides/security_guardrails.md`):
+
+```mermaid
+flowchart TB
+    U["Upload (image / PDF)"] --> IN["Input guard<br/>MIME sniff · size · dimensions"]
+    IN --> LOAD["load_page_images<br/>(PDF → 300 DPI renders)"]
+    LOAD --> OCR["Local OCR<br/>Tesseract eng+tha (default) · RapidOCR / hybrid opt-in"]
+    OCR --> COH{"Coherence gate 0.40<br/>is this readable text?"}
+    COH -- "noise / handwriting soup" --> BLOCK["Blocked honestly<br/>recovery details preserved"]
+    COH -- readable --> SAN["sanitize_document_text<br/>prompt-injection guard + 12k cap"]
+    SAN --> RT["Router agent<br/>type + language"]
+    RT -- "unsupported" --> SHORT["Short-circuit<br/>unsupported page result"]
+    RT -- "invoice / purchase_order / delivery_note" --> EX["Extractor agent (one per type)<br/>compact field catalog · strict JSON"]
+    EX --> VAL["Validator (deterministic)<br/>source_span evidence + type checks"]
+    VAL --> SKIP{"Clean-result skip policy"}
+    SKIP -- "all gates pass" --> ACC["Acceptance policy<br/>accepted / needs_review"]
+    SKIP -- "findings present" --> JDG["Judge agent<br/>canonical-records verify + coverage cap"]
+    JDG --> ACC
+    ACC --> RES["ExtractionResult<br/>fields + tables + confidence + prompt_version"]
+    RES --> STORE["SQLite history (data/extraction.db)<br/>+ source previews (data/sources/)"]
+    STORE --> UI["Web UI<br/>results · review flags · AI-output disclaimer"]
+```
+
+Key invariants:
+
+- **Field names match the catalog EXACTLY** (no aliases/synonyms); unknown
+  labeled fields are added to the catalog (`is_new_field`).
+- **No evidence, no acceptance** — every field carries a verbatim
+  `source_span`; the Validator checks it against the OCR text, the Judge
+  re-verifies, unresolved cases surface as `needs_review: true`.
+- **Prompts come from the registry** — every agent reads its template from
+  `api/app/prompts/*.json`; the template content hash feeds the result-cache
+  fingerprint, so a prompt edit automatically invalidates cached results.
+
+## Workflow
+
+Uploads run as async jobs — the UI uploads once, then polls progress:
+
+```mermaid
+sequenceDiagram
+    participant W as Web UI
+    participant A as API Server
+    participant P as Pipeline
+    W->>A: "POST /api/jobs (files)"
+    A->>A: input guard + store originals
+    A-->>W: job_id + queued status
+    loop poll
+        W->>A: "GET /api/jobs/{id}"
+        A-->>W: "page progress (ocr → router → judge)"
+    end
+    Note over P: "repeat-upload fast path: result-cache<br/>fingerprint (file + OCR + config + prompts)<br/>may resolve pages before OCR runs"
+    P->>P: pipeline stages (diagram above)
+    P-->>A: per-page ExtractionResult
+    A-->>W: completed results + source previews
+    W->>W: render fields/tables, review flags, disclaimer
+    Note over W,A: "history re-opens saved results without re-extracting.<br/>DELETE /api/history bulk-clears (409 while active)"
+```
+
+Optional durable mode: `TEMPORAL_ENABLED=true` moves the same pipeline into a
+Temporal workflow (`python -m app.temporal.worker`), otherwise it runs
+in-process. See `docs/reference/async_jobs.md` and `docs/guides/temporal.md`.
+
+## Tool stack
+
+```mermaid
+flowchart LR
+    subgraph client["Client"]
+        WEB["React + TypeScript + Vite (:5173)<br/>Extraction · History · Evaluation tabs"]
+    end
+    subgraph server["FastAPI backend (:8000, /api)"]
+        SVC["extraction_service (orchestration)"]
+        AG["agents<br/>router · 3 extractors · validator · judge"]
+        PR["prompt registry<br/>api/app/prompts/*.json"]
+        GC["guards<br/>injection · PII · content limits · audit log"]
+        CACHE["result cache + job store"]
+    end
+    subgraph onhost["On-host (no API key)"]
+        OCRX["Local OCR<br/>Tesseract / RapidOCR (CPU)"]
+        DB[("SQLite<br/>data/extraction.db")]
+        SRC[("source storage<br/>data/sources/")]
+    end
+    subgraph cloud["Configurable / optional"]
+        LLM["LLM provider (14 options)<br/>single text model · OpenAI-compatible"]
+        LF["Langfuse (optional)<br/>traces with PII mask"]
+        TMP["Temporal (optional)<br/>durable workflow mode"]
+    end
+    WEB -- "/api" --> SVC
+    SVC --> AG
+    AG -- "templates + content hash" --> PR
+    SVC --> GC
+    AG -- "structured JSON" --> LLM
+    SVC --> OCRX
+    SVC --> CACHE --> DB
+    SVC --> SRC
+    SVC -. "traces" .-> LF
+    SVC -. "opt-in" .-> TMP
+```
+
+| Layer | Choice | Why |
+|---|---|---|
+| Frontend | React + TypeScript + Vite | fast dev loop, typed contracts shared with the API shape |
+| API | FastAPI + Pydantic | strict contracts (`ExtractedField`, `ExtractionResult`), OpenAPI docs |
+| OCR | Local Tesseract (default), RapidOCR/hybrid opt-in | on-host, offline, Thai+English, no per-page cost |
+| LLM | Any OpenAI-compatible provider (14 registry entries) | one text model for Router + Extractor + Judge; swap by editing 3 env vars |
+| Storage | SQLite (`data/extraction.db`) + filesystem sources | zero-ops persistence, single canonical history |
+| Caching | OCR cache + result cache (content fingerprints) | repeat uploads skip OCR and even the whole pipeline |
+| Observability | Langfuse (optional) | per-stage traces, tokens, latency; PII masked |
+| Durability | Temporal (optional) | workflow mode for long-running/recoverable jobs |
 
 ## Quick start
 
@@ -62,17 +177,19 @@ Re-running skips everything already installed. Ctrl+C stops both.
 │   │   ├── agents/            # router · 3 extractors · validator · judge
 │   │   ├── api/routes.py      # /extract /templates /evaluate /jobs
 │   │   ├── core/              # config (env) · security (injection guard)
+│   │   ├── guards/            # input/output/content/PII/audit/timeout guards
 │   │   ├── observability/     # Langfuse tracing
+│   │   ├── prompts/           # prompt registry: router/extractor/judge JSON + registry.py
 │   │   ├── schemas/           # Pydantic contracts (ExtractedField, ExtractionResult)
 │   │   ├── services/          # orchestration · LLM client · field catalog · KB
 │   │   ├── temporal/          # durable workflow (optional)
 │   │   └── data/knowledge_base/  # field_catalog · few_shot · ground_truth · documents
-│   ├── tests/                 # pytest
+│   ├── tests/                 # pytest (+ fixtures/injection_corpus.txt)
 │   ├── .env.example
 │   └── requirements.txt
 ├── web/                       # React + TypeScript + Vite frontend
 │   └── src/{api,components,hooks,types,utils}
-├── docs/                      # architecture.md · backend.md · frontend.md · adr/
+├── docs/                      # guides/ · reference/ · reports/ · adr/ · tech-stack/
 ├── skills/document-extraction/SKILL.md   # AI-agent skill file
 ├── AGENTS.md                  # AI-agent project memory
 ├── scripts/run_all.sh         # ONE command: API :8000 + Web :5173
@@ -218,6 +335,9 @@ proxies `/api` to `http://127.0.0.1:8000` automatically.
 
 - `CHANGELOG.md` — what changed, newest first
 - `docs/reference/architecture.md` — pipeline, security model, token strategy
+- `docs/reference/prompt_registry.md` — versioned prompts + cache invalidation
+- `docs/guides/security_guardrails.md` — guard layers, injection corpus, PII, disclaimers
+- `docs/reports/security_audit_2026-09-18.md` — dated security audit
 - `docs/reference/backend.md` — module map + API + KB layout
 - `docs/reference/frontend.md` — component structure + behaviour
 - `docs/guides/local_ocr.md` — local RapidOCR pipeline notes

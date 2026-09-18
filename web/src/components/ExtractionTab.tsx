@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { sourceUrl } from '../api/client';
 import { PipelineStepper } from './PipelineStepper';
+import { Disclaimer } from './Disclaimer';
 import { AlertTriangleIcon, CheckCircleIcon } from './icons';
 import { JUDGE_PASS_SCORE, formatFieldValue, getDisplayDocType, getFailedStageLabel, getPipelineStage, getResultKind, isUnsupportedDocument } from '../utils/pipeline';
 import type { CombinedField, DocumentGroup, ExtractionResult, ProviderErrorDetails } from '../types/extraction';
@@ -234,6 +235,8 @@ export function ExtractionTab({ group, doc, docIndex, onSelectDoc, onRetry, comb
             : <span className="meta-chip">review clear</span>}
         </div>
       )}
+
+      <Disclaimer variant="extraction" />
 
       {doc?.error && isUnsupportedDocument(doc) && (
         <div className="callout">

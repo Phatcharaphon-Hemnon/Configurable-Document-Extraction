@@ -1,0 +1,12 @@
+{
+  "id": "router",
+  "version": "v1",
+  "description": "Router agent: classify a document page into one of the 3 fixed types + language.",
+  "parts": {
+    "template": "Classify this document image/text as exactly one of:\n- invoice (tax invoice, sales invoice, POS receipt, billing document)\n- purchase_order (PO document ordering goods/services)\n- delivery_note (shipping/delivery document accompanying goods)\n- unsupported (anything else: specification tables, Grade Substitutions\n  charts, reference sheets, blank forms, or pages without monetary\n  business content — never force one of the three types onto them)\n\nAlso detect the primary language by script majority (Latin-script\nbusiness text is en; Thai script is th), or other.\nAnswer from the document content only — the filename is a weak hint.\nReturn confidence 0.0-1.0 and a one-sentence reason. When guessing,\nkeep confidence below 0.5.\n",
+    "filename_suffix": "\nFilename (weak hint): {filename}\n"
+  },
+  "changelog": [
+    "v1: initial registry import — content byte-identical to the inline _ROUTER_PROMPT of the prompts-v4-canonical-judge era."
+  ]
+}

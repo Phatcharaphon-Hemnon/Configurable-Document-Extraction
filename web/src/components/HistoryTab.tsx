@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ExtractionTab } from './ExtractionTab';
+import { Disclaimer } from './Disclaimer';
 import { downloadOriginal, extractFiles, pollJobStatus } from '../api/client';
 import type { DocumentGroup, ExtractionResult } from '../types/extraction';
 
@@ -241,6 +242,8 @@ export function HistoryTab() {
 
   return (
     <div className="history-tab">
+      <Disclaimer variant="history" />
+
       {/* Stats Cards */}
       {stats && (
         <div className="stats-grid">
